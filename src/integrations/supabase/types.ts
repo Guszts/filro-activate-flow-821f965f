@@ -14,16 +14,269 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      events: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          failure_reason: string | null
+          id: string
+          paid_at: string | null
+          plan_id: string
+          status: Database["public"]["Enums"]["payment_status"]
+          stripe_customer_id: string | null
+          stripe_payment_intent_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          failure_reason?: string | null
+          id?: string
+          paid_at?: string | null
+          plan_id: string
+          status?: Database["public"]["Enums"]["payment_status"]
+          stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          failure_reason?: string | null
+          id?: string
+          paid_at?: string | null
+          plan_id?: string
+          status?: Database["public"]["Enums"]["payment_status"]
+          stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plans: {
+        Row: {
+          activation_price: number
+          active: boolean
+          created_at: string
+          description: string
+          display_order: number
+          features: Json
+          id: string
+          monthly_price: number
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          activation_price: number
+          active?: boolean
+          created_at?: string
+          description?: string
+          display_order?: number
+          features?: Json
+          id?: string
+          monthly_price: number
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          activation_price?: number
+          active?: boolean
+          created_at?: string
+          description?: string
+          display_order?: number
+          features?: Json
+          id?: string
+          monthly_price?: number
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          account_type: Database["public"]["Enums"]["account_type"]
+          business_name: string | null
+          business_segment: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+          whatsapp: string | null
+        }
+        Insert: {
+          account_type?: Database["public"]["Enums"]["account_type"]
+          business_name?: string | null
+          business_segment?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id: string
+          whatsapp?: string | null
+        }
+        Update: {
+          account_type?: Database["public"]["Enums"]["account_type"]
+          business_name?: string | null
+          business_segment?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          business_info: Json | null
+          business_info_submitted: boolean
+          business_name: string | null
+          business_segment: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          plan_id: string | null
+          project_status: Database["public"]["Enums"]["project_status"]
+          selected_model: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_info?: Json | null
+          business_info_submitted?: boolean
+          business_name?: string | null
+          business_segment?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          plan_id?: string | null
+          project_status?: Database["public"]["Enums"]["project_status"]
+          selected_model?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_info?: Json | null
+          business_info_submitted?: boolean
+          business_name?: string | null
+          business_segment?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          plan_id?: string | null
+          project_status?: Database["public"]["Enums"]["project_status"]
+          selected_model?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      account_type: "customer" | "admin"
+      app_role: "admin" | "customer"
+      payment_status:
+        | "pending"
+        | "processing"
+        | "paid"
+        | "failed"
+        | "refunded"
+        | "cancelled"
+      project_status:
+        | "new"
+        | "paid"
+        | "waiting_info"
+        | "in_production"
+        | "delivered"
+        | "on_hold"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +403,26 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      account_type: ["customer", "admin"],
+      app_role: ["admin", "customer"],
+      payment_status: [
+        "pending",
+        "processing",
+        "paid",
+        "failed",
+        "refunded",
+        "cancelled",
+      ],
+      project_status: [
+        "new",
+        "paid",
+        "waiting_info",
+        "in_production",
+        "delivered",
+        "on_hold",
+        "cancelled",
+      ],
+    },
   },
 } as const
