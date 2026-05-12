@@ -91,7 +91,7 @@ function HomePage() {
             {/* Floating label */}
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-              className="absolute -left-4 top-10 bg-paper rounded-2xl px-4 py-3 text-xs font-semibold uppercase tracking-widest border border-border"
+              className="absolute -left-4 top-10 bg-paper rounded-2xl px-4 py-3 text-xs font-semibold tracking-wide border border-border"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
               Modelo · Padaria
@@ -101,17 +101,9 @@ function HomePage() {
               className="absolute -right-4 bottom-16 bg-paper rounded-2xl px-5 py-4 max-w-[200px] border border-border"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
-              <div className="text-xs uppercase tracking-widest text-ink-soft">Pronto</div>
+              <div className="text-xs tracking-wide text-ink-soft">Pronto</div>
               <div className="font-display font-black text-ink leading-tight mt-1">Em dias,<br />não meses.</div>
             </motion.div>
-            <motion.a
-              href="#ativacao"
-              initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.7, type: "spring" }}
-              className="absolute -bottom-8 -left-6 lg:-left-12 h-28 w-28 rounded-full bg-flame text-paper grid place-items-center font-display font-black uppercase text-sm tracking-widest hover:scale-105 transition-transform"
-              style={{ boxShadow: "var(--shadow-pop)" }}
-            >
-              Começar
-            </motion.a>
           </motion.div>
         </div>
       </section>
