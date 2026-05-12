@@ -84,7 +84,7 @@ export function SiteHeader() {
               onClick={() => setOpen(false)}
               className="mt-2 inline-flex items-center justify-center h-12 px-6 rounded-full bg-ink text-paper text-sm font-semibold tracking-wide w-fit"
             >
-              ATIVAR
+              Ativar
             </a>
           </div>
         </div>
