@@ -29,7 +29,7 @@ export function ModelGrid() {
               </div>
             </div>
             <div className="absolute bottom-4 left-4 right-4 h-20 rounded-2xl bg-paper/90 backdrop-blur border border-border flex items-center px-4">
-              <div className="text-xs tracking-wide text-ink-soft">filro / modelo</div>
+              <div className="text-xs tracking-wide text-ink-soft">Modelo</div>
             </div>
           </div>
           <div className="p-6 flex flex-col flex-1">
