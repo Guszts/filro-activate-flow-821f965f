@@ -112,7 +112,7 @@ function HomePage() {
       <section id="modelos" className="scroll-mt-24 mx-auto max-w-[1400px] px-5 md:px-10 py-20 md:py-28">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <span className="text-xs uppercase tracking-widest text-ink-soft">02 — Modelos</span>
+            <span className="text-xs tracking-wide text-ink-soft">02 — Modelos</span>
             <h2 className="mt-3 editorial-headline text-5xl md:text-7xl text-ink max-w-2xl">Escolha uma direção visual</h2>
           </div>
           <p className="md:text-right text-ink-soft max-w-md">
@@ -124,7 +124,7 @@ function HomePage() {
 
       {/* HOW IT WORKS */}
       <section id="como-funciona" className="scroll-mt-24 mx-auto max-w-[1400px] px-5 md:px-10 py-20 md:py-28">
-        <span className="text-xs uppercase tracking-widest text-ink-soft">03 — Processo</span>
+        <span className="text-xs tracking-wide text-ink-soft">03 — Processo</span>
         <h2 className="mt-3 editorial-headline text-5xl md:text-7xl text-ink max-w-3xl">Como funciona a ativação</h2>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -154,7 +154,7 @@ function HomePage() {
       <section id="ativacao" className="scroll-mt-24 mx-auto max-w-[1400px] px-5 md:px-10 py-20 md:py-28">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <span className="text-xs uppercase tracking-widest text-ink-soft">04 — Planos</span>
+            <span className="text-xs tracking-wide text-ink-soft">04 — Planos</span>
             <h2 className="mt-3 editorial-headline text-5xl md:text-7xl text-ink">Planos de ativação</h2>
           </div>
           <p className="md:text-right text-ink-soft max-w-md">

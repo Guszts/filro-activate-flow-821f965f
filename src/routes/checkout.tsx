@@ -74,7 +74,7 @@ function CheckoutPage() {
 
         <aside className="lg:col-span-2">
           <div className="card-elevated p-7 sticky top-28">
-            <div className="text-xs uppercase tracking-widest text-ink-soft">Resumo</div>
+            <div className="text-xs tracking-wide text-ink-soft">Resumo</div>
             <div className="mt-4 font-display font-black text-3xl text-ink uppercase">{planName || "Plano"}</div>
             <div className="mt-2 text-ink-soft text-sm">Ativação única</div>
             <div className="mt-6 border-t border-border pt-6 flex justify-between items-baseline">

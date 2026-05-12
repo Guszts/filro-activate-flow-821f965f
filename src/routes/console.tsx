@@ -29,7 +29,7 @@ function ConsolePage() {
     <div className="min-h-screen grid md:grid-cols-[260px_1fr]">
       <aside className="border-r border-border bg-paper p-6 flex flex-col">
         <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
-        <div className="text-xs uppercase tracking-widest text-ink-soft mt-1">Console</div>
+        <div className="text-xs tracking-wide text-ink-soft mt-1">Console</div>
         <nav className="mt-10 space-y-1 text-sm">
           {([
             ["overview", "Overview"],
@@ -69,7 +69,7 @@ function Metric({ label, value, sub }: { label: string; value: string; sub?: str
       initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
       className="card-elevated p-6"
     >
-      <div className="text-xs uppercase tracking-widest text-ink-soft">{label}</div>
+      <div className="text-xs tracking-wide text-ink-soft">{label}</div>
       <div className="mt-2 font-display font-black text-3xl text-ink">{value}</div>
       {sub && <div className="text-xs text-ink-soft mt-1">{sub}</div>}
     </motion.div>
@@ -152,7 +152,7 @@ function UsersTab() {
       <div className="mt-6 card-elevated overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted text-left text-xs uppercase tracking-widest text-ink-soft">
+            <thead className="bg-muted text-left text-xs tracking-wide text-ink-soft">
               <tr>
                 <th className="px-4 py-3">Nome</th><th className="px-4 py-3">Email</th>
                 <th className="px-4 py-3">Negócio</th><th className="px-4 py-3">Segmento</th>
@@ -203,7 +203,7 @@ function PaymentsTab() {
       <div className="mt-8 card-elevated overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted text-left text-xs uppercase tracking-widest text-ink-soft">
+            <thead className="bg-muted text-left text-xs tracking-wide text-ink-soft">
               <tr>
                 <th className="px-4 py-3">Cliente</th><th className="px-4 py-3">Plano</th>
                 <th className="px-4 py-3">Valor</th><th className="px-4 py-3">Status</th>
@@ -250,7 +250,7 @@ function PlansTab() {
         {(data ?? []).map((p) => (
           <div key={p.id} className="card-elevated p-6">
             <div className="font-display font-black uppercase text-2xl">{p.name}</div>
-            <div className="text-xs uppercase tracking-widest text-ink-soft mt-1">{p.slug}</div>
+            <div className="text-xs tracking-wide text-ink-soft mt-1">{p.slug}</div>
             <div className="mt-4 font-display font-black text-3xl text-ink">{formatBRL(p.activation_price)}</div>
             <div className="text-sm text-ink-soft">+ {formatBRL(p.monthly_price)}/mês</div>
             <p className="mt-4 text-sm text-ink-soft">{p.description}</p>

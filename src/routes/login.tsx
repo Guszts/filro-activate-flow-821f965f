@@ -40,12 +40,12 @@ function LoginPage() {
         <p className="mt-3 text-ink-soft">Acesse sua conta para continuar a ativação.</p>
         <form onSubmit={submit} className="mt-8 card-elevated p-7 space-y-4">
           <div>
-            <label className="text-xs uppercase tracking-widest text-ink-soft">Email</label>
+            <label className="text-xs tracking-wide text-ink-soft">Email</label>
             <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
               className="mt-2 w-full h-12 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink" />
           </div>
           <div>
-            <label className="text-xs uppercase tracking-widest text-ink-soft">Senha</label>
+            <label className="text-xs tracking-wide text-ink-soft">Senha</label>
             <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
               className="mt-2 w-full h-12 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink" />
           </div>

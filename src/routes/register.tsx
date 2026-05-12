@@ -66,7 +66,7 @@ function RegisterPage() {
             ["password", "Senha (mín. 8)", "password"],
           ].map(([k, label, type]) => (
             <div key={k} className={k === "password" || k === "business_segment" ? "sm:col-span-2" : ""}>
-              <label className="text-xs uppercase tracking-widest text-ink-soft">{label}</label>
+              <label className="text-xs tracking-wide text-ink-soft">{label}</label>
               <input
                 type={type as string}
                 required
