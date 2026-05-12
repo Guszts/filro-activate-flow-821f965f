@@ -65,11 +65,11 @@ function HomePage() {
               Páginas profissionais, cardápios digitais, portfólios e sites de negócios adaptados para empresas locais que precisam de uma apresentação online mais limpa, forte e organizada.
             </p>
             <div className="mt-10 flex flex-wrap gap-3 items-center">
-              <a href="#ativacao" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-ink text-paper font-semibold tracking-wide hover:scale-[1.02] transition-transform">
+              <a href="#ativacao" className="inline-flex items-center justify-center h-14 px-8 rounded-2xl bg-ink text-paper font-semibold tracking-wide hover:scale-[1.02] transition-transform">
                 Iniciar ativação
                 <ArrowRight className="ml-2 h-4 w-4" />
               </a>
-              <a href="#modelos" className="inline-flex items-center justify-center h-14 px-8 rounded-full border border-ink text-ink font-semibold tracking-wide hover:bg-ink hover:text-paper transition-colors">
+              <a href="#modelos" className="inline-flex items-center justify-center h-14 px-8 rounded-2xl border border-ink text-ink font-semibold tracking-wide hover:bg-ink hover:text-paper transition-colors">
                 Ver modelos
               </a>
             </div>
