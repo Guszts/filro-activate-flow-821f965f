@@ -58,7 +58,7 @@ async function handleEvent(event: Stripe.Event) {
         plan_id: plan.id,
         amount: (plan.activation_price ?? 0) + (plan.monthly_price ?? 0),
         currency: (session.currency ?? "brl").toLowerCase(),
-        status: "succeeded",
+        status: "paid",
         stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
         stripe_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : null,
         paid_at: new Date().toISOString(),
@@ -71,9 +71,9 @@ async function handleEvent(event: Stripe.Event) {
         .eq("user_id", userId)
         .maybeSingle();
       if (existing) {
-        await supabaseAdmin.from("projects").update({ plan_id: plan.id, project_status: "active" }).eq("id", existing.id);
+        await supabaseAdmin.from("projects").update({ plan_id: plan.id, project_status: "paid" }).eq("id", existing.id);
       } else {
-        await supabaseAdmin.from("projects").insert({ user_id: userId, plan_id: plan.id, project_status: "active" });
+        await supabaseAdmin.from("projects").insert({ user_id: userId, plan_id: plan.id, project_status: "paid" });
       }
 
       await supabaseAdmin.from("events").insert({
