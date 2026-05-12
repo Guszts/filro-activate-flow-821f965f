@@ -2,6 +2,7 @@ import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import logoSrc from "@/assets/logo.png";
 
 const sections = [
   { label: "Modelos", hash: "modelos" },
@@ -20,8 +21,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-background/70 border-b border-border/50">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 py-4 md:py-6 flex items-center justify-between">
-        <Link to="/" className="font-display font-black text-2xl tracking-tight text-ink" aria-label="Início">
-          <span className="h-3 w-3 inline-block rounded-sm bg-ink align-middle" />
+        <Link to="/" className="inline-flex items-center" aria-label="Início">
+          <img src={logoSrc} alt="Logo" className="h-3 w-3 object-contain" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-ink-soft">
