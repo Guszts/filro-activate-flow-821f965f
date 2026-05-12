@@ -34,6 +34,14 @@ async function resolveOrCreateCustomer(
   return created.id;
 }
 
+function getPriceLookupKeys(planSlug: string) {
+  const normalizedSlug = planSlug.replace(/^plan_/, "");
+  return {
+    activationKey: `plan_${normalizedSlug}_activation`,
+    monthlyKey: `plan_${normalizedSlug}_monthly`,
+  };
+}
+
 export const createPlanCheckoutSession = createServerFn({ method: "POST" })
   .inputValidator((data: {
     planSlug: string;
@@ -48,8 +56,7 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const stripe = createStripeClient(data.environment);
 
-    const activationKey = `plan_${data.planSlug}_activation`;
-    const monthlyKey = `plan_${data.planSlug}_monthly`;
+    const { activationKey, monthlyKey } = getPriceLookupKeys(data.planSlug);
 
     let actPrices, monPrices;
     try {
