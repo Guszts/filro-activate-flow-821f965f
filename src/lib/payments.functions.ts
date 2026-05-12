@@ -48,8 +48,8 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const stripe = createStripeClient(data.environment);
 
-    const activationKey = `${data.planSlug}_activation`;
-    const monthlyKey = `${data.planSlug}_monthly`;
+    const activationKey = `plan_${data.planSlug}_activation`;
+    const monthlyKey = `plan_${data.planSlug}_monthly`;
 
     let actPrices, monPrices;
     try {
