@@ -51,7 +51,7 @@ export function SiteHeader() {
           href={sectionHref("ativacao")}
           className="hidden md:inline-flex items-center justify-center h-12 px-6 rounded-full bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.02] active:scale-[0.98] transition-transform"
         >
-          ATIVAR
+          Ativar
         </a>
 
         <button
