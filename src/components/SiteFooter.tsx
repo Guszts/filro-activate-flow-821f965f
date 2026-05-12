@@ -22,7 +22,7 @@ export function SiteFooter() {
         <div className="text-sm text-ink-soft">
           <div className="font-semibold text-ink mb-3">Contato</div>
           <p>Suporte por WhatsApp após a ativação.</p>
-          <p className="mt-6 text-xs">© {new Date().getFullYear()} Filro. Todos os direitos reservados.</p>
+          <p className="mt-6 text-xs">© {new Date().getFullYear()} Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>
