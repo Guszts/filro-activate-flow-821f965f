@@ -35,17 +35,17 @@ function LoginPage() {
   return (
     <div className="min-h-screen grid place-items-center px-5 py-10">
       <div className="w-full max-w-md">
-        <Link to="/" className="font-display font-black text-2xl text-ink">FILRO</Link>
+        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
         <h1 className="mt-10 editorial-headline text-5xl text-ink">Entrar</h1>
         <p className="mt-3 text-ink-soft">Acesse sua conta para continuar a ativação.</p>
         <form onSubmit={submit} className="mt-8 card-elevated p-7 space-y-4">
           <div>
-            <label className="text-xs uppercase tracking-widest text-ink-soft">Email</label>
+            <label className="text-xs tracking-wide text-ink-soft">Email</label>
             <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
               className="mt-2 w-full h-12 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink" />
           </div>
           <div>
-            <label className="text-xs uppercase tracking-widest text-ink-soft">Senha</label>
+            <label className="text-xs tracking-wide text-ink-soft">Senha</label>
             <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
               className="mt-2 w-full h-12 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink" />
           </div>

@@ -20,8 +20,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-background/70 border-b border-border/50">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 py-4 md:py-6 flex items-center justify-between">
-        <Link to="/" className="font-display font-black text-2xl tracking-tight text-ink">
-          FILRO
+        <Link to="/" className="font-display font-black text-2xl tracking-tight text-ink" aria-label="Início">
+          <span className="h-3 w-3 inline-block rounded-sm bg-ink align-middle" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-ink-soft">
@@ -49,13 +49,13 @@ export function SiteHeader() {
 
         <a
           href={sectionHref("ativacao")}
-          className="hidden md:inline-flex items-center justify-center h-12 px-6 rounded-full bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.02] active:scale-[0.98] transition-transform"
+          className="hidden md:inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.02] active:scale-[0.98] transition-transform"
         >
-          ATIVAR
+          Ativar
         </a>
 
         <button
-          className="md:hidden h-10 w-10 grid place-items-center rounded-full bg-paper border border-border"
+          className="md:hidden h-10 w-10 grid place-items-center rounded-2xl bg-paper border border-border"
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >
@@ -82,9 +82,9 @@ export function SiteHeader() {
             <a
               href={sectionHref("ativacao")}
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex items-center justify-center h-12 px-6 rounded-full bg-ink text-paper text-sm font-semibold tracking-wide w-fit"
+              className="mt-2 inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide w-fit"
             >
-              ATIVAR
+              Ativar
             </a>
           </div>
         </div>

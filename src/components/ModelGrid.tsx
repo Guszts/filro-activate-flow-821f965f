@@ -29,19 +29,19 @@ export function ModelGrid() {
               </div>
             </div>
             <div className="absolute bottom-4 left-4 right-4 h-20 rounded-2xl bg-paper/90 backdrop-blur border border-border flex items-center px-4">
-              <div className="text-xs uppercase tracking-widest text-ink-soft">filro / modelo</div>
+              <div className="text-xs tracking-wide text-ink-soft">filro / modelo</div>
             </div>
           </div>
           <div className="p-6 flex flex-col flex-1">
-            <h3 className="font-display uppercase text-2xl font-black tracking-tight">{m.name}</h3>
+            <h3 className="font-display text-2xl font-black tracking-tight">{m.name}</h3>
             <p className="mt-2 text-sm text-ink-soft flex-1">{m.desc}</p>
             <div className="mt-6 flex gap-2">
-              <button className="flex-1 h-10 rounded-full border border-border text-xs font-semibold uppercase tracking-wider hover:bg-ink hover:text-paper transition-colors">
+              <button className="flex-1 h-10 rounded-2xl border border-border text-xs font-semibold tracking-wider hover:bg-ink hover:text-paper transition-colors">
                 Ver exemplo
               </button>
               <a
                 href="/#ativacao"
-                className="flex-1 h-10 grid place-items-center rounded-full bg-ink text-paper text-xs font-semibold uppercase tracking-wider hover:scale-[1.02] transition-transform"
+                className="flex-1 h-10 grid place-items-center rounded-2xl bg-ink text-paper text-xs font-semibold tracking-wider hover:scale-[1.02] transition-transform"
               >
                 Usar este
               </a>
