@@ -4,9 +4,9 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const links = [
-  { label: "Modelos", to: "/modelos" },
-  { label: "Como funciona", to: "/como-funciona" },
-  { label: "Ativação", to: "/ativacao" },
+  { label: "Modelos", hash: "modelos" },
+  { label: "Como funciona", hash: "como-funciona" },
+  { label: "Ativação", hash: "ativacao" },
 ];
 
 export function SiteHeader() {
