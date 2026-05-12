@@ -13,9 +13,9 @@ export function SiteFooter() {
         <div className="text-sm text-ink-soft">
           <div className="font-semibold text-ink mb-3">Navegação</div>
           <ul className="space-y-2">
-            <li><Link to="/modelos">Modelos</Link></li>
-            <li><Link to="/como-funciona">Como funciona</Link></li>
-            <li><Link to="/ativacao">Ativação</Link></li>
+            <li><a href="/#modelos">Modelos</a></li>
+            <li><a href="/#como-funciona">Como funciona</a></li>
+            <li><a href="/#ativacao">Ativação</a></li>
             <li><Link to="/login">Entrar</Link></li>
           </ul>
         </div>
