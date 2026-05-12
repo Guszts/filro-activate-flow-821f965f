@@ -35,7 +35,7 @@ function LoginPage() {
   return (
     <div className="min-h-screen grid place-items-center px-5 py-10">
       <div className="w-full max-w-md">
-        <Link to="/" className="font-display font-black text-2xl text-ink">FILRO</Link>
+        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
         <h1 className="mt-10 editorial-headline text-5xl text-ink">Entrar</h1>
         <p className="mt-3 text-ink-soft">Acesse sua conta para continuar a ativação.</p>
         <form onSubmit={submit} className="mt-8 card-elevated p-7 space-y-4">

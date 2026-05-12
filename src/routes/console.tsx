@@ -28,7 +28,7 @@ function ConsolePage() {
   return (
     <div className="min-h-screen grid md:grid-cols-[260px_1fr]">
       <aside className="border-r border-border bg-paper p-6 flex flex-col">
-        <Link to="/" className="font-display font-black text-2xl text-ink">FILRO</Link>
+        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
         <div className="text-xs uppercase tracking-widest text-ink-soft mt-1">Console</div>
         <nav className="mt-10 space-y-1 text-sm">
           {([

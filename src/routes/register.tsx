@@ -53,7 +53,7 @@ function RegisterPage() {
   return (
     <div className="min-h-screen grid place-items-center px-5 py-10">
       <div className="w-full max-w-xl">
-        <Link to="/" className="font-display font-black text-2xl text-ink">FILRO</Link>
+        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
         <h1 className="mt-10 editorial-headline text-5xl text-ink">Criar conta</h1>
         <p className="mt-3 text-ink-soft">Vamos preparar sua ativação.</p>
         <form onSubmit={submit} className="mt-8 card-elevated p-7 grid sm:grid-cols-2 gap-4">
