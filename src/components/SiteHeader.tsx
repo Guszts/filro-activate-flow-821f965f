@@ -49,13 +49,13 @@ export function SiteHeader() {
 
         <a
           href={sectionHref("ativacao")}
-          className="hidden md:inline-flex items-center justify-center h-12 px-6 rounded-full bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.02] active:scale-[0.98] transition-transform"
+          className="hidden md:inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.02] active:scale-[0.98] transition-transform"
         >
           Ativar
         </a>
 
         <button
-          className="md:hidden h-10 w-10 grid place-items-center rounded-full bg-paper border border-border"
+          className="md:hidden h-10 w-10 grid place-items-center rounded-2xl bg-paper border border-border"
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >
@@ -82,7 +82,7 @@ export function SiteHeader() {
             <a
               href={sectionHref("ativacao")}
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex items-center justify-center h-12 px-6 rounded-full bg-ink text-paper text-sm font-semibold tracking-wide w-fit"
+              className="mt-2 inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide w-fit"
             >
               Ativar
             </a>

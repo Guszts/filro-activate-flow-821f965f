@@ -143,7 +143,7 @@ function HomePage() {
               style={{ boxShadow: "var(--shadow-card)" }}
             >
               <div className="font-display font-black text-5xl text-flame">{s.n}</div>
-              <h3 className="mt-6 font-display font-black uppercase text-xl tracking-tight">{s.t}</h3>
+              <h3 className="mt-6 font-display font-black text-xl tracking-tight">{s.t}</h3>
               <p className="mt-2 text-sm text-ink-soft">{s.d}</p>
             </motion.div>
           ))}
@@ -193,11 +193,11 @@ function HomePage() {
             <p className="mt-6 text-paper/70 max-w-xl">
               Após o pagamento, você envia as informações do seu negócio e nós adaptamos o modelo escolhido.
             </p>
-            <a href="#ativacao" className="mt-10 inline-flex items-center h-14 px-8 rounded-full bg-lime text-ink font-semibold tracking-wide hover:scale-[1.02] transition-transform">
+            <a href="#ativacao" className="mt-10 inline-flex items-center h-14 px-8 rounded-2xl bg-lime text-ink font-semibold tracking-wide hover:scale-[1.02] transition-transform">
               Iniciar ativação <ArrowRight className="ml-2 h-4 w-4" />
             </a>
           </div>
-          <div className="absolute -right-20 -bottom-20 w-[400px] h-[400px] rounded-full bg-flame/30 blur-3xl pointer-events-none" />
+          <div className="absolute -right-20 -bottom-20 w-[400px] h-[400px] rounded-2xl bg-flame/30 blur-3xl pointer-events-none" />
         </motion.div>
       </section>
 
