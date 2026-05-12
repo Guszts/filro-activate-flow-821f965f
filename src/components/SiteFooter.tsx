@@ -5,8 +5,8 @@ export function SiteFooter() {
     <footer className="mt-32 border-t border-border/60">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 py-12 md:py-16 grid gap-10 md:grid-cols-3">
         <div>
-          <div className="font-display font-black text-3xl text-ink">FILRO</div>
-          <p className="mt-3 text-sm text-ink-soft max-w-xs">
+          <div className="h-3 w-3 rounded-sm bg-ink" />
+          <p className="mt-4 text-sm text-ink-soft max-w-xs">
             Páginas profissionais, cardápios digitais, portfólios e sites para negócios locais.
           </p>
         </div>
