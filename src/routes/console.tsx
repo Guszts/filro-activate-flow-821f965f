@@ -119,7 +119,7 @@ function OverviewTab() {
         <Metric label="Usuários totais" value={String(totalUsers)} sub={`${newToday} hoje`} />
         <Metric label="Pagantes" value={String(payingUsers)} sub={`${conversion}% conversão`} />
         <Metric label="Receita ativação" value={formatBRL(revenue)} />
-        <Metric label="MRR" value={formatBRL(mrr)} sub="recorrência mensal" />
+        <Metric label="Receita mensal" value={formatBRL(mrr)} sub="recorrência mensal" />
         <Metric label="Pagamentos concluídos" value={String(paid.length)} sub={`${paymentsToday} hoje`} />
         <Metric label="Pendentes" value={String(pending.length)} />
         <Metric label="Falhas" value={String(failed.length)} />
@@ -249,7 +249,7 @@ function PlansTab() {
       <div className="mt-8 grid md:grid-cols-3 gap-5">
         {(data ?? []).map((p) => (
           <div key={p.id} className="card-elevated p-6">
-            <div className="font-display font-black uppercase text-2xl">{p.name}</div>
+            <div className="font-display font-black text-2xl">{p.name}</div>
             <div className="text-xs tracking-wide text-ink-soft mt-1">{p.slug}</div>
             <div className="mt-4 font-display font-black text-3xl text-ink">{formatBRL(p.activation_price)}</div>
             <div className="text-sm text-ink-soft">+ {formatBRL(p.monthly_price)}/mês</div>
