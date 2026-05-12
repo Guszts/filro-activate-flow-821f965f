@@ -20,8 +20,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-background/70 border-b border-border/50">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 py-4 md:py-6 flex items-center justify-between">
-        <Link to="/" className="font-display font-black text-2xl tracking-tight text-ink">
-          FILRO
+        <Link to="/" className="font-display font-black text-2xl tracking-tight text-ink" aria-label="Início">
+          <span className="h-3 w-3 inline-block rounded-sm bg-ink align-middle" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-ink-soft">
