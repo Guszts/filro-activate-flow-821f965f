@@ -183,22 +183,14 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }) => {
     const stripe = createStripeClient(data.environment);
+    const plan = await getPlanForCheckout(data.planSlug);
 
-    const { activationKey, monthlyKey } = getPriceLookupKeys(data.planSlug);
-
-    let actPrices, monPrices;
+    let activationPrice, monthlyPrice;
     try {
-      [actPrices, monPrices] = await Promise.all([
-        stripe.prices.list({ lookup_keys: [activationKey], limit: 1 }),
-        stripe.prices.list({ lookup_keys: [monthlyKey], limit: 1 }),
-      ]);
+      ({ activationPrice, monthlyPrice } = await resolveOrCreatePlanPrices(stripe, data.planSlug, plan));
     } catch (err) {
-      console.error("[checkout] prices.list failed", { activationKey, monthlyKey, err });
-      throw new Error(`Falha ao consultar preços: ${err instanceof Error ? err.message : String(err)}`);
-    }
-    if (!actPrices?.data?.length || !monPrices?.data?.length) {
-      console.error("[checkout] price lookup empty", { activationKey, monthlyKey, act: actPrices?.data?.length, mon: monPrices?.data?.length });
-      throw new Error(`Plano não encontrado (lookup_keys: ${activationKey}, ${monthlyKey})`);
+      console.error("[checkout] price resolution failed", { planSlug: data.planSlug, err });
+      throw new Error(`Falha ao preparar preços do plano: ${err instanceof Error ? err.message : String(err)}`);
     }
 
     const customerId = (data.customerEmail || data.userId)
@@ -210,8 +202,8 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
-        { price: monPrices.data[0].id, quantity: 1 },
-        { price: actPrices.data[0].id, quantity: 1 },
+        { price: monthlyPrice.id, quantity: 1 },
+        { price: activationPrice.id, quantity: 1 },
       ],
       mode: "subscription",
       ui_mode: "embedded_page",
