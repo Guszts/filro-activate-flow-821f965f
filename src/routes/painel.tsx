@@ -71,7 +71,7 @@ function PainelPage() {
             <h1 className="mt-2 editorial-headline text-5xl md:text-6xl text-ink">Olá, <span className="lime-mark">{user?.email?.split("@")[0]}</span></h1>
             <p className="mt-3 text-ink-soft">Acompanhe seu projeto, pagamentos e edite as informações do negócio.</p>
           </div>
-          <a href="https://wa.me/5511999999999" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-lime text-ink font-semibold text-sm">
+          <a href="https://wa.me/5592993561754" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-lime text-ink font-semibold text-sm">
             <MessageCircle className="h-4 w-4" /> Suporte WhatsApp
           </a>
         </div>
