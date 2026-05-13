@@ -1,7 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createStripeClient, getWebhookSecret, type StripeEnv } from "@/lib/stripe.server";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { sendTransactionalEmailServer, getAdminEmails } from "@/lib/email/send.server";
 import type Stripe from "stripe";
+
+const PANEL_URL = "https://filro.app/painel";
+
+function formatBRL(cents: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
+}
+function formatDate(iso: string | null) {
+  if (!iso) return "—";
+  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(new Date(iso));
+}
 
 export const Route = createFileRoute("/api/public/payments/webhook")({
   server: {
@@ -159,6 +170,41 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         ].join("\n"),
       });
 
+      // Welcome email to customer
+      if (profile?.email) {
+        await sendTransactionalEmailServer({
+          templateName: "welcome-purchase",
+          recipientEmail: profile.email,
+          idempotencyKey: `welcome-${session.id}`,
+          templateData: {
+            name: profile.name || undefined,
+            planName: plan.name,
+            businessName: profile.business_name || undefined,
+            panelUrl: PANEL_URL,
+          },
+        }).catch((e) => console.error("[email] welcome failed", e));
+      }
+
+      // Admin notification
+      const totalAmount = (plan.activation_price ?? 0) + (plan.monthly_price ?? 0);
+      const admins = await getAdminEmails().catch(() => [] as string[]);
+      for (const adminEmail of admins) {
+        await sendTransactionalEmailServer({
+          templateName: "sale-notification",
+          recipientEmail: adminEmail,
+          idempotencyKey: `sale-${session.id}-${adminEmail}`,
+          templateData: {
+            customerName: profile?.name,
+            customerEmail: profile?.email,
+            customerWhatsapp: profile?.whatsapp,
+            businessName: profile?.business_name,
+            planName: plan.name,
+            amount: formatBRL(totalAmount),
+            sessionId: session.id,
+          },
+        }).catch((e) => console.error("[email] sale-notification failed", e));
+      }
+
       await logEvent("checkout.session.completed", userId, { planSlug, sessionId: session.id });
       break;
     }
@@ -173,6 +219,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
 
     case "customer.subscription.deleted": {
       const sub = event.data.object as Stripe.Subscription;
+      const endsAtIso = tsToISO((sub as any).current_period_end) ?? null;
       await supabaseAdmin
         .from("subscriptions")
         .update({
@@ -185,10 +232,24 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
 
       const userId = sub.metadata?.userId;
       if (userId) {
-        await supabaseAdmin
-          .from("projects")
-          .update({ project_status: "new" })
-          .eq("user_id", userId);
+        await supabaseAdmin.from("projects").update({ project_status: "new" }).eq("user_id", userId);
+
+        const { data: profile } = await supabaseAdmin
+          .from("profiles").select("name, email").eq("user_id", userId).maybeSingle();
+        const plan = await getPlanBySlug(sub.metadata?.planSlug);
+        if (profile?.email) {
+          await sendTransactionalEmailServer({
+            templateName: "subscription-canceled",
+            recipientEmail: profile.email,
+            idempotencyKey: `cancel-${sub.id}`,
+            templateData: {
+              name: profile.name,
+              planName: plan?.name,
+              endsAt: formatDate(endsAtIso),
+              panelUrl: PANEL_URL,
+            },
+          }).catch((e) => console.error("[email] cancel failed", e));
+        }
       }
       await logEvent("customer.subscription.deleted", userId ?? null, { id: sub.id });
       break;
@@ -227,8 +288,34 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
 
     case "invoice.payment_failed":
     case "checkout.session.async_payment_failed": {
-      const obj = event.data.object as { id?: string; metadata?: { userId?: string } };
-      await logEvent(event.type, obj.metadata?.userId ?? null, { id: obj.id });
+      const obj = event.data.object as { id?: string; metadata?: { userId?: string }; subscription?: string };
+      const userId = obj.metadata?.userId ?? null;
+
+      // Try to find the user via subscription if not in metadata
+      let resolvedUserId = userId;
+      let planName: string | undefined;
+      if (!resolvedUserId && obj.subscription) {
+        const { data: sub } = await supabaseAdmin
+          .from("subscriptions")
+          .select("user_id, plan_id, plans:plans(name)")
+          .eq("stripe_subscription_id", obj.subscription)
+          .maybeSingle();
+        resolvedUserId = (sub as any)?.user_id ?? null;
+        planName = (sub as any)?.plans?.name;
+      }
+      if (resolvedUserId) {
+        const { data: profile } = await supabaseAdmin
+          .from("profiles").select("name, email").eq("user_id", resolvedUserId).maybeSingle();
+        if (profile?.email) {
+          await sendTransactionalEmailServer({
+            templateName: "payment-failed",
+            recipientEmail: profile.email,
+            idempotencyKey: `pay-failed-${obj.id}`,
+            templateData: { name: profile.name, planName, portalUrl: PANEL_URL },
+          }).catch((e) => console.error("[email] payment-failed failed", e));
+        }
+      }
+      await logEvent(event.type, resolvedUserId, { id: obj.id });
       break;
     }
 

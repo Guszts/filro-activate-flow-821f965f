@@ -67,6 +67,13 @@ function CheckoutPage() {
       <SiteHeader />
       <main className="mx-auto max-w-[1100px] w-full px-5 md:px-10 py-12 md:py-16 grid lg:grid-cols-5 gap-10">
         <section className="lg:col-span-3">
+          <ol className="flex items-center gap-3 text-xs tracking-wide text-ink-soft mb-6">
+            <li className="flex items-center gap-2"><span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-ink text-paper text-[11px] font-bold">1</span> Plano</li>
+            <span className="h-px w-6 bg-border" />
+            <li className="flex items-center gap-2 text-ink"><span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-ink text-paper text-[11px] font-bold">2</span> Pagamento</li>
+            <span className="h-px w-6 bg-border" />
+            <li className="flex items-center gap-2"><span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted text-ink-soft text-[11px] font-bold">3</span> Negócio</li>
+          </ol>
           <h1 className="editorial-headline text-5xl md:text-6xl text-ink">Checkout</h1>
           <p className="mt-3 text-ink-soft">Pagamento seguro processado dentro do site.</p>
 
