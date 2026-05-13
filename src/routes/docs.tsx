@@ -17,8 +17,11 @@ const sections = [
   { id: "comecando", label: "Começando", icon: Rocket },
   { id: "fluxo", label: "Fluxo de ativação", icon: Workflow },
   { id: "envio", label: "O que enviar", icon: Palette },
+  { id: "pagamento", label: "Pagamento e planos", icon: CreditCard },
   { id: "tecnico", label: "Detalhes técnicos", icon: Wrench },
   { id: "dominio", label: "Domínio e hospedagem", icon: Globe },
+  { id: "manutencao", label: "Manutenção e edições", icon: RefreshCw },
+  { id: "metricas", label: "Métricas e SEO", icon: BarChart3 },
   { id: "faq", label: "FAQ", icon: FileQuestion },
   { id: "suporte", label: "Suporte", icon: MessageCircle },
 ] as const;
