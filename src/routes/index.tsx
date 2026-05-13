@@ -6,6 +6,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ModelGrid } from "@/components/ModelGrid";
 import { VideoHero } from "@/components/VideoHero";
 import { PlanCard } from "@/components/PlanCard";
+import { FAQ } from "@/components/FAQ";
+import { Testimonials } from "@/components/Testimonials";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -180,6 +182,10 @@ function HomePage() {
           ))}
         </div>
       </section>
+
+      <Testimonials />
+
+      <FAQ />
 
       {/* FINAL CTA */}
       <section className="mx-auto max-w-[1400px] px-5 md:px-10 py-16 md:py-24">
