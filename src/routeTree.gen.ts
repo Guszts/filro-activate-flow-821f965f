@@ -14,6 +14,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PaymentSuccessRouteImport } from './routes/payment-success'
 import { Route as PaymentFailedRouteImport } from './routes/payment-failed'
+import { Route as PainelRouteImport } from './routes/painel'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as ConsoleRouteImport } from './routes/console'
@@ -46,6 +47,11 @@ const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
 const PaymentFailedRoute = PaymentFailedRouteImport.update({
   id: '/payment-failed',
   path: '/payment-failed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
   '/login': typeof LoginRoute
+  '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
   '/login': typeof LoginRoute
+  '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
   '/login': typeof LoginRoute
+  '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/console'
     | '/docs'
     | '/login'
+    | '/painel'
     | '/payment-failed'
     | '/payment-success'
     | '/privacidade'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/console'
     | '/docs'
     | '/login'
+    | '/painel'
     | '/payment-failed'
     | '/payment-success'
     | '/privacidade'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/console'
     | '/docs'
     | '/login'
+    | '/painel'
     | '/payment-failed'
     | '/payment-success'
     | '/privacidade'
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   ConsoleRoute: typeof ConsoleRoute
   DocsRoute: typeof DocsRoute
   LoginRoute: typeof LoginRoute
+  PainelRoute: typeof PainelRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
@@ -235,6 +248,13 @@ declare module '@tanstack/react-router' {
       path: '/payment-failed'
       fullPath: '/payment-failed'
       preLoaderRoute: typeof PaymentFailedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/painel': {
+      id: '/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof PainelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -303,6 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConsoleRoute: ConsoleRoute,
   DocsRoute: DocsRoute,
   LoginRoute: LoginRoute,
+  PainelRoute: PainelRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
   PrivacidadeRoute: PrivacidadeRoute,
