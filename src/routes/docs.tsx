@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
-import { Clock, ShieldCheck, Sparkles, Workflow, Globe, Wrench, MessageCircle, FileQuestion, Rocket, Palette } from "lucide-react";
+import { Clock, ShieldCheck, Sparkles, Workflow, Globe, Wrench, MessageCircle, FileQuestion, Rocket, Palette, CreditCard, RefreshCw, BarChart3 } from "lucide-react";
 
 export const Route = createFileRoute("/docs")({
   component: DocsPage,
