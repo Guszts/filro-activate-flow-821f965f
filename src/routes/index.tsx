@@ -7,7 +7,7 @@ import { ModelGrid } from "@/components/ModelGrid";
 import { VideoHero } from "@/components/VideoHero";
 import { PlanCard } from "@/components/PlanCard";
 import { FAQ } from "@/components/FAQ";
-import { Testimonials } from "@/components/Testimonials";
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -182,8 +182,6 @@ function HomePage() {
           ))}
         </div>
       </section>
-
-      <Testimonials />
 
       <FAQ />
 
