@@ -86,9 +86,11 @@ function CheckoutPage() {
                 <div className="h-12 w-full bg-muted rounded animate-pulse" />
               </div>
             ) : (
-              <EmbeddedCheckoutProvider stripe={getStripe()} options={{ clientSecret }}>
-                <EmbeddedCheckout />
-              </EmbeddedCheckoutProvider>
+              <div className="rounded-2xl overflow-hidden bg-paper">
+                <EmbeddedCheckoutProvider stripe={getStripe()} options={{ clientSecret }}>
+                  <EmbeddedCheckout />
+                </EmbeddedCheckoutProvider>
+              </div>
             )}
           </div>
         </section>
