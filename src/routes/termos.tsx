@@ -35,7 +35,7 @@ function TermsPage() {
           <h2>8. Foro</h2>
           <p>Fica eleito o foro de Belo Horizonte/MG para dirimir quaisquer questões.</p>
           <h2>9. Contato</h2>
-          <p>Dúvidas: <a href="mailto:contato@filro.app" className="text-ink underline">contato@filro.app</a>.</p>
+          <p>Dúvidas: <a href="mailto:filro.site@gmail.com" className="text-ink underline">filro.site@gmail.com</a>.</p>
         </article>
       </main>
       <SiteFooter />

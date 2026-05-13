@@ -124,7 +124,7 @@ function DocsPage() {
 
             <Section id="suporte" title="Suporte" icon={MessageCircle}>
               <p>Atendimento humano via WhatsApp em horário comercial (9h-18h, seg-sex):</p>
-              <p><a href="https://wa.me/5511999999999" className="text-ink underline" target="_blank" rel="noreferrer">+55 11 99999-9999</a></p>
+              <p><a href="https://wa.me/5592993561754" className="text-ink underline" target="_blank" rel="noreferrer">+55 92 99356-1754</a></p>
               <p>Para dúvidas legais, veja <Link to="/termos" className="text-ink underline">Termos</Link> e <Link to="/privacidade" className="text-ink underline">Privacidade</Link>.</p>
               <Card><ShieldCheck className="h-5 w-5 text-azure" /><div>SLA: resposta em até 4h úteis. Incidentes críticos em até 1h.</div></Card>
             </Section>

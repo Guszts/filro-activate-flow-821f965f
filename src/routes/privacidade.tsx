@@ -39,7 +39,7 @@ function PrivacyPage() {
             <li>Lovable Cloud / Supabase (banco de dados)</li>
           </ul>
           <h2>4. Seus direitos (LGPD)</h2>
-          <p>Você pode, a qualquer tempo: acessar, corrigir, exportar, anonimizar ou excluir seus dados. Solicite via <a href="mailto:dpo@filro.app" className="text-ink underline">dpo@filro.app</a>; respondemos em até 15 dias.</p>
+          <p>Você pode, a qualquer tempo: acessar, corrigir, exportar, anonimizar ou excluir seus dados. Solicite via <a href="mailto:filro.site@gmail.com" className="text-ink underline">filro.site@gmail.com</a>; respondemos em até 15 dias.</p>
           <h2>5. Retenção</h2>
           <p>Mantemos dados enquanto sua conta está ativa e por 5 anos após o cancelamento (obrigação fiscal). Logs técnicos: 90 dias.</p>
           <h2>6. Segurança</h2>

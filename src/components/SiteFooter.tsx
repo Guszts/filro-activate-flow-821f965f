@@ -37,10 +37,10 @@ export function SiteFooter() {
         </div>
         <div className="text-sm text-ink-soft">
           <div className="font-semibold text-ink mb-4">Contato</div>
-          <a href="https://wa.me/5511999999999" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl bg-lime text-ink font-semibold text-sm hover:scale-105 transition">
+          <a href="https://wa.me/5592993561754" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl bg-lime text-ink font-semibold text-sm hover:scale-105 transition">
             <MessageCircle className="h-4 w-4" /> WhatsApp
           </a>
-          <p className="mt-4 text-xs">contato@filro.app</p>
+          <p className="mt-4 text-xs">filro.site@gmail.com</p>
         </div>
       </div>
       <div className="border-t border-border/60">
