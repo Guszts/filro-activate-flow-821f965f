@@ -1,7 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createStripeClient, getWebhookSecret, type StripeEnv } from "@/lib/stripe.server";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { sendTransactionalEmailServer, getAdminEmails } from "@/lib/email/send.server";
 import type Stripe from "stripe";
+
+const PANEL_URL = "https://filro.app/painel";
+
+function formatBRL(cents: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
+}
+function formatDate(iso: string | null) {
+  if (!iso) return "—";
+  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(new Date(iso));
+}
 
 export const Route = createFileRoute("/api/public/payments/webhook")({
   server: {
