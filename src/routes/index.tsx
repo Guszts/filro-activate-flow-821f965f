@@ -101,12 +101,15 @@ function HomePage() {
               className="absolute -right-4 bottom-16 bg-paper rounded-2xl px-5 py-4 max-w-[200px] border border-border"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
-              <div className="text-xs tracking-wide text-ink-soft">Pronto</div>
-              <div className="font-display font-black text-ink leading-tight mt-1">Em dias,<br />não meses.</div>
+              <div className="text-xs tracking-wide text-ink-soft">Pronto em</div>
+              <div className="font-display font-black text-ink leading-tight mt-1">24 horas,<br />garantido.</div>
             </motion.div>
           </motion.div>
         </div>
       </section>
+
+      {/* VIDEO HERO */}
+      <VideoHero />
 
       {/* MODELS */}
       <section id="modelos" className="scroll-mt-24 mx-auto max-w-[1400px] px-5 md:px-10 py-20 md:py-28">
