@@ -195,41 +195,43 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }) => {
     try {
-    const stripe = createStripeClient(data.environment);
-    const plan = await getPlanForCheckout(data.planSlug);
+      const stripe = createStripeClient(data.environment);
+      const plan = await getPlanForCheckout(data.planSlug);
 
-    let activationPrice: Stripe.Price, monthlyPrice: Stripe.Price;
-    try {
-      ({ activationPrice, monthlyPrice } = await resolveOrCreatePlanPrices(stripe, data.planSlug, plan));
-    } catch (err) {
-      console.error("[checkout] price resolution failed", { planSlug: data.planSlug, err });
-      throw new Error(`Falha ao preparar preços do plano: ${err instanceof Error ? err.message : String(err)}`);
-    }
+      let activationPrice: Stripe.Price | null = null;
+      let monthlyPrice: Stripe.Price | null = null;
+      try {
+        ({ activationPrice, monthlyPrice } = await resolveOrCreatePlanPrices(stripe, data.planSlug, plan));
+      } catch (err) {
+        console.error("[checkout] price resolution failed", { planSlug: data.planSlug, err });
+        throw new Error(`Falha ao preparar preços do plano: ${err instanceof Error ? err.message : String(err)}`);
+      }
+      if (!activationPrice || !monthlyPrice) throw new Error("Preços do plano não encontrados");
 
-    const customerId = (data.customerEmail || data.userId)
-      ? await resolveOrCreateCustomer(stripe, {
-          email: data.customerEmail,
-          userId: data.userId,
-        })
-      : undefined;
+      const customerId = (data.customerEmail || data.userId)
+        ? await resolveOrCreateCustomer(stripe, {
+            email: data.customerEmail,
+            userId: data.userId,
+          })
+        : undefined;
 
-    const session = await stripe.checkout.sessions.create({
-      line_items: [
-        { price: monthlyPrice.id, quantity: 1 },
-        { price: activationPrice.id, quantity: 1 },
-      ],
-      mode: "subscription",
-      ui_mode: "embedded_page",
-      return_url: data.returnUrl,
-      ...(customerId && { customer: customerId }),
-      ...(data.userId && {
-        metadata: { userId: data.userId, planSlug: data.planSlug },
-        subscription_data: { metadata: { userId: data.userId, planSlug: data.planSlug } },
-      }),
-    });
+      const session = await stripe.checkout.sessions.create({
+        line_items: [
+          { price: monthlyPrice.id, quantity: 1 },
+          { price: activationPrice.id, quantity: 1 },
+        ],
+        mode: "subscription",
+        ui_mode: "embedded_page",
+        return_url: data.returnUrl,
+        ...(customerId && { customer: customerId }),
+        ...(data.userId && {
+          metadata: { userId: data.userId, planSlug: data.planSlug },
+          subscription_data: { metadata: { userId: data.userId, planSlug: data.planSlug } },
+        }),
+      });
 
-    if (!session.client_secret) throw new Error("Falha ao criar sessão");
-    return { clientSecret: session.client_secret, error: null };
+      if (!session.client_secret) throw new Error("Falha ao criar sessão");
+      return { clientSecret: session.client_secret, error: null };
     } catch (err) {
       console.error("[checkout] checkout session startup failed", { planSlug: data.planSlug, err });
       return { clientSecret: null, error: getCheckoutErrorMessage(err) };
