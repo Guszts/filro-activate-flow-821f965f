@@ -104,7 +104,9 @@ async function resolveOrCreateProduct(
     throw new Error("resposta inválida do provedor");
   } catch (err) {
     const statusCode = (err as { statusCode?: number }).statusCode;
-    if (statusCode && statusCode !== 404) {
+    if (statusCode === 404) {
+      // Product will be created below.
+    } else {
       console.error("[checkout] product lookup failed", { productId, err });
       throw new Error(`Falha ao consultar produto: ${err instanceof Error ? err.message : String(err)}`);
     }
