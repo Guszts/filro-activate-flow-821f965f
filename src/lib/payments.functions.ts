@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createStripeClient, type StripeEnv } from "@/lib/stripe.server";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type Stripe from "stripe";
 
 interface PlanPriceInfo {
