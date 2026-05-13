@@ -1,5 +1,44 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createStripeClient, type StripeEnv } from "@/lib/stripe.server";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import type Stripe from "stripe";
+
+interface PlanPriceInfo {
+  name: string;
+  activation_price: number;
+  monthly_price: number;
+  description: string | null;
+}
+
+function normalizePlanSlug(planSlug: string) {
+  return planSlug.replace(/^plan_/, "");
+}
+
+function assertStripeList<T>(response: unknown, lookupKey: string): { data: T[] } {
+  const maybe = response as { data?: unknown; message?: unknown; type?: unknown } | null;
+  if (!maybe || !Array.isArray(maybe.data)) {
+    console.error("[checkout] unexpected Stripe list response", { lookupKey, response: maybe });
+    const details = typeof maybe?.message === "string" ? maybe.message : "resposta inválida do provedor";
+    throw new Error(`Falha na integração de pagamentos (${lookupKey}): ${details}`);
+  }
+  return maybe as { data: T[] };
+}
+
+async function getPlanForCheckout(planSlug: string): Promise<PlanPriceInfo> {
+  const { data, error } = await supabaseAdmin
+    .from("plans")
+    .select("name, activation_price, monthly_price, description")
+    .eq("slug", normalizePlanSlug(planSlug))
+    .eq("active", true)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[checkout] plan lookup failed", { planSlug, error });
+    throw new Error("Falha ao consultar plano");
+  }
+  if (!data) throw new Error("Plano não encontrado");
+  return data as PlanPriceInfo;
+}
 
 async function resolveOrCreateCustomer(
   stripe: ReturnType<typeof createStripeClient>,
@@ -35,11 +74,102 @@ async function resolveOrCreateCustomer(
 }
 
 function getPriceLookupKeys(planSlug: string) {
-  const normalizedSlug = planSlug.replace(/^plan_/, "");
+  const normalizedSlug = normalizePlanSlug(planSlug);
   return {
     activationKey: `plan_${normalizedSlug}_activation`,
     monthlyKey: `plan_${normalizedSlug}_monthly`,
   };
+}
+
+async function listPriceByLookupKey(
+  stripe: ReturnType<typeof createStripeClient>,
+  lookupKey: string,
+) {
+  const response = await stripe.prices.list({ lookup_keys: [lookupKey], active: true, limit: 1 });
+  return assertStripeList<Stripe.Price>(response, lookupKey).data[0] ?? null;
+}
+
+async function resolveOrCreateProduct(
+  stripe: ReturnType<typeof createStripeClient>,
+  planSlug: string,
+  plan: PlanPriceInfo,
+) {
+  const normalizedSlug = normalizePlanSlug(planSlug);
+  const productId = `plan_${normalizedSlug}`;
+
+  try {
+    const existing = await stripe.products.retrieve(productId);
+    if ("id" in existing && existing.id && !("deleted" in existing && existing.deleted)) return existing.id;
+    console.error("[checkout] unexpected product response", { productId, response: existing });
+    throw new Error("resposta inválida do provedor");
+  } catch (err) {
+    const statusCode = (err as { statusCode?: number }).statusCode;
+    if (statusCode === 404) {
+      // Product will be created below.
+    } else {
+      console.error("[checkout] product lookup failed", { productId, err });
+      throw new Error(`Falha ao consultar produto: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  const created = await stripe.products.create({
+    id: productId,
+    name: plan.name,
+    description: plan.description || `Plano ${plan.name}`,
+    tax_code: "txcd_10103001",
+    metadata: { lovable_external_id: productId, planSlug: normalizedSlug },
+  });
+
+  if (!created.id) throw new Error("Falha ao criar produto do plano");
+  return created.id;
+}
+
+async function createPlanPrice(
+  stripe: ReturnType<typeof createStripeClient>,
+  productId: string,
+  lookupKey: string,
+  amount: number,
+  recurring?: Stripe.PriceCreateParams.Recurring,
+) {
+  const created = await stripe.prices.create({
+    currency: "brl",
+    unit_amount: amount,
+    product: productId,
+    lookup_key: lookupKey,
+    transfer_lookup_key: true,
+    ...(recurring && { recurring }),
+    metadata: { lovable_external_id: lookupKey },
+  });
+
+  if (!created.id) throw new Error(`Falha ao criar preço (${lookupKey})`);
+  return created;
+}
+
+async function resolveOrCreatePlanPrices(
+  stripe: ReturnType<typeof createStripeClient>,
+  planSlug: string,
+  plan: PlanPriceInfo,
+) {
+  const { activationKey, monthlyKey } = getPriceLookupKeys(planSlug);
+  let [activationPrice, monthlyPrice] = await Promise.all([
+    listPriceByLookupKey(stripe, activationKey),
+    listPriceByLookupKey(stripe, monthlyKey),
+  ]);
+
+  if (!activationPrice || !monthlyPrice) {
+    console.warn("[checkout] missing plan price; creating fallback prices", {
+      planSlug,
+      activationKey,
+      monthlyKey,
+      hasActivation: Boolean(activationPrice),
+      hasMonthly: Boolean(monthlyPrice),
+    });
+    const productId = await resolveOrCreateProduct(stripe, planSlug, plan);
+    if (!activationPrice) activationPrice = await createPlanPrice(stripe, productId, activationKey, plan.activation_price);
+    if (!monthlyPrice) monthlyPrice = await createPlanPrice(stripe, productId, monthlyKey, plan.monthly_price, { interval: "month" });
+  }
+
+  return { activationPrice, monthlyPrice };
 }
 
 export const createPlanCheckoutSession = createServerFn({ method: "POST" })
@@ -55,22 +185,14 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }) => {
     const stripe = createStripeClient(data.environment);
+    const plan = await getPlanForCheckout(data.planSlug);
 
-    const { activationKey, monthlyKey } = getPriceLookupKeys(data.planSlug);
-
-    let actPrices, monPrices;
+    let activationPrice, monthlyPrice;
     try {
-      [actPrices, monPrices] = await Promise.all([
-        stripe.prices.list({ lookup_keys: [activationKey], limit: 1 }),
-        stripe.prices.list({ lookup_keys: [monthlyKey], limit: 1 }),
-      ]);
+      ({ activationPrice, monthlyPrice } = await resolveOrCreatePlanPrices(stripe, data.planSlug, plan));
     } catch (err) {
-      console.error("[checkout] prices.list failed", { activationKey, monthlyKey, err });
-      throw new Error(`Falha ao consultar preços: ${err instanceof Error ? err.message : String(err)}`);
-    }
-    if (!actPrices?.data?.length || !monPrices?.data?.length) {
-      console.error("[checkout] price lookup empty", { activationKey, monthlyKey, act: actPrices?.data?.length, mon: monPrices?.data?.length });
-      throw new Error(`Plano não encontrado (lookup_keys: ${activationKey}, ${monthlyKey})`);
+      console.error("[checkout] price resolution failed", { planSlug: data.planSlug, err });
+      throw new Error(`Falha ao preparar preços do plano: ${err instanceof Error ? err.message : String(err)}`);
     }
 
     const customerId = (data.customerEmail || data.userId)
@@ -82,8 +204,8 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
-        { price: monPrices.data[0].id, quantity: 1 },
-        { price: actPrices.data[0].id, quantity: 1 },
+        { price: monthlyPrice.id, quantity: 1 },
+        { price: activationPrice.id, quantity: 1 },
       ],
       mode: "subscription",
       ui_mode: "embedded_page",
