@@ -66,16 +66,18 @@ function PainelPage() {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/painel" } }); return; }
     (async () => {
-      const [projRes, payRes, planRes] = await Promise.all([
+      const [projRes, payRes, planRes, subRes] = await Promise.all([
         supabase.from("projects").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("payments").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
         supabase.from("plans").select("id,name,activation_price,monthly_price"),
+        supabase.from("subscriptions").select("id").eq("user_id", user.id).neq("status", "canceled").limit(1),
       ]);
       setProject(projRes.data as ProjectRow | null);
       setPayments((payRes.data ?? []) as PaymentRow[]);
       const map: Record<string, PlanRow> = {};
       (planRes.data ?? []).forEach((p) => { map[p.id] = p as PlanRow; });
       setPlans(map);
+      setHasSubscription((subRes.data ?? []).length > 0);
       setLoadingData(false);
     })();
   }, [loading, user, navigate]);
