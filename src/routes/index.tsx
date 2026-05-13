@@ -183,6 +183,10 @@ function HomePage() {
         </div>
       </section>
 
+      <Testimonials />
+
+      <FAQ />
+
       {/* FINAL CTA */}
       <section className="mx-auto max-w-[1400px] px-5 md:px-10 py-16 md:py-24">
         <motion.div
