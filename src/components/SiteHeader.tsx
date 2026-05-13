@@ -87,6 +87,7 @@ export function SiteHeader() {
                         <div className="text-xs text-ink-soft">Logado como</div>
                         <div className="text-sm font-medium text-ink truncate">{user?.email}</div>
                       </div>
+                      <Link to="/painel" className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-sm text-ink"><LayoutDashboard className="h-4 w-4" /> Painel</Link>
                       <Link to="/business-info" className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-sm text-ink"><User className="h-4 w-4" /> Meu negócio</Link>
                       {isAdmin && <Link to="/console" className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-sm text-ink"><LayoutDashboard className="h-4 w-4" /> Console</Link>}
                       <button onClick={async () => { await signOut(); navigate({ to: "/" }); }} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-sm text-ink text-left">
