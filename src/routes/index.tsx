@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ModelGrid } from "@/components/ModelGrid";
+import { VideoHero } from "@/components/VideoHero";
 import { PlanCard } from "@/components/PlanCard";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
