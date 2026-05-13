@@ -130,6 +130,7 @@ function OverviewTab() {
 }
 
 function UsersTab() {
+  const navigate = useNavigate();
   const { data } = useQuery({
     queryKey: ["console-users"],
     queryFn: async () => {
