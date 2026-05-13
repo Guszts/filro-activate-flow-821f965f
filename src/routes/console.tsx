@@ -130,6 +130,7 @@ function OverviewTab() {
 }
 
 function UsersTab() {
+  const navigate = useNavigate();
   const { data } = useQuery({
     queryKey: ["console-users"],
     queryFn: async () => {
@@ -165,7 +166,7 @@ function UsersTab() {
                 const pay = data?.payments.find((x) => x.user_id === p.user_id && x.status === "paid");
                 const planName = pay ? data?.plans.find((pl) => pl.id === pay.plan_id)?.name : "—";
                 return (
-                  <tr key={p.id} className="border-t border-border hover:bg-muted/50">
+                  <tr key={p.id} className="border-t border-border hover:bg-muted/50 cursor-pointer" onClick={() => navigate({ to: "/lead/$id", params: { id: p.user_id } })}>
                     <td className="px-4 py-3 font-medium">{p.name || "—"}</td>
                     <td className="px-4 py-3">{p.email}</td>
                     <td className="px-4 py-3">{p.business_name || "—"}</td>
