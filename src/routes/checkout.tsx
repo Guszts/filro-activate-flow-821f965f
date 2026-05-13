@@ -43,7 +43,7 @@ function CheckoutPage() {
         if (!planRow) throw new Error("Plano não encontrado");
         setPlan(planRow as PlanInfo);
 
-        const { clientSecret } = await createPlanCheckoutSession({
+        const paymentSession = await createPlanCheckoutSession({
           data: {
             planSlug,
             customerEmail: user.email ?? undefined,
@@ -52,7 +52,8 @@ function CheckoutPage() {
             environment: getStripeEnvironment(),
           },
         });
-        setClientSecret(clientSecret);
+        if (paymentSession.error) throw new Error(paymentSession.error);
+        setClientSecret(paymentSession.clientSecret);
       } catch (e) {
         const msg = e instanceof Error ? e.message : "Falha ao iniciar pagamento";
         setError(msg);
@@ -70,8 +71,15 @@ function CheckoutPage() {
           <p className="mt-3 text-ink-soft">Pagamento seguro processado dentro do site.</p>
 
           <div className="mt-8 card-elevated p-3 md:p-5">
-            {error && <div className="text-destructive text-sm mb-4 px-4">{error}</div>}
-            {!clientSecret ? (
+            {error ? (
+              <div className="p-5 md:p-7">
+                <div className="text-destructive text-sm font-medium">{error}</div>
+                <p className="mt-3 text-sm text-ink-soft">
+                  Tente novamente em alguns minutos ou volte para escolher o plano de novo.
+                </p>
+                <Link to="/" className="mt-5 inline-flex text-sm text-ink-soft hover:text-ink">Voltar aos planos</Link>
+              </div>
+            ) : !clientSecret ? (
               <div className="space-y-3 p-4">
                 <div className="h-4 w-2/3 bg-muted rounded animate-pulse" />
                 <div className="h-12 w-full bg-muted rounded animate-pulse" />
