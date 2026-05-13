@@ -104,7 +104,7 @@ function BusinessInfoPage() {
       business_name: info.name,
       business_segment: info.segment,
       selected_model: info.model_choice,
-      project_status: "in_progress",
+      project_status: "in_production",
     }).eq("id", project.id);
     setSaving(false);
     if (error) return toast.error(error.message);

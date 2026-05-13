@@ -9,18 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosRouteImport } from './routes/termos'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PaymentSuccessRouteImport } from './routes/payment-success'
 import { Route as PaymentFailedRouteImport } from './routes/payment-failed'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as DocsRouteImport } from './routes/docs'
 import { Route as ConsoleRouteImport } from './routes/console'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as BusinessInfoRouteImport } from './routes/business-info'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
@@ -38,6 +53,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsoleRoute = ConsoleRouteImport.update({
   id: '/console',
   path: '/console',
@@ -48,9 +68,19 @@ const CheckoutRoute = CheckoutRouteImport.update({
   path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BusinessInfoRoute = BusinessInfoRouteImport.update({
+  id: '/business-info',
+  path: '/business-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeadIdRoute = LeadIdRouteImport.update({
+  id: '/lead/$id',
+  path: '/lead/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicPaymentsWebhookRoute =
@@ -62,86 +92,135 @@ const ApiPublicPaymentsWebhookRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/console': typeof ConsoleRoute
+  '/docs': typeof DocsRoute
   '/login': typeof LoginRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
+  '/termos': typeof TermosRoute
+  '/lead/$id': typeof LeadIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/console': typeof ConsoleRoute
+  '/docs': typeof DocsRoute
   '/login': typeof LoginRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
+  '/termos': typeof TermosRoute
+  '/lead/$id': typeof LeadIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/console': typeof ConsoleRoute
+  '/docs': typeof DocsRoute
   '/login': typeof LoginRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
+  '/termos': typeof TermosRoute
+  '/lead/$id': typeof LeadIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/business-info'
     | '/checkout'
     | '/console'
+    | '/docs'
     | '/login'
     | '/payment-failed'
     | '/payment-success'
+    | '/privacidade'
     | '/register'
+    | '/termos'
+    | '/lead/$id'
     | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/business-info'
     | '/checkout'
     | '/console'
+    | '/docs'
     | '/login'
     | '/payment-failed'
     | '/payment-success'
+    | '/privacidade'
     | '/register'
+    | '/termos'
+    | '/lead/$id'
     | '/api/public/payments/webhook'
   id:
     | '__root__'
     | '/'
+    | '/business-info'
     | '/checkout'
     | '/console'
+    | '/docs'
     | '/login'
     | '/payment-failed'
     | '/payment-success'
+    | '/privacidade'
     | '/register'
+    | '/termos'
+    | '/lead/$id'
     | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BusinessInfoRoute: typeof BusinessInfoRoute
   CheckoutRoute: typeof CheckoutRoute
   ConsoleRoute: typeof ConsoleRoute
+  DocsRoute: typeof DocsRoute
   LoginRoute: typeof LoginRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   RegisterRoute: typeof RegisterRoute
+  TermosRoute: typeof TermosRoute
+  LeadIdRoute: typeof LeadIdRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/payment-success': {
@@ -165,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/console': {
       id: '/console'
       path: '/console'
@@ -179,11 +265,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/business-info': {
+      id: '/business-info'
+      path: '/business-info'
+      fullPath: '/business-info'
+      preLoaderRoute: typeof BusinessInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lead/$id': {
+      id: '/lead/$id'
+      path: '/lead/$id'
+      fullPath: '/lead/$id'
+      preLoaderRoute: typeof LeadIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/payments/webhook': {
@@ -198,24 +298,19 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BusinessInfoRoute: BusinessInfoRoute,
   CheckoutRoute: CheckoutRoute,
   ConsoleRoute: ConsoleRoute,
+  DocsRoute: DocsRoute,
   LoginRoute: LoginRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   RegisterRoute: RegisterRoute,
+  TermosRoute: TermosRoute,
+  LeadIdRoute: LeadIdRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
