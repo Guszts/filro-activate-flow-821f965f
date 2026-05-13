@@ -42,6 +42,25 @@ function PainelPage() {
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [plans, setPlans] = useState<Record<string, PlanRow>>({});
   const [loadingData, setLoadingData] = useState(true);
+  const [hasSubscription, setHasSubscription] = useState(false);
+  const [openingPortal, setOpeningPortal] = useState(false);
+  const openPortal = useServerFn(createPortalSession);
+
+  async function handleManageSubscription() {
+    setOpeningPortal(true);
+    try {
+      const res = await openPortal({
+        data: { returnUrl: window.location.href, environment: getStripeEnvironment() },
+      });
+      if (res.url) window.open(res.url, "_blank");
+      else toast.error(res.error || "Não foi possível abrir o portal");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao abrir portal");
+    } finally {
+      setOpeningPortal(false);
+    }
+  }
+
 
   useEffect(() => {
     if (loading) return;
