@@ -134,6 +134,7 @@ export function SiteHeader() {
               ))}
               {isAuthenticated ? (
                 <>
+                  <Link to="/painel" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Painel</Link>
                   <Link to="/business-info" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><User className="h-4 w-4" /> Meu negócio</Link>
                   {isAdmin && <Link to="/console" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Console</Link>}
                   <button onClick={async () => { await signOut(); setOpen(false); navigate({ to: "/" }); }} className="text-left text-ink py-3 inline-flex items-center gap-2"><LogOut className="h-4 w-4" /> Sair</button>
