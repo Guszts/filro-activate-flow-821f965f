@@ -87,7 +87,15 @@ function CheckoutPage() {
               </div>
             ) : (
               <div className="rounded-2xl overflow-hidden bg-paper">
-                <EmbeddedCheckoutProvider stripe={getStripe()} options={{ clientSecret }}>
+                <EmbeddedCheckoutProvider
+                  stripe={getStripe()}
+                  options={{
+                    clientSecret,
+                    onComplete: () => {
+                      // Stripe redirects via return_url; nothing else to do.
+                    },
+                  }}
+                >
                   <EmbeddedCheckout />
                 </EmbeddedCheckoutProvider>
               </div>
