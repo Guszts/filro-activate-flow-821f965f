@@ -1,12 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/format";
-import { ArrowRight, CheckCircle2, Clock, FileText, MessageCircle, Pencil, Sparkles } from "lucide-react";
+import { getStripeEnvironment } from "@/lib/stripe";
+import { createPortalSession } from "@/lib/payments.functions";
+import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, MessageCircle, Pencil, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/painel")({ component: PainelPage });
 
