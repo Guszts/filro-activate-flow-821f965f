@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
@@ -31,6 +32,11 @@ import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/em
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
   path: '/termos',
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
   '/termos': typeof TermosRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -177,6 +184,7 @@ export interface FileRoutesByTo {
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
   '/termos': typeof TermosRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -201,6 +209,7 @@ export interface FileRoutesById {
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
   '/termos': typeof TermosRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/register'
     | '/termos'
+    | '/unsubscribe'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/lovable/email/suppression'
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/register'
     | '/termos'
+    | '/unsubscribe'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/lovable/email/suppression'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/register'
     | '/termos'
+    | '/unsubscribe'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/lovable/email/suppression'
@@ -296,6 +308,7 @@ export interface RootRouteChildren {
   PrivacidadeRoute: typeof PrivacidadeRoute
   RegisterRoute: typeof RegisterRoute
   TermosRoute: typeof TermosRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LeadIdRoute: typeof LeadIdRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
@@ -309,6 +322,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/termos': {
       id: '/termos'
       path: '/termos'
@@ -472,6 +492,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacidadeRoute: PrivacidadeRoute,
   RegisterRoute: RegisterRoute,
   TermosRoute: TermosRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LeadIdRoute: LeadIdRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
