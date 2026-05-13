@@ -1,12 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/format";
-import { ArrowRight, CheckCircle2, Clock, FileText, MessageCircle, Pencil, Sparkles } from "lucide-react";
+import { getStripeEnvironment } from "@/lib/stripe";
+import { createPortalSession } from "@/lib/payments.functions";
+import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, MessageCircle, Pencil, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/painel")({ component: PainelPage });
 
@@ -38,21 +42,42 @@ function PainelPage() {
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [plans, setPlans] = useState<Record<string, PlanRow>>({});
   const [loadingData, setLoadingData] = useState(true);
+  const [hasSubscription, setHasSubscription] = useState(false);
+  const [openingPortal, setOpeningPortal] = useState(false);
+  const openPortal = useServerFn(createPortalSession);
+
+  async function handleManageSubscription() {
+    setOpeningPortal(true);
+    try {
+      const res = await openPortal({
+        data: { returnUrl: window.location.href, environment: getStripeEnvironment() },
+      });
+      if (res.url) window.open(res.url, "_blank");
+      else toast.error(res.error || "Não foi possível abrir o portal");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao abrir portal");
+    } finally {
+      setOpeningPortal(false);
+    }
+  }
+
 
   useEffect(() => {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/painel" } }); return; }
     (async () => {
-      const [projRes, payRes, planRes] = await Promise.all([
+      const [projRes, payRes, planRes, subRes] = await Promise.all([
         supabase.from("projects").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("payments").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
         supabase.from("plans").select("id,name,activation_price,monthly_price"),
+        supabase.from("subscriptions").select("id").eq("user_id", user.id).neq("status", "canceled").limit(1),
       ]);
       setProject(projRes.data as ProjectRow | null);
       setPayments((payRes.data ?? []) as PaymentRow[]);
       const map: Record<string, PlanRow> = {};
       (planRes.data ?? []).forEach((p) => { map[p.id] = p as PlanRow; });
       setPlans(map);
+      setHasSubscription((subRes.data ?? []).length > 0);
       setLoadingData(false);
     })();
   }, [loading, user, navigate]);
@@ -134,6 +159,16 @@ function PainelPage() {
             >
               <div className="text-xs tracking-wide text-ink-soft">Atalhos</div>
               <div className="mt-4 space-y-2">
+                {hasSubscription && (
+                  <button
+                    onClick={handleManageSubscription}
+                    disabled={openingPortal}
+                    className="w-full flex items-center justify-between p-4 rounded-2xl bg-ink text-paper hover:bg-ink/90 transition-colors disabled:opacity-60"
+                  >
+                    <span className="inline-flex items-center gap-3 text-sm font-medium"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Gerenciar assinatura"}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                )}
                 <Link to="/business-info" className="flex items-center justify-between p-4 rounded-2xl bg-muted hover:bg-stone transition-colors">
                   <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><Pencil className="h-4 w-4" /> Meu negócio</span>
                   <ArrowRight className="h-4 w-4 text-ink-soft" />

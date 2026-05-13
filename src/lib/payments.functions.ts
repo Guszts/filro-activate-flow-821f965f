@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createStripeClient, type StripeEnv } from "@/lib/stripe.server";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type Stripe from "stripe";
 
 interface PlanPriceInfo {
@@ -236,5 +237,37 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
     } catch (err) {
       console.error("[checkout] checkout session startup failed", { planSlug: data.planSlug, err });
       return { clientSecret: null, error: getCheckoutErrorMessage(err) };
+    }
+  });
+
+export const createPortalSession = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { returnUrl: string; environment: StripeEnv }) => data)
+  .handler(async ({ data, context }) => {
+    const { userId } = context;
+
+    const { data: sub } = await supabaseAdmin
+      .from("subscriptions")
+      .select("stripe_customer_id")
+      .eq("user_id", userId)
+      .eq("environment", data.environment)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!sub?.stripe_customer_id) {
+      return { url: null, error: "Nenhuma assinatura encontrada para gerenciar." };
+    }
+
+    try {
+      const stripe = createStripeClient(data.environment);
+      const portal = await stripe.billingPortal.sessions.create({
+        customer: sub.stripe_customer_id,
+        return_url: data.returnUrl,
+      });
+      return { url: portal.url, error: null };
+    } catch (err) {
+      console.error("[portal] failed", err);
+      return { url: null, error: err instanceof Error ? err.message : "Falha ao abrir portal" };
     }
   });
