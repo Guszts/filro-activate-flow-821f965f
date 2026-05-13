@@ -68,6 +68,9 @@ function RegisterPage() {
           <button disabled={loading} className="sm:col-span-2 w-full h-13 py-4 rounded-full bg-ink text-paper font-semibold tracking-wide disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-elegant">
             {loading ? "Criando..." : "Criar conta"}
           </button>
+          <p className="sm:col-span-2 text-xs text-ink-soft text-center leading-relaxed">
+            Ao criar conta, você concorda com nossos <Link to="/termos" className="text-ink underline">Termos de Uso</Link> e a <Link to="/privacidade" className="text-ink underline">Política de Privacidade</Link>.
+          </p>
         </form>
         <p className="mt-6 text-center text-sm text-ink-soft">
           Já tem conta? <Link to="/login" search={{ redirect }} className="text-ink font-semibold">Entrar</Link>
