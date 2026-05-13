@@ -24,6 +24,14 @@ function assertStripeList<T>(response: unknown, lookupKey: string): { data: T[] 
   return maybe as { data: T[] };
 }
 
+function getCheckoutErrorMessage(err: unknown) {
+  const raw = err instanceof Error ? err.message : String(err);
+  if (/Credential not found|STRIPE_.*not configured|LOVABLE_API_KEY is not configured/i.test(raw)) {
+    return "Pagamentos temporariamente indisponíveis. A conexão de pagamentos precisa ser reativada antes de concluir o checkout.";
+  }
+  return raw || "Falha ao iniciar pagamento";
+}
+
 async function getPlanForCheckout(planSlug: string): Promise<PlanPriceInfo> {
   const { data, error } = await supabaseAdmin
     .from("plans")
@@ -169,6 +177,8 @@ async function resolveOrCreatePlanPrices(
     if (!monthlyPrice) monthlyPrice = await createPlanPrice(stripe, productId, monthlyKey, plan.monthly_price, { interval: "month" });
   }
 
+  if (!activationPrice || !monthlyPrice) throw new Error("Preços do plano não encontrados");
+
   return { activationPrice, monthlyPrice };
 }
 
@@ -184,10 +194,11 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
     return data;
   })
   .handler(async ({ data }) => {
+    try {
     const stripe = createStripeClient(data.environment);
     const plan = await getPlanForCheckout(data.planSlug);
 
-    let activationPrice, monthlyPrice;
+    let activationPrice: Stripe.Price, monthlyPrice: Stripe.Price;
     try {
       ({ activationPrice, monthlyPrice } = await resolveOrCreatePlanPrices(stripe, data.planSlug, plan));
     } catch (err) {
@@ -218,5 +229,9 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
     });
 
     if (!session.client_secret) throw new Error("Falha ao criar sessão");
-    return { clientSecret: session.client_secret };
+    return { clientSecret: session.client_secret, error: null };
+    } catch (err) {
+      console.error("[checkout] checkout session startup failed", { planSlug: data.planSlug, err });
+      return { clientSecret: null, error: getCheckoutErrorMessage(err) };
+    }
   });
