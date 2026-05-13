@@ -54,7 +54,7 @@ async function getPlanBySlug(slug: string | null | undefined) {
 }
 
 async function logEvent(eventType: string, userId: string | null, data: Record<string, unknown>) {
-  await supabaseAdmin.from("events").insert({ event_type: eventType, user_id: userId, event_data: data });
+  await supabaseAdmin.from("events").insert({ event_type: eventType, user_id: userId, event_data: data as never });
 }
 
 async function upsertSubscription(sub: Stripe.Subscription, env: StripeEnv) {
