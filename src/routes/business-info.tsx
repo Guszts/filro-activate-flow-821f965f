@@ -118,7 +118,7 @@ function BusinessInfoPage() {
     const ext = file.name.split(".").pop() ?? "bin";
     const path = `${user.id}/${prefix}-${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true });
-    if (error) { toast.error("File upload failed: " + error.message); return null; }
+    if (error) { toast.error("Falha no upload do arquivo: " + error.message); return null; }
     const { data } = supabase.storage.from("business-assets").getPublicUrl(path);
     return data.publicUrl;
   };
