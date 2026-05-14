@@ -272,31 +272,31 @@ function BusinessInfoPage() {
                       <input type="file" accept="image/*" onChange={(e) => handleProductImg(idx, e)} className="hidden" />
                     </label>
                     <div className="space-y-2">
-                      <input value={pr.name} onChange={(e) => updProduct(idx, "name", e.target.value)} className={inputCls} placeholder="Product name" />
-                      <input value={pr.price} onChange={(e) => updProduct(idx, "price", e.target.value)} className={inputCls} placeholder="Price" />
-                      <textarea value={pr.description} onChange={(e) => updProduct(idx, "description", e.target.value)} rows={2} className={inputCls + " py-3 h-auto"} placeholder="Short description" />
+                      <input value={pr.name} onChange={(e) => updProduct(idx, "name", e.target.value)} className={inputCls} placeholder="Nome do produto" />
+                      <input value={pr.price} onChange={(e) => updProduct(idx, "price", e.target.value)} className={inputCls} placeholder="Preço" />
+                      <textarea value={pr.description} onChange={(e) => updProduct(idx, "description", e.target.value)} rows={2} className={inputCls + " py-3 h-auto"} placeholder="Descrição curta" />
                     </div>
                     <button onClick={() => removeProduct(idx)} className="h-10 w-10 grid place-items-center rounded-xl text-flame hover:bg-flame/10"><Trash2 className="h-4 w-4" /></button>
                   </div>
                 ))}
                 <button onClick={addProduct} className="w-full h-14 rounded-2xl border-2 border-dashed border-border text-ink-soft hover:border-ink hover:text-ink inline-flex items-center justify-center gap-2 transition-colors">
-                  <Plus className="h-5 w-5" /> Add product / service
+                  <Plus className="h-5 w-5" /> Adicionar produto / serviço
                 </button>
               </div>
             )}
 
             {section === "modelo" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
-                <Field label="Promotions & offers"><textarea value={info.promotions} onChange={(e) => upd("promotions", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Coupons, discounts, combos..." /></Field>
+                <Field label="Promoções e ofertas"><textarea value={info.promotions} onChange={(e) => upd("promotions", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Cupons, descontos, combos..." /></Field>
                 <div className="border-t border-border pt-5">
-                  <div className="font-semibold text-ink mb-3">Reference template</div>
-                  <Field label="Describe how you want it"><textarea value={info.model_notes} onChange={(e) => upd("model_notes", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Style, reference sites, vibe..." /></Field>
-                  <Field label="Inspiration link"><input value={info.model_link} onChange={(e) => upd("model_link", e.target.value)} className={inputCls} placeholder="https://..." /></Field>
-                  <Field label="File (PDF, image, brief)">
+                  <div className="font-semibold text-ink mb-3">Modelo de referência</div>
+                  <Field label="Descreva como você quer"><textarea value={info.model_notes} onChange={(e) => upd("model_notes", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Estilo, sites de referência, vibe..." /></Field>
+                  <Field label="Link de inspiração"><input value={info.model_link} onChange={(e) => upd("model_link", e.target.value)} className={inputCls} placeholder="https://..." /></Field>
+                  <Field label="Arquivo (PDF, imagem, briefing)">
                     <div className="flex items-center gap-3">
-                      {info.model_file_url && <a href={info.model_file_url} target="_blank" rel="noreferrer" className="text-sm text-ink underline">View file</a>}
+                      {info.model_file_url && <a href={info.model_file_url} target="_blank" rel="noreferrer" className="text-sm text-ink underline">Ver arquivo</a>}
                       <label className="inline-flex items-center gap-2 h-12 px-4 rounded-xl border border-border bg-paper cursor-pointer hover:bg-muted text-sm">
-                        <Upload className="h-4 w-4" /> {info.model_file_url ? "Change file" : "Upload file"}
+                        <Upload className="h-4 w-4" /> {info.model_file_url ? "Trocar arquivo" : "Enviar arquivo"}
                         <input type="file" onChange={handleModelFile} className="hidden" />
                       </label>
                     </div>
@@ -312,7 +312,7 @@ function BusinessInfoPage() {
                 ))}
               </div>
               <button onClick={submit} disabled={saving} className="h-13 px-8 py-3 rounded-full bg-ink text-paper font-semibold hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50">
-                {saving ? "Saving..." : project.business_info_submitted ? "Update information" : "Submit for activation"}
+                {saving ? "Salvando..." : project.business_info_submitted ? "Atualizar informações" : "Enviar para ativação"}
               </button>
             </div>
           </div>
