@@ -31,7 +31,11 @@ function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [openingPortal, setOpeningPortal] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [cancelling, setCancelling] = useState(false);
   const openPortal = useServerFn(createPortalSession);
+  const callCancel = useServerFn(cancelSubscription);
 
   useEffect(() => {
     if (loading) return;
