@@ -60,9 +60,9 @@ function SettingsPage() {
     try {
       const res = await openPortal({ data: { returnUrl: window.location.href, environment: getStripeEnvironment() } });
       if (res.url) window.open(res.url, "_blank");
-      else toast.error(res.error || "Could not open billing portal");
+      else toast.error(res.error || "Não foi possível abrir o portal de cobrança");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Error opening portal");
+      toast.error(err instanceof Error ? err.message : "Erro ao abrir o portal");
     } finally { setOpeningPortal(false); }
   };
 
