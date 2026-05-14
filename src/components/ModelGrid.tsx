@@ -135,7 +135,7 @@ export function ModelGrid() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.65, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{ y: -8, transition: { duration: 0.35, ease: "easeOut" } }}
-            className="group rounded-3xl bg-paper border border-border overflow-hidden flex flex-col"
+            className="group card-personality rounded-3xl bg-paper border border-border overflow-hidden flex flex-col"
             style={{ boxShadow: "var(--shadow-card)" }}
           >
             <div className="relative h-56 w-full overflow-hidden">
