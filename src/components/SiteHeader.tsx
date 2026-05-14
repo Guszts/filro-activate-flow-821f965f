@@ -77,12 +77,12 @@ export function SiteHeader() {
               </AnimatePresence>
             </div>
           ) : (
-            <Link to="/login" className="hidden md:inline-flex items-center h-11 px-4 text-sm font-medium text-ink-soft hover:text-ink transition-colors">Sign in</Link>
+            <Link to="/login" className="hidden md:inline-flex items-center h-11 px-4 text-sm font-medium text-ink-soft hover:text-ink transition-colors">Entrar</Link>
           )}
 
           <a href={sectionHref("ativacao")}
             className="hidden md:inline-flex items-center justify-center h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.03] active:scale-[0.97] transition-transform shadow-elegant">
-            Activate now
+            Ativar agora
           </a>
 
           <button
@@ -125,11 +125,11 @@ export function SiteHeader() {
                   )}
                 </>
               ) : (
-                <Link to="/login" onClick={() => setOpen(false)} className="text-ink py-3">Sign in</Link>
+                <Link to="/login" onClick={() => setOpen(false)} className="text-ink py-3">Entrar</Link>
               )}
               <a href={sectionHref("ativacao")} onClick={() => setOpen(false)}
                 className="mt-3 inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide w-full">
-                Activate now
+                Ativar agora
               </a>
               <a href="https://wa.me/5592993561754" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center justify-center gap-2 h-12 px-6 rounded-2xl bg-lime text-ink text-sm font-semibold tracking-wide w-full">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
