@@ -175,18 +175,18 @@ function BusinessInfoPage() {
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
       <main className="mx-auto max-w-[1200px] w-full px-5 md:px-10 py-10 md:py-16">
-        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Home</Link>
+        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mt-6 flex items-center gap-4">
-          <h1 className="editorial-headline text-4xl md:text-6xl text-ink">Business information</h1>
+          <h1 className="editorial-headline text-4xl md:text-6xl text-ink">Informações do negócio</h1>
           {project.business_info_submitted && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-lime text-ink text-xs font-semibold">
-              <Check className="h-3.5 w-3.5" /> Submitted
+              <Check className="h-3.5 w-3.5" /> Enviado
             </span>
           )}
         </motion.div>
-        <p className="mt-3 text-ink-soft max-w-2xl">The more details you give, the better the result. Everything is editable later.</p>
+        <p className="mt-3 text-ink-soft max-w-2xl">Quanto mais detalhes você fornecer, melhor o resultado. Tudo é editável depois.</p>
         <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-flame/10 text-flame text-xs font-semibold">
-          <Clock className="h-3.5 w-3.5" /> Delivery within 24h after confirmation
+          <Clock className="h-3.5 w-3.5" /> Entrega em até 24h após confirmação
         </div>
 
         <div className="mt-10 grid lg:grid-cols-[240px_1fr] gap-8">
