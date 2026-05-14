@@ -14,7 +14,7 @@ export const Route = createFileRoute("/console")({
   ]}),
 });
 
-type Tab = "overview" | "users" | "payments" | "subscriptions" | "plans" | "events" | "settings";
+type Tab = "overview" | "users" | "payments" | "subscriptions" | "cancellations" | "plans" | "events" | "settings";
 
 function useRealtimeRefetch(tables: string[], queryKeys: string[][]) {
   const qc = useQueryClient();
