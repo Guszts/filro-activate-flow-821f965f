@@ -6,11 +6,11 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { getStripeEnvironment } from "@/lib/stripe";
-import { createPortalSession } from "@/lib/payments.functions";
+import { createPortalSession, cancelSubscription } from "@/lib/payments.functions";
 import { PhoneInput } from "@/components/PhoneInput";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
-import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon, XCircle } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
