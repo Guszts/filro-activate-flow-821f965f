@@ -24,7 +24,7 @@ export const createEssencialFreePromo = createServerFn({ method: "POST" })
 
     // Create promotion code
     const promo = await stripe.promotionCodes.create({
-      coupon: coupon.id,
+      promotion: { type: "coupon", coupon: coupon.id },
       code,
       max_redemptions: 50,
       metadata: { plan: "essencial" },
