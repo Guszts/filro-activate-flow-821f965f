@@ -8,7 +8,13 @@ import { ArrowLeft, MessageCircle, Mail, ExternalLink, Copy } from "lucide-react
 import { toast } from "sonner";
 import { formatBRL, formatDateTime } from "@/lib/format";
 
-export const Route = createFileRoute("/lead/$id")({ component: LeadPage });
+export const Route = createFileRoute("/lead/$id")({
+  component: LeadPage,
+  head: () => ({ meta: [
+    { title: "Lead · Filro" },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
+});
 
 interface BusinessInfo {
   name?: string; description?: string; segment?: string; slogan?: string;
