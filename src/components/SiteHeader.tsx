@@ -17,7 +17,9 @@ const authLinks = [
 ] as const;
 
 export function SiteHeader() {
-  const { isAuthenticated, isAdmin, signOut, user } = useAuth();
+  const { isAuthenticated, isAdmin, hasPaid, signOut, user } = useAuth();
+  const showPaidLinks = hasPaid || isAdmin;
+  const visibleAuthLinks = showPaidLinks ? authLinks : [];
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
