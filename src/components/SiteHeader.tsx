@@ -1,36 +1,39 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { useState } from "react";
-import { Menu, X, ChevronDown, MessageCircle, LayoutDashboard, LogOut, Briefcase, Shield, Layers, PlayCircle, Rocket } from "lucide-react";
+import { Menu, X, ChevronDown, MessageCircle, LayoutDashboard, Briefcase, Shield, Layers, PlayCircle, Rocket, Settings as SettingsIcon } from "lucide-react";
 import logoSrc from "@/assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
 const sections = [
-  { label: "Modelos", hash: "modelos", icon: Layers },
-  { label: "Como funciona", hash: "como-funciona", icon: PlayCircle },
-  { label: "Ativação", hash: "ativacao", icon: Rocket },
+  { label: "Templates", hash: "modelos", icon: Layers },
+  { label: "How it works", hash: "como-funciona", icon: PlayCircle },
+  { label: "Activation", hash: "ativacao", icon: Rocket },
 ] as const;
 
 const authLinks = [
-  { to: "/painel" as const, label: "Painel", icon: LayoutDashboard },
-  { to: "/business-info" as const, label: "Meu negócio", icon: Briefcase },
+  { to: "/painel" as const, label: "Dashboard", icon: LayoutDashboard },
+  { to: "/business-info" as const, label: "My business", icon: Briefcase },
+  { to: "/settings" as const, label: "Settings", icon: SettingsIcon },
 ] as const;
 
 export function SiteHeader() {
-  const { isAuthenticated, isAdmin, hasPaid, signOut, user } = useAuth();
+  const { isAuthenticated, isAdmin, hasPaid, user } = useAuth();
   const showPaidLinks = hasPaid || isAdmin;
-  const visibleAuthLinks = showPaidLinks ? authLinks : [];
+  const visibleAuthLinks = showPaidLinks
+    ? authLinks
+    : ([{ to: "/settings" as const, label: "Settings", icon: SettingsIcon }] as const);
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
-  const [menu, setMenu] = useState<null | "docs" | "user">(null);
+  const [menu, setMenu] = useState<null | "user">(null);
 
   const sectionHref = (hash: string) => (path === "/" ? `#${hash}` : `/#${hash}`);
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/75 border-b border-border/40">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 py-4 md:py-5 flex items-center justify-between gap-4">
-        <Link to="/" className="inline-flex items-center gap-2.5 group" aria-label="Início">
+        <Link to="/" className="inline-flex items-center gap-2.5 group" aria-label="Home">
           <img src={logoSrc} alt="Filro" className="h-9 md:h-11 w-auto object-contain transition-transform group-hover:scale-105" />
           <span className="font-display font-black text-xl md:text-2xl text-ink tracking-tight">Filro</span>
         </Link>
@@ -46,7 +49,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           {isAuthenticated ? (
             <div className="hidden md:block relative" onMouseEnter={() => setMenu("user")} onMouseLeave={() => setMenu(null)}>
-              <button className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-border bg-paper hover:bg-muted transition-colors text-sm font-medium text-ink">
+              <button onClick={() => navigate({ to: "/settings" })} className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-border bg-paper hover:bg-muted transition-colors text-sm font-medium text-ink">
                 <div className="h-7 w-7 rounded-full bg-ink text-paper grid place-items-center text-xs font-bold">{user?.email?.[0]?.toUpperCase() ?? "U"}</div>
                 <ChevronDown className="h-3.5 w-3.5 text-ink-soft" />
               </button>
@@ -55,10 +58,6 @@ export function SiteHeader() {
                   <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }} transition={{ duration: 0.15 }}
                     className="absolute top-full right-0 pt-3 w-64 z-50">
                     <div className="card-elevated p-2 shadow-elegant">
-                      <div className="px-3 py-2 border-b border-border mb-1">
-                        <div className="text-xs text-ink-soft">Logado como</div>
-                        <div className="text-sm font-medium text-ink truncate">{user?.email}</div>
-                      </div>
                       {visibleAuthLinks.map(({ to, label, icon: Icon }) => {
                         const active = path === to;
                         return (
@@ -72,21 +71,18 @@ export function SiteHeader() {
                           <Shield className="h-4 w-4" /> Console
                         </Link>
                       )}
-                      <button onClick={async () => { await signOut(); navigate({ to: "/" }); }} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-sm text-ink text-left">
-                        <LogOut className="h-4 w-4" /> Sair
-                      </button>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
           ) : (
-            <Link to="/login" className="hidden md:inline-flex items-center h-11 px-4 text-sm font-medium text-ink-soft hover:text-ink transition-colors">Entrar</Link>
+            <Link to="/login" className="hidden md:inline-flex items-center h-11 px-4 text-sm font-medium text-ink-soft hover:text-ink transition-colors">Sign in</Link>
           )}
 
           <a href={sectionHref("ativacao")}
             className="hidden md:inline-flex items-center justify-center h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.03] active:scale-[0.97] transition-transform shadow-elegant">
-            Ativar agora
+            Activate now
           </a>
 
           <button
@@ -127,14 +123,13 @@ export function SiteHeader() {
                       <Shield className="h-4 w-4" /> Console
                     </Link>
                   )}
-                  <button onClick={async () => { await signOut(); setOpen(false); navigate({ to: "/" }); }} className="text-left text-ink py-3 px-2 inline-flex items-center gap-2"><LogOut className="h-4 w-4" /> Sair</button>
                 </>
               ) : (
-                <Link to="/login" onClick={() => setOpen(false)} className="text-ink py-3">Entrar</Link>
+                <Link to="/login" onClick={() => setOpen(false)} className="text-ink py-3">Sign in</Link>
               )}
               <a href={sectionHref("ativacao")} onClick={() => setOpen(false)}
                 className="mt-3 inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide w-full">
-                Ativar agora
+                Activate now
               </a>
               <a href="https://wa.me/5592993561754" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center justify-center gap-2 h-12 px-6 rounded-2xl bg-lime text-ink text-sm font-semibold tracking-wide w-full">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
