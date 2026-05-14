@@ -202,19 +202,19 @@ function BusinessInfoPage() {
           <div className="space-y-6">
             {section === "identidade" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
-                <Field label="Business name *"><input value={info.name} onChange={(e) => upd("name", e.target.value)} className={inputCls} /></Field>
-                <Field label="Slogan"><input value={info.slogan} onChange={(e) => upd("slogan", e.target.value)} className={inputCls} placeholder="e.g. The best coffee in town" /></Field>
-                <Field label="Segment"><input value={info.segment} onChange={(e) => upd("segment", e.target.value)} className={inputCls} placeholder="e.g. Bakery, Salon, Restaurant" /></Field>
-                <Field label="Description"><textarea value={info.description} onChange={(e) => upd("description", e.target.value)} rows={4} className={inputCls + " py-3 h-auto"} placeholder="Tell us about your business, story, what makes it different" /></Field>
+                <Field label="Nome do negócio *"><input value={info.name} onChange={(e) => upd("name", e.target.value)} className={inputCls} /></Field>
+                <Field label="Slogan"><input value={info.slogan} onChange={(e) => upd("slogan", e.target.value)} className={inputCls} placeholder="ex.: O melhor café da cidade" /></Field>
+                <Field label="Segmento"><input value={info.segment} onChange={(e) => upd("segment", e.target.value)} className={inputCls} placeholder="ex.: Padaria, Salão, Restaurante" /></Field>
+                <Field label="Descrição"><textarea value={info.description} onChange={(e) => upd("description", e.target.value)} rows={4} className={inputCls + " py-3 h-auto"} placeholder="Conte sobre o negócio, história, o que o diferencia" /></Field>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <Field label="Primary color"><div className="flex gap-2 items-center"><input type="color" value={info.brand_color_primary} onChange={(e) => upd("brand_color_primary", e.target.value)} className="h-12 w-16 rounded-xl cursor-pointer border border-border" /><input value={info.brand_color_primary} onChange={(e) => upd("brand_color_primary", e.target.value)} className={inputCls} /></div></Field>
-                  <Field label="Secondary color"><div className="flex gap-2 items-center"><input type="color" value={info.brand_color_secondary} onChange={(e) => upd("brand_color_secondary", e.target.value)} className="h-12 w-16 rounded-xl cursor-pointer border border-border" /><input value={info.brand_color_secondary} onChange={(e) => upd("brand_color_secondary", e.target.value)} className={inputCls} /></div></Field>
+                  <Field label="Cor primária"><div className="flex gap-2 items-center"><input type="color" value={info.brand_color_primary} onChange={(e) => upd("brand_color_primary", e.target.value)} className="h-12 w-16 rounded-xl cursor-pointer border border-border" /><input value={info.brand_color_primary} onChange={(e) => upd("brand_color_primary", e.target.value)} className={inputCls} /></div></Field>
+                  <Field label="Cor secundária"><div className="flex gap-2 items-center"><input type="color" value={info.brand_color_secondary} onChange={(e) => upd("brand_color_secondary", e.target.value)} className="h-12 w-16 rounded-xl cursor-pointer border border-border" /><input value={info.brand_color_secondary} onChange={(e) => upd("brand_color_secondary", e.target.value)} className={inputCls} /></div></Field>
                 </div>
                 <Field label="Logo">
                   <div className="flex items-center gap-4">
                     {info.logo_url && <img src={info.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
                     <label className="inline-flex items-center gap-2 h-12 px-4 rounded-xl border border-border bg-paper cursor-pointer hover:bg-muted text-sm">
-                      <Upload className="h-4 w-4" /> {info.logo_url ? "Change logo" : "Upload logo"}
+                      <Upload className="h-4 w-4" /> {info.logo_url ? "Trocar logo" : "Enviar logo"}
                       <input type="file" accept="image/*" onChange={handleLogo} className="hidden" />
                     </label>
                   </div>
