@@ -102,17 +102,30 @@ export function SiteHeader() {
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             className="md:hidden border-t border-border bg-paper overflow-hidden">
             <div className="px-5 py-6 flex flex-col gap-1 text-base font-medium">
-              {sections.map((l) => (
-                <a key={l.hash} href={sectionHref(l.hash)} onClick={() => setOpen(false)} className="text-ink py-3 border-b border-border/50">
-                  {l.label}
-                </a>
-              ))}
+              {sections.map((l) => {
+                const Icon = l.icon;
+                return (
+                  <a key={l.hash} href={sectionHref(l.hash)} onClick={() => setOpen(false)} className="text-ink py-3 border-b border-border/50 inline-flex items-center gap-2">
+                    <Icon className="h-4 w-4 text-ink-soft" /> {l.label}
+                  </a>
+                );
+              })}
               {isAuthenticated ? (
                 <>
-                  <Link to="/painel" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Painel</Link>
-                  <Link to="/business-info" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><User className="h-4 w-4" /> Meu negócio</Link>
-                  {isAdmin && <Link to="/console" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Console</Link>}
-                  <button onClick={async () => { await signOut(); setOpen(false); navigate({ to: "/" }); }} className="text-left text-ink py-3 inline-flex items-center gap-2"><LogOut className="h-4 w-4" /> Sair</button>
+                  {authLinks.map(({ to, label, icon: Icon }) => {
+                    const active = path === to;
+                    return (
+                      <Link key={to} to={to} onClick={() => setOpen(false)} className={`py-3 px-2 rounded-lg inline-flex items-center gap-2 ${active ? "bg-muted text-ink font-semibold" : "text-ink"}`}>
+                        <Icon className="h-4 w-4" /> {label}
+                      </Link>
+                    );
+                  })}
+                  {isAdmin && (
+                    <Link to="/console" onClick={() => setOpen(false)} className={`py-3 px-2 rounded-lg inline-flex items-center gap-2 ${path === "/console" ? "bg-muted text-ink font-semibold" : "text-ink"}`}>
+                      <Shield className="h-4 w-4" /> Console
+                    </Link>
+                  )}
+                  <button onClick={async () => { await signOut(); setOpen(false); navigate({ to: "/" }); }} className="text-left text-ink py-3 px-2 inline-flex items-center gap-2"><LogOut className="h-4 w-4" /> Sair</button>
                 </>
               ) : (
                 <Link to="/login" onClick={() => setOpen(false)} className="text-ink py-3">Entrar</Link>
