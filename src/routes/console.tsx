@@ -403,7 +403,89 @@ function SubscriptionsTab() {
   );
 }
 
-function EventsTab() {
+function CancellationsTab() {
+  useRealtimeRefetch(["subscriptions", "events", "profiles", "plans"], [["console-cancellations"]]);
+  const { data } = useQuery({
+    queryKey: ["console-cancellations"],
+    queryFn: async () => {
+      const subs = await supabase
+        .from("subscriptions")
+        .select("*")
+        .or("status.eq.canceled,cancel_at_period_end.eq.true")
+        .order("updated_at", { ascending: false });
+      const evts = await supabase
+        .from("events")
+        .select("user_id, event_data, created_at")
+        .eq("event_type", "subscription.cancel_requested")
+        .order("created_at", { ascending: false })
+        .limit(500);
+      const profiles = await supabase.from("profiles").select("user_id, name, email, whatsapp");
+      const plans = await supabase.from("plans").select("id, name");
+      return { subs: subs.data ?? [], evts: evts.data ?? [], profiles: profiles.data ?? [], plans: plans.data ?? [] };
+    },
+  });
+
+  const reasonFor = (userId: string, subscriptionId: string | null) => {
+    const match = (data?.evts ?? []).find((e: any) =>
+      e.user_id === userId && (!subscriptionId || e.event_data?.subscriptionId === subscriptionId)
+    );
+    return match?.event_data?.reason as string | undefined;
+  };
+
+  return (
+    <div>
+      <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Cancelamentos</h1>
+      <p className="mt-2 text-ink-soft">Assinaturas canceladas ou agendadas para encerrar no fim do ciclo.</p>
+      <div className="mt-8 card-elevated overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted text-left text-xs tracking-wide text-ink-soft">
+              <tr>
+                <th className="px-4 py-3">Cliente</th>
+                <th className="px-4 py-3">Plano</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Encerra em</th>
+                <th className="px-4 py-3">Motivo</th>
+                <th className="px-4 py-3">Atualizado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(data?.subs ?? []).map((s: any) => {
+                const prof = data?.profiles.find((x) => x.user_id === s.user_id);
+                const plan = data?.plans.find((p) => p.id === s.plan_id);
+                const reason = reasonFor(s.user_id, s.stripe_subscription_id);
+                return (
+                  <tr key={s.id} className="border-t border-border hover:bg-muted/50 align-top">
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{prof?.name || "—"}</div>
+                      <div className="text-xs text-ink-soft">{prof?.email}</div>
+                      {prof?.whatsapp && <div className="text-xs text-ink-soft">{prof.whatsapp}</div>}
+                    </td>
+                    <td className="px-4 py-3">{plan?.name || "—"}</td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={s.status} />
+                      {s.cancel_at_period_end && s.status !== "canceled" && (
+                        <div className="text-[11px] text-ink-soft mt-1">cancela no fim do ciclo</div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-ink-soft">{s.current_period_end ? formatDateTime(s.current_period_end) : "—"}</td>
+                    <td className="px-4 py-3 text-ink-soft max-w-[280px]">
+                      {reason ? <span className="whitespace-pre-wrap">{reason}</span> : <span className="text-ink-soft/60">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-ink-soft">{s.updated_at ? formatDateTime(s.updated_at) : "—"}</td>
+                  </tr>
+                );
+              })}
+              {(!data || data.subs.length === 0) && (
+                <tr><td colSpan={6} className="px-4 py-12 text-center text-ink-soft">Nenhum cancelamento ainda.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
   useRealtimeRefetch(["events"], [["console-events"]]);
   const [filter, setFilter] = useState("");
   const { data } = useQuery({
