@@ -165,6 +165,56 @@
   .hero-shadow {
     box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.4);
   }
+
+  /* Personality: cards lift, accent corner appears */
+  .card-personality {
+    position: relative;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.3s ease;
+  }
+  .card-personality::after {
+    content: "";
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 0; height: 6px;
+    background: var(--lime);
+    border-radius: 999px;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+  .card-personality:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-pop);
+  }
+  .card-personality:hover::after { width: 28px; }
+
+  /* Subtle dot pattern for sections */
+  .dots-bg {
+    background-image: radial-gradient(var(--ink) 1px, transparent 1px);
+    background-size: 22px 22px;
+    background-position: 0 0;
+    opacity: 0.08;
+  }
+
+  /* Floating brand blobs */
+  .float-slow { animation: float-slow 14s ease-in-out infinite; }
+  .float-slower { animation: float-slow 22s ease-in-out infinite reverse; }
+
+  /* Sparkle hover for emphasis (links / inline tags) */
+  .ink-underline {
+    background-image: linear-gradient(var(--ink), var(--ink));
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .ink-underline:hover { background-size: 100% 2px; }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(14px, -22px, 0) rotate(3deg); }
 }
 
 /* Stripe Element overrides */
