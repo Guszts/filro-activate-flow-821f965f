@@ -150,6 +150,7 @@ function OverviewTab() {
 }
 
 function UsersTab() {
+  useRealtimeRefetch(["profiles", "payments"], [["console-users"]]);
   const navigate = useNavigate();
   const { data } = useQuery({
     queryKey: ["console-users"],
