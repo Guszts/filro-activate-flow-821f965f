@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /painel
+Disallow: /console
+Disallow: /checkout
+Disallow: /lead
+Disallow: /settings
+Disallow: /business-info
+Disallow: /api/
+Disallow: /lovable/
+
+Sitemap: https://setup.filro.site/sitemap.xml

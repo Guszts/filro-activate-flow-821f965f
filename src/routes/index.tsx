@@ -134,23 +134,48 @@ function HomePage() {
         <h2 className="mt-3 editorial-headline text-5xl md:text-7xl text-ink max-w-3xl">Como funciona a ativação</h2>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { n: "01", t: "Crie sua conta", d: "Registro rápido com email e WhatsApp." },
-            { n: "02", t: "Escolha o modelo", d: "Selecione a direção visual do seu negócio." },
-            { n: "03", t: "Pague com segurança", d: "Checkout integrado e seguro no site." },
-            { n: "04", t: "Envie suas informações", d: "Adaptamos o modelo ao seu negócio." },
+            { n: "01", t: "Crie sua conta", d: "Registro rápido com email e WhatsApp.", accent: "azure" as const },
+            { n: "02", t: "Escolha o modelo", d: "Selecione a direção visual do seu negócio.", accent: "lime" as const },
+            { n: "03", t: "Pague com segurança", d: "Checkout integrado e seguro no site.", accent: "flame" as const },
+            { n: "04", t: "Envie suas informações", d: "Adaptamos o modelo ao seu negócio.", accent: "ink" as const },
           ].map((s, i) => (
             <motion.div
               key={s.n}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className="rounded-3xl bg-paper border border-border p-7"
+              transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -6, transition: { duration: 0.3, ease: "easeOut" } }}
+              className="group relative rounded-3xl bg-paper border border-border p-7 overflow-hidden"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
-              <div className="font-display font-black text-5xl text-flame">{s.n}</div>
-              <h3 className="mt-6 font-display font-black text-xl tracking-tight">{s.t}</h3>
-              <p className="mt-2 text-sm text-ink-soft">{s.d}</p>
+              {/* Subtle accent corner — mirrors model-cover personality */}
+              <div
+                className={`pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-70 transition-transform duration-500 group-hover:scale-125 ${
+                  s.accent === "azure" ? "bg-azure/25" :
+                  s.accent === "lime" ? "bg-lime/40" :
+                  s.accent === "flame" ? "bg-flame/30" :
+                  "bg-ink/10"
+                }`}
+              />
+              <div
+                className={`pointer-events-none absolute right-6 bottom-6 h-1.5 w-10 rounded-full transition-all duration-500 group-hover:w-16 ${
+                  s.accent === "azure" ? "bg-azure" :
+                  s.accent === "lime" ? "bg-lime" :
+                  s.accent === "flame" ? "bg-flame" :
+                  "bg-ink"
+                }`}
+              />
+              <div className="relative">
+                <div className={`font-display font-black text-5xl ${
+                  s.accent === "azure" ? "text-azure" :
+                  s.accent === "lime" ? "text-ink" :
+                  s.accent === "flame" ? "text-flame" :
+                  "text-ink"
+                }`}>{s.n}</div>
+                <h3 className="mt-6 font-display font-black text-xl tracking-tight">{s.t}</h3>
+                <p className="mt-2 text-sm text-ink-soft">{s.d}</p>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -191,21 +216,65 @@ function HomePage() {
           initial={{ opacity: 0, scale: 0.97 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="rounded-[3rem] bg-ink text-paper p-10 md:p-20 relative overflow-hidden"
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative rounded-[3rem] p-10 md:p-20 overflow-hidden text-paper"
+          style={{
+            background:
+              "radial-gradient(120% 100% at 0% 0%, oklch(0.32 0.05 260) 0%, transparent 55%), radial-gradient(120% 100% at 100% 100%, oklch(0.55 0.18 30 / 0.45) 0%, transparent 55%), linear-gradient(135deg, oklch(0.22 0.04 260) 0%, oklch(0.18 0.03 260) 100%)",
+          }}
         >
+          {/* Decorative shapes — Filro personality */}
+          <motion.div
+            aria-hidden
+            initial={{ opacity: 0, scale: 0.6 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.1, delay: 0.2 }}
+            className="absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full bg-flame/40 blur-3xl pointer-events-none"
+          />
+          <motion.div
+            aria-hidden
+            initial={{ opacity: 0, scale: 0.6 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.1, delay: 0.35 }}
+            className="absolute -left-32 -bottom-32 h-[420px] w-[420px] rounded-full bg-azure/30 blur-3xl pointer-events-none"
+          />
+
+          {/* Lime accent strokes */}
+          <div aria-hidden className="absolute right-12 top-12 h-1.5 w-20 rounded-full bg-lime hidden md:block" />
+          <div aria-hidden className="absolute right-12 top-16 h-1.5 w-12 rounded-full bg-lime/60 hidden md:block" />
+
+          {/* Subtle grid texture */}
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-[0.06] pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(var(--paper) 1px, transparent 1px), linear-gradient(90deg, var(--paper) 1px, transparent 1px)",
+              backgroundSize: "48px 48px",
+            }}
+          />
+
           <div className="relative z-10 max-w-3xl">
-            <h2 className="editorial-headline text-5xl md:text-7xl">
+            <span className="inline-flex items-center gap-2 text-xs tracking-wide text-paper/70">
+              <span className="h-1.5 w-6 bg-lime" /> Próximo passo
+            </span>
+            <h2 className="editorial-headline mt-6 text-5xl md:text-7xl">
               Pronto para ativar<br /><span className="lime-mark">sua página?</span>
             </h2>
             <p className="mt-6 text-paper/70 max-w-xl">
               Após o pagamento, você envia as informações do seu negócio e nós adaptamos o modelo escolhido.
             </p>
-            <a href="#ativacao" className="mt-10 inline-flex items-center h-14 px-8 rounded-2xl bg-lime text-ink font-semibold tracking-wide hover:scale-[1.02] transition-transform">
-              Iniciar ativação <ArrowRight className="ml-2 h-4 w-4" />
-            </a>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <a href="#ativacao" className="inline-flex items-center h-14 px-8 rounded-2xl bg-lime text-ink font-semibold tracking-wide hover:scale-[1.02] transition-transform">
+                Iniciar ativação <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+              <a href="#modelos" className="inline-flex items-center h-14 px-8 rounded-2xl border border-paper/30 text-paper font-semibold tracking-wide hover:bg-paper hover:text-ink transition-colors">
+                Ver modelos
+              </a>
+            </div>
           </div>
-          <div className="absolute -right-20 -bottom-20 w-[400px] h-[400px] rounded-2xl bg-flame/30 blur-3xl pointer-events-none" />
         </motion.div>
       </section>
 
