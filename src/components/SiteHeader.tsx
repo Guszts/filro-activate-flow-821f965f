@@ -6,15 +6,15 @@ import logoSrc from "@/assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
 const sections = [
-  { label: "Templates", hash: "modelos", icon: Layers },
-  { label: "How it works", hash: "como-funciona", icon: PlayCircle },
-  { label: "Activation", hash: "ativacao", icon: Rocket },
+  { label: "Modelos", hash: "modelos", icon: Layers },
+  { label: "Como funciona", hash: "como-funciona", icon: PlayCircle },
+  { label: "Ativação", hash: "ativacao", icon: Rocket },
 ] as const;
 
 const authLinks = [
-  { to: "/painel" as const, label: "Dashboard", icon: LayoutDashboard },
-  { to: "/business-info" as const, label: "My business", icon: Briefcase },
-  { to: "/settings" as const, label: "Settings", icon: SettingsIcon },
+  { to: "/painel" as const, label: "Painel", icon: LayoutDashboard },
+  { to: "/business-info" as const, label: "Meu negócio", icon: Briefcase },
+  { to: "/settings" as const, label: "Configurações", icon: SettingsIcon },
 ] as const;
 
 export function SiteHeader() {
