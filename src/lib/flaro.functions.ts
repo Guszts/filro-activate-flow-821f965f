@@ -80,12 +80,23 @@ export const flaroChat = createServerFn({ method: "POST" })
         }
         lastStatus = res.status;
         lastBody = await res.text().catch(() => "");
-        // Failover on rate limit, auth, server errors
-        if (res.status === 429 || res.status === 401 || res.status === 403 || res.status >= 500) {
+        // Failover on rate limit, auth, server errors, or org/account-level blocks (organization_restricted vem como 400)
+        const isOrgRestricted =
+          res.status === 400 &&
+          (lastBody.includes("organization_restricted") ||
+            lastBody.includes("Organization has been restricted") ||
+            lastBody.includes("account_deactivated"));
+        if (
+          res.status === 429 ||
+          res.status === 401 ||
+          res.status === 403 ||
+          res.status >= 500 ||
+          isOrgRestricted
+        ) {
           console.warn(`[Flaro] key ${i + 1} failed (${res.status}), tentando próxima...`);
           continue;
         }
-        // Other client errors (e.g. 400) — não adianta tentar outra chave
+        // Outros erros de cliente (ex.: 400 por payload inválido) — não adianta tentar outra chave
         break;
       } catch (err) {
         console.warn(`[Flaro] key ${i + 1} threw, tentando próxima...`, err);
