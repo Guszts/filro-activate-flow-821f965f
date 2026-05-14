@@ -140,10 +140,15 @@ function SettingsPage() {
           {hasSubscription ? (
             <>
               <p className="text-sm text-ink-soft">Atualize forma de pagamento, veja faturas, troque ou cancele seu plano.</p>
-              <button onClick={manageBilling} disabled={openingPortal} className="mt-5 inline-flex items-center justify-between gap-3 w-full sm:w-auto h-12 px-5 rounded-2xl bg-ink text-paper font-semibold hover:bg-ink/90 disabled:opacity-60">
-                <span className="inline-flex items-center gap-2"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Gerenciar assinatura"}</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
+              <div className="mt-5 flex flex-col sm:flex-row gap-3">
+                <button onClick={manageBilling} disabled={openingPortal} className="inline-flex items-center justify-between gap-3 h-12 px-5 rounded-2xl bg-ink text-paper font-semibold hover:bg-ink/90 disabled:opacity-60">
+                  <span className="inline-flex items-center gap-2"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Gerenciar assinatura"}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+                <button onClick={() => setCancelOpen(true)} className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted">
+                  <XCircle className="h-4 w-4" /> Cancelar assinatura
+                </button>
+              </div>
             </>
           ) : !hasPaid ? (
             <>
