@@ -3,10 +3,28 @@ Allow: /
 Disallow: /painel
 Disallow: /console
 Disallow: /checkout
-Disallow: /lead
+Disallow: /lead/
 Disallow: /settings
 Disallow: /business-info
+Disallow: /payment-success
+Disallow: /payment-failed
+Disallow: /unsubscribe
+Disallow: /login
+Disallow: /register
 Disallow: /api/
 Disallow: /lovable/
+
+# Permitir explicitamente bots de IA e busca
+User-agent: Googlebot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
 
 Sitemap: https://setup.filro.site/sitemap.xml
