@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, Fragment } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Loader2, Mail, Sparkles } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Mail, ArrowRight } from "lucide-react";
 import { flaroChat } from "@/lib/flaro.functions";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -55,7 +55,7 @@ function renderInline(text: string) {
 }
 
 function ActionChip({ a }: { a: Action }) {
-  const Icon = a.icon === "wa" ? MessageCircle : a.icon === "mail" ? Mail : Sparkles;
+  const Icon = a.icon === "wa" ? MessageCircle : a.icon === "mail" ? Mail : ArrowRight;
   const isExternal = a.href.startsWith("http") || a.href.startsWith("mailto:");
   return (
     <a
