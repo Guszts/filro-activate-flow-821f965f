@@ -171,6 +171,55 @@ function SettingsPage() {
         </motion.section>
       </main>
       <SiteFooter />
+
+      <AnimatePresence>
+        {cancelOpen && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm grid place-items-center p-5"
+            onClick={() => !cancelling && setCancelOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.97 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md card-elevated p-7"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><XCircle className="h-5 w-5" /></div>
+                <h3 className="font-display font-black text-2xl text-ink">Cancelar assinatura?</h3>
+              </div>
+              <p className="mt-3 text-sm text-ink-soft">
+                Você manterá acesso até o fim do ciclo já pago. Conta pra gente o que faltou — usamos para melhorar.
+              </p>
+              <label className="block mt-5 text-xs tracking-wide text-ink-soft uppercase">Motivo (opcional)</label>
+              <textarea
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                rows={4}
+                maxLength={1000}
+                placeholder="Ex.: vou pausar o negócio, preço, encontrei outra solução..."
+                className="mt-2 w-full px-4 py-3 rounded-xl border border-border bg-paper outline-none focus:border-ink transition-colors text-sm"
+              />
+              <div className="mt-6 flex flex-col-reverse sm:flex-row gap-3 sm:justify-end">
+                <button
+                  onClick={() => setCancelOpen(false)}
+                  disabled={cancelling}
+                  className="h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted disabled:opacity-50"
+                >
+                  Voltar
+                </button>
+                <button
+                  onClick={confirmCancel}
+                  disabled={cancelling}
+                  className="h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90 disabled:opacity-60 inline-flex items-center justify-center gap-2"
+                >
+                  <XCircle className="h-4 w-4" /> {cancelling ? "Cancelando..." : "Confirmar cancelamento"}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
