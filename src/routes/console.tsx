@@ -96,6 +96,7 @@ function Metric({ label, value, sub }: { label: string; value: string; sub?: str
 }
 
 function OverviewTab() {
+  useRealtimeRefetch(["payments", "profiles", "subscriptions"], [["console-overview"]]);
   const { data } = useQuery({
     queryKey: ["console-overview"],
     queryFn: async () => {
