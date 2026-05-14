@@ -23,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<Role>(null);
+  const [hasPaid, setHasPaid] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchRole = async (uid: string | undefined) => {
@@ -36,23 +37,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setRole(isAdmin ? "admin" : "customer");
   };
 
+  const fetchPaid = async (uid: string | undefined) => {
+    if (!uid) return setHasPaid(false);
+    const { data } = await supabase
+      .from("payments")
+      .select("id")
+      .eq("user_id", uid)
+      .eq("status", "paid")
+      .limit(1);
+    setHasPaid(!!data && data.length > 0);
+  };
+
   useEffect(() => {
     // Listener FIRST
     const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
       setUser(s?.user ?? null);
-      // Defer role fetch (avoid deadlock)
+      // Defer fetches (avoid deadlock)
       if (s?.user) {
-        setTimeout(() => fetchRole(s.user.id), 0);
+        setTimeout(() => { fetchRole(s.user.id); fetchPaid(s.user.id); }, 0);
       } else {
         setRole(null);
+        setHasPaid(false);
       }
     });
     // Then check existing session
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
       setUser(s?.user ?? null);
-      if (s?.user) fetchRole(s.user.id);
+      if (s?.user) { fetchRole(s.user.id); fetchPaid(s.user.id); }
       setLoading(false);
     });
     return () => sub.subscription.unsubscribe();
@@ -66,12 +79,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       isAdmin: role === "admin",
       isAuthenticated: !!user,
+      hasPaid,
       refreshRole: () => fetchRole(user?.id),
+      refreshPaid: () => fetchPaid(user?.id),
       signOut: async () => {
         await supabase.auth.signOut();
       },
     }),
-    [session, user, role, loading],
+    [session, user, role, loading, hasPaid],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
