@@ -7,6 +7,10 @@ export const Route = createFileRoute("/unsubscribe")({
     token: typeof s.token === "string" ? s.token : undefined,
   }),
   component: UnsubscribePage,
+  head: () => ({ meta: [
+    { title: "Cancelar inscrição · Filro" },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
 });
 
 function UnsubscribePage() {
