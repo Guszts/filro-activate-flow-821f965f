@@ -22,7 +22,7 @@ export function SiteHeader() {
   const showPaidLinks = hasPaid || isAdmin;
   const visibleAuthLinks = showPaidLinks
     ? authLinks
-    : ([{ to: "/settings" as const, label: "Settings", icon: SettingsIcon }] as const);
+    : ([{ to: "/settings" as const, label: "Configurações", icon: SettingsIcon }] as const);
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
