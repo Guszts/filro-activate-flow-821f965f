@@ -120,6 +120,7 @@ function RootComponent() {
         </div>
         <PaymentTestModeBanner />
         <Outlet />
+        <FlaroChat />
         <Toaster />
       </AuthProvider>
     </QueryClientProvider>
