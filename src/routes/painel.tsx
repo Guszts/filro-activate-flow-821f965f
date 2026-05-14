@@ -12,7 +12,13 @@ import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, HelpCircle, Load
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/painel")({ component: PainelPage });
+export const Route = createFileRoute("/painel")({
+  component: PainelPage,
+  head: () => ({ meta: [
+    { title: "Painel · Filro" },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
+});
 
 interface ProjectRow {
   id: string;
