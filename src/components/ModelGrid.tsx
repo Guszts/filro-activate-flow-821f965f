@@ -130,14 +130,25 @@ export function ModelGrid() {
         return (
           <motion.article
             key={m.name}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.55, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.65, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ y: -8, transition: { duration: 0.35, ease: "easeOut" } }}
             className="group rounded-3xl bg-paper border border-border overflow-hidden flex flex-col"
             style={{ boxShadow: "var(--shadow-card)" }}
           >
-            <Cover className="h-56 w-full" />
+            <div className="relative h-56 w-full overflow-hidden">
+              <motion.div
+                className="absolute inset-0"
+                whileHover={{ scale: 1.06 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <Cover className="h-full w-full" />
+              </motion.div>
+              {/* Subtle sheen on hover */}
+              <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-tr from-transparent via-paper/10 to-transparent" />
+            </div>
             <div className="p-6 flex flex-col flex-1">
               <h3 className="font-display text-2xl font-black tracking-tight">{m.name}</h3>
               <p className="mt-2 text-sm text-ink-soft flex-1">{m.desc}</p>
