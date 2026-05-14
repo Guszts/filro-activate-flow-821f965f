@@ -134,23 +134,48 @@ function HomePage() {
         <h2 className="mt-3 editorial-headline text-5xl md:text-7xl text-ink max-w-3xl">Como funciona a ativação</h2>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { n: "01", t: "Crie sua conta", d: "Registro rápido com email e WhatsApp." },
-            { n: "02", t: "Escolha o modelo", d: "Selecione a direção visual do seu negócio." },
-            { n: "03", t: "Pague com segurança", d: "Checkout integrado e seguro no site." },
-            { n: "04", t: "Envie suas informações", d: "Adaptamos o modelo ao seu negócio." },
+            { n: "01", t: "Crie sua conta", d: "Registro rápido com email e WhatsApp.", accent: "azure" as const },
+            { n: "02", t: "Escolha o modelo", d: "Selecione a direção visual do seu negócio.", accent: "lime" as const },
+            { n: "03", t: "Pague com segurança", d: "Checkout integrado e seguro no site.", accent: "flame" as const },
+            { n: "04", t: "Envie suas informações", d: "Adaptamos o modelo ao seu negócio.", accent: "ink" as const },
           ].map((s, i) => (
             <motion.div
               key={s.n}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className="rounded-3xl bg-paper border border-border p-7"
+              transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -6, transition: { duration: 0.3, ease: "easeOut" } }}
+              className="group relative rounded-3xl bg-paper border border-border p-7 overflow-hidden"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
-              <div className="font-display font-black text-5xl text-flame">{s.n}</div>
-              <h3 className="mt-6 font-display font-black text-xl tracking-tight">{s.t}</h3>
-              <p className="mt-2 text-sm text-ink-soft">{s.d}</p>
+              {/* Subtle accent corner — mirrors model-cover personality */}
+              <div
+                className={`pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-70 transition-transform duration-500 group-hover:scale-125 ${
+                  s.accent === "azure" ? "bg-azure/25" :
+                  s.accent === "lime" ? "bg-lime/40" :
+                  s.accent === "flame" ? "bg-flame/30" :
+                  "bg-ink/10"
+                }`}
+              />
+              <div
+                className={`pointer-events-none absolute right-6 bottom-6 h-1.5 w-10 rounded-full transition-all duration-500 group-hover:w-16 ${
+                  s.accent === "azure" ? "bg-azure" :
+                  s.accent === "lime" ? "bg-lime" :
+                  s.accent === "flame" ? "bg-flame" :
+                  "bg-ink"
+                }`}
+              />
+              <div className="relative">
+                <div className={`font-display font-black text-5xl ${
+                  s.accent === "azure" ? "text-azure" :
+                  s.accent === "lime" ? "text-ink" :
+                  s.accent === "flame" ? "text-flame" :
+                  "text-ink"
+                }`}>{s.n}</div>
+                <h3 className="mt-6 font-display font-black text-xl tracking-tight">{s.t}</h3>
+                <p className="mt-2 text-sm text-ink-soft">{s.d}</p>
+              </div>
             </motion.div>
           ))}
         </div>
