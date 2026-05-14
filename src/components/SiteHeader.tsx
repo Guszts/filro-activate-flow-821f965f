@@ -1,14 +1,14 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { useState } from "react";
-import { Menu, X, ChevronDown, MessageCircle, LayoutDashboard, LogOut, Briefcase, Shield, Sparkles, PlayCircle, Zap } from "lucide-react";
+import { Menu, X, ChevronDown, MessageCircle, LayoutDashboard, LogOut, Briefcase, Shield, Layers, PlayCircle, Rocket } from "lucide-react";
 import logoSrc from "@/assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
 const sections = [
-  { label: "Modelos", hash: "modelos", icon: Sparkles },
+  { label: "Modelos", hash: "modelos", icon: Layers },
   { label: "Como funciona", hash: "como-funciona", icon: PlayCircle },
-  { label: "Ativação", hash: "ativacao", icon: Zap },
+  { label: "Ativação", hash: "ativacao", icon: Rocket },
 ] as const;
 
 const authLinks = [
