@@ -297,9 +297,6 @@ function HomePage() {
             <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-paper/70">
               <span className="h-1.5 w-6 bg-lime" /> Próximo passo
             </span>
-            <span className="inline-flex items-center gap-2 text-xs tracking-wide text-paper/70">
-              <span className="h-1.5 w-6 bg-lime" /> Próximo passo
-            </span>
             <h2 className="editorial-headline mt-6 text-5xl md:text-7xl">
               Pronto para ativar<br /><span className="lime-mark">sua página?</span>
             </h2>
