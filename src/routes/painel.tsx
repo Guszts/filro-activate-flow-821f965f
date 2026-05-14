@@ -37,7 +37,7 @@ const STATUS_LABEL: Record<string, { label: string; color: string; icon: typeof 
 
 function PainelPage() {
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, loading, hasPaid, isAdmin } = useAuth();
   const [project, setProject] = useState<ProjectRow | null>(null);
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [plans, setPlans] = useState<Record<string, PlanRow>>({});
@@ -65,6 +65,7 @@ function PainelPage() {
   useEffect(() => {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/painel" } }); return; }
+    if (!hasPaid && !isAdmin) { navigate({ to: "/" }); return; }
     (async () => {
       const [projRes, payRes, planRes, subRes] = await Promise.all([
         supabase.from("projects").select("*").eq("user_id", user.id).maybeSingle(),
@@ -80,7 +81,7 @@ function PainelPage() {
       setHasSubscription((subRes.data ?? []).length > 0);
       setLoadingData(false);
     })();
-  }, [loading, user, navigate]);
+  }, [loading, user, hasPaid, isAdmin, navigate]);
 
   const status = STATUS_LABEL[project?.project_status ?? "new"] ?? STATUS_LABEL.new;
   const StatusIcon = status.icon;
