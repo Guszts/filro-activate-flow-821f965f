@@ -262,6 +262,7 @@ function PaymentsTab() {
 }
 
 function PlansTab() {
+  useRealtimeRefetch(["plans"], [["console-plans"]]);
   const { data } = useQuery({
     queryKey: ["console-plans"],
     queryFn: async () => (await supabase.from("plans").select("*").order("display_order")).data ?? [],
