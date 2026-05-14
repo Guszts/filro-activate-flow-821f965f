@@ -52,7 +52,7 @@ function SettingsPage() {
     }).eq("user_id", user.id);
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Profile updated");
+    toast.success("Perfil atualizado");
   };
 
   const manageBilling = async () => {
