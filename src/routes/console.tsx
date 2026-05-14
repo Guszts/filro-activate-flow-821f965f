@@ -38,13 +38,37 @@ function ConsolePage() {
 
   useEffect(() => {
     if (loading) return;
-    if (!user) navigate({ to: "/login", search: { redirect: "/console" } });
-    else if (role && role !== "admin") navigate({ to: "/" });
+    if (!user) {
+      navigate({ to: "/login", search: { redirect: "/console" } });
+      return;
+    }
+    if (role && role !== "admin") {
+      navigate({ to: "/" });
+    }
   }, [loading, user, role, navigate]);
 
-  if (loading || !isAdmin) {
+  // Aguardando sessão / role
+  if (loading || (user && role === null)) {
     return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
   }
+
+  // Usuário autenticado mas sem permissão de admin
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen grid place-items-center px-6">
+        <div className="max-w-md text-center space-y-3">
+          <h1 className="text-2xl font-bold text-ink">Acesso restrito</h1>
+          <p className="text-ink-soft text-sm">
+            Esta área é exclusiva para administradores autorizados da Filro.
+          </p>
+          <Link to="/" className="inline-block mt-2 text-sm font-semibold text-ink underline">
+            Voltar ao início
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen grid md:grid-cols-[260px_1fr]">
