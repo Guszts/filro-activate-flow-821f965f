@@ -163,25 +163,33 @@ export function FlaroChat() {
 
             {/* Messages */}
             <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-paper">
-              {messages.map((m, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
-                      m.role === "user"
-                        ? "bg-ink text-paper rounded-br-md"
-                        : "bg-lime/30 text-ink rounded-bl-md border border-ink/10"
-                    }`}
+              {messages.map((m, i) => {
+                const parsed = m.role === "assistant" ? parseAssistantMessage(m.content) : null;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className={`flex flex-col ${m.role === "user" ? "items-end" : "items-start"}`}
                   >
-                    {m.content}
-                  </div>
-                </motion.div>
-              ))}
+                    <div
+                      className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+                        m.role === "user"
+                          ? "bg-ink text-paper rounded-br-md"
+                          : "bg-lime/30 text-ink rounded-bl-md border border-ink/10"
+                      }`}
+                    >
+                      {parsed ? renderInline(parsed.text) : m.content}
+                    </div>
+                    {parsed && parsed.actions.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1.5 max-w-[85%]">
+                        {parsed.actions.map((a, k) => <ActionChip key={k} a={a} />)}
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
               {loading && (
                 <div className="flex justify-start">
                   <div className="bg-lime/30 border border-ink/10 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-2 text-ink text-sm">
