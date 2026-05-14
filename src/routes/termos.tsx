@@ -4,10 +4,19 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 export const Route = createFileRoute("/termos")({
   component: TermsPage,
-  head: () => ({ meta: [
-    { title: "Termos de Uso · Filro" },
-    { name: "description", content: "Termos e condições de uso dos serviços Filro: contratação, prazo de 24h, pagamentos, cancelamento e responsabilidades." },
-  ]}),
+  head: () => ({
+    meta: [
+      { title: "Termos de Uso · Filro" },
+      { name: "description", content: "Termos e condições de uso dos serviços Filro: contratação, prazo de 24h, pagamentos, cancelamento e responsabilidades." },
+      { property: "og:title", content: "Termos de Uso · Filro" },
+      { property: "og:description", content: "Contratação, prazo de 24h, pagamentos, cancelamento e responsabilidades." },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "https://setup.filro.site/termos" },
+      { name: "twitter:title", content: "Termos de Uso · Filro" },
+      { name: "twitter:description", content: "Contratação, prazo de 24h, pagamentos e cancelamento." },
+    ],
+    links: [{ rel: "canonical", href: "https://setup.filro.site/termos" }],
+  }),
 });
 
 function TermsPage() {
