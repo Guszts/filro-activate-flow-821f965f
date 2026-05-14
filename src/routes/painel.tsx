@@ -37,7 +37,7 @@ const STATUS_LABEL: Record<string, { label: string; color: string; icon: typeof 
 
 function PainelPage() {
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, loading, hasPaid, isAdmin } = useAuth();
   const [project, setProject] = useState<ProjectRow | null>(null);
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [plans, setPlans] = useState<Record<string, PlanRow>>({});
