@@ -50,7 +50,9 @@ function ConsolePage() {
             ["overview", "Overview"],
             ["users", "Usuários"],
             ["payments", "Pagamentos"],
+            ["subscriptions", "Assinaturas"],
             ["plans", "Planos"],
+            ["events", "Auditoria"],
             ["settings", "Configurações"],
           ] as const).map(([k, label]) => (
             <button
@@ -71,7 +73,9 @@ function ConsolePage() {
         {tab === "overview" && <OverviewTab />}
         {tab === "users" && <UsersTab />}
         {tab === "payments" && <PaymentsTab />}
+        {tab === "subscriptions" && <SubscriptionsTab />}
         {tab === "plans" && <PlansTab />}
+        {tab === "events" && <EventsTab />}
         {tab === "settings" && <SettingsTab />}
       </main>
     </div>
