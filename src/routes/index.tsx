@@ -147,7 +147,7 @@ function HomePage() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ y: -6, transition: { duration: 0.3, ease: "easeOut" } }}
-              className="group relative rounded-3xl bg-paper border border-border p-7 overflow-hidden"
+              className="group card-personality relative rounded-3xl bg-paper border border-border p-7 overflow-hidden"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
               {/* Subtle accent corner — mirrors model-cover personality */}
