@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
+import type { ReactElement } from "react";
 
-type Cover = (props: { className?: string }) => JSX.Element;
+type Cover = (props: { className?: string }) => ReactElement;
 
 // Each cover is a hand-composed abstract scene using Filro's palette.
 // No images, no text — only color, shape, and rhythm.
