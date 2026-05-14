@@ -4,7 +4,8 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowLeft, MessageCircle, Mail, ExternalLink } from "lucide-react";
+import { ArrowLeft, MessageCircle, Mail, ExternalLink, Copy } from "lucide-react";
+import { toast } from "sonner";
 import { formatBRL, formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/lead/$id")({ component: LeadPage });
@@ -86,8 +87,8 @@ function LeadPage() {
             <div className="flex items-center gap-4 mb-3">
               {bi.logo_url && <img src={bi.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
               <div className="flex gap-2">
-                {bi.brand_color_primary && <div className="h-10 w-10 rounded-lg border border-border" style={{ background: bi.brand_color_primary }} title={bi.brand_color_primary} />}
-                {bi.brand_color_secondary && <div className="h-10 w-10 rounded-lg border border-border" style={{ background: bi.brand_color_secondary }} title={bi.brand_color_secondary} />}
+                {bi.brand_color_primary && <ColorSwatch hex={bi.brand_color_primary} />}
+                {bi.brand_color_secondary && <ColorSwatch hex={bi.brand_color_secondary} />}
               </div>
             </div>
             <Row label="Descrição" value={bi.description} multiline />
@@ -140,5 +141,21 @@ function Row({ label, value, multiline }: { label: string; value?: string | null
       <span className="text-[10px] tracking-wide text-ink-soft/70 uppercase">{label}</span>
       <span className={`text-sm text-ink ${multiline ? "whitespace-pre-wrap" : ""}`}>{value}</span>
     </div>
+  );
+}
+
+function ColorSwatch({ hex }: { hex: string }) {
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(hex); toast.success(`Copied ${hex}`); }
+    catch { toast.error("Could not copy"); }
+  };
+  return (
+    <button onClick={copy} title={`Click to copy ${hex}`}
+      className="group relative h-10 w-10 rounded-lg border border-border overflow-hidden hover:scale-110 transition-transform"
+      style={{ background: hex }}>
+      <span className="absolute inset-0 grid place-items-center bg-ink/0 group-hover:bg-ink/40 transition-colors">
+        <Copy className="h-3.5 w-3.5 text-paper opacity-0 group-hover:opacity-100" />
+      </span>
+    </button>
   );
 }

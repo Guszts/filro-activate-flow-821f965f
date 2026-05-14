@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PaymentSuccessRouteImport } from './routes/payment-success'
@@ -40,6 +41,11 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
   path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/payment-success': typeof PaymentSuccessRoute
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
+  '/settings': typeof SettingsRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -183,6 +190,7 @@ export interface FileRoutesByTo {
   '/payment-success': typeof PaymentSuccessRoute
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
+  '/settings': typeof SettingsRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/payment-success': typeof PaymentSuccessRoute
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
+  '/settings': typeof SettingsRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -234,6 +243,7 @@ export interface FileRouteTypes {
     | '/payment-success'
     | '/privacidade'
     | '/register'
+    | '/settings'
     | '/termos'
     | '/unsubscribe'
     | '/email/unsubscribe'
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/payment-success'
     | '/privacidade'
     | '/register'
+    | '/settings'
     | '/termos'
     | '/unsubscribe'
     | '/email/unsubscribe'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/payment-success'
     | '/privacidade'
     | '/register'
+    | '/settings'
     | '/termos'
     | '/unsubscribe'
     | '/email/unsubscribe'
@@ -307,6 +319,7 @@ export interface RootRouteChildren {
   PaymentSuccessRoute: typeof PaymentSuccessRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   RegisterRoute: typeof RegisterRoute
+  SettingsRoute: typeof SettingsRoute
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
@@ -334,6 +347,13 @@ declare module '@tanstack/react-router' {
       path: '/termos'
       fullPath: '/termos'
       preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -491,6 +511,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaymentSuccessRoute: PaymentSuccessRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   RegisterRoute: RegisterRoute,
+  SettingsRoute: SettingsRoute,
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
@@ -506,13 +527,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
