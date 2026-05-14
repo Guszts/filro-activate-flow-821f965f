@@ -143,3 +143,19 @@ function Row({ label, value, multiline }: { label: string; value?: string | null
     </div>
   );
 }
+
+function ColorSwatch({ hex }: { hex: string }) {
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(hex); toast.success(`Copied ${hex}`); }
+    catch { toast.error("Could not copy"); }
+  };
+  return (
+    <button onClick={copy} title={`Click to copy ${hex}`}
+      className="group relative h-10 w-10 rounded-lg border border-border overflow-hidden hover:scale-110 transition-transform"
+      style={{ background: hex }}>
+      <span className="absolute inset-0 grid place-items-center bg-ink/0 group-hover:bg-ink/40 transition-colors">
+        <Copy className="h-3.5 w-3.5 text-paper opacity-0 group-hover:opacity-100" />
+      </span>
+    </button>
+  );
+}
