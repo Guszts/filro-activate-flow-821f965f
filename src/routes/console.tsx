@@ -81,6 +81,7 @@ function ConsolePage() {
             ["users", "Usuários"],
             ["payments", "Pagamentos"],
             ["subscriptions", "Assinaturas"],
+            ["cancellations", "Cancelamentos"],
             ["plans", "Planos"],
             ["events", "Auditoria"],
             ["settings", "Configurações"],
