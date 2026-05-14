@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
-import { Clock, ShieldCheck, Sparkles, Workflow, Globe, Wrench, MessageCircle, FileQuestion, Rocket, Palette, CreditCard, RefreshCw, BarChart3 } from "lucide-react";
+import { Clock, ShieldCheck, ChevronDown, Workflow, Globe, Wrench, MessageCircle, FileQuestion, Rocket, Palette, CreditCard, RefreshCw, BarChart3, Lightbulb } from "lucide-react";
 
 export const Route = createFileRoute("/docs")({
   component: DocsPage,
@@ -112,7 +112,7 @@ function DocsPage() {
                 <li>Cupons, combos, descontos por tempo limitado.</li>
                 <li><strong>Selecionar modelo:</strong> link de referência (site que você gosta), arquivo (brief, PDF, imagem) ou descrição livre do clima desejado.</li>
               </ul>
-              <Card><Sparkles className="h-5 w-5 text-flame" /><div>Não tem logo ou fotos profissionais? Sem problema. Trabalhamos com tipografia, ilustrações e fotos do seu celular ou stock licenciado.</div></Card>
+              <Card><Lightbulb className="h-5 w-5 text-flame" /><div>Não tem logo ou fotos profissionais? Sem problema. Trabalhamos com tipografia, ilustrações e fotos do seu celular ou stock licenciado.</div></Card>
             </Section>
 
             <Section id="pagamento" title="Pagamento e planos" icon={CreditCard}>
@@ -258,7 +258,7 @@ function Section({ id, title, icon: Icon, children }: { id: string; title: strin
 function Q({ q, children }: { q: string; children: React.ReactNode }) {
   return (
     <details className="border-b border-border py-4 group">
-      <summary className="cursor-pointer font-semibold text-ink list-none flex justify-between items-center"><span>{q}</span><Sparkles className="h-4 w-4 text-ink-soft group-open:rotate-180 transition-transform" /></summary>
+      <summary className="cursor-pointer font-semibold text-ink list-none flex justify-between items-center"><span>{q}</span><ChevronDown className="h-4 w-4 text-ink-soft group-open:rotate-180 transition-transform" /></summary>
       <div className="mt-2 text-ink-soft">{children}</div>
     </details>
   );

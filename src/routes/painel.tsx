@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/format";
 import { getStripeEnvironment } from "@/lib/stripe";
 import { createPortalSession } from "@/lib/payments.functions";
-import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, MessageCircle, Pencil, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, HelpCircle, Loader2, MessageCircle, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -31,7 +31,7 @@ interface PlanRow { id: string; name: string; activation_price: number; monthly_
 const STATUS_LABEL: Record<string, { label: string; color: string; icon: typeof Clock }> = {
   new: { label: "Novo", color: "bg-muted text-ink", icon: Clock },
   paid: { label: "Pago", color: "bg-lime text-ink", icon: CheckCircle2 },
-  in_progress: { label: "Em produção", color: "bg-azure text-paper", icon: Sparkles },
+  in_progress: { label: "Em produção", color: "bg-azure text-paper", icon: Loader2 },
   delivered: { label: "Entregue", color: "bg-flame text-paper", icon: CheckCircle2 },
 };
 
@@ -178,7 +178,7 @@ function PainelPage() {
                   <ArrowRight className="h-4 w-4 text-ink-soft" />
                 </Link>
                 <Link to="/" hash="faq" className="flex items-center justify-between p-4 rounded-2xl bg-muted hover:bg-stone transition-colors">
-                  <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><Sparkles className="h-4 w-4" /> Dúvidas frequentes</span>
+                  <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><HelpCircle className="h-4 w-4" /> Dúvidas frequentes</span>
                   <ArrowRight className="h-4 w-4 text-ink-soft" />
                 </Link>
               </div>
