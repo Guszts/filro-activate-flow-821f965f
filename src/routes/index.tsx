@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { formatBRL } from "@/lib/format";
-import heroImg from "@/assets/hero-owner.jpg";
+const heroImg = "https://vcosjojrcnofamjqatgg.supabase.co/storage/v1/object/public/media/1778722402326-eytc71-9ru1H.jpg";
 import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: HomePage });

@@ -2,13 +2,28 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatBRL, formatDateTime } from "@/lib/format";
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/console")({ component: ConsolePage });
 
-type Tab = "overview" | "users" | "payments" | "plans" | "settings";
+type Tab = "overview" | "users" | "payments" | "subscriptions" | "plans" | "events" | "settings";
+
+function useRealtimeRefetch(tables: string[], queryKeys: string[][]) {
+  const qc = useQueryClient();
+  useEffect(() => {
+    const channel = supabase.channel(`console-${tables.join("-")}-${Math.random()}`);
+    tables.forEach((t) => {
+      channel.on("postgres_changes" as never, { event: "*", schema: "public", table: t }, () => {
+        queryKeys.forEach((k) => qc.invalidateQueries({ queryKey: k }));
+      });
+    });
+    channel.subscribe();
+    return () => { supabase.removeChannel(channel); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+}
 
 function ConsolePage() {
   const { user, role, loading, isAdmin, signOut } = useAuth();
@@ -35,7 +50,9 @@ function ConsolePage() {
             ["overview", "Overview"],
             ["users", "Usuários"],
             ["payments", "Pagamentos"],
+            ["subscriptions", "Assinaturas"],
             ["plans", "Planos"],
+            ["events", "Auditoria"],
             ["settings", "Configurações"],
           ] as const).map(([k, label]) => (
             <button
@@ -56,7 +73,9 @@ function ConsolePage() {
         {tab === "overview" && <OverviewTab />}
         {tab === "users" && <UsersTab />}
         {tab === "payments" && <PaymentsTab />}
+        {tab === "subscriptions" && <SubscriptionsTab />}
         {tab === "plans" && <PlansTab />}
+        {tab === "events" && <EventsTab />}
         {tab === "settings" && <SettingsTab />}
       </main>
     </div>
@@ -77,6 +96,7 @@ function Metric({ label, value, sub }: { label: string; value: string; sub?: str
 }
 
 function OverviewTab() {
+  useRealtimeRefetch(["payments", "profiles", "subscriptions"], [["console-overview"]]);
   const { data } = useQuery({
     queryKey: ["console-overview"],
     queryFn: async () => {
@@ -130,6 +150,7 @@ function OverviewTab() {
 }
 
 function UsersTab() {
+  useRealtimeRefetch(["profiles", "payments"], [["console-users"]]);
   const navigate = useNavigate();
   const { data } = useQuery({
     queryKey: ["console-users"],
@@ -189,6 +210,7 @@ function UsersTab() {
 }
 
 function PaymentsTab() {
+  useRealtimeRefetch(["payments", "profiles", "plans"], [["console-payments"]]);
   const { data } = useQuery({
     queryKey: ["console-payments"],
     queryFn: async () => {
@@ -240,6 +262,7 @@ function PaymentsTab() {
 }
 
 function PlansTab() {
+  useRealtimeRefetch(["plans"], [["console-plans"]]);
   const { data } = useQuery({
     queryKey: ["console-plans"],
     queryFn: async () => (await supabase.from("plans").select("*").order("display_order")).data ?? [],
@@ -294,4 +317,112 @@ function StatusBadge({ status }: { status: string }) {
     failed: "Falha", refunded: "Reembolsado", cancelled: "Cancelado",
   };
   return <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${map[status] ?? "bg-muted text-ink-soft"}`}>{labels[status] ?? status}</span>;
+}
+
+function SubscriptionsTab() {
+  useRealtimeRefetch(["subscriptions", "plans", "profiles"], [["console-subs"]]);
+  const { data } = useQuery({
+    queryKey: ["console-subs"],
+    queryFn: async () => {
+      const subs = await supabase.from("subscriptions").select("*").order("created_at", { ascending: false });
+      const profiles = await supabase.from("profiles").select("user_id, name, email");
+      const plans = await supabase.from("plans").select("id, name");
+      return { subs: subs.data ?? [], profiles: profiles.data ?? [], plans: plans.data ?? [] };
+    },
+  });
+  return (
+    <div>
+      <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Assinaturas</h1>
+      <div className="mt-8 card-elevated overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted text-left text-xs tracking-wide text-ink-soft">
+              <tr>
+                <th className="px-4 py-3">Cliente</th><th className="px-4 py-3">Plano</th>
+                <th className="px-4 py-3">Status</th><th className="px-4 py-3">Próx. ciclo</th>
+                <th className="px-4 py-3">Cancela no fim</th><th className="px-4 py-3">Stripe Customer</th>
+                <th className="px-4 py-3">Env</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(data?.subs ?? []).map((s: any) => {
+                const prof = data?.profiles.find((x) => x.user_id === s.user_id);
+                const plan = data?.plans.find((p) => p.id === s.plan_id);
+                return (
+                  <tr key={s.id} className="border-t border-border hover:bg-muted/50">
+                    <td className="px-4 py-3"><div className="font-medium">{prof?.name || "—"}</div><div className="text-xs text-ink-soft">{prof?.email}</div></td>
+                    <td className="px-4 py-3">{plan?.name || "—"}</td>
+                    <td className="px-4 py-3"><StatusBadge status={s.status} /></td>
+                    <td className="px-4 py-3 text-ink-soft">{s.current_period_end ? formatDateTime(s.current_period_end) : "—"}</td>
+                    <td className="px-4 py-3">{s.cancel_at_period_end ? "Sim" : "Não"}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-ink-soft truncate max-w-[160px]">{s.stripe_customer_id}</td>
+                    <td className="px-4 py-3 text-xs text-ink-soft">{s.environment}</td>
+                  </tr>
+                );
+              })}
+              {(!data || data.subs.length === 0) && (
+                <tr><td colSpan={7} className="px-4 py-12 text-center text-ink-soft">Nenhuma assinatura ainda.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EventsTab() {
+  useRealtimeRefetch(["events"], [["console-events"]]);
+  const [filter, setFilter] = useState("");
+  const { data } = useQuery({
+    queryKey: ["console-events"],
+    queryFn: async () => {
+      const evts = await supabase.from("events").select("*").order("created_at", { ascending: false }).limit(500);
+      const profiles = await supabase.from("profiles").select("user_id, name, email");
+      return { events: evts.data ?? [], profiles: profiles.data ?? [] };
+    },
+  });
+  const filtered = (data?.events ?? []).filter((e: any) =>
+    !filter || e.event_type.toLowerCase().includes(filter.toLowerCase())
+  );
+  return (
+    <div>
+      <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Auditoria</h1>
+      <p className="mt-2 text-ink-soft">Eventos de pagamento, assinaturas e signups — sincronizados em tempo real.</p>
+      <input value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Filtrar por tipo (ex.: subscription, payment, checkout)..."
+        className="mt-6 w-full max-w-md h-11 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink" />
+      <div className="mt-6 card-elevated overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted text-left text-xs tracking-wide text-ink-soft">
+              <tr>
+                <th className="px-4 py-3">Quando</th><th className="px-4 py-3">Tipo</th>
+                <th className="px-4 py-3">Cliente</th><th className="px-4 py-3">Stripe ref</th>
+                <th className="px-4 py-3">Detalhes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((e: any) => {
+                const prof = data?.profiles.find((x) => x.user_id === e.user_id);
+                const d = e.event_data ?? {};
+                const ref = d.sessionId || d.id || d.invoiceId || d.subId || "—";
+                return (
+                  <tr key={e.id} className="border-t border-border hover:bg-muted/50 align-top">
+                    <td className="px-4 py-3 text-ink-soft whitespace-nowrap">{formatDateTime(e.created_at)}</td>
+                    <td className="px-4 py-3 font-mono text-xs">{e.event_type}</td>
+                    <td className="px-4 py-3">{prof ? <><div className="font-medium">{prof.name || "—"}</div><div className="text-xs text-ink-soft">{prof.email}</div></> : <span className="text-ink-soft">—</span>}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-ink-soft truncate max-w-[180px]">{ref}</td>
+                    <td className="px-4 py-3"><pre className="text-xs text-ink-soft whitespace-pre-wrap break-all max-w-[420px]">{JSON.stringify(d, null, 0)}</pre></td>
+                  </tr>
+                );
+              })}
+              {filtered.length === 0 && (
+                <tr><td colSpan={5} className="px-4 py-12 text-center text-ink-soft">Nenhum evento.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -1,7 +1,7 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { useState } from "react";
-import { Menu, X, ChevronDown, BookOpen, Shield, FileText, MessageCircle, LayoutDashboard, LogOut, User } from "lucide-react";
+import { Menu, X, ChevronDown, MessageCircle, LayoutDashboard, LogOut, User } from "lucide-react";
 import logoSrc from "@/assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -9,12 +9,6 @@ const sections = [
   { label: "Modelos", hash: "modelos" },
   { label: "Como funciona", hash: "como-funciona" },
   { label: "Ativação", hash: "ativacao" },
-] as const;
-
-const docsLinks = [
-  { to: "/docs", label: "Documentação", icon: BookOpen, desc: "Guias completos · 24h" },
-  { to: "/termos", label: "Termos de Uso", icon: FileText, desc: "Condições do serviço" },
-  { to: "/privacidade", label: "Privacidade", icon: Shield, desc: "LGPD · seus dados" },
 ] as const;
 
 export function SiteHeader() {
@@ -40,35 +34,6 @@ export function SiteHeader() {
               {l.label}
             </a>
           ))}
-          <div className="relative" onMouseEnter={() => setMenu("docs")} onMouseLeave={() => setMenu(null)}>
-            <button className="inline-flex items-center gap-1 hover:text-ink transition-colors">
-              Recursos <ChevronDown className="h-3.5 w-3.5" />
-            </button>
-            <AnimatePresence>
-              {menu === "docs" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-72"
-                >
-                  <div className="card-elevated p-2 shadow-elegant">
-                    {docsLinks.map((d) => {
-                      const Icon = d.icon;
-                      return (
-                        <Link key={d.to} to={d.to} className="flex items-start gap-3 p-3 rounded-xl hover:bg-muted transition-colors">
-                          <div className="h-9 w-9 grid place-items-center rounded-lg bg-ink text-paper shrink-0"><Icon className="h-4 w-4" /></div>
-                          <div>
-                            <div className="text-sm font-semibold text-ink">{d.label}</div>
-                            <div className="text-xs text-ink-soft">{d.desc}</div>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -126,11 +91,6 @@ export function SiteHeader() {
                 <a key={l.hash} href={sectionHref(l.hash)} onClick={() => setOpen(false)} className="text-ink py-3 border-b border-border/50">
                   {l.label}
                 </a>
-              ))}
-              {docsLinks.map((d) => (
-                <Link key={d.to} to={d.to} onClick={() => setOpen(false)} className="text-ink py-3 border-b border-border/50 inline-flex items-center gap-2">
-                  <d.icon className="h-4 w-4" /> {d.label}
-                </Link>
               ))}
               {isAuthenticated ? (
                 <>
