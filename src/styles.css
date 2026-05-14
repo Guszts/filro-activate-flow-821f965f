@@ -118,7 +118,21 @@
     -webkit-font-smoothing: antialiased;
     background-image: var(--gradient-page);
     background-attachment: fixed;
+    position: relative;
   }
+  /* Grain overlay across the whole site */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: var(--grain-url);
+    background-size: 220px 220px;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+  }
+  .dark body::before { mix-blend-mode: overlay; opacity: 0.09; }
   h1, h2, h3, .display { font-family: var(--font-display); letter-spacing: -0.02em; }
 }
 
