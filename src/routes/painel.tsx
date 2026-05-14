@@ -31,7 +31,7 @@ interface PlanRow { id: string; name: string; activation_price: number; monthly_
 const STATUS_LABEL: Record<string, { label: string; color: string; icon: typeof Clock }> = {
   new: { label: "Novo", color: "bg-muted text-ink", icon: Clock },
   paid: { label: "Pago", color: "bg-lime text-ink", icon: CheckCircle2 },
-  in_progress: { label: "Em produção", color: "bg-azure text-paper", icon: Sparkles },
+  in_progress: { label: "Em produção", color: "bg-azure text-paper", icon: Loader2 },
   delivered: { label: "Entregue", color: "bg-flame text-paper", icon: CheckCircle2 },
 };
 
