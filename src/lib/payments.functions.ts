@@ -225,7 +225,6 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
         allow_promotion_codes: true,
-        payment_method_types: ["card", "link"],
         ...(customerId && { customer: customerId }),
         ...(data.userId && {
           metadata: { userId: data.userId, planSlug: data.planSlug },
