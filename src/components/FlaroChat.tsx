@@ -1,10 +1,74 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Fragment } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Mail, Sparkles } from "lucide-react";
 import { flaroChat } from "@/lib/flaro.functions";
 
 type Msg = { role: "user" | "assistant"; content: string };
+
+type Action = { type: "wa" | "email" | "plans"; href: string; label: string; icon: "wa" | "mail" | "spark" };
+
+const WA_HREF = "https://wa.me/5592993561754";
+const PLANS_HREF = "/#ativacao";
+
+function parseAssistantMessage(content: string): { text: string; actions: Action[] } {
+  const actions: Action[] = [];
+  let text = content;
+
+  const waRegex = /(?:https?:\/\/wa\.me\/\d+|(?:\+?\s?55[\s.-]?)?\(?\s?92\s?\)?[\s.-]?9?\s?9356[\s.-]?1754)/gi;
+  if (waRegex.test(text)) {
+    actions.push({ type: "wa", href: WA_HREF, label: "Falar no WhatsApp", icon: "wa" });
+    text = text.replace(waRegex, "");
+  }
+
+  const emailRegex = /\b[\w.+-]+@[\w-]+\.[\w.-]+\b/g;
+  const seen = new Set<string>();
+  const emails = text.match(emailRegex) || [];
+  for (const e of emails) {
+    if (seen.has(e.toLowerCase())) continue;
+    seen.add(e.toLowerCase());
+    actions.push({ type: "email", href: `mailto:${e}`, label: "Enviar e-mail", icon: "mail" });
+  }
+  text = text.replace(emailRegex, "");
+
+  if (/\b(planos?|preços?|iniciar ativação|ativar (sua |a )?página|ver planos|contratar)\b/i.test(text)) {
+    actions.push({ type: "plans", href: PLANS_HREF, label: "Ver planos", icon: "spark" });
+  }
+
+  text = text
+    .replace(/\(\s*[·\-,]?\s*\)/g, "")
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/\s+([.,;:!?])/g, "$1")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return { text, actions };
+}
+
+function renderInline(text: string) {
+  const parts = text.split(/(\*\*[^*\n]+\*\*)/g);
+  return parts.map((p, i) => {
+    const m = p.match(/^\*\*([^*]+)\*\*$/);
+    if (m) return <strong key={i} className="font-bold">{m[1]}</strong>;
+    return <Fragment key={i}>{p}</Fragment>;
+  });
+}
+
+function ActionChip({ a }: { a: Action }) {
+  const Icon = a.icon === "wa" ? MessageCircle : a.icon === "mail" ? Mail : Sparkles;
+  const isExternal = a.href.startsWith("http") || a.href.startsWith("mailto:");
+  return (
+    <a
+      href={a.href}
+      target={isExternal && a.href.startsWith("http") ? "_blank" : undefined}
+      rel={isExternal && a.href.startsWith("http") ? "noreferrer" : undefined}
+      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-ink text-paper text-xs font-semibold hover:scale-105 active:scale-95 transition"
+    >
+      <Icon className="h-3.5 w-3.5" />
+      {a.label}
+    </a>
+  );
+}
 
 const INTRO: Msg = {
   role: "assistant",
@@ -99,25 +163,33 @@ export function FlaroChat() {
 
             {/* Messages */}
             <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-paper">
-              {messages.map((m, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
-                      m.role === "user"
-                        ? "bg-ink text-paper rounded-br-md"
-                        : "bg-lime/30 text-ink rounded-bl-md border border-ink/10"
-                    }`}
+              {messages.map((m, i) => {
+                const parsed = m.role === "assistant" ? parseAssistantMessage(m.content) : null;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className={`flex flex-col ${m.role === "user" ? "items-end" : "items-start"}`}
                   >
-                    {m.content}
-                  </div>
-                </motion.div>
-              ))}
+                    <div
+                      className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+                        m.role === "user"
+                          ? "bg-ink text-paper rounded-br-md"
+                          : "bg-lime/30 text-ink rounded-bl-md border border-ink/10"
+                      }`}
+                    >
+                      {parsed ? renderInline(parsed.text) : m.content}
+                    </div>
+                    {parsed && parsed.actions.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1.5 max-w-[85%]">
+                        {parsed.actions.map((a, k) => <ActionChip key={k} a={a} />)}
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
               {loading && (
                 <div className="flex justify-start">
                   <div className="bg-lime/30 border border-ink/10 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-2 text-ink text-sm">
