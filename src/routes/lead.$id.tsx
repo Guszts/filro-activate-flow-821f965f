@@ -87,8 +87,8 @@ function LeadPage() {
             <div className="flex items-center gap-4 mb-3">
               {bi.logo_url && <img src={bi.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
               <div className="flex gap-2">
-                {bi.brand_color_primary && <div className="h-10 w-10 rounded-lg border border-border" style={{ background: bi.brand_color_primary }} title={bi.brand_color_primary} />}
-                {bi.brand_color_secondary && <div className="h-10 w-10 rounded-lg border border-border" style={{ background: bi.brand_color_secondary }} title={bi.brand_color_secondary} />}
+                {bi.brand_color_primary && <ColorSwatch hex={bi.brand_color_primary} />}
+                {bi.brand_color_secondary && <ColorSwatch hex={bi.brand_color_secondary} />}
               </div>
             </div>
             <Row label="Descrição" value={bi.description} multiline />
