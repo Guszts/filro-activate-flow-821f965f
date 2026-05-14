@@ -258,7 +258,7 @@ function Section({ id, title, icon: Icon, children }: { id: string; title: strin
 function Q({ q, children }: { q: string; children: React.ReactNode }) {
   return (
     <details className="border-b border-border py-4 group">
-      <summary className="cursor-pointer font-semibold text-ink list-none flex justify-between items-center"><span>{q}</span><Sparkles className="h-4 w-4 text-ink-soft group-open:rotate-180 transition-transform" /></summary>
+      <summary className="cursor-pointer font-semibold text-ink list-none flex justify-between items-center"><span>{q}</span><ChevronDown className="h-4 w-4 text-ink-soft group-open:rotate-180 transition-transform" /></summary>
       <div className="mt-2 text-ink-soft">{children}</div>
     </details>
   );
