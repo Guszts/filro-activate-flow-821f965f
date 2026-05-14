@@ -59,7 +59,7 @@ export function SiteHeader() {
                         <div className="text-xs text-ink-soft">Logado como</div>
                         <div className="text-sm font-medium text-ink truncate">{user?.email}</div>
                       </div>
-                      {authLinks.map(({ to, label, icon: Icon }) => {
+                      {visibleAuthLinks.map(({ to, label, icon: Icon }) => {
                         const active = path === to;
                         return (
                           <Link key={to} to={to} className={`flex items-center gap-3 p-3 rounded-xl text-sm transition-colors ${active ? "bg-muted text-ink font-semibold" : "text-ink hover:bg-muted"}`}>
@@ -114,7 +114,7 @@ export function SiteHeader() {
               })}
               {isAuthenticated ? (
                 <>
-                  {authLinks.map(({ to, label, icon: Icon }) => {
+                  {visibleAuthLinks.map(({ to, label, icon: Icon }) => {
                     const active = path === to;
                     return (
                       <Link key={to} to={to} onClick={() => setOpen(false)} className={`py-3 px-2 rounded-lg inline-flex items-center gap-2 ${active ? "bg-muted text-ink font-semibold" : "text-ink"}`}>
