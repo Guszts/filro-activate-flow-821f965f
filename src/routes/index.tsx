@@ -95,7 +95,7 @@ function HomePage() {
             {/* Floating label */}
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-              className="absolute -left-4 top-10 bg-paper rounded-2xl px-4 py-3 text-xs font-semibold tracking-wide border border-border"
+              className="absolute -left-4 top-10 z-20 bg-paper rounded-2xl px-4 py-3 text-xs font-semibold tracking-wide border border-border"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
               Modelo · Padaria
