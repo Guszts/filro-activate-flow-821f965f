@@ -40,6 +40,9 @@ function BusinessInfoPage() {
   const [project, setProject] = useState<{ id: string; business_info_submitted: boolean } | null>(null);
   const [saving, setSaving] = useState(false);
   const [section, setSection] = useState<"identidade" | "contato" | "catalogo" | "modelo">("identidade");
+  const [hydrated, setHydrated] = useState(false);
+
+  const lsKey = user ? `business-info-draft:${user.id}` : null;
 
   useEffect(() => {
     if (loading) return;
@@ -48,18 +51,36 @@ function BusinessInfoPage() {
       const { data: pay } = await supabase.from("payments").select("id, plan_id, status").eq("user_id", user.id).eq("status", "paid").maybeSingle();
       if (!pay) { toast.error("Você precisa concluir um pagamento primeiro."); navigate({ to: "/" }); return; }
 
+      // Load local draft immediately for instant restore
+      try {
+        const raw = lsKey ? localStorage.getItem(lsKey) : null;
+        if (raw) setInfo({ ...empty, ...(JSON.parse(raw) as Partial<BusinessInfo>) });
+      } catch { /* ignore */ }
+
       const { data: existing } = await supabase.from("projects").select("id, business_info, business_info_submitted").eq("user_id", user.id).maybeSingle();
       if (existing) {
         setProject({ id: existing.id, business_info_submitted: existing.business_info_submitted });
-        if (existing.business_info && typeof existing.business_info === "object") {
+        if (existing.business_info && typeof existing.business_info === "object" && Object.keys(existing.business_info).length > 0) {
           setInfo({ ...empty, ...(existing.business_info as Partial<BusinessInfo>) });
         }
       } else {
         const { data: created } = await supabase.from("projects").insert({ user_id: user.id, plan_id: pay.plan_id }).select("id, business_info_submitted").single();
         if (created) setProject({ id: created.id, business_info_submitted: created.business_info_submitted });
       }
+      setHydrated(true);
     })();
-  }, [loading, user, navigate]);
+  }, [loading, user, navigate, lsKey]);
+
+  // Autosave: localStorage immediately + debounced server save
+  useEffect(() => {
+    if (!hydrated || !lsKey) return;
+    try { localStorage.setItem(lsKey, JSON.stringify(info)); } catch { /* ignore */ }
+    if (!project) return;
+    const t = setTimeout(() => {
+      supabase.from("projects").update({ business_info: info as never }).eq("id", project.id);
+    }, 800);
+    return () => clearTimeout(t);
+  }, [info, hydrated, project, lsKey]);
 
   const upd = <K extends keyof BusinessInfo>(k: K, v: BusinessInfo[K]) => setInfo((p) => ({ ...p, [k]: v }));
 
