@@ -12,7 +12,13 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon } from "lucide-react";
 
-export const Route = createFileRoute("/settings")({ component: SettingsPage });
+export const Route = createFileRoute("/settings")({
+  component: SettingsPage,
+  head: () => ({ meta: [
+    { title: "Configurações · Filro" },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
+});
 
 interface ProfileRow {
   name: string; email: string; whatsapp: string; business_name: string; business_segment: string;
