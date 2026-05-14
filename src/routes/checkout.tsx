@@ -9,7 +9,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createPlanCheckoutSession } from "@/lib/payments.functions";
 
-export const Route = createFileRoute("/checkout")({ component: CheckoutPage });
+export const Route = createFileRoute("/checkout")({
+  component: CheckoutPage,
+  head: () => ({ meta: [
+    { title: "Checkout · Filro" },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
+});
 
 interface PlanInfo { name: string; activation_price: number; monthly_price: number }
 
