@@ -210,6 +210,7 @@ function UsersTab() {
 }
 
 function PaymentsTab() {
+  useRealtimeRefetch(["payments", "profiles", "plans"], [["console-payments"]]);
   const { data } = useQuery({
     queryKey: ["console-payments"],
     queryFn: async () => {
