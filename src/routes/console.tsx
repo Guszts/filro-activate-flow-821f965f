@@ -2,13 +2,28 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatBRL, formatDateTime } from "@/lib/format";
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/console")({ component: ConsolePage });
 
-type Tab = "overview" | "users" | "payments" | "plans" | "settings";
+type Tab = "overview" | "users" | "payments" | "subscriptions" | "plans" | "events" | "settings";
+
+function useRealtimeRefetch(tables: string[], queryKeys: string[][]) {
+  const qc = useQueryClient();
+  useEffect(() => {
+    const channel = supabase.channel(`console-${tables.join("-")}-${Math.random()}`);
+    tables.forEach((t) => {
+      channel.on("postgres_changes" as never, { event: "*", schema: "public", table: t }, () => {
+        queryKeys.forEach((k) => qc.invalidateQueries({ queryKey: k }));
+      });
+    });
+    channel.subscribe();
+    return () => { supabase.removeChannel(channel); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+}
 
 function ConsolePage() {
   const { user, role, loading, isAdmin, signOut } = useAuth();
