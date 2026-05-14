@@ -233,6 +233,21 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
       });
 
       if (!session.client_secret) throw new Error("Falha ao criar sessão");
+
+      // Track checkout_started for analytics/audit
+      if (data.userId) {
+        await supabaseAdmin.from("events").insert({
+          event_type: "checkout.started",
+          user_id: data.userId,
+          event_data: {
+            planSlug: normalizePlanSlug(data.planSlug),
+            sessionId: session.id,
+            environment: data.environment,
+            email: data.customerEmail ?? null,
+          } as never,
+        }).then(() => null).catch((e) => console.error("[checkout] event log failed", e));
+      }
+
       return { clientSecret: session.client_secret, error: null };
     } catch (err) {
       console.error("[checkout] checkout session startup failed", { planSlug: data.planSlug, err });
