@@ -34,6 +34,7 @@ export function SiteHeader() {
               {l.label}
             </a>
           ))}
+        </nav>
 
         <div className="flex items-center gap-2">
           {isAuthenticated ? (
