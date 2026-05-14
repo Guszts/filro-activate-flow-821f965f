@@ -4,7 +4,8 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowLeft, MessageCircle, Mail, ExternalLink } from "lucide-react";
+import { ArrowLeft, MessageCircle, Mail, ExternalLink, Copy } from "lucide-react";
+import { toast } from "sonner";
 import { formatBRL, formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/lead/$id")({ component: LeadPage });
