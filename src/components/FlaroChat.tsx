@@ -87,7 +87,6 @@ export function FlaroChat() {
               <div className="absolute right-0 -top-4 h-20 w-16 -rotate-6 rounded-3xl bg-flame" />
               <div className="absolute -bottom-6 left-16 h-12 w-28 rotate-3 rounded-3xl bg-ink/90" />
               <div className="relative flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-paper grid place-items-center text-ink font-display font-black text-lg ring-2 ring-ink">F</div>
                 <div>
                   <div className="font-display font-black leading-tight text-ink">Flaro</div>
                   <div className="text-xs text-ink-soft">Atendente inteligente da Filro</div>
