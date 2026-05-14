@@ -81,9 +81,10 @@ function HomePage() {
           <motion.div style={{ y: yImg }} className="lg:col-span-5 relative">
             <motion.div
               style={{ scale: scaleImg }}
-              className="relative aspect-[3/4] rounded-[3rem] overflow-hidden bg-stone"
+              className="relative aspect-[3/4] rounded-[32px] lg:rounded-[48px] overflow-hidden border border-white/10 bg-black/60 shadow-2xl hero-shadow transition-all duration-500 md:duration-1000"
             >
               <img src={heroImg} alt="Dono de padaria local com avental atrás do balcão" className="absolute inset-0 h-full w-full object-cover" width={1080} height={1440} />
+              <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
             </motion.div>
 
             {/* Decorative curved line */}
