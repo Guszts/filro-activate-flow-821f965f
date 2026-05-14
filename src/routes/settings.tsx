@@ -76,6 +76,23 @@ function SettingsPage() {
     } finally { setOpeningPortal(false); }
   };
 
+  const confirmCancel = async () => {
+    setCancelling(true);
+    try {
+      const res = await callCancel({ data: { reason: cancelReason.trim() || undefined, environment: getStripeEnvironment() } });
+      if (res.ok) {
+        toast.success("Assinatura cancelada. Você mantém acesso até o fim do ciclo atual.");
+        setCancelOpen(false);
+        setCancelReason("");
+        setHasSubscription(false);
+      } else {
+        toast.error(res.error || "Não foi possível cancelar");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao cancelar");
+    } finally { setCancelling(false); }
+  };
+
   if (loading || !user) return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
 
   return (
