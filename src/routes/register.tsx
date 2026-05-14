@@ -18,6 +18,11 @@ const schema = z.object({
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
   validateSearch: (s: Record<string, unknown>) => ({ redirect: (s.redirect as string) || "/checkout" }),
+  head: () => ({ meta: [
+    { title: "Criar conta · Filro" },
+    { name: "description", content: "Crie sua conta Filro e comece a ativação da sua página profissional em 24h." },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
 });
 
 function RegisterPage() {
