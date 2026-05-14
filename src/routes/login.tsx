@@ -6,6 +6,11 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/login")({
   component: LoginPage,
   validateSearch: (s: Record<string, unknown>) => ({ redirect: (s.redirect as string) || "/" }),
+  head: () => ({ meta: [
+    { title: "Entrar · Filro" },
+    { name: "description", content: "Acesse sua conta Filro para gerenciar sua página, conteúdos e ativação." },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
 });
 
 function LoginPage() {

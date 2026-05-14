@@ -1,0 +1,16 @@
+# Filro
+
+> Filro cria e ativa páginas profissionais para pequenos negócios em até 24 horas — cardápios digitais, portfólios, sites institucionais e páginas de captação para padarias, clínicas, salões, lojas, restaurantes e prestadores de serviço.
+
+A Filro entrega uma página pronta, hospedada e integrada ao WhatsApp, com painel próprio para edição de conteúdo. O cliente escolhe um modelo, envia as informações do negócio e recebe a página ativa em até 24h. Atendimento por chat (Flaro) e por WhatsApp.
+
+## Páginas
+
+- [Início](/): visão geral da Filro, modelos, processo de ativação e planos.
+- [Documentação](/docs): como funciona a ativação em 24h, o que enviar, dúvidas frequentes e detalhes técnicos.
+- [Política de Privacidade](/privacidade): coleta, uso e proteção de dados conforme LGPD.
+- [Termos de Uso](/termos): contratação, pagamentos, prazo de entrega, cancelamento.
+
+## Optional
+
+- [Sitemap](/sitemap.xml)

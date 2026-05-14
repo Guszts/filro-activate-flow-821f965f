@@ -6,7 +6,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatBRL, formatDateTime } from "@/lib/format";
 import { motion } from "framer-motion";
 
-export const Route = createFileRoute("/console")({ component: ConsolePage });
+export const Route = createFileRoute("/console")({
+  component: ConsolePage,
+  head: () => ({ meta: [
+    { title: "Console · Filro" },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
+});
 
 type Tab = "overview" | "users" | "payments" | "subscriptions" | "plans" | "events" | "settings";
 

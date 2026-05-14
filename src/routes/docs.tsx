@@ -7,10 +7,30 @@ import { Clock, ShieldCheck, ChevronDown, Workflow, Globe, Wrench, MessageCircle
 
 export const Route = createFileRoute("/docs")({
   component: DocsPage,
-  head: () => ({ meta: [
-    { title: "Documentação · Filro" },
-    { name: "description", content: "Como funciona a Filro: ativação em 24h, o que enviar, dúvidas frequentes e detalhes técnicos." },
-  ]}),
+  head: () => ({
+    meta: [
+      { title: "Documentação · Filro" },
+      { name: "description", content: "Como funciona a Filro: ativação em 24h, o que enviar, dúvidas frequentes e detalhes técnicos." },
+      { property: "og:title", content: "Documentação · Filro" },
+      { property: "og:description", content: "Como funciona a Filro: ativação em 24h, o que enviar e detalhes técnicos." },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "https://setup.filro.site/docs" },
+      { name: "twitter:title", content: "Documentação · Filro" },
+      { name: "twitter:description", content: "Como funciona a ativação em 24h, o que enviar e dúvidas frequentes." },
+    ],
+    links: [{ rel: "canonical", href: "https://setup.filro.site/docs" }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Início", item: "https://setup.filro.site/" },
+          { "@type": "ListItem", position: 2, name: "Documentação", item: "https://setup.filro.site/docs" },
+        ],
+      }),
+    }],
+  }),
 });
 
 const sections = [

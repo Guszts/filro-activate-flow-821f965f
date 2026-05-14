@@ -15,6 +15,10 @@ export const Route = createFileRoute("/payment-success")({
     payment_intent: (s.payment_intent as string) || "",
     redirect_status: (s.redirect_status as string) || "",
   }),
+  head: () => ({ meta: [
+    { title: "Pagamento confirmado · Filro" },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
 });
 
 interface ReceiptData {

@@ -8,7 +8,13 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Plus, Trash2, Upload, Check, Clock } from "lucide-react";
 
-export const Route = createFileRoute("/business-info")({ component: BusinessInfoPage });
+export const Route = createFileRoute("/business-info")({
+  component: BusinessInfoPage,
+  head: () => ({ meta: [
+    { title: "Informações do negócio · Filro" },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
+});
 
 interface Product { name: string; price: string; description: string; image_url: string }
 interface DayHours { closed: boolean; open: string; close: string }

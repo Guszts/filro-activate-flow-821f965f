@@ -2,7 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { X } from "lucide-react";
 
-export const Route = createFileRoute("/payment-failed")({ component: FailedPage });
+export const Route = createFileRoute("/payment-failed")({
+  component: FailedPage,
+  head: () => ({ meta: [
+    { title: "Pagamento não concluído · Filro" },
+    { name: "robots", content: "noindex,nofollow" },
+  ]}),
+});
 
 function FailedPage() {
   return (

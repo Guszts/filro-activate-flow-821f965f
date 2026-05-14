@@ -4,10 +4,19 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 export const Route = createFileRoute("/privacidade")({
   component: PrivacyPage,
-  head: () => ({ meta: [
-    { title: "Política de Privacidade · Filro" },
-    { name: "description", content: "Como a Filro coleta, usa, armazena e protege seus dados, em conformidade total com a LGPD." },
-  ]}),
+  head: () => ({
+    meta: [
+      { title: "Política de Privacidade · Filro" },
+      { name: "description", content: "Como a Filro coleta, usa, armazena e protege seus dados, em conformidade total com a LGPD." },
+      { property: "og:title", content: "Política de Privacidade · Filro" },
+      { property: "og:description", content: "Como a Filro coleta, usa e protege seus dados — conforme LGPD." },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "https://setup.filro.site/privacidade" },
+      { name: "twitter:title", content: "Política de Privacidade · Filro" },
+      { name: "twitter:description", content: "Como a Filro coleta, usa e protege seus dados — conforme LGPD." },
+    ],
+    links: [{ rel: "canonical", href: "https://setup.filro.site/privacidade" }],
+  }),
 });
 
 function PrivacyPage() {

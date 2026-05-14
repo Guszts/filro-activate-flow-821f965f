@@ -14,13 +14,13 @@ import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <main className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="font-display text-7xl font-black text-ink">404</h1>
         <p className="mt-4 text-ink-soft">Página não encontrada.</p>
         <a href="/" className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold">Voltar ao início</a>
       </div>
-    </div>
+    </main>
   );
 }
 
