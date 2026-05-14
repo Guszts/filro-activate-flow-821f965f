@@ -145,8 +145,8 @@ function BusinessInfoPage() {
 
   const submit = async () => {
     if (!project || !user) return;
-    if (!info.name) return toast.error("Business name is required");
-    if (!info.whatsapp) return toast.error("WhatsApp is required");
+    if (!info.name) return toast.error("Nome do negócio é obrigatório");
+    if (!info.whatsapp) return toast.error("WhatsApp é obrigatório");
     setSaving(true);
     const { error } = await supabase.from("projects").update({
       business_info: info as never,
@@ -158,17 +158,17 @@ function BusinessInfoPage() {
     }).eq("id", project.id);
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Information submitted! Activation started. Delivery in 24h.");
+    toast.success("Informações enviadas! Ativação iniciada. Entrega em 24h.");
     setProject({ ...project, business_info_submitted: true });
   };
 
-  if (loading || !project) return <div className="min-h-screen grid place-items-center text-ink-soft">Loading...</div>;
+  if (loading || !project) return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
 
   const sections = [
-    ["identidade", "Brand identity"],
-    ["contato", "Contact & socials"],
-    ["catalogo", "Catalog"],
-    ["modelo", "Template & promos"],
+    ["identidade", "Identidade da marca"],
+    ["contato", "Contato e redes"],
+    ["catalogo", "Catálogo"],
+    ["modelo", "Modelo e promoções"],
   ] as const;
 
   return (
