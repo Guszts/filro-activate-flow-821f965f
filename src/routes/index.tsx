@@ -102,7 +102,7 @@ function HomePage() {
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
-              className="absolute -right-4 bottom-16 bg-paper rounded-2xl px-5 py-4 max-w-[200px] border border-border"
+              className="absolute -right-4 bottom-16 z-20 bg-paper rounded-2xl px-5 py-4 max-w-[200px] border border-border"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
               <div className="text-xs tracking-wide text-ink-soft">Pronto em</div>
