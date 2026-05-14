@@ -145,6 +145,9 @@
   .ring-ink { box-shadow: 0 0 0 1px var(--ink); }
   .scrollbar-none::-webkit-scrollbar { display: none; }
   .scrollbar-none { scrollbar-width: none; }
+  .hero-shadow {
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.4);
+  }
 }
 
 /* Stripe Element overrides */
