@@ -112,7 +112,7 @@ function DocsPage() {
                 <li>Cupons, combos, descontos por tempo limitado.</li>
                 <li><strong>Selecionar modelo:</strong> link de referência (site que você gosta), arquivo (brief, PDF, imagem) ou descrição livre do clima desejado.</li>
               </ul>
-              <Card><Sparkles className="h-5 w-5 text-flame" /><div>Não tem logo ou fotos profissionais? Sem problema. Trabalhamos com tipografia, ilustrações e fotos do seu celular ou stock licenciado.</div></Card>
+              <Card><Lightbulb className="h-5 w-5 text-flame" /><div>Não tem logo ou fotos profissionais? Sem problema. Trabalhamos com tipografia, ilustrações e fotos do seu celular ou stock licenciado.</div></Card>
             </Section>
 
             <Section id="pagamento" title="Pagamento e planos" icon={CreditCard}>
