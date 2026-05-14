@@ -1,7 +1,7 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { useState } from "react";
-import { Menu, X, ChevronDown, BookOpen, Shield, FileText, MessageCircle, LayoutDashboard, LogOut, User } from "lucide-react";
+import { Menu, X, ChevronDown, MessageCircle, LayoutDashboard, LogOut, User } from "lucide-react";
 import logoSrc from "@/assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -9,12 +9,6 @@ const sections = [
   { label: "Modelos", hash: "modelos" },
   { label: "Como funciona", hash: "como-funciona" },
   { label: "Ativação", hash: "ativacao" },
-] as const;
-
-const docsLinks = [
-  { to: "/docs", label: "Documentação", icon: BookOpen, desc: "Guias completos · 24h" },
-  { to: "/termos", label: "Termos de Uso", icon: FileText, desc: "Condições do serviço" },
-  { to: "/privacidade", label: "Privacidade", icon: Shield, desc: "LGPD · seus dados" },
 ] as const;
 
 export function SiteHeader() {
