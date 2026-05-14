@@ -53,11 +53,9 @@ export function FlaroChat() {
         transition={{ delay: 0.6, type: "spring", stiffness: 260, damping: 20 }}
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Fechar chat com Flaro" : "Abrir chat com Flaro"}
-        className="fixed z-[60] bottom-5 right-5 md:bottom-6 md:right-6 h-14 w-14 rounded-full grid place-items-center text-paper shadow-2xl transition-transform hover:scale-105 active:scale-95"
+        className="fixed z-[60] bottom-5 right-5 md:bottom-6 md:right-6 h-14 w-14 rounded-full grid place-items-center text-ink shadow-2xl transition-transform hover:scale-105 active:scale-95 bg-lime ring-2 ring-ink"
         style={{
-          background:
-            "radial-gradient(120% 120% at 0% 0%, oklch(0.78 0.18 95) 0%, oklch(0.628 0.231 30) 60%, oklch(0.45 0.18 280) 100%)",
-          boxShadow: "0 16px 40px -8px oklch(0.628 0.231 30 / 0.5)",
+          boxShadow: "0 16px 40px -8px oklch(0.255 0.035 260 / 0.45)",
         }}
       >
         <AnimatePresence mode="wait" initial={false}>
@@ -80,26 +78,22 @@ export function FlaroChat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed z-[59] bottom-24 right-3 md:right-6 w-[calc(100vw-1.5rem)] max-w-[400px] h-[min(640px,80vh)] rounded-3xl overflow-hidden border border-white/10 bg-paper shadow-2xl flex flex-col"
+            className="fixed z-[59] bottom-24 right-3 md:right-6 w-[calc(100vw-1.5rem)] max-w-[400px] h-[min(640px,80vh)] rounded-3xl overflow-hidden border border-ink/10 bg-paper shadow-2xl flex flex-col"
             style={{ boxShadow: "0 30px 80px -20px rgba(0,0,0,0.4)" }}
           >
-            {/* Header */}
-            <div
-              className="px-5 py-4 text-paper relative overflow-hidden"
-              style={{
-                background:
-                  "radial-gradient(120% 120% at 0% 0%, oklch(0.78 0.18 95) 0%, oklch(0.628 0.231 30) 60%, oklch(0.35 0.15 280) 100%)",
-              }}
-            >
-              <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "14px 14px" }} />
+            {/* Header — Moda palette: paper base with lime + flame blocks */}
+            <div className="px-5 py-4 text-ink relative overflow-hidden bg-paper border-b border-ink/10">
+              <div className="absolute -left-8 -top-8 h-28 w-24 rotate-12 rounded-3xl bg-lime" />
+              <div className="absolute right-0 -top-4 h-20 w-16 -rotate-6 rounded-3xl bg-flame" />
+              <div className="absolute -bottom-6 left-16 h-12 w-28 rotate-3 rounded-3xl bg-ink/90" />
               <div className="relative flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-paper/95 grid place-items-center text-ink font-display font-black text-lg">F</div>
+                <div className="h-10 w-10 rounded-full bg-paper grid place-items-center text-ink font-display font-black text-lg ring-2 ring-ink">F</div>
                 <div>
-                  <div className="font-display font-black leading-tight">Flaro</div>
-                  <div className="text-xs opacity-90">Atendente inteligente da Filro</div>
+                  <div className="font-display font-black leading-tight text-ink">Flaro</div>
+                  <div className="text-xs text-ink-soft">Atendente inteligente da Filro</div>
                 </div>
-                <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] bg-paper/15 px-2 py-1 rounded-full">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Online
+                <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] bg-ink text-paper px-2 py-1 rounded-full">
+                  <span className="h-1.5 w-1.5 rounded-full bg-lime" /> Online
                 </span>
               </div>
             </div>
@@ -118,7 +112,7 @@ export function FlaroChat() {
                     className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                       m.role === "user"
                         ? "bg-ink text-paper rounded-br-md"
-                        : "bg-stone text-ink rounded-bl-md border border-border"
+                        : "bg-lime/30 text-ink rounded-bl-md border border-ink/10"
                     }`}
                   >
                     {m.content}
@@ -127,7 +121,7 @@ export function FlaroChat() {
               ))}
               {loading && (
                 <div className="flex justify-start">
-                  <div className="bg-stone border border-border rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-2 text-ink-soft text-sm">
+                  <div className="bg-lime/30 border border-ink/10 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-2 text-ink text-sm">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     Flaro está digitando…
                   </div>
