@@ -429,7 +429,7 @@ function CancellationsTab() {
     const match = (data?.evts ?? []).find((e: any) =>
       e.user_id === userId && (!subscriptionId || e.event_data?.subscriptionId === subscriptionId)
     );
-    return match?.event_data?.reason as string | undefined;
+    return (match?.event_data as { reason?: string } | undefined)?.reason;
   };
 
   return (
