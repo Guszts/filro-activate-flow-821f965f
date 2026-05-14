@@ -15,7 +15,44 @@ import { formatBRL } from "@/lib/format";
 const heroImg = "https://vcosjojrcnofamjqatgg.supabase.co/storage/v1/object/public/media/1778722402326-eytc71-9ru1H.jpg";
 import { ArrowRight } from "lucide-react";
 
-export const Route = createFileRoute("/")({ component: HomePage });
+const HOME_FAQS = [
+  { q: "Em quanto tempo recebo minha página?", a: "Entregamos em até 24 horas após o envio das informações do seu negócio." },
+  { q: "Como funciona o pagamento?", a: "Taxa única de ativação + mensalidade que cobre hospedagem, manutenção e pequenas alterações. Pagamento seguro pela Stripe." },
+  { q: "Posso cancelar quando quiser?", a: "Sim. Não há fidelidade. Cancele a mensalidade a qualquer momento direto do seu painel." },
+  { q: "Preciso ter domínio próprio?", a: "Não é obrigatório. Entregamos em um subdomínio nosso, e se você tiver um domínio próprio, configuramos sem custo adicional." },
+];
+
+export const Route = createFileRoute("/")({
+  component: HomePage,
+  head: () => ({
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Service",
+          serviceType: "Criação e ativação de páginas profissionais",
+          provider: { "@type": "Organization", name: "Filro", url: "https://setup.filro.site" },
+          areaServed: { "@type": "Country", name: "Brasil" },
+          description: "Páginas profissionais, cardápios digitais, portfólios e sites para negócios locais com ativação em até 24 horas.",
+          url: "https://setup.filro.site/",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: HOME_FAQS.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      },
+    ],
+  }),
+});
 
 function HomePage() {
   const navigate = useNavigate();
