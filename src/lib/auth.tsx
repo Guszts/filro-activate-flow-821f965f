@@ -11,7 +11,9 @@ interface AuthState {
   loading: boolean;
   isAdmin: boolean;
   isAuthenticated: boolean;
+  hasPaid: boolean;
   refreshRole: () => Promise<void>;
+  refreshPaid: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
