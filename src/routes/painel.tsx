@@ -65,6 +65,7 @@ function PainelPage() {
   useEffect(() => {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/painel" } }); return; }
+    if (!hasPaid && !isAdmin) { navigate({ to: "/" }); return; }
     (async () => {
       const [projRes, payRes, planRes, subRes] = await Promise.all([
         supabase.from("projects").select("*").eq("user_id", user.id).maybeSingle(),
