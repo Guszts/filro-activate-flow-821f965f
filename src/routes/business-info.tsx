@@ -74,7 +74,7 @@ function BusinessInfoPage() {
     if (!user) { navigate({ to: "/login", search: { redirect: "/business-info" } }); return; }
     (async () => {
       const { data: pay } = await supabase.from("payments").select("id, plan_id, status").eq("user_id", user.id).eq("status", "paid").maybeSingle();
-      if (!pay) { toast.error("You need to complete a payment first."); navigate({ to: "/" }); return; }
+      if (!pay) { toast.error("Você precisa concluir um pagamento primeiro."); navigate({ to: "/" }); return; }
 
       try {
         const raw = lsKey ? localStorage.getItem(lsKey) : null;
