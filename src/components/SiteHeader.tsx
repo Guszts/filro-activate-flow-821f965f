@@ -92,11 +92,6 @@ export function SiteHeader() {
                   {l.label}
                 </a>
               ))}
-              {docsLinks.map((d) => (
-                <Link key={d.to} to={d.to} onClick={() => setOpen(false)} className="text-ink py-3 border-b border-border/50 inline-flex items-center gap-2">
-                  <d.icon className="h-4 w-4" /> {d.label}
-                </Link>
-              ))}
               {isAuthenticated ? (
                 <>
                   <Link to="/painel" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Painel</Link>
