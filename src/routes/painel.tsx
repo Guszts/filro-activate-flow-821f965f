@@ -81,7 +81,7 @@ function PainelPage() {
       setHasSubscription((subRes.data ?? []).length > 0);
       setLoadingData(false);
     })();
-  }, [loading, user, navigate]);
+  }, [loading, user, hasPaid, isAdmin, navigate]);
 
   const status = STATUS_LABEL[project?.project_status ?? "new"] ?? STATUS_LABEL.new;
   const StatusIcon = status.icon;
