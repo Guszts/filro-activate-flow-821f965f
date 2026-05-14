@@ -9,6 +9,7 @@ import {
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
+import { FlaroChat } from "@/components/FlaroChat";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -120,6 +121,7 @@ function RootComponent() {
         </div>
         <PaymentTestModeBanner />
         <Outlet />
+        <FlaroChat />
         <Toaster />
       </AuthProvider>
     </QueryClientProvider>
