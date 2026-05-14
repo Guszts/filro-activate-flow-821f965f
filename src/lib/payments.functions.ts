@@ -290,3 +290,58 @@ export const createPortalSession = createServerFn({ method: "POST" })
       return { url: null, error: err instanceof Error ? err.message : "Falha ao abrir portal" };
     }
   });
+
+export const cancelSubscription = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { reason?: string; immediate?: boolean; environment: StripeEnv }) => {
+    if (data.reason && data.reason.length > 1000) throw new Error("Motivo muito longo");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { userId } = context;
+
+    const { data: sub } = await supabaseAdmin
+      .from("subscriptions")
+      .select("id, stripe_subscription_id, status, current_period_end")
+      .eq("user_id", userId)
+      .eq("environment", data.environment)
+      .neq("status", "canceled")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!sub?.stripe_subscription_id) {
+      return { ok: false, error: "Nenhuma assinatura ativa encontrada." };
+    }
+
+    try {
+      const stripe = createStripeClient(data.environment);
+      let updatedAt: string | null = null;
+      if (data.immediate) {
+        const canceled = await stripe.subscriptions.cancel(sub.stripe_subscription_id);
+        updatedAt = canceled?.canceled_at ? new Date(canceled.canceled_at * 1000).toISOString() : new Date().toISOString();
+      } else {
+        await stripe.subscriptions.update(sub.stripe_subscription_id, { cancel_at_period_end: true });
+      }
+
+      // Audit event so admin console pode filtrar motivos.
+      await supabaseAdmin.from("events").insert({
+        event_type: "subscription.cancel_requested",
+        user_id: userId,
+        event_data: {
+          subscriptionId: sub.stripe_subscription_id,
+          environment: data.environment,
+          immediate: !!data.immediate,
+          reason: data.reason ?? null,
+          current_period_end: sub.current_period_end,
+          canceled_at: updatedAt,
+        } as never,
+      });
+
+      return { ok: true, error: null };
+    } catch (err) {
+      console.error("[cancel] failed", err);
+      return { ok: false, error: err instanceof Error ? err.message : "Falha ao cancelar assinatura" };
+    }
+  });
+

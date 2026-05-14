@@ -6,11 +6,11 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { getStripeEnvironment } from "@/lib/stripe";
-import { createPortalSession } from "@/lib/payments.functions";
+import { createPortalSession, cancelSubscription } from "@/lib/payments.functions";
 import { PhoneInput } from "@/components/PhoneInput";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
-import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon, XCircle } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
@@ -31,7 +31,11 @@ function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [openingPortal, setOpeningPortal] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [cancelling, setCancelling] = useState(false);
   const openPortal = useServerFn(createPortalSession);
+  const callCancel = useServerFn(cancelSubscription);
 
   useEffect(() => {
     if (loading) return;
@@ -70,6 +74,23 @@ function SettingsPage() {
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erro ao abrir o portal");
     } finally { setOpeningPortal(false); }
+  };
+
+  const confirmCancel = async () => {
+    setCancelling(true);
+    try {
+      const res = await callCancel({ data: { reason: cancelReason.trim() || undefined, environment: getStripeEnvironment() } });
+      if (res.ok) {
+        toast.success("Assinatura cancelada. Você mantém acesso até o fim do ciclo atual.");
+        setCancelOpen(false);
+        setCancelReason("");
+        setHasSubscription(false);
+      } else {
+        toast.error(res.error || "Não foi possível cancelar");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao cancelar");
+    } finally { setCancelling(false); }
   };
 
   if (loading || !user) return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
@@ -119,10 +140,15 @@ function SettingsPage() {
           {hasSubscription ? (
             <>
               <p className="text-sm text-ink-soft">Atualize forma de pagamento, veja faturas, troque ou cancele seu plano.</p>
-              <button onClick={manageBilling} disabled={openingPortal} className="mt-5 inline-flex items-center justify-between gap-3 w-full sm:w-auto h-12 px-5 rounded-2xl bg-ink text-paper font-semibold hover:bg-ink/90 disabled:opacity-60">
-                <span className="inline-flex items-center gap-2"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Gerenciar assinatura"}</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
+              <div className="mt-5 flex flex-col sm:flex-row gap-3">
+                <button onClick={manageBilling} disabled={openingPortal} className="inline-flex items-center justify-between gap-3 h-12 px-5 rounded-2xl bg-ink text-paper font-semibold hover:bg-ink/90 disabled:opacity-60">
+                  <span className="inline-flex items-center gap-2"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Gerenciar assinatura"}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+                <button onClick={() => setCancelOpen(true)} className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted">
+                  <XCircle className="h-4 w-4" /> Cancelar assinatura
+                </button>
+              </div>
             </>
           ) : !hasPaid ? (
             <>
@@ -145,6 +171,55 @@ function SettingsPage() {
         </motion.section>
       </main>
       <SiteFooter />
+
+      <AnimatePresence>
+        {cancelOpen && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm grid place-items-center p-5"
+            onClick={() => !cancelling && setCancelOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.97 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md card-elevated p-7"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><XCircle className="h-5 w-5" /></div>
+                <h3 className="font-display font-black text-2xl text-ink">Cancelar assinatura?</h3>
+              </div>
+              <p className="mt-3 text-sm text-ink-soft">
+                Você manterá acesso até o fim do ciclo já pago. Conta pra gente o que faltou — usamos para melhorar.
+              </p>
+              <label className="block mt-5 text-xs tracking-wide text-ink-soft uppercase">Motivo (opcional)</label>
+              <textarea
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                rows={4}
+                maxLength={1000}
+                placeholder="Ex.: vou pausar o negócio, preço, encontrei outra solução..."
+                className="mt-2 w-full px-4 py-3 rounded-xl border border-border bg-paper outline-none focus:border-ink transition-colors text-sm"
+              />
+              <div className="mt-6 flex flex-col-reverse sm:flex-row gap-3 sm:justify-end">
+                <button
+                  onClick={() => setCancelOpen(false)}
+                  disabled={cancelling}
+                  className="h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted disabled:opacity-50"
+                >
+                  Voltar
+                </button>
+                <button
+                  onClick={confirmCancel}
+                  disabled={cancelling}
+                  className="h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90 disabled:opacity-60 inline-flex items-center justify-center gap-2"
+                >
+                  <XCircle className="h-4 w-4" /> {cancelling ? "Cancelando..." : "Confirmar cancelamento"}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
