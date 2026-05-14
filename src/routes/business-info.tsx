@@ -233,12 +233,12 @@ function BusinessInfoPage() {
                       onChange={(e) => upd("instagram", normalizeInstagram(e.target.value))}
                       onBlur={(e) => upd("instagram", normalizeInstagram(e.target.value))}
                       className={inputCls + " pl-9"}
-                      placeholder="yourbusiness"
+                      placeholder="seunegocio"
                     />
                   </div>
                 </Field>
-                <Field label="Address"><input value={info.address} onChange={(e) => upd("address", e.target.value)} className={inputCls} placeholder="Street, number, neighborhood, city" /></Field>
-                <Field label="Opening hours">
+                <Field label="Endereço"><input value={info.address} onChange={(e) => upd("address", e.target.value)} className={inputCls} placeholder="Rua, número, bairro, cidade" /></Field>
+                <Field label="Horário de funcionamento">
                   <div className="rounded-xl border border-border overflow-hidden divide-y divide-border">
                     {DAYS.map((d) => {
                       const h = info.hours[d.key];
@@ -247,7 +247,7 @@ function BusinessInfoPage() {
                           <div className="text-sm font-medium text-ink">{d.label}</div>
                           <label className="inline-flex items-center gap-2 text-xs text-ink-soft">
                             <input type="checkbox" checked={h.closed} onChange={(e) => updDay(d.key, { closed: e.target.checked })} />
-                            Closed
+                            Fechado
                           </label>
                           <input type="time" disabled={h.closed} value={h.open} onChange={(e) => updDay(d.key, { open: e.target.value })}
                             className="h-10 px-3 rounded-lg border border-border bg-paper outline-none focus:border-ink disabled:opacity-40" />
