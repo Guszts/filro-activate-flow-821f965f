@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/format";
 import { getStripeEnvironment } from "@/lib/stripe";
 import { createPortalSession } from "@/lib/payments.functions";
-import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, MessageCircle, Pencil, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, HelpCircle, Loader2, MessageCircle, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
