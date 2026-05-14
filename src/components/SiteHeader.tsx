@@ -34,36 +34,6 @@ export function SiteHeader() {
               {l.label}
             </a>
           ))}
-          <div className="relative" onMouseEnter={() => setMenu("docs")} onMouseLeave={() => setMenu(null)}>
-            <button className="inline-flex items-center gap-1 hover:text-ink transition-colors">
-              Recursos <ChevronDown className="h-3.5 w-3.5" />
-            </button>
-            <AnimatePresence>
-              {menu === "docs" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-72"
-                >
-                  <div className="card-elevated p-2 shadow-elegant">
-                    {docsLinks.map((d) => {
-                      const Icon = d.icon;
-                      return (
-                        <Link key={d.to} to={d.to} className="flex items-start gap-3 p-3 rounded-xl hover:bg-muted transition-colors">
-                          <div className="h-9 w-9 grid place-items-center rounded-lg bg-ink text-paper shrink-0"><Icon className="h-4 w-4" /></div>
-                          <div>
-                            <div className="text-sm font-semibold text-ink">{d.label}</div>
-                            <div className="text-xs text-ink-soft">{d.desc}</div>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </nav>
 
         <div className="flex items-center gap-2">
           {isAuthenticated ? (
