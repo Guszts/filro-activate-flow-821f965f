@@ -29,6 +29,10 @@ Como responder:
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile";
+const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const LOVABLE_AI_MODEL = "google/gemini-3-flash-preview";
+
+type ChatMessage = Array<{ role: string; content: string }>;
 
 function getKeys(): string[] {
   return [
@@ -39,7 +43,7 @@ function getKeys(): string[] {
   ].filter((k): k is string => !!k && k.length > 10);
 }
 
-async function callGroq(apiKey: string, messages: Array<{ role: string; content: string }>) {
+async function callGroq(apiKey: string, messages: ChatMessage) {
   const res = await fetch(GROQ_URL, {
     method: "POST",
     headers: {
@@ -56,9 +60,43 @@ async function callGroq(apiKey: string, messages: Array<{ role: string; content:
   return res;
 }
 
+async function callLovableAi(apiKey: string, messages: ChatMessage) {
+  const res = await fetch(LOVABLE_AI_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: LOVABLE_AI_MODEL,
+      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+      temperature: 0.55,
+      max_tokens: 700,
+    }),
+  });
+  return res;
+}
+
 export const flaroChat = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => inputSchema.parse(input))
   .handler(async ({ data }) => {
+    const lovableApiKey = process.env.LOVABLE_API_KEY;
+    if (lovableApiKey) {
+      try {
+        const res = await callLovableAi(lovableApiKey, data.messages);
+        if (res.ok) {
+          const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+          const reply = json.choices?.[0]?.message?.content?.trim() || "";
+          if (reply) return { reply, error: null };
+        } else {
+          const body = await res.text().catch(() => "");
+          console.warn("[Flaro] Lovable AI failed, tentando Groq como backup...", { status: res.status, body });
+        }
+      } catch (err) {
+        console.warn("[Flaro] Lovable AI threw, tentando Groq como backup...", err);
+      }
+    }
+
     const keys = getKeys();
     if (keys.length === 0) {
       return { reply: "Desculpe, o atendimento está temporariamente indisponível.", error: "no_keys" as const };
