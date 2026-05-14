@@ -486,6 +486,8 @@ function CancellationsTab() {
     </div>
   );
 }
+
+function EventsTab() {
   useRealtimeRefetch(["events"], [["console-events"]]);
   const [filter, setFilter] = useState("");
   const { data } = useQuery({
