@@ -1,14 +1,19 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { useState } from "react";
-import { Menu, X, ChevronDown, MessageCircle, LayoutDashboard, LogOut, User } from "lucide-react";
+import { Menu, X, ChevronDown, MessageCircle, LayoutDashboard, LogOut, Briefcase, Shield, Sparkles, PlayCircle, Zap } from "lucide-react";
 import logoSrc from "@/assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
 const sections = [
-  { label: "Modelos", hash: "modelos" },
-  { label: "Como funciona", hash: "como-funciona" },
-  { label: "Ativação", hash: "ativacao" },
+  { label: "Modelos", hash: "modelos", icon: Sparkles },
+  { label: "Como funciona", hash: "como-funciona", icon: PlayCircle },
+  { label: "Ativação", hash: "ativacao", icon: Zap },
+] as const;
+
+const authLinks = [
+  { to: "/painel" as const, label: "Painel", icon: LayoutDashboard },
+  { to: "/business-info" as const, label: "Meu negócio", icon: Briefcase },
 ] as const;
 
 export function SiteHeader() {
@@ -52,9 +57,19 @@ export function SiteHeader() {
                         <div className="text-xs text-ink-soft">Logado como</div>
                         <div className="text-sm font-medium text-ink truncate">{user?.email}</div>
                       </div>
-                      <Link to="/painel" className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-sm text-ink"><LayoutDashboard className="h-4 w-4" /> Painel</Link>
-                      <Link to="/business-info" className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-sm text-ink"><User className="h-4 w-4" /> Meu negócio</Link>
-                      {isAdmin && <Link to="/console" className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-sm text-ink"><LayoutDashboard className="h-4 w-4" /> Console</Link>}
+                      {authLinks.map(({ to, label, icon: Icon }) => {
+                        const active = path === to;
+                        return (
+                          <Link key={to} to={to} className={`flex items-center gap-3 p-3 rounded-xl text-sm transition-colors ${active ? "bg-muted text-ink font-semibold" : "text-ink hover:bg-muted"}`}>
+                            <Icon className="h-4 w-4" /> {label}
+                          </Link>
+                        );
+                      })}
+                      {isAdmin && (
+                        <Link to="/console" className={`flex items-center gap-3 p-3 rounded-xl text-sm transition-colors ${path === "/console" ? "bg-muted text-ink font-semibold" : "text-ink hover:bg-muted"}`}>
+                          <Shield className="h-4 w-4" /> Console
+                        </Link>
+                      )}
                       <button onClick={async () => { await signOut(); navigate({ to: "/" }); }} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-sm text-ink text-left">
                         <LogOut className="h-4 w-4" /> Sair
                       </button>
@@ -87,17 +102,30 @@ export function SiteHeader() {
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             className="md:hidden border-t border-border bg-paper overflow-hidden">
             <div className="px-5 py-6 flex flex-col gap-1 text-base font-medium">
-              {sections.map((l) => (
-                <a key={l.hash} href={sectionHref(l.hash)} onClick={() => setOpen(false)} className="text-ink py-3 border-b border-border/50">
-                  {l.label}
-                </a>
-              ))}
+              {sections.map((l) => {
+                const Icon = l.icon;
+                return (
+                  <a key={l.hash} href={sectionHref(l.hash)} onClick={() => setOpen(false)} className="text-ink py-3 border-b border-border/50 inline-flex items-center gap-2">
+                    <Icon className="h-4 w-4 text-ink-soft" /> {l.label}
+                  </a>
+                );
+              })}
               {isAuthenticated ? (
                 <>
-                  <Link to="/painel" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Painel</Link>
-                  <Link to="/business-info" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><User className="h-4 w-4" /> Meu negócio</Link>
-                  {isAdmin && <Link to="/console" onClick={() => setOpen(false)} className="text-ink py-3 inline-flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Console</Link>}
-                  <button onClick={async () => { await signOut(); setOpen(false); navigate({ to: "/" }); }} className="text-left text-ink py-3 inline-flex items-center gap-2"><LogOut className="h-4 w-4" /> Sair</button>
+                  {authLinks.map(({ to, label, icon: Icon }) => {
+                    const active = path === to;
+                    return (
+                      <Link key={to} to={to} onClick={() => setOpen(false)} className={`py-3 px-2 rounded-lg inline-flex items-center gap-2 ${active ? "bg-muted text-ink font-semibold" : "text-ink"}`}>
+                        <Icon className="h-4 w-4" /> {label}
+                      </Link>
+                    );
+                  })}
+                  {isAdmin && (
+                    <Link to="/console" onClick={() => setOpen(false)} className={`py-3 px-2 rounded-lg inline-flex items-center gap-2 ${path === "/console" ? "bg-muted text-ink font-semibold" : "text-ink"}`}>
+                      <Shield className="h-4 w-4" /> Console
+                    </Link>
+                  )}
+                  <button onClick={async () => { await signOut(); setOpen(false); navigate({ to: "/" }); }} className="text-left text-ink py-3 px-2 inline-flex items-center gap-2"><LogOut className="h-4 w-4" /> Sair</button>
                 </>
               ) : (
                 <Link to="/login" onClick={() => setOpen(false)} className="text-ink py-3">Entrar</Link>

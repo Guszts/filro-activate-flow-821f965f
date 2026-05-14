@@ -46,7 +46,6 @@ export function SiteFooter() {
       <div className="border-t border-border/60">
         <div className="mx-auto max-w-[1400px] px-5 md:px-10 py-5 text-xs text-ink-soft flex flex-wrap justify-between gap-3">
           <span>© {new Date().getFullYear()} Filro. Todos os direitos reservados.</span>
-          <span>Feito com cuidado · entrega em 24h ou mês grátis</span>
         </div>
       </div>
     </footer>
