@@ -232,7 +232,7 @@ function BusinessInfoPage() {
           <nav className="lg:sticky lg:top-28 h-fit space-y-1">
             {sections.map(([k, label]) => (
               <button key={k} onClick={() => setSection(k)}
-                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors ${section === k ? "bg-ink text-paper" : "text-ink-soft hover:bg-muted"}`}>
+                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors ${currentSection === k ? "bg-ink text-paper" : "text-ink-soft hover:bg-muted"}`}>
                 {label}
               </button>
             ))}
