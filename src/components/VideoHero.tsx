@@ -1,21 +1,33 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 
 export function VideoHero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   const toggle = () => {
     const v = videoRef.current;
     if (!v) return;
     if (v.paused) {
+      // Unmute on first user-initiated play so o áudio é audível
+      v.muted = false;
+      setIsMuted(false);
       v.play();
       setIsPlaying(true);
     } else {
       v.pause();
       setIsPlaying(false);
     }
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setIsMuted(v.muted);
   };
 
   return (
@@ -31,7 +43,7 @@ export function VideoHero() {
           ref={videoRef}
           src="/videos/filro-hero.mp4"
           className="absolute inset-0 h-full w-full object-cover"
-          muted
+          muted={isMuted}
           loop
           playsInline
           preload="metadata"
@@ -70,6 +82,16 @@ export function VideoHero() {
             <Pause className="h-5 w-5 md:h-6 md:w-6 fill-white" strokeWidth={0} />
           </button>
         )}
+
+        {/* Discreet mute/unmute control — always available inside hero */}
+        <button
+          type="button"
+          onClick={toggleMute}
+          aria-label={isMuted ? "Ativar som" : "Silenciar"}
+          className="absolute bottom-4 left-4 md:bottom-6 md:left-6 z-30 flex h-10 w-10 md:h-11 md:w-11 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/80 hover:scale-105 active:scale-95"
+        >
+          {isMuted ? <VolumeX className="h-4 w-4 md:h-5 md:w-5" /> : <Volume2 className="h-4 w-4 md:h-5 md:w-5" />}
+        </button>
       </motion.div>
     </section>
   );
