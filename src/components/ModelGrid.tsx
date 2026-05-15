@@ -6,6 +6,7 @@ import clinicaCover from "@/assets/cover-clinica.jpg";
 import autoCover from "@/assets/cover-auto.jpg";
 import restauranteCover from "@/assets/cover-restaurante.jpg";
 import hamburguerCover from "@/assets/cover-hamburguer.jpg";
+import modaCover from "@/assets/cover-moda.jpg";
 
 type Cover = (props: { className?: string }) => ReactElement;
 
@@ -29,17 +30,7 @@ const PadariaCover: Cover = photoCover(padariaCover, "Capa do modelo Padaria");
 const AutoCover: Cover = photoCover(autoCover, "Capa do modelo Auto");
 const RestauranteCover: Cover = photoCover(restauranteCover, "Capa do modelo Restaurante");
 const HamburguerCover: Cover = photoCover(hamburguerCover, "Capa do modelo Hambúrguer");
-
-const ModaCover: Cover = ({ className }) => (
-  <div className={`relative overflow-hidden bg-paper ${className ?? ""}`}>
-    <div className="absolute inset-0">
-      <div className="absolute -left-10 -top-10 h-56 w-44 rotate-12 rounded-3xl bg-lime" />
-      <div className="absolute right-0 top-12 h-40 w-28 -rotate-6 rounded-3xl bg-flame" />
-      <div className="absolute bottom-0 left-12 h-24 w-40 rotate-3 rounded-3xl bg-ink" />
-    </div>
-    <div className="absolute right-10 bottom-10 h-6 w-6 rounded-full bg-paper ring-2 ring-ink" />
-  </div>
-);
+const ModaCover: Cover = photoCover(modaCover, "Capa do modelo Moda");
 
 interface Model {
   name: string;
