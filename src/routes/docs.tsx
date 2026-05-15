@@ -87,9 +87,9 @@ function DocsPage() {
                 <li><strong>Crie sua conta</strong> com e-mail/senha ou login Google.</li>
                 <li><strong>Finalize o pagamento</strong> via Stripe (cartão, débito ou Pix).</li>
                 <li><strong>Envie as informações do negócio</strong> — identidade, contato, catálogo e referência de modelo.</li>
-                <li>Em até 24h, sua presença digital está no ar e você recebe o link no WhatsApp.</li>
+                <li>Em estimativa de até 24h após envio completo das informações, sua presença digital fica no ar e o link chega no WhatsApp.</li>
               </ol>
-              <Card><Clock className="h-5 w-5 text-flame" /><div><strong>Garantia 24h.</strong> Se passarmos do prazo por culpa nossa, mês de mensalidade por nossa conta.</div></Card>
+              <Card><Clock className="h-5 w-5 text-flame" /><div><strong>Estimativa 24h.</strong> Prazo contado a partir do envio completo do formulário; materiais incompletos pausam o cronômetro.</div></Card>
             </Section>
 
             <Section id="fluxo" title="Fluxo de ativação" icon={Workflow}>
@@ -161,15 +161,15 @@ function DocsPage() {
               <h3>Stack</h3>
               <ul>
                 <li>Frontend: React 19 + TanStack Start v1 (SSR + Edge runtime).</li>
-                <li>Backend: Lovable Cloud (Postgres + Auth + Storage + Realtime).</li>
-                <li>Pagamentos: Stripe via Lovable Connector Gateway, com Embedded Checkout.</li>
-                <li>Hospedagem: Cloudflare Workers Edge, com cache global em 300+ POPs.</li>
-                <li>CDN de imagens: Cloudflare Images com otimização automática (WebP/AVIF).</li>
+                <li>Backend gerenciado: Postgres + Auth + Storage + Realtime.</li>
+                <li>Pagamentos: Stripe com Embedded Checkout.</li>
+                <li>Hospedagem em edge global, com cache em centenas de POPs.</li>
+                <li>CDN de imagens com otimização automática (WebP/AVIF).</li>
               </ul>
               <h3>Performance</h3>
               <ul>
-                <li>Lighthouse 95+ em todas as categorias (Performance, A11y, SEO, Best Practices).</li>
-                <li>SSR para SEO e first-paint sub-segundo (TTFB &lt; 200ms na média global).</li>
+                <li>Boas práticas de performance e SEO técnico (Core Web Vitals como meta de trabalho).</li>
+                <li>SSR para SEO e first-paint rápido.</li>
                 <li>Lazy-loading nativo em imagens e componentes pesados.</li>
                 <li>Fontes auto-hospedadas com <code>font-display: swap</code>.</li>
               </ul>
@@ -205,13 +205,13 @@ function DocsPage() {
             <Section id="manutencao" title="Manutenção e edições" icon={RefreshCw}>
               <h3>O que está incluso na mensalidade</h3>
               <ul>
-                <li>Atualizações de catálogo (preços, fotos, descrições) ilimitadas via painel.</li>
+                <li>Pequenas alterações de catálogo (preços, fotos, descrições) inclusas via painel.</li>
                 <li>Pequenos ajustes visuais (até 2h/mês de equipe).</li>
-                <li>Backups diários automáticos com retenção de 90 dias.</li>
-                <li>Monitoramento 24/7 de uptime.</li>
+                <li>Hospedagem ativa enquanto a mensalidade estiver em dia.</li>
+                <li>Suporte básico para manutenção do projeto pelo WhatsApp.</li>
               </ul>
               <h3>Edições maiores</h3>
-              <p>Redesigns completos, novas seções customizadas ou integrações específicas são orçados à parte. Pedidos pelo WhatsApp; orçamento em até 1 dia útil.</p>
+              <p>Redesigns, novas seções customizadas ou integrações específicas são orçados à parte. Pedidos pelo WhatsApp; orçamento em até 1 dia útil.</p>
             </Section>
 
             <Section id="metricas" title="Métricas e SEO" icon={BarChart3}>
@@ -234,7 +234,7 @@ function DocsPage() {
               <Q q="Posso editar depois?">Sim. Você acessa o painel a qualquer hora e atualiza informações, fotos, preços e promoções sem cobrança extra.</Q>
               <Q q="Quanto tempo até estar no ar?">Até 24 horas após o envio das informações. Geralmente entregamos em menos de 18h.</Q>
               <Q q="Preciso entender de tecnologia?">Não. Você só envia as informações; nosso time monta tudo. O painel também é desenhado para uso por leigos.</Q>
-              <Q q="E se eu não gostar do resultado?">Incluímos 1 rodada de revisão visual gratuita nos primeiros 7 dias. Ajustes finos são feitos sem custo nesse período.</Q>
+              <Q q="E se eu não gostar do resultado?">Incluímos 1 rodada de revisão visual nos primeiros 7 dias. Ajustes simples dentro do escopo são feitos sem custo nesse período.</Q>
               <Q q="Posso cancelar?">Sim, a qualquer momento. A ativação não é reembolsável após início da produção; mensalidade pode ser cancelada com 7 dias de antecedência.</Q>
               <Q q="O que acontece se eu cancelar?">O site fica no ar até o fim do ciclo já pago. Depois disso, exportamos seus dados em JSON/CSV e o domínio próprio continua seu para apontar onde quiser.</Q>
               <Q q="Vocês fazem cardápio digital?">Sim, é uma das categorias mais pedidas. Plano Avançado em diante, com QR code para mesas.</Q>
