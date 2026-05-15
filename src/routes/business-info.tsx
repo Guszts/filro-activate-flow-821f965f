@@ -219,8 +219,13 @@ function BusinessInfoPage() {
           )}
         </motion.div>
         <p className="mt-3 text-ink-soft max-w-2xl">Quanto mais detalhes você fornecer, melhor o resultado. Tudo é editável depois.</p>
-        <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-flame/10 text-flame text-xs font-semibold">
-          <Clock className="h-3.5 w-3.5" /> Entrega em até 24h após confirmação
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink text-paper text-xs font-semibold uppercase tracking-wide">
+            Plano {planSlug}
+          </span>
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-flame/10 text-flame text-xs font-semibold">
+            <Clock className="h-3.5 w-3.5" /> Entrega em até 24h após confirmação
+          </span>
         </div>
 
         <div className="mt-10 grid lg:grid-cols-[240px_1fr] gap-8">
