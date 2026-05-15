@@ -382,8 +382,8 @@ const Flow = () => {
       <HeadlineRow kicker="COMO COMEÇA" title="Três passos. Sem mistério." />
       <div style={{ display: "flex", alignItems: "stretch", gap: 18 }}>
         {steps.map((st, i) => (
-          <>
-            <Card key={st.n} bg={i === 1 ? THEME.lime : THEME.white} delay={10 + i * 10} style={{ flex: 1, minHeight: 200 }}>
+          <React.Fragment key={st.n}>
+            <Card bg={i === 1 ? THEME.lime : THEME.white} delay={10 + i * 10} style={{ flex: 1, minHeight: 200 }}>
               <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 80, lineHeight: 1, color: THEME.ink }}>{st.n}</div>
               <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 36, color: THEME.ink }}>{st.t}</div>
               <div style={{ fontFamily: "Inter, sans-serif", fontSize: 20, color: THEME.inkSoft }}>{st.d}</div>
@@ -391,7 +391,7 @@ const Flow = () => {
             {i < steps.length - 1 ? (
               <div style={{ display: "flex", alignItems: "center", fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 56, color: THEME.ink }}>→</div>
             ) : null}
-          </>
+          </React.Fragment>
         ))}
       </div>
     </div>
