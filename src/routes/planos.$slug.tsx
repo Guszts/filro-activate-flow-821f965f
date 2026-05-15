@@ -6,7 +6,8 @@ import { useAuth } from "@/lib/auth";
 import { formatBRL } from "@/lib/format";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { ArrowRight, Check, PlayCircle } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import { TutorialVideo } from "@/components/TutorialVideo";
 
 export const Route = createFileRoute("/planos/$slug")({
   component: PlanDetailsPage,
