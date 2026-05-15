@@ -1,14 +1,5 @@
 import { Link } from "@tanstack/react-router";
 
-const WA_NUMBER = "5592993561754";
-const WA_MSG = encodeURIComponent(
-  "Olá! Vim do site da Filro e gostaria de tirar uma dúvida sobre os planos / ativação."
-);
-const EMAIL = "filro.site@gmail.com";
-const EMAIL_SUBJECT = encodeURIComponent("Suporte Filro");
-const EMAIL_BODY = encodeURIComponent(
-  "Olá, equipe Filro!\n\nVim pelo site e gostaria de falar sobre:\n\n"
-);
 
 export function SiteFooter() {
   return (
@@ -42,22 +33,9 @@ export function SiteFooter() {
           <div className="font-semibold text-ink mb-4">Contato</div>
           <ul className="space-y-2.5">
             <li>
-              <a
-                href={`https://wa.me/${WA_NUMBER}?text=${WA_MSG}`}
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-ink transition-colors underline-offset-4 hover:underline"
-              >
-                WhatsApp · +55 92 99356-1754
-              </a>
-            </li>
-            <li>
-              <a
-                href={`mailto:${EMAIL}?subject=${EMAIL_SUBJECT}&body=${EMAIL_BODY}`}
-                className="hover:text-ink transition-colors underline-offset-4 hover:underline break-all"
-              >
-                {EMAIL}
-              </a>
+              <Link to="/docs" className="hover:text-ink transition-colors">
+                Central de ajuda
+              </Link>
             </li>
           </ul>
         </div>
