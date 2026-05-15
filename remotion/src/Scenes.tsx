@@ -173,7 +173,7 @@ const Promise_ = () => {
   ];
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", gap: 36 }}>
-      <HeadlineRow kicker="O JEITO START" title="Sua presença digital, sem complicação." />
+      <HeadlineRow kicker={`O JEITO ${usePlanLabel()}`} title="Sua presença digital, sem complicação." />
       <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
         {words.map((w, i) => {
           const s = useEnter(10 + i * 8);
