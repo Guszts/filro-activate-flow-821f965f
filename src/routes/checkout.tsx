@@ -52,9 +52,7 @@ function CheckoutPage() {
         const paymentSession = await createPlanCheckoutSession({
           data: {
             planSlug,
-            customerEmail: user.email ?? undefined,
-            userId: user.id,
-            returnUrl: `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+            returnOrigin: window.location.origin,
             environment: getStripeEnvironment(),
           },
         });

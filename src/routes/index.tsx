@@ -143,7 +143,7 @@ function HomePage() {
               style={{ boxShadow: "var(--shadow-card)" }}
             >
               <div className="text-xs tracking-wide text-ink-soft">Pronto em</div>
-              <div className="font-display font-black text-ink leading-tight mt-1">24 horas,<br />garantido.</div>
+              <div className="font-display font-black text-ink leading-tight mt-1">até 24h<br />após envio.</div>
             </motion.div>
           </motion.div>
         </div>

@@ -36,10 +36,24 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
           return new Response("Invalid signature", { status: 400 });
         }
 
+        // Idempotência: se este event.id já foi gravado, descarta.
+        const { error: dupeErr } = await supabaseAdmin
+          .from("webhook_events")
+          .insert({ event_id: event.id, event_type: event.type, environment: env });
+        if (dupeErr) {
+          if ((dupeErr as { code?: string }).code === "23505") {
+            console.log("[webhook] duplicate event, skipping", event.id);
+            return new Response("ok", { status: 200 });
+          }
+          console.error("[webhook] failed to record event", dupeErr);
+        }
+
         try {
           await handleEvent(event, env);
         } catch (err) {
           console.error("[webhook] handler error", { type: event.type, err });
+          // Remove o registro para permitir retry do Stripe
+          await supabaseAdmin.from("webhook_events").delete().eq("event_id", event.id);
           return new Response("Handler error", { status: 500 });
         }
 
@@ -256,7 +270,16 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
     }
 
     case "invoice.payment_succeeded": {
-      const invoice = event.data.object as Stripe.Invoice & { subscription?: string | Stripe.Subscription };
+      const invoice = event.data.object as Stripe.Invoice & {
+        subscription?: string | Stripe.Subscription;
+        billing_reason?: string;
+      };
+      // Evita duplicação: a fatura inicial (subscription_create) já foi
+      // registrada em checkout.session.completed.
+      if (invoice.billing_reason === "subscription_create") {
+        await logEvent("invoice.payment_succeeded.skipped_initial", null, { invoiceId: invoice.id });
+        break;
+      }
       const subId = typeof invoice.subscription === "string"
         ? invoice.subscription
         : invoice.subscription?.id;

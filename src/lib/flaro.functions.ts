@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const messageSchema = z.object({
   role: z.enum(["user", "assistant", "system"]),
@@ -9,6 +11,34 @@ const messageSchema = z.object({
 const inputSchema = z.object({
   messages: z.array(messageSchema).min(1).max(40),
 });
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 10;
+
+async function checkRateLimit(identity: string): Promise<boolean> {
+  const since = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+  const { count } = await supabaseAdmin
+    .from("flaro_rate_limits")
+    .select("id", { count: "exact", head: true })
+    .eq("identity", identity)
+    .gte("created_at", since);
+  if ((count ?? 0) >= RATE_LIMIT_MAX) return false;
+  await supabaseAdmin.from("flaro_rate_limits").insert({ identity });
+  return true;
+}
+
+function getIdentity(): string {
+  try {
+    const req = getRequest();
+    const ip = req.headers.get("cf-connecting-ip")
+      || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+      || req.headers.get("x-real-ip")
+      || "unknown";
+    return `ip:${ip}`;
+  } catch {
+    return "ip:unknown";
+  }
+}
 
 const SYSTEM_PROMPT = `Você é o Flaro, o atendente inteligente da Filro.
 
@@ -86,6 +116,15 @@ async function callLovableAi(apiKey: string, messages: ChatMessage) {
 export const flaroChat = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => inputSchema.parse(input))
   .handler(async ({ data }) => {
+    const identity = getIdentity();
+    const allowed = await checkRateLimit(identity).catch(() => true);
+    if (!allowed) {
+      return {
+        reply: "Você está enviando mensagens rápido demais. Aguarde um instante e tente de novo.",
+        error: "rate_limited" as const,
+      };
+    }
+
     const lovableApiKey = process.env.LOVABLE_API_KEY;
     if (lovableApiKey) {
       try {

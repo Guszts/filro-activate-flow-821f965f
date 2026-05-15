@@ -183,18 +183,38 @@ async function resolveOrCreatePlanPrices(
   return { activationPrice, monthlyPrice };
 }
 
+const ALLOWED_RETURN_HOSTS = new Set([
+  "setup.filro.site",
+  "filro.site",
+  "filro-activate-flow.lovable.app",
+  "id-preview--dda9f651-8d6f-45c8-92a8-0cf8f17a35cf.lovable.app",
+  "localhost",
+  "127.0.0.1",
+]);
+
 export const createPlanCheckoutSession = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data: {
     planSlug: string;
-    customerEmail?: string;
-    userId?: string;
-    returnUrl: string;
+    returnOrigin: string;
     environment: StripeEnv;
   }) => {
     if (!/^[a-z_]+$/.test(data.planSlug)) throw new Error("Invalid planSlug");
-    return data;
+    if (data.environment !== "sandbox" && data.environment !== "live") throw new Error("Invalid environment");
+    let parsed: URL;
+    try { parsed = new URL(data.returnOrigin); } catch { throw new Error("Invalid returnOrigin"); }
+    if (parsed.protocol !== "https:" && parsed.hostname !== "localhost" && parsed.hostname !== "127.0.0.1") {
+      throw new Error("Invalid returnOrigin protocol");
+    }
+    if (!ALLOWED_RETURN_HOSTS.has(parsed.hostname)) throw new Error("Disallowed return origin");
+    return { planSlug: data.planSlug, returnOrigin: parsed.origin, environment: data.environment };
   })
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    const { userId, supabase } = context;
+    // Email é fonte de verdade no servidor — derivado da sessão autenticada.
+    const { data: authUser } = await supabase.auth.getUser();
+    const customerEmail = authUser?.user?.email ?? undefined;
+    const returnUrl = `${data.returnOrigin}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
     try {
       const stripe = createStripeClient(data.environment);
       const plan = await getPlanForCheckout(data.planSlug);
@@ -209,12 +229,10 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
       }
       if (!activationPrice || !monthlyPrice) throw new Error("Preços do plano não encontrados");
 
-      const customerId = (data.customerEmail || data.userId)
-        ? await resolveOrCreateCustomer(stripe, {
-            email: data.customerEmail,
-            userId: data.userId,
-          })
-        : undefined;
+      const customerId = await resolveOrCreateCustomer(stripe, {
+        email: customerEmail,
+        userId,
+      });
 
       const session = await stripe.checkout.sessions.create({
         line_items: [
@@ -223,33 +241,28 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
         ],
         mode: "subscription",
         ui_mode: "embedded_page",
-        return_url: data.returnUrl,
+        return_url: returnUrl,
         allow_promotion_codes: true,
-        ...(customerId && { customer: customerId }),
-        ...(data.userId && {
-          metadata: { userId: data.userId, planSlug: data.planSlug },
-          subscription_data: { metadata: { userId: data.userId, planSlug: data.planSlug } },
-        }),
+        customer: customerId,
+        metadata: { userId, planSlug: data.planSlug },
+        subscription_data: { metadata: { userId, planSlug: data.planSlug } },
       });
 
       if (!session.client_secret) throw new Error("Falha ao criar sessão");
 
-      // Track checkout_started for analytics/audit
-      if (data.userId) {
-        try {
-          await supabaseAdmin.from("events").insert({
-            event_type: "checkout.started",
-            user_id: data.userId,
-            event_data: {
-              planSlug: normalizePlanSlug(data.planSlug),
-              sessionId: session.id,
-              environment: data.environment,
-              email: data.customerEmail ?? null,
-            } as never,
-          });
-        } catch (e) {
-          console.error("[checkout] event log failed", e);
-        }
+      try {
+        await supabaseAdmin.from("events").insert({
+          event_type: "checkout.started",
+          user_id: userId,
+          event_data: {
+            planSlug: normalizePlanSlug(data.planSlug),
+            sessionId: session.id,
+            environment: data.environment,
+            email: customerEmail ?? null,
+          } as never,
+        });
+      } catch (e) {
+        console.error("[checkout] event log failed", e);
       }
 
       return { clientSecret: session.client_secret, error: null };

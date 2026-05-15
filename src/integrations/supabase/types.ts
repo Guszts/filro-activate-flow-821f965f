@@ -176,6 +176,24 @@ export type Database = {
         }
         Relationships: []
       }
+      flaro_rate_limits: {
+        Row: {
+          created_at: string
+          id: string
+          identity: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          identity: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          identity?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
@@ -464,6 +482,27 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      webhook_events: {
+        Row: {
+          environment: string
+          event_id: string
+          event_type: string
+          processed_at: string
+        }
+        Insert: {
+          environment: string
+          event_id: string
+          event_type: string
+          processed_at?: string
+        }
+        Update: {
+          environment?: string
+          event_id?: string
+          event_type?: string
+          processed_at?: string
         }
         Relationships: []
       }
