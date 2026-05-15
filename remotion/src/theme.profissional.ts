@@ -34,7 +34,7 @@ export const PROFISSIONAL_SCENES = [
   { id: "mobile",  from: 1668, duration: 210 },  // 55.6 - 62.6
   { id: "forWho",  from: 1878, duration: 180 },  // 62.6 - 68.6  (any device)
   { id: "flow",    from: 2058, duration: 240 },  // 68.6 - 76.6
-  { id: "fields2", from: 2298, duration: 255 },  // 76.6 - 85.1  ← reuse Fields again? use Adapt? we'll map to Adapt — but let's keep distinct ids. Use "adapt2".
+  { id: "fields",  from: 2298, duration: 255 },  // 76.6 - 85.1
   { id: "noTech",  from: 2553, duration: 180 },  // 85.1 - 91.1
   { id: "oneTime", from: 2733, duration: 225 },  // 91.1 - 98.6
   { id: "monthly", from: 2958, duration: 195 },  // 98.6 - 105.1
