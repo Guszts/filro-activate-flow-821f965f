@@ -97,8 +97,9 @@ function BusinessInfoPage() {
   const navigate = useNavigate();
   const [info, setInfo] = useState<BusinessInfo>(empty);
   const [project, setProject] = useState<{ id: string; business_info_submitted: boolean } | null>(null);
+  const [planSlug, setPlanSlug] = useState<string>("plus");
   const [saving, setSaving] = useState(false);
-  const [section, setSection] = useState<"identidade" | "contato" | "catalogo" | "modelo">("identidade");
+  const [section, setSection] = useState<SectionKey>("identidade");
   const [hydrated, setHydrated] = useState(false);
 
   const lsKey = user ? `business-info-draft:${user.id}` : null;
