@@ -1,36 +1,48 @@
 import { motion } from "framer-motion";
 import { useState, type ReactElement } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import padariaCover from "@/assets/cover-padaria.jpg";
-import clinicaCover from "@/assets/cover-clinica.jpg";
-import autoCover from "@/assets/cover-auto.jpg";
-import restauranteCover from "@/assets/cover-restaurante.jpg";
-import hamburguerCover from "@/assets/cover-hamburguer.jpg";
-import modaCover from "@/assets/cover-moda.jpg";
+import padariaSrc from "@/assets/cover-padaria.jpg?w=896&format=webp";
+import padariaSet from "@/assets/cover-padaria.jpg?w=480;768;896&format=webp&as=srcset";
+import clinicaSrc from "@/assets/cover-clinica.jpg?w=896&format=webp";
+import clinicaSet from "@/assets/cover-clinica.jpg?w=480;768;896&format=webp&as=srcset";
+import autoSrc from "@/assets/cover-auto.jpg?w=896&format=webp";
+import autoSet from "@/assets/cover-auto.jpg?w=480;768;896&format=webp&as=srcset";
+import restauranteSrc from "@/assets/cover-restaurante.jpg?w=896&format=webp";
+import restauranteSet from "@/assets/cover-restaurante.jpg?w=480;768;896&format=webp&as=srcset";
+import hamburguerSrc from "@/assets/cover-hamburguer.jpg?w=896&format=webp";
+import hamburguerSet from "@/assets/cover-hamburguer.jpg?w=480;768;896&format=webp&as=srcset";
+import modaSrc from "@/assets/cover-moda.jpg?w=896&format=webp";
+import modaSet from "@/assets/cover-moda.jpg?w=480;768;896&format=webp&as=srcset";
 
 type Cover = (props: { className?: string }) => ReactElement;
 
+// Sizes: mobile single-column ~ full viewport; sm 2-col ~ 50vw; lg 3-col ~ 33vw; capped at 480px (max card width).
+const COVER_SIZES = "(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw";
+
 const photoCover =
-  (src: string, alt: string): Cover =>
+  (src: string, srcSet: string, alt: string): Cover =>
   ({ className }) => (
     <div className={`relative overflow-hidden ${className ?? ""}`}>
       <img
         src={src}
+        srcSet={srcSet}
+        sizes={COVER_SIZES}
         alt={alt}
         loading="lazy"
+        decoding="async"
         width={896}
         height={704}
-        className="h-full w-full object-cover"
+        className="h-full w-full object-cover object-center"
       />
     </div>
   );
 
-const ClinicaCover: Cover = photoCover(clinicaCover, "Capa do modelo Clínica");
-const PadariaCover: Cover = photoCover(padariaCover, "Capa do modelo Padaria");
-const AutoCover: Cover = photoCover(autoCover, "Capa do modelo Auto");
-const RestauranteCover: Cover = photoCover(restauranteCover, "Capa do modelo Restaurante");
-const HamburguerCover: Cover = photoCover(hamburguerCover, "Capa do modelo Hambúrguer");
-const ModaCover: Cover = photoCover(modaCover, "Capa do modelo Moda");
+const ClinicaCover: Cover = photoCover(clinicaSrc, clinicaSet, "Capa do modelo Clínica");
+const PadariaCover: Cover = photoCover(padariaSrc, padariaSet, "Capa do modelo Padaria");
+const AutoCover: Cover = photoCover(autoSrc, autoSet, "Capa do modelo Auto");
+const RestauranteCover: Cover = photoCover(restauranteSrc, restauranteSet, "Capa do modelo Restaurante");
+const HamburguerCover: Cover = photoCover(hamburguerSrc, hamburguerSet, "Capa do modelo Hambúrguer");
+const ModaCover: Cover = photoCover(modaSrc, modaSet, "Capa do modelo Moda");
 
 interface Model {
   name: string;
