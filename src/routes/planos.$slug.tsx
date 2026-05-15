@@ -288,26 +288,6 @@ function PlanDetailsPage() {
               </div>
             </section>
 
-            {/* EXEMPLOS DE APLICAÇÃO (cenários demonstrativos, não depoimentos reais) */}
-            <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16">
-              <span className="text-xs tracking-wide text-ink-soft">Exemplos de aplicação</span>
-              <h2 className="mt-3 editorial-headline text-4xl md:text-5xl text-ink">Cenários comuns onde a Filro brilha.</h2>
-              <p className="mt-4 max-w-2xl text-ink-soft">Modelos demonstrativos do que costuma ser entregue para cada tipo de negócio. Não são depoimentos de clientes.</p>
-              <div className="mt-10 grid md:grid-cols-3 gap-5">
-                {[
-                  { name: "Padaria de bairro", text: "Cardápio digital, horário, localização e botão direto para pedido no WhatsApp — tudo em uma página." },
-                  { name: "Oficina mecânica", text: "Página de orçamento com formulário simples, lista de serviços e fluxo de contato pelo WhatsApp." },
-                  { name: "Clínica / consultório", text: "Apresentação dos profissionais, serviços, horários e agendamento direto pelo WhatsApp." },
-                ].map((t) => (
-                  <div key={t.name} className="rounded-3xl border border-border bg-paper p-6" style={{ boxShadow: "var(--shadow-card)" }}>
-                    <div className="text-xs uppercase tracking-widest text-ink-soft">Modelo demonstrativo</div>
-                    <p className="mt-3 text-ink leading-relaxed">{t.text}</p>
-                    <div className="mt-5 text-sm text-ink-soft">{t.name}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
             {/* PLAN-SPECIFIC FAQ */}
             <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16">
               <span className="text-xs tracking-wide text-ink-soft">Dúvidas sobre o plano</span>
