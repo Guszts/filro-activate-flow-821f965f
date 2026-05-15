@@ -27,6 +27,11 @@ interface BusinessInfo {
   products: Product[];
   promotions: string;
   model_choice: string; model_link: string; model_file_url: string; model_notes: string;
+  testimonials: string;
+  facebook: string;
+  tiktok: string;
+  premium_brand_voice: string;
+  premium_target_audience: string;
 }
 
 const DAYS: { key: string; label: string }[] = [
@@ -47,6 +52,29 @@ const empty: BusinessInfo = {
   products: [],
   promotions: "",
   model_choice: "", model_link: "", model_file_url: "", model_notes: "",
+  testimonials: "",
+  facebook: "",
+  tiktok: "",
+  premium_brand_voice: "",
+  premium_target_audience: "",
+};
+
+// Per-plan field configuration: which sections appear and how rich each one is.
+type SectionKey = "identidade" | "contato" | "catalogo" | "modelo" | "premium";
+const PLAN_SECTIONS: Record<string, SectionKey[]> = {
+  start:        ["identidade", "contato"],
+  essencial:    ["identidade", "contato", "catalogo"],
+  plus:         ["identidade", "contato", "catalogo", "modelo"],
+  profissional: ["identidade", "contato", "catalogo", "modelo"],
+  priority:     ["identidade", "contato", "catalogo", "modelo", "premium"],
+  premium:      ["identidade", "contato", "catalogo", "modelo", "premium"],
+};
+const SECTION_LABELS: Record<SectionKey, string> = {
+  identidade: "Identidade da marca",
+  contato: "Contato e redes",
+  catalogo: "Catálogo",
+  modelo: "Modelo e promoções",
+  premium: "Conteúdo avançado",
 };
 
 // Backward-compat: hours used to be a plain string. Coerce to map.
