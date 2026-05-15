@@ -26,7 +26,7 @@ export const Route = createFileRoute("/planos/$slug")({
 const TUTORIAL_VIDEOS: Record<string, string | null> = {
   start: null,
   essencial: null,
-  plus: null,
+  plus: "/videos/filro-plus.mp4",
   profissional: null,
   priority: null,
   premium: null,
