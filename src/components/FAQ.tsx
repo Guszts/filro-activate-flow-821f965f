@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const faqs = [
   {
     q: "Em quanto tempo recebo minha página?",
-    a: "Entregamos em até 24 horas após o envio das informações do seu negócio. Caso ultrapasse esse prazo, devolvemos a mensalidade do mês.",
+    a: "Estimativa de até 24 horas após o envio completo das informações do seu negócio. Materiais incompletos podem alongar o prazo.",
   },
   {
     q: "Posso enviar um modelo de referência?",
