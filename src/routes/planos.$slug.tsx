@@ -26,7 +26,7 @@ export const Route = createFileRoute("/planos/$slug")({
 // tutorial when available — leaving as null shows a placeholder card.
 const TUTORIAL_VIDEOS: Record<string, string | null> = {
   start: "/videos/filro-start.mp4",
-  essencial: null,
+  essencial: "/videos/filro-essencial.mp4",
   plus: "/videos/filro-plus.mp4",
   profissional: null,
   priority: null,
