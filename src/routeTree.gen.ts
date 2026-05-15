@@ -18,12 +18,15 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PaymentSuccessRouteImport } from './routes/payment-success'
 import { Route as PaymentFailedRouteImport } from './routes/payment-failed'
 import { Route as PainelRouteImport } from './routes/painel'
+import { Route as ModelosRouteImport } from './routes/modelos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as ConsoleRouteImport } from './routes/console'
+import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BusinessInfoRouteImport } from './routes/business-info'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PlanosIndexRouteImport } from './routes/planos.index'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
@@ -80,6 +83,11 @@ const PainelRoute = PainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModelosRoute = ModelosRouteImport.update({
+  id: '/modelos',
+  path: '/modelos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -95,6 +103,11 @@ const ConsoleRoute = ConsoleRouteImport.update({
   path: '/console',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ComoFuncionaRoute = ComoFuncionaRouteImport.update({
+  id: '/como-funciona',
+  path: '/como-funciona',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
@@ -108,6 +121,11 @@ const BusinessInfoRoute = BusinessInfoRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanosIndexRoute = PlanosIndexRouteImport.update({
+  id: '/planos/',
+  path: '/planos/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlanosSlugRoute = PlanosSlugRouteImport.update({
@@ -169,9 +187,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
+  '/como-funciona': typeof ComoFuncionaRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
   '/login': typeof LoginRoute
+  '/modelos': typeof ModelosRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -184,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
+  '/planos/': typeof PlanosIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -196,9 +217,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
+  '/como-funciona': typeof ComoFuncionaRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
   '/login': typeof LoginRoute
+  '/modelos': typeof ModelosRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -211,6 +234,7 @@ export interface FileRoutesByTo {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
+  '/planos': typeof PlanosIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -224,9 +248,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
+  '/como-funciona': typeof ComoFuncionaRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
   '/login': typeof LoginRoute
+  '/modelos': typeof ModelosRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -239,6 +265,7 @@ export interface FileRoutesById {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
+  '/planos/': typeof PlanosIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -253,9 +280,11 @@ export interface FileRouteTypes {
     | '/'
     | '/business-info'
     | '/checkout'
+    | '/como-funciona'
     | '/console'
     | '/docs'
     | '/login'
+    | '/modelos'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
@@ -268,6 +297,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
+    | '/planos/'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -280,9 +310,11 @@ export interface FileRouteTypes {
     | '/'
     | '/business-info'
     | '/checkout'
+    | '/como-funciona'
     | '/console'
     | '/docs'
     | '/login'
+    | '/modelos'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
@@ -295,6 +327,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
+    | '/planos'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -307,9 +340,11 @@ export interface FileRouteTypes {
     | '/'
     | '/business-info'
     | '/checkout'
+    | '/como-funciona'
     | '/console'
     | '/docs'
     | '/login'
+    | '/modelos'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
@@ -322,6 +357,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
+    | '/planos/'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -335,9 +371,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BusinessInfoRoute: typeof BusinessInfoRoute
   CheckoutRoute: typeof CheckoutRoute
+  ComoFuncionaRoute: typeof ComoFuncionaRoute
   ConsoleRoute: typeof ConsoleRoute
   DocsRoute: typeof DocsRoute
   LoginRoute: typeof LoginRoute
+  ModelosRoute: typeof ModelosRoute
   PainelRoute: typeof PainelRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
@@ -350,6 +388,7 @@ export interface RootRouteChildren {
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LeadIdRoute: typeof LeadIdRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
+  PlanosIndexRoute: typeof PlanosIndexRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -424,6 +463,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PainelRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/modelos': {
+      id: '/modelos'
+      path: '/modelos'
+      fullPath: '/modelos'
+      preLoaderRoute: typeof ModelosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -445,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsoleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/como-funciona': {
+      id: '/como-funciona'
+      path: '/como-funciona'
+      fullPath: '/como-funciona'
+      preLoaderRoute: typeof ComoFuncionaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkout': {
       id: '/checkout'
       path: '/checkout'
@@ -464,6 +517,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planos/': {
+      id: '/planos/'
+      path: '/planos'
+      fullPath: '/planos/'
+      preLoaderRoute: typeof PlanosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/planos/$slug': {
@@ -543,9 +603,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BusinessInfoRoute: BusinessInfoRoute,
   CheckoutRoute: CheckoutRoute,
+  ComoFuncionaRoute: ComoFuncionaRoute,
   ConsoleRoute: ConsoleRoute,
   DocsRoute: DocsRoute,
   LoginRoute: LoginRoute,
+  ModelosRoute: ModelosRoute,
   PainelRoute: PainelRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
@@ -558,6 +620,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LeadIdRoute: LeadIdRoute,
   PlanosSlugRoute: PlanosSlugRoute,
+  PlanosIndexRoute: PlanosIndexRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
