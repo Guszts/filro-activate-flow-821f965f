@@ -1,21 +1,33 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 
 export function VideoHero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   const toggle = () => {
     const v = videoRef.current;
     if (!v) return;
     if (v.paused) {
+      // Unmute on first user-initiated play so o áudio é audível
+      v.muted = false;
+      setIsMuted(false);
       v.play();
       setIsPlaying(true);
     } else {
       v.pause();
       setIsPlaying(false);
     }
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setIsMuted(v.muted);
   };
 
   return (
