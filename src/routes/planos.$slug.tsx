@@ -25,7 +25,7 @@ export const Route = createFileRoute("/planos/$slug")({
 // Map of optional tutorial videos per slug. Replace embed URLs with the real
 // tutorial when available — leaving as null shows a placeholder card.
 const TUTORIAL_VIDEOS: Record<string, string | null> = {
-  start: null,
+  start: "/videos/filro-start.mp4",
   essencial: null,
   plus: "/videos/filro-plus.mp4",
   profissional: null,
