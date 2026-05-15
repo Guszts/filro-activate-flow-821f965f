@@ -1,3 +1,4 @@
+import React from "react";
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
 import { THEME } from "./theme";
 import type { CSSProperties } from "react";
