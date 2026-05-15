@@ -219,22 +219,27 @@ function BusinessInfoPage() {
           )}
         </motion.div>
         <p className="mt-3 text-ink-soft max-w-2xl">Quanto mais detalhes você fornecer, melhor o resultado. Tudo é editável depois.</p>
-        <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-flame/10 text-flame text-xs font-semibold">
-          <Clock className="h-3.5 w-3.5" /> Entrega em até 24h após confirmação
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink text-paper text-xs font-semibold uppercase tracking-wide">
+            Plano {planSlug}
+          </span>
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-flame/10 text-flame text-xs font-semibold">
+            <Clock className="h-3.5 w-3.5" /> Entrega em até 24h após confirmação
+          </span>
         </div>
 
         <div className="mt-10 grid lg:grid-cols-[240px_1fr] gap-8">
           <nav className="lg:sticky lg:top-28 h-fit space-y-1">
             {sections.map(([k, label]) => (
               <button key={k} onClick={() => setSection(k)}
-                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors ${section === k ? "bg-ink text-paper" : "text-ink-soft hover:bg-muted"}`}>
+                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors ${currentSection === k ? "bg-ink text-paper" : "text-ink-soft hover:bg-muted"}`}>
                 {label}
               </button>
             ))}
           </nav>
 
           <div className="space-y-6">
-            {section === "identidade" && (
+            {currentSection === "identidade" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
                 <Field label="Nome do negócio *"><input value={info.name} onChange={(e) => upd("name", e.target.value)} className={inputCls} /></Field>
                 <Field label="Slogan"><input value={info.slogan} onChange={(e) => upd("slogan", e.target.value)} className={inputCls} placeholder="ex.: O melhor café da cidade" /></Field>
@@ -256,7 +261,7 @@ function BusinessInfoPage() {
               </div>
             )}
 
-            {section === "contato" && (
+            {currentSection === "contato" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
                 <Field label="WhatsApp *"><PhoneInput value={info.whatsapp} onChange={(v) => upd("whatsapp", v)} required /></Field>
                 <Field label="Instagram">
@@ -295,7 +300,7 @@ function BusinessInfoPage() {
               </div>
             )}
 
-            {section === "catalogo" && (
+            {currentSection === "catalogo" && (
               <div className="space-y-4">
                 {info.products.map((pr, idx) => (
                   <div key={idx} className="card-elevated p-5 md:p-6 grid md:grid-cols-[120px_1fr_auto] gap-4 items-start">
@@ -319,7 +324,7 @@ function BusinessInfoPage() {
               </div>
             )}
 
-            {section === "modelo" && (
+            {currentSection === "modelo" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
                 <Field label="Promoções e ofertas"><textarea value={info.promotions} onChange={(e) => upd("promotions", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Cupons, descontos, combos..." /></Field>
                 <div className="border-t border-border pt-5">
@@ -339,10 +344,32 @@ function BusinessInfoPage() {
               </div>
             )}
 
+            {currentSection === "premium" && (
+              <div className="card-elevated p-6 md:p-8 space-y-5">
+                <Field label="Voz da marca">
+                  <textarea value={info.premium_brand_voice} onChange={(e) => upd("premium_brand_voice", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Tom de voz: amigável, profissional, sofisticado, descontraído..." />
+                </Field>
+                <Field label="Público-alvo">
+                  <textarea value={info.premium_target_audience} onChange={(e) => upd("premium_target_audience", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Quem são seus clientes ideais? Idade, perfil, interesses, necessidades..." />
+                </Field>
+                <Field label="Depoimentos de clientes">
+                  <textarea value={info.testimonials} onChange={(e) => upd("testimonials", e.target.value)} rows={4} className={inputCls + " py-3 h-auto"} placeholder='Cole depoimentos reais. Ex.: "Atendimento impecável" — Maria, cliente desde 2023' />
+                </Field>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <Field label="Facebook">
+                    <input value={info.facebook} onChange={(e) => upd("facebook", e.target.value)} className={inputCls} placeholder="facebook.com/seunegocio" />
+                  </Field>
+                  <Field label="TikTok">
+                    <input value={info.tiktok} onChange={(e) => upd("tiktok", e.target.value)} className={inputCls} placeholder="@seunegocio" />
+                  </Field>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-between items-center pt-4">
               <div className="flex gap-2">
                 {sections.map(([k]) => (
-                  <span key={k} className={`h-2 w-2 rounded-full ${section === k ? "bg-ink" : "bg-border"}`} />
+                  <span key={k} className={`h-2 w-2 rounded-full ${currentSection === k ? "bg-ink" : "bg-border"}`} />
                 ))}
               </div>
               <button onClick={submit} disabled={saving} className="h-13 px-8 py-3 rounded-full bg-ink text-paper font-semibold hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50">
