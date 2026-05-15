@@ -245,27 +245,8 @@ function PlanDetailsPage() {
               <h2 className="mt-3 editorial-headline text-4xl md:text-5xl text-ink">
                 Veja como funciona<br />em 2 minutos.
               </h2>
-              <div className="mt-8 relative rounded-3xl overflow-hidden border border-border bg-ink/5 aspect-video">
-                {tutorialUrl ? (
-                  <iframe
-                    src={tutorialUrl}
-                    title={`Tutorial do plano ${plan.name}`}
-                    className="absolute inset-0 h-full w-full"
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
-                ) : (
-                  <div className="absolute inset-0 grid place-items-center text-center px-6">
-                    <div>
-                      <PlayCircle className="mx-auto h-14 w-14 text-ink-soft" />
-                      <p className="mt-4 text-sm text-ink-soft max-w-md">
-                        Tutorial em produção. Em breve um vídeo curto mostrando como adaptamos o modelo {plan.name} ao seu negócio.
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <TutorialVideo url={tutorialUrl} planName={plan.name} />
+
             </section>
 
             {/* EXTRA DETAIL BLOCKS */}
