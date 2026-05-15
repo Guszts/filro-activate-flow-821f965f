@@ -27,6 +27,11 @@ interface BusinessInfo {
   products: Product[];
   promotions: string;
   model_choice: string; model_link: string; model_file_url: string; model_notes: string;
+  testimonials: string;
+  facebook: string;
+  tiktok: string;
+  premium_brand_voice: string;
+  premium_target_audience: string;
 }
 
 const DAYS: { key: string; label: string }[] = [
@@ -47,6 +52,29 @@ const empty: BusinessInfo = {
   products: [],
   promotions: "",
   model_choice: "", model_link: "", model_file_url: "", model_notes: "",
+  testimonials: "",
+  facebook: "",
+  tiktok: "",
+  premium_brand_voice: "",
+  premium_target_audience: "",
+};
+
+// Per-plan field configuration: which sections appear and how rich each one is.
+type SectionKey = "identidade" | "contato" | "catalogo" | "modelo" | "premium";
+const PLAN_SECTIONS: Record<string, SectionKey[]> = {
+  start:        ["identidade", "contato"],
+  essencial:    ["identidade", "contato", "catalogo"],
+  plus:         ["identidade", "contato", "catalogo", "modelo"],
+  profissional: ["identidade", "contato", "catalogo", "modelo"],
+  priority:     ["identidade", "contato", "catalogo", "modelo", "premium"],
+  premium:      ["identidade", "contato", "catalogo", "modelo", "premium"],
+};
+const SECTION_LABELS: Record<SectionKey, string> = {
+  identidade: "Identidade da marca",
+  contato: "Contato e redes",
+  catalogo: "Catálogo",
+  modelo: "Modelo e promoções",
+  premium: "Conteúdo avançado",
 };
 
 // Backward-compat: hours used to be a plain string. Coerce to map.
@@ -69,8 +97,9 @@ function BusinessInfoPage() {
   const navigate = useNavigate();
   const [info, setInfo] = useState<BusinessInfo>(empty);
   const [project, setProject] = useState<{ id: string; business_info_submitted: boolean } | null>(null);
+  const [planSlug, setPlanSlug] = useState<string>("plus");
   const [saving, setSaving] = useState(false);
-  const [section, setSection] = useState<"identidade" | "contato" | "catalogo" | "modelo">("identidade");
+  const [section, setSection] = useState<SectionKey>("identidade");
   const [hydrated, setHydrated] = useState(false);
 
   const lsKey = user ? `business-info-draft:${user.id}` : null;
@@ -79,8 +108,10 @@ function BusinessInfoPage() {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/business-info" } }); return; }
     (async () => {
-      const { data: pay } = await supabase.from("payments").select("id, plan_id, status").eq("user_id", user.id).eq("status", "paid").maybeSingle();
+      const { data: pay } = await supabase.from("payments").select("id, plan_id, status, plans(slug)").eq("user_id", user.id).eq("status", "paid").maybeSingle();
       if (!pay) { toast.error("Você precisa concluir um pagamento primeiro."); navigate({ to: "/" }); return; }
+      const slug = (pay as { plans?: { slug?: string } | null })?.plans?.slug ?? "plus";
+      setPlanSlug(slug);
 
       try {
         const raw = lsKey ? localStorage.getItem(lsKey) : null;
@@ -170,12 +201,9 @@ function BusinessInfoPage() {
 
   if (loading || !project) return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
 
-  const sections = [
-    ["identidade", "Identidade da marca"],
-    ["contato", "Contato e redes"],
-    ["catalogo", "Catálogo"],
-    ["modelo", "Modelo e promoções"],
-  ] as const;
+  const activeSectionKeys = PLAN_SECTIONS[planSlug] ?? PLAN_SECTIONS.plus;
+  const sections = activeSectionKeys.map((k) => [k, SECTION_LABELS[k]] as const);
+  const currentSection = activeSectionKeys.includes(section) ? section : activeSectionKeys[0];
 
   return (
     <div className="min-h-screen flex flex-col">

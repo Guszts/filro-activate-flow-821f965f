@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { formatBRL } from "@/lib/format";
 import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
+
 import { ArrowRight, Check } from "lucide-react";
 import { TutorialVideo } from "@/components/TutorialVideo";
 
@@ -271,8 +271,63 @@ function PlanDetailsPage() {
               ))}
             </section>
 
+            {/* TRUST BADGES */}
+            <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  { t: "Entrega em 24h", d: "Após envio das informações." },
+                  { t: "Pagamento seguro", d: "Processado pela Stripe." },
+                  { t: "Sem fidelidade", d: "Cancele quando quiser." },
+                  { t: "Suporte humano", d: "WhatsApp em horário comercial." },
+                ].map((b) => (
+                  <div key={b.t} className="rounded-2xl border border-border bg-paper p-5">
+                    <div className="font-display font-black text-base text-ink">{b.t}</div>
+                    <div className="mt-1 text-sm text-ink-soft">{b.d}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* SOCIAL PROOF */}
+            <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16">
+              <span className="text-xs tracking-wide text-ink-soft">Quem já ativou</span>
+              <h2 className="mt-3 editorial-headline text-4xl md:text-5xl text-ink">Negócios reais usam a Filro.</h2>
+              <div className="mt-10 grid md:grid-cols-3 gap-5">
+                {[
+                  { name: "Marina · Padaria Aurora", text: "Em menos de um dia minha padaria tinha um site profissional. Os clientes acham o cardápio sozinhos pelo WhatsApp." },
+                  { name: "Rafael · Auto Mecânica RF", text: "O fluxo de orçamentos via WhatsApp triplicou. O site passa muito mais confiança que minha página antiga." },
+                  { name: "Júlia · Clínica Reviver", text: "Visual limpo, profissional, e o suporte responde rápido sempre que preciso ajustar algo." },
+                ].map((t) => (
+                  <div key={t.name} className="rounded-3xl border border-border bg-paper p-6" style={{ boxShadow: "var(--shadow-card)" }}>
+                    <div className="text-flame text-lg">★★★★★</div>
+                    <p className="mt-3 text-ink leading-relaxed">"{t.text}"</p>
+                    <div className="mt-5 text-sm text-ink-soft">{t.name}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* PLAN-SPECIFIC FAQ */}
+            <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16">
+              <span className="text-xs tracking-wide text-ink-soft">Dúvidas sobre o plano</span>
+              <h2 className="mt-3 editorial-headline text-4xl md:text-5xl text-ink">Perguntas comuns.</h2>
+              <div className="mt-8 grid md:grid-cols-2 gap-4">
+                {[
+                  { q: "Como avanço para o checkout?", a: `Clique em "Continuar para o checkout" abaixo. Você será direcionado ao pagamento seguro pela Stripe.` },
+                  { q: "O que acontece após o pagamento?", a: "Você recebe um formulário guiado para enviar as informações do negócio (logo, fotos, contato, etc.). Em até 24h após o envio completo, sua página está no ar." },
+                  { q: "Posso trocar de plano depois?", a: "Sim. É possível fazer upgrade a qualquer momento direto pelo painel. Downgrades ocorrem no próximo ciclo." },
+                  { q: "Tem fidelidade?", a: "Não. Cancele a manutenção quando quiser direto pelo painel. A ativação é única e não recorrente." },
+                ].map((f) => (
+                  <div key={f.q} className="rounded-2xl border border-border bg-paper p-5">
+                    <div className="font-display font-black text-ink">{f.q}</div>
+                    <p className="mt-2 text-sm text-ink-soft leading-relaxed">{f.a}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
             {/* SUMMARY + CONTINUE */}
-            <section className="mx-auto max-w-[1200px] px-5 md:px-10 pb-20 md:pb-28">
+            <section className="mx-auto max-w-[1200px] px-5 md:px-10 pb-32 md:pb-28">
               <div
                 className="rounded-3xl border border-border bg-paper p-7 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
                 style={{ boxShadow: "var(--shadow-card)" }}
@@ -288,7 +343,7 @@ function PlanDetailsPage() {
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Link
-                    to="/"
+                    to="/planos"
                     className="inline-flex items-center h-13 py-4 px-6 rounded-2xl border border-ink/30 text-ink font-semibold tracking-wide hover:bg-ink hover:text-paper transition-colors"
                   >
                     Ver outros planos
@@ -303,11 +358,21 @@ function PlanDetailsPage() {
                 </div>
               </div>
             </section>
+
+            {/* MOBILE STICKY CTA */}
+            <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-paper/95 backdrop-blur-md border-t border-border p-4">
+              <button
+                type="button"
+                onClick={handleContinue}
+                className="w-full inline-flex items-center justify-center h-13 px-6 rounded-2xl bg-ink text-paper font-semibold tracking-wide"
+              >
+                Continuar · {formatBRL(plan.activation_price)} <ArrowRight className="ml-2 h-4 w-4" />
+              </button>
+            </div>
           </>
         )}
       </main>
-
-      <SiteFooter />
     </div>
   );
 }
+
