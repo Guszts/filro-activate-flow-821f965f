@@ -255,97 +255,53 @@ function HomePage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative rounded-[3rem] p-10 md:p-20 overflow-hidden text-paper"
-          style={{
-            background:
-              "radial-gradient(130% 90% at 100% 0%, oklch(0.628 0.231 30 / 0.55) 0%, transparent 50%), radial-gradient(120% 100% at 0% 100%, oklch(0.61 0.135 270 / 0.55) 0%, transparent 55%), linear-gradient(140deg, oklch(0.2 0.035 260) 0%, oklch(0.16 0.03 260) 100%)",
-          }}
+          className="relative rounded-[3rem] p-10 md:p-20 overflow-hidden bg-paper text-ink border border-border"
         >
-          {/* Soft glow blobs */}
+          {/* Moda-style color blocks */}
           <motion.div
             aria-hidden
-            initial={{ opacity: 0, scale: 0.6 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, x: -30, rotate: 0 }}
+            whileInView={{ opacity: 1, x: 0, rotate: 12 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.1, delay: 0.2 }}
-            className="absolute -right-32 -top-32 h-[440px] w-[440px] rounded-full bg-flame/40 blur-3xl pointer-events-none"
+            transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute -left-24 -top-24 h-[380px] w-[300px] rounded-[3rem] bg-lime pointer-events-none"
           />
           <motion.div
             aria-hidden
-            initial={{ opacity: 0, scale: 0.6 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, x: 30, rotate: 0 }}
+            whileInView={{ opacity: 1, x: 0, rotate: -6 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.1, delay: 0.35 }}
-            className="absolute -left-40 -bottom-40 h-[460px] w-[460px] rounded-full bg-azure/40 blur-3xl pointer-events-none"
+            transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute -right-16 top-16 h-[280px] w-[200px] rounded-[3rem] bg-flame pointer-events-none"
           />
-
-          {/* Filro personality — color blocks echoing model covers */}
           <motion.div
             aria-hidden
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30, rotate: 0 }}
+            whileInView={{ opacity: 1, y: 0, rotate: 3 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="absolute right-0 top-0 hidden md:flex flex-col gap-1 pointer-events-none"
-          >
-            <div className="h-3 w-40 bg-lime" />
-            <div className="h-3 w-28 bg-flame" />
-            <div className="h-3 w-16 bg-paper/80" />
-          </motion.div>
-
-          {/* Plus cross — clinic motif */}
-          <motion.svg
-            aria-hidden
-            initial={{ opacity: 0, rotate: -20, scale: 0.6 }}
-            whileInView={{ opacity: 1, rotate: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.5 }}
-            className="absolute right-10 bottom-10 hidden md:block pointer-events-none"
-            width="72" height="72" viewBox="0 0 72 72" fill="none"
-          >
-            <rect x="28" y="6" width="16" height="60" rx="3" fill="var(--lime)" />
-            <rect x="6" y="28" width="60" height="16" rx="3" fill="var(--lime)" />
-          </motion.svg>
-
-          {/* Halftone dots — sesame motif */}
-          <div aria-hidden className="absolute left-10 top-10 hidden md:grid grid-cols-4 gap-2 pointer-events-none">
-            {Array.from({ length: 16 }).map((_, i) => (
-              <span key={i} className="h-1.5 w-1.5 rounded-full bg-paper/40" />
-            ))}
-          </div>
-
-          {/* Diagonal flame stripe — fashion motif */}
+            transition={{ duration: 0.9, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute -bottom-10 left-24 h-[180px] w-[300px] rounded-[3rem] bg-ink pointer-events-none hidden md:block"
+          />
           <div
             aria-hidden
-            className="absolute -left-10 top-1/2 h-2 w-44 bg-flame/70 rotate-[-35deg] hidden md:block pointer-events-none"
-          />
-
-          {/* Subtle grid texture */}
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-[0.05] pointer-events-none"
-            style={{
-              backgroundImage:
-                "linear-gradient(var(--paper) 1px, transparent 1px), linear-gradient(90deg, var(--paper) 1px, transparent 1px)",
-              backgroundSize: "48px 48px",
-            }}
+            className="absolute right-10 bottom-10 h-6 w-6 rounded-full bg-paper ring-2 ring-ink pointer-events-none"
           />
 
           <div className="relative z-10 max-w-3xl">
-            <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-paper/70">
-              <span className="h-1.5 w-6 bg-lime" /> Próximo passo
+            <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-ink/70">
+              <span className="h-1.5 w-6 bg-ink" /> Próximo passo
             </span>
             <h2 className="editorial-headline mt-6 text-5xl md:text-7xl">
               Pronto para ativar<br /><span className="lime-mark">sua página?</span>
             </h2>
-            <p className="mt-6 text-paper/70 max-w-xl">
+            <p className="mt-6 text-ink-soft max-w-xl">
               Após o pagamento, você envia as informações do seu negócio e nós adaptamos o modelo escolhido.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
-              <a href="#ativacao" className="inline-flex items-center h-14 px-8 rounded-2xl bg-lime text-ink font-semibold tracking-wide hover:scale-[1.02] transition-transform">
+              <a href="#ativacao" className="inline-flex items-center h-14 px-8 rounded-2xl bg-ink text-paper font-semibold tracking-wide hover:scale-[1.02] transition-transform">
                 Iniciar ativação <ArrowRight className="ml-2 h-4 w-4" />
               </a>
-              <a href="#modelos" className="inline-flex items-center h-14 px-8 rounded-2xl border border-paper/30 text-paper font-semibold tracking-wide hover:bg-paper hover:text-ink transition-colors">
+              <a href="#modelos" className="inline-flex items-center h-14 px-8 rounded-2xl border border-ink/30 text-ink font-semibold tracking-wide hover:bg-ink hover:text-paper transition-colors">
                 Ver modelos
               </a>
             </div>
