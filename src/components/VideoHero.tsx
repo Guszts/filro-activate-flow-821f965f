@@ -38,24 +38,22 @@ export function VideoHero() {
           preload="metadata"
         />
 
-        {/* Glassmorphism play/pause control */}
-        <button
-          type="button"
-          onClick={toggle}
-          aria-label={isPlaying ? "Pausar vídeo" : "Reproduzir vídeo"}
-          className="group absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center gap-2 md:gap-3 rounded-full border border-white/30 bg-white/15 px-4 py-2.5 md:px-5 md:py-3 text-white shadow-lg backdrop-blur-xl backdrop-saturate-150 transition-all hover:bg-white/25 hover:scale-105 active:scale-95"
-        >
-          <span className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-white/25 border border-white/40">
+        {/* Glassmorphism container with solid black play/pause button */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 rounded-full border border-white/30 bg-white/15 p-3 md:p-4 shadow-2xl backdrop-blur-xl backdrop-saturate-150">
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label={isPlaying ? "Pausar vídeo" : "Reproduzir vídeo"}
+            className="flex h-14 w-14 md:h-20 md:w-20 items-center justify-center rounded-full bg-black text-white shadow-lg transition-all hover:scale-105 active:scale-95"
+          >
             {isPlaying ? (
-              <Pause className="h-4 w-4 md:h-4.5 md:w-4.5 fill-white" strokeWidth={0} />
+              <Pause className="h-6 w-6 md:h-8 md:w-8 fill-white" strokeWidth={0} />
             ) : (
-              <Play className="h-4 w-4 md:h-4.5 md:w-4.5 fill-white ml-0.5" strokeWidth={0} />
+              <Play className="h-6 w-6 md:h-8 md:w-8 fill-white ml-1" strokeWidth={0} />
             )}
-          </span>
-          <span className="text-xs md:text-sm font-medium tracking-wide pr-1">
-            {isPlaying ? "Pausar" : "Reproduzir"}
-          </span>
-        </button>
+          </button>
+        </div>
+
       </motion.div>
     </section>
   );
