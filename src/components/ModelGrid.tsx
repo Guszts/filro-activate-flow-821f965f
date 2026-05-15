@@ -2,63 +2,33 @@ import { motion } from "framer-motion";
 import { useState, type ReactElement } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import padariaCover from "@/assets/cover-padaria.jpg";
+import clinicaCover from "@/assets/cover-clinica.jpg";
+import autoCover from "@/assets/cover-auto.jpg";
+import restauranteCover from "@/assets/cover-restaurante.jpg";
+import hamburguerCover from "@/assets/cover-hamburguer.jpg";
 
 type Cover = (props: { className?: string }) => ReactElement;
 
-// Each cover is a hand-composed abstract scene using Filro's palette.
+const photoCover =
+  (src: string, alt: string): Cover =>
+  ({ className }) => (
+    <div className={`relative overflow-hidden ${className ?? ""}`}>
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        width={896}
+        height={704}
+        className="h-full w-full object-cover"
+      />
+    </div>
+  );
 
-const ClinicaCover: Cover = ({ className }) => (
-  <div className={`relative overflow-hidden bg-[oklch(0.96_0.02_220)] ${className ?? ""}`}>
-    <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_120%,oklch(0.85_0.09_220/_0.55),transparent_60%)]" />
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-      <div className="relative h-32 w-32">
-        <div className="absolute left-1/2 top-0 h-full w-8 -translate-x-1/2 rounded-full bg-azure" />
-        <div className="absolute top-1/2 left-0 h-8 w-full -translate-y-1/2 rounded-full bg-azure" />
-        <div className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-paper" />
-      </div>
-    </div>
-    <div className="absolute left-6 top-6 h-2.5 w-2.5 rounded-full bg-azure/70" />
-    <div className="absolute right-8 top-10 h-1.5 w-1.5 rounded-full bg-ink/40" />
-    <div className="absolute right-12 bottom-10 h-2 w-2 rounded-full bg-azure/60" />
-  </div>
-);
-
-const PadariaCover: Cover = ({ className }) => (
-  <div className={`relative overflow-hidden ${className ?? ""}`}>
-    <img
-      src={padariaCover}
-      alt="Capa do modelo Padaria"
-      loading="lazy"
-      width={896}
-      height={704}
-      className="h-full w-full object-cover"
-    />
-  </div>
-);
-
-const AutoCover: Cover = ({ className }) => (
-  <div className={`relative overflow-hidden bg-ink ${className ?? ""}`}>
-    <div className="absolute inset-0">
-      {[0, 1, 2, 3, 4, 5].map((i) => (
-        <div
-          key={i}
-          className="absolute h-[2px] bg-paper/60"
-          style={{
-            top: `${15 + i * 12}%`,
-            left: `${i % 2 === 0 ? 10 : 30}%`,
-            right: `${i % 2 === 0 ? 30 : 10}%`,
-          }}
-        />
-      ))}
-    </div>
-    <div className="absolute bottom-8 left-10 h-16 w-16 rounded-full border-[6px] border-paper">
-      <div className="absolute inset-2 rounded-full border-2 border-paper/50" />
-    </div>
-    <div className="absolute bottom-8 right-10 h-16 w-16 rounded-full border-[6px] border-lime">
-      <div className="absolute inset-2 rounded-full border-2 border-lime/50" />
-    </div>
-  </div>
-);
+const ClinicaCover: Cover = photoCover(clinicaCover, "Capa do modelo Clínica");
+const PadariaCover: Cover = photoCover(padariaCover, "Capa do modelo Padaria");
+const AutoCover: Cover = photoCover(autoCover, "Capa do modelo Auto");
+const RestauranteCover: Cover = photoCover(restauranteCover, "Capa do modelo Restaurante");
+const HamburguerCover: Cover = photoCover(hamburguerCover, "Capa do modelo Hambúrguer");
 
 const ModaCover: Cover = ({ className }) => (
   <div className={`relative overflow-hidden bg-paper ${className ?? ""}`}>
@@ -68,33 +38,6 @@ const ModaCover: Cover = ({ className }) => (
       <div className="absolute bottom-0 left-12 h-24 w-40 rotate-3 rounded-3xl bg-ink" />
     </div>
     <div className="absolute right-10 bottom-10 h-6 w-6 rounded-full bg-paper ring-2 ring-ink" />
-  </div>
-);
-
-const RestauranteCover: Cover = ({ className }) => (
-  <div className={`relative overflow-hidden bg-[oklch(0.94_0.04_250)] ${className ?? ""}`}>
-    <div className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-paper shadow-[0_20px_40px_-20px_oklch(0.255_0.035_260/0.4)]">
-      <div className="absolute inset-3 rounded-full border border-stone/60" />
-      <div className="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-azure" />
-    </div>
-    <div className="absolute left-6 top-1/2 h-24 w-2 -translate-y-1/2 rounded-full bg-ink" />
-    <div className="absolute right-6 top-1/2 h-24 w-2 -translate-y-1/2 rounded-full bg-ink" />
-    <div className="absolute right-[18px] top-1/2 h-6 w-6 -translate-y-[34px] rounded-sm bg-ink" />
-  </div>
-);
-
-const HamburguerCover: Cover = ({ className }) => (
-  <div className={`relative overflow-hidden bg-[oklch(0.93_0.08_60)] ${className ?? ""}`}>
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5">
-      <div className="h-7 w-36 rounded-t-[28px] bg-[oklch(0.78_0.12_60)]" />
-      <div className="h-2 w-40 rounded-full bg-lime" />
-      <div className="h-4 w-40 rounded-md bg-ink" />
-      <div className="h-2 w-40 rounded-full bg-flame" />
-      <div className="h-6 w-36 rounded-b-[28px] bg-[oklch(0.7_0.13_55)]" />
-    </div>
-    <div className="absolute left-1/2 top-[34%] -translate-x-8 h-1.5 w-1.5 rounded-full bg-paper/90" />
-    <div className="absolute left-1/2 top-[32%] translate-x-2 h-1.5 w-1.5 rounded-full bg-paper/90" />
-    <div className="absolute left-1/2 top-[36%] translate-x-10 h-1.5 w-1.5 rounded-full bg-paper/90" />
   </div>
 );
 
