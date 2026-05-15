@@ -1,14 +1,14 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { useState } from "react";
-import { Menu, X, ChevronDown, MessageCircle, LayoutDashboard, Briefcase, Shield, Layers, PlayCircle, Rocket, Settings as SettingsIcon } from "lucide-react";
-import logoSrc from "@/assets/logo.png";
+import { Menu, X, ChevronDown, LayoutDashboard, Briefcase, Shield, Layers, PlayCircle, Rocket, Settings as SettingsIcon, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const sections = [
-  { label: "Modelos", hash: "modelos", icon: Layers },
-  { label: "Como funciona", hash: "como-funciona", icon: PlayCircle },
-  { label: "Ativação", hash: "ativacao", icon: Rocket },
+const navLinks = [
+  { to: "/" as const, label: "Início", icon: Home },
+  { to: "/modelos" as const, label: "Modelos", icon: Layers },
+  { to: "/como-funciona" as const, label: "Como funciona", icon: PlayCircle },
+  { to: "/planos" as const, label: "Planos", icon: Rocket },
 ] as const;
 
 const authLinks = [
@@ -28,21 +28,18 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<null | "user">(null);
 
-  const sectionHref = (hash: string) => (path === "/" ? `#${hash}` : `/#${hash}`);
-
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/75 border-b border-border/40">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 py-4 md:py-5 flex items-center justify-between gap-4">
         <Link to="/" className="inline-flex items-center gap-2.5 group" aria-label="Home">
-          <img src={logoSrc} alt="Filro" className="h-9 md:h-11 w-auto object-contain transition-transform group-hover:scale-105" />
-          <span className="font-display font-black text-xl md:text-2xl text-ink tracking-tight">Filro</span>
+          <span className="font-display font-black text-2xl md:text-3xl text-ink tracking-tight transition-transform group-hover:scale-[1.03]">Filro</span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-ink-soft">
-          {sections.map((l) => (
-            <a key={l.hash} href={sectionHref(l.hash)} className="relative hover:text-ink transition-colors story-link">
+          {navLinks.slice(1).map((l) => (
+            <Link key={l.to} to={l.to} className="relative hover:text-ink transition-colors" activeProps={{ className: "text-ink" }}>
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -80,10 +77,10 @@ export function SiteHeader() {
             <Link to="/login" className="hidden md:inline-flex items-center h-11 px-4 text-sm font-medium text-ink-soft hover:text-ink transition-colors">Entrar</Link>
           )}
 
-          <a href={sectionHref("ativacao")}
+          <Link to="/planos"
             className="hidden md:inline-flex items-center justify-center h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.03] active:scale-[0.97] transition-transform shadow-elegant">
             Ativar agora
-          </a>
+          </Link>
 
           <button
             className="md:hidden h-11 w-11 grid place-items-center rounded-2xl bg-paper border border-border"
@@ -100,16 +97,19 @@ export function SiteHeader() {
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             className="md:hidden border-t border-border bg-paper overflow-hidden">
             <div className="px-5 py-6 flex flex-col gap-1 text-base font-medium">
-              {sections.map((l) => {
+              {navLinks.map((l) => {
                 const Icon = l.icon;
+                const active = path === l.to;
                 return (
-                  <a key={l.hash} href={sectionHref(l.hash)} onClick={() => setOpen(false)} className="text-ink py-3 border-b border-border/50 inline-flex items-center gap-2">
+                  <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className={`py-3 px-2 rounded-lg inline-flex items-center gap-2 ${active ? "bg-muted text-ink font-semibold" : "text-ink"}`}>
                     <Icon className="h-4 w-4 text-ink-soft" /> {l.label}
-                  </a>
+                  </Link>
                 );
               })}
+
               {isAuthenticated ? (
                 <>
+                  <div className="mt-3 mb-1 px-2 text-[10px] uppercase tracking-widest text-ink-soft">Sua conta</div>
                   {visibleAuthLinks.map(({ to, label, icon: Icon }) => {
                     const active = path === to;
                     return (
@@ -125,15 +125,13 @@ export function SiteHeader() {
                   )}
                 </>
               ) : (
-                <Link to="/login" onClick={() => setOpen(false)} className="text-ink py-3">Entrar</Link>
+                <Link to="/login" onClick={() => setOpen(false)} className="text-ink py-3 px-2">Entrar</Link>
               )}
-              <a href={sectionHref("ativacao")} onClick={() => setOpen(false)}
+
+              <Link to="/planos" onClick={() => setOpen(false)}
                 className="mt-3 inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide w-full">
                 Ativar agora
-              </a>
-              <a href="https://wa.me/5592993561754" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center justify-center gap-2 h-12 px-6 rounded-2xl bg-lime text-ink text-sm font-semibold tracking-wide w-full">
-                <MessageCircle className="h-4 w-4" /> WhatsApp
-              </a>
+              </Link>
             </div>
           </motion.div>
         )}
