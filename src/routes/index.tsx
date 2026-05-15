@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { formatBRL } from "@/lib/format";
-const heroImg = "https://vcosjojrcnofamjqatgg.supabase.co/storage/v1/object/public/media/1778722402326-eytc71-9ru1H.jpg";
+import heroImg from "@/assets/hero-flaro.jpg?w=1088&format=webp";
 import { ArrowRight } from "lucide-react";
 
 const HOME_FAQS = [
@@ -114,10 +114,9 @@ function HomePage() {
           <motion.div style={{ y: yImg }} className="lg:col-span-5 relative">
             <motion.div
               style={{ scale: scaleImg }}
-              className="relative aspect-[3/4] rounded-[32px] lg:rounded-[48px] overflow-hidden border border-white/10 bg-black/60 shadow-2xl hero-shadow transition-all duration-500 md:duration-1000"
+              className="relative aspect-[3/4] rounded-[32px] lg:rounded-[48px] overflow-hidden border border-border bg-paper shadow-2xl hero-shadow transition-all duration-500 md:duration-1000"
             >
-              <img src={heroImg} alt="Dono de padaria local com avental atrás do balcão" className="absolute inset-0 h-full w-full object-cover" width={1080} height={1440} />
-              <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+              <img src={heroImg} alt="Ilustração no estilo Flaro de um pequeno negócio local" className="absolute inset-0 h-full w-full object-cover" width={1088} height={1440} />
             </motion.div>
 
             {/* Decorative curved line */}
