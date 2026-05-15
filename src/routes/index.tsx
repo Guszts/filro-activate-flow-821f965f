@@ -16,7 +16,7 @@ const heroImg = "https://vcosjojrcnofamjqatgg.supabase.co/storage/v1/object/publ
 import { ArrowRight } from "lucide-react";
 
 const HOME_FAQS = [
-  { q: "Em quanto tempo recebo minha página?", a: "Entregamos em até 24 horas após o envio das informações do seu negócio." },
+  { q: "Em quanto tempo recebo minha página?", a: "Estimativa de até 24h após o envio completo das informações do negócio." },
   { q: "Como funciona o pagamento?", a: "Taxa única de ativação + mensalidade que cobre hospedagem, manutenção e pequenas alterações. Pagamento seguro pela Stripe." },
   { q: "Posso cancelar quando quiser?", a: "Sim. Não há fidelidade. Cancele a mensalidade a qualquer momento direto do seu painel." },
   { q: "Preciso ter domínio próprio?", a: "Não é obrigatório. Entregamos em um subdomínio nosso, e se você tiver um domínio próprio, configuramos sem custo adicional." },
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/")({
           serviceType: "Criação e ativação de páginas profissionais",
           provider: { "@type": "Organization", name: "Filro", url: "https://setup.filro.site" },
           areaServed: { "@type": "Country", name: "Brasil" },
-          description: "Páginas profissionais, cardápios digitais, portfólios e sites para negócios locais com ativação em até 24 horas.",
+          description: "Páginas profissionais, cardápios digitais, portfólios e sites para negócios locais com ativação digital rápida (estimativa de até 24h após envio completo).",
           url: "https://setup.filro.site/",
         }),
       },
@@ -142,7 +142,7 @@ function HomePage() {
               className="absolute -right-4 bottom-16 z-20 bg-paper rounded-2xl px-5 py-4 max-w-[200px] border border-border"
               style={{ boxShadow: "var(--shadow-card)" }}
             >
-              <div className="text-xs tracking-wide text-ink-soft">Pronto em</div>
+              <div className="text-xs tracking-wide text-ink-soft">Estimativa</div>
               <div className="font-display font-black text-ink leading-tight mt-1">até 24h<br />após envio.</div>
             </motion.div>
           </motion.div>
