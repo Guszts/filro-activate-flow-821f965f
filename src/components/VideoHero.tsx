@@ -43,7 +43,7 @@ export function VideoHero() {
           ref={videoRef}
           src="/videos/filro-hero.mp4"
           className="absolute inset-0 h-full w-full object-cover"
-          muted
+          muted={isMuted}
           loop
           playsInline
           preload="metadata"
