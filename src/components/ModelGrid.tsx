@@ -19,11 +19,11 @@ type Cover = (props: { className?: string }) => ReactElement;
 // Sizes: mobile single-column ~ full viewport; sm 2-col ~ 50vw; lg 3-col ~ 33vw; capped at 480px (max card width).
 const COVER_SIZES = "(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw";
 
-// Duotone tint maps each photo into the Flaro palette: grayscale base + brand color wash.
+// Cover photos are illustrated in the Flaro palette directly — no CSS tinting needed.
 const photoCover =
-  (src: string, srcSet: string, alt: string, tint: string): Cover =>
+  (src: string, srcSet: string, alt: string): Cover =>
   ({ className }) => (
-    <div className={`relative overflow-hidden ${className ?? ""}`}>
+    <div className={`relative overflow-hidden bg-paper ${className ?? ""}`}>
       <img
         src={src}
         srcSet={srcSet}
@@ -33,62 +33,17 @@ const photoCover =
         decoding="async"
         width={896}
         height={704}
-        className="h-full w-full object-cover object-center [filter:grayscale(1)_contrast(1.05)_brightness(1.02)]"
-      />
-      {/* Brand color wash */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 mix-blend-multiply"
-        style={{ background: tint }}
-      />
-      {/* Highlight lift to keep depth */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 mix-blend-screen opacity-40"
-        style={{
-          background:
-            "linear-gradient(135deg, var(--paper) 0%, transparent 45%, transparent 100%)",
-        }}
+        className="h-full w-full object-cover object-center"
       />
     </div>
   );
 
-const ClinicaCover: Cover = photoCover(
-  clinicaSrc,
-  clinicaSet,
-  "Capa do modelo Clínica",
-  "linear-gradient(135deg, var(--azure) 0%, var(--paper) 100%)",
-);
-const PadariaCover: Cover = photoCover(
-  padariaSrc,
-  padariaSet,
-  "Capa do modelo Padaria",
-  "linear-gradient(135deg, var(--flame) 0%, var(--lime) 100%)",
-);
-const AutoCover: Cover = photoCover(
-  autoSrc,
-  autoSet,
-  "Capa do modelo Auto",
-  "linear-gradient(135deg, var(--ink) 0%, var(--azure) 100%)",
-);
-const RestauranteCover: Cover = photoCover(
-  restauranteSrc,
-  restauranteSet,
-  "Capa do modelo Restaurante",
-  "linear-gradient(135deg, var(--flame) 0%, var(--ink) 100%)",
-);
-const HamburguerCover: Cover = photoCover(
-  hamburguerSrc,
-  hamburguerSet,
-  "Capa do modelo Hambúrguer",
-  "linear-gradient(135deg, var(--flame) 0%, var(--lime) 100%)",
-);
-const ModaCover: Cover = photoCover(
-  modaSrc,
-  modaSet,
-  "Capa do modelo Moda",
-  "linear-gradient(135deg, var(--lime) 0%, var(--flame) 100%)",
-);
+const ClinicaCover: Cover = photoCover(clinicaSrc, clinicaSet, "Capa do modelo Clínica");
+const PadariaCover: Cover = photoCover(padariaSrc, padariaSet, "Capa do modelo Padaria");
+const AutoCover: Cover = photoCover(autoSrc, autoSet, "Capa do modelo Auto");
+const RestauranteCover: Cover = photoCover(restauranteSrc, restauranteSet, "Capa do modelo Restaurante");
+const HamburguerCover: Cover = photoCover(hamburguerSrc, hamburguerSet, "Capa do modelo Hambúrguer");
+const ModaCover: Cover = photoCover(modaSrc, modaSet, "Capa do modelo Moda");
 
 interface Model {
   name: string;
