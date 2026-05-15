@@ -352,9 +352,6 @@ function BusinessInfoPage() {
                 <Field label="Público-alvo">
                   <textarea value={info.premium_target_audience} onChange={(e) => upd("premium_target_audience", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Quem são seus clientes ideais? Idade, perfil, interesses, necessidades..." />
                 </Field>
-                <Field label="Depoimentos de clientes">
-                  <textarea value={info.testimonials} onChange={(e) => upd("testimonials", e.target.value)} rows={4} className={inputCls + " py-3 h-auto"} placeholder='Cole depoimentos reais. Ex.: "Atendimento impecável" — Maria, cliente desde 2023' />
-                </Field>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <Field label="Facebook">
                     <input value={info.facebook} onChange={(e) => upd("facebook", e.target.value)} className={inputCls} placeholder="facebook.com/seunegocio" />
