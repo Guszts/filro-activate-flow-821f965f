@@ -180,10 +180,18 @@ export function ModelGrid() {
                   </li>
                 ))}
               </ul>
+              <a
+                href={preview.exampleUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 h-12 grid place-items-center rounded-2xl border border-ink/30 text-ink text-sm font-semibold tracking-wide hover:bg-ink hover:text-paper transition-colors"
+              >
+                Acessar exemplo
+              </a>
               <button
                 type="button"
                 onClick={goToActivation}
-                className="mt-4 h-12 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.01] transition-transform"
+                className="mt-2 h-12 rounded-2xl bg-ink text-paper text-sm font-semibold tracking-wide hover:scale-[1.01] transition-transform"
               >
                 Usar este modelo
               </button>
