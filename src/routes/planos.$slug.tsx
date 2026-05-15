@@ -30,7 +30,7 @@ const TUTORIAL_VIDEOS: Record<string, string | null> = {
   plus: "/videos/filro-plus.mp4",
   profissional: "/videos/filro-profissional.mp4",
   priority: "/videos/filro-priority.mp4",
-  premium: null,
+  premium: "/videos/filro-premium.mp4",
 };
 
 const EXTRAS_BY_SLUG: Record<string, { title: string; items: string[] }[]> = {
