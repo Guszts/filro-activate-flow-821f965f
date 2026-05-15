@@ -344,10 +344,32 @@ function BusinessInfoPage() {
               </div>
             )}
 
+            {currentSection === "premium" && (
+              <div className="card-elevated p-6 md:p-8 space-y-5">
+                <Field label="Voz da marca">
+                  <textarea value={info.premium_brand_voice} onChange={(e) => upd("premium_brand_voice", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Tom de voz: amigável, profissional, sofisticado, descontraído..." />
+                </Field>
+                <Field label="Público-alvo">
+                  <textarea value={info.premium_target_audience} onChange={(e) => upd("premium_target_audience", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Quem são seus clientes ideais? Idade, perfil, interesses, necessidades..." />
+                </Field>
+                <Field label="Depoimentos de clientes">
+                  <textarea value={info.testimonials} onChange={(e) => upd("testimonials", e.target.value)} rows={4} className={inputCls + " py-3 h-auto"} placeholder='Cole depoimentos reais. Ex.: "Atendimento impecável" — Maria, cliente desde 2023' />
+                </Field>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <Field label="Facebook">
+                    <input value={info.facebook} onChange={(e) => upd("facebook", e.target.value)} className={inputCls} placeholder="facebook.com/seunegocio" />
+                  </Field>
+                  <Field label="TikTok">
+                    <input value={info.tiktok} onChange={(e) => upd("tiktok", e.target.value)} className={inputCls} placeholder="@seunegocio" />
+                  </Field>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-between items-center pt-4">
               <div className="flex gap-2">
                 {sections.map(([k]) => (
-                  <span key={k} className={`h-2 w-2 rounded-full ${section === k ? "bg-ink" : "bg-border"}`} />
+                  <span key={k} className={`h-2 w-2 rounded-full ${currentSection === k ? "bg-ink" : "bg-border"}`} />
                 ))}
               </div>
               <button onClick={submit} disabled={saving} className="h-13 px-8 py-3 rounded-full bg-ink text-paper font-semibold hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50">
