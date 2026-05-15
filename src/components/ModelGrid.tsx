@@ -49,6 +49,7 @@ interface Model {
   desc: string;
   Cover: Cover;
   highlights: string[];
+  exampleUrl: string;
 }
 
 const models: Model[] = [
@@ -57,36 +58,42 @@ const models: Model[] = [
     desc: "Estrutura clara para clínicas e consultórios.",
     Cover: ClinicaCover,
     highlights: ["Especialidades e equipe", "Agendamento via WhatsApp", "Endereço com mapa"],
+    exampleUrl: "https://clinica.filro.site/",
   },
   {
     name: "Padaria",
     desc: "Cardápio visual e localização em destaque.",
     Cover: PadariaCover,
     highlights: ["Cardápio com fotos", "Horário de funcionamento", "Pedido pelo WhatsApp"],
+    exampleUrl: "https://padaria.filro.site/",
   },
   {
     name: "Auto",
     desc: "Serviços, agendamento e contato direto.",
     Cover: AutoCover,
     highlights: ["Lista de serviços", "Galeria de antes/depois", "Orçamento via WhatsApp"],
+    exampleUrl: "https://mecanica.filro.site/",
   },
   {
     name: "Moda",
     desc: "Coleções e vitrine de produtos.",
     Cover: ModaCover,
     highlights: ["Vitrine de produtos", "Coleções e lookbook", "Compra pelo WhatsApp"],
+    exampleUrl: "https://roupas.filro.site/",
   },
   {
     name: "Restaurante",
     desc: "Menu, fotos e reservas via WhatsApp.",
     Cover: RestauranteCover,
     highlights: ["Menu completo", "Fotos do ambiente", "Reservas pelo WhatsApp"],
+    exampleUrl: "https://restaurante.filro.site/",
   },
   {
     name: "Hambúrguer",
     desc: "Cardápio rápido e pedido por WhatsApp.",
     Cover: HamburguerCover,
     highlights: ["Cardápio com combos", "Promoções em destaque", "Pedido pelo WhatsApp"],
+    exampleUrl: "https://hamburguer.filro.site/",
   },
 ];
 
