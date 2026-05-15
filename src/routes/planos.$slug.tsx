@@ -29,7 +29,7 @@ const TUTORIAL_VIDEOS: Record<string, string | null> = {
   essencial: "/videos/filro-essencial.mp4",
   plus: "/videos/filro-plus.mp4",
   profissional: "/videos/filro-profissional.mp4",
-  priority: null,
+  priority: "/videos/filro-priority.mp4",
   premium: null,
 };
 
