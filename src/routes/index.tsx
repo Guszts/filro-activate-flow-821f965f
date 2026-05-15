@@ -78,11 +78,7 @@ function HomePage() {
 
   const handleSelect = (slug: string) => {
     sessionStorage.setItem("filro:selectedPlan", slug);
-    if (!isAuthenticated) {
-      navigate({ to: "/login", search: { redirect: "/checkout" } });
-    } else {
-      navigate({ to: "/checkout" });
-    }
+    navigate({ to: "/planos/$slug", params: { slug } });
   };
 
   return (
