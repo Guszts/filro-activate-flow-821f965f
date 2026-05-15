@@ -108,8 +108,10 @@ function BusinessInfoPage() {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/business-info" } }); return; }
     (async () => {
-      const { data: pay } = await supabase.from("payments").select("id, plan_id, status").eq("user_id", user.id).eq("status", "paid").maybeSingle();
+      const { data: pay } = await supabase.from("payments").select("id, plan_id, status, plans(slug)").eq("user_id", user.id).eq("status", "paid").maybeSingle();
       if (!pay) { toast.error("Você precisa concluir um pagamento primeiro."); navigate({ to: "/" }); return; }
+      const slug = (pay as { plans?: { slug?: string } | null })?.plans?.slug ?? "plus";
+      setPlanSlug(slug);
 
       try {
         const raw = lsKey ? localStorage.getItem(lsKey) : null;
@@ -199,12 +201,9 @@ function BusinessInfoPage() {
 
   if (loading || !project) return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
 
-  const sections = [
-    ["identidade", "Identidade da marca"],
-    ["contato", "Contato e redes"],
-    ["catalogo", "Catálogo"],
-    ["modelo", "Modelo e promoções"],
-  ] as const;
+  const activeSectionKeys = PLAN_SECTIONS[planSlug] ?? PLAN_SECTIONS.plus;
+  const sections = activeSectionKeys.map((k) => [k, SECTION_LABELS[k]] as const);
+  const currentSection = activeSectionKeys.includes(section) ? section : activeSectionKeys[0];
 
   return (
     <div className="min-h-screen flex flex-col">
