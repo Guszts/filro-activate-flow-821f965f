@@ -43,7 +43,7 @@ export function VideoHero() {
           type="button"
           onClick={toggle}
           aria-label={isPlaying ? "Pausar vídeo" : "Reproduzir vídeo"}
-          className="group absolute bottom-4 right-4 md:bottom-6 md:right-6 z-20 flex items-center gap-2 md:gap-3 rounded-full border border-white/30 bg-white/15 px-4 py-2.5 md:px-5 md:py-3 text-white shadow-lg backdrop-blur-xl backdrop-saturate-150 transition-all hover:bg-white/25 hover:scale-105 active:scale-95"
+          className="group absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center gap-2 md:gap-3 rounded-full border border-white/30 bg-white/15 px-4 py-2.5 md:px-5 md:py-3 text-white shadow-lg backdrop-blur-xl backdrop-saturate-150 transition-all hover:bg-white/25 hover:scale-105 active:scale-95"
         >
           <span className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-white/25 border border-white/40">
             {isPlaying ? (
