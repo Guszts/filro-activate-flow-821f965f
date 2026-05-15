@@ -239,7 +239,7 @@ function BusinessInfoPage() {
           </nav>
 
           <div className="space-y-6">
-            {section === "identidade" && (
+            {currentSection === "identidade" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
                 <Field label="Nome do negócio *"><input value={info.name} onChange={(e) => upd("name", e.target.value)} className={inputCls} /></Field>
                 <Field label="Slogan"><input value={info.slogan} onChange={(e) => upd("slogan", e.target.value)} className={inputCls} placeholder="ex.: O melhor café da cidade" /></Field>
@@ -261,7 +261,7 @@ function BusinessInfoPage() {
               </div>
             )}
 
-            {section === "contato" && (
+            {currentSection === "contato" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
                 <Field label="WhatsApp *"><PhoneInput value={info.whatsapp} onChange={(v) => upd("whatsapp", v)} required /></Field>
                 <Field label="Instagram">
@@ -300,7 +300,7 @@ function BusinessInfoPage() {
               </div>
             )}
 
-            {section === "catalogo" && (
+            {currentSection === "catalogo" && (
               <div className="space-y-4">
                 {info.products.map((pr, idx) => (
                   <div key={idx} className="card-elevated p-5 md:p-6 grid md:grid-cols-[120px_1fr_auto] gap-4 items-start">
@@ -324,7 +324,7 @@ function BusinessInfoPage() {
               </div>
             )}
 
-            {section === "modelo" && (
+            {currentSection === "modelo" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
                 <Field label="Promoções e ofertas"><textarea value={info.promotions} onChange={(e) => upd("promotions", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Cupons, descontos, combos..." /></Field>
                 <div className="border-t border-border pt-5">
