@@ -76,9 +76,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Filro",
+          alternateName: ["Filro Setup", "Setup Filro", "Filro Site", "Setup Filro Site"],
           url: "https://setup.filro.site",
           logo: "https://setup.filro.site/favicon.ico",
           description: "Páginas profissionais e sites para negócios locais com ativação rápida.",
+          sameAs: ["https://filro.site", "https://setup.filro.site"],
         }),
       },
       {
@@ -86,8 +88,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "Filro",
+          name: "Filro Setup",
+          alternateName: ["Filro", "Setup Filro", "Filro Site"],
           url: "https://setup.filro.site",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://setup.filro.site/?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
         }),
       },
     ],
