@@ -82,6 +82,16 @@ export function VideoHero() {
             <Pause className="h-5 w-5 md:h-6 md:w-6 fill-white" strokeWidth={0} />
           </button>
         )}
+
+        {/* Discreet mute/unmute control — always available inside hero */}
+        <button
+          type="button"
+          onClick={toggleMute}
+          aria-label={isMuted ? "Ativar som" : "Silenciar"}
+          className="absolute bottom-4 left-4 md:bottom-6 md:left-6 z-30 flex h-10 w-10 md:h-11 md:w-11 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/80 hover:scale-105 active:scale-95"
+        >
+          {isMuted ? <VolumeX className="h-4 w-4 md:h-5 md:w-5" /> : <Volume2 className="h-4 w-4 md:h-5 md:w-5" />}
+        </button>
       </motion.div>
     </section>
   );
