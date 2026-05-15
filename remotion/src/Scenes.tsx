@@ -1,6 +1,7 @@
 import React from "react";
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
 import { THEME } from "./theme";
+import { usePlanLabel } from "./PlanLabelContext";
 import type { CSSProperties } from "react";
 
 // ---------- shared helpers ----------
@@ -138,7 +139,7 @@ const Hook = () => {
             lineHeight: 0.9,
           }}
         >
-          START
+          {usePlanLabel()}
         </div>
         <div
           style={{
@@ -172,7 +173,7 @@ const Promise_ = () => {
   ];
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", gap: 36 }}>
-      <HeadlineRow kicker="O JEITO START" title="Sua presença digital, sem complicação." />
+      <HeadlineRow kicker={`O JEITO ${usePlanLabel()}`} title="Sua presença digital, sem complicação." />
       <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
         {words.map((w, i) => {
           const s = useEnter(10 + i * 8);
@@ -374,7 +375,7 @@ const Trust = () => {
 // ---------- 7. FLOW ----------
 const Flow = () => {
   const steps = [
-    { n: "1", t: "Escolha", d: "o plano START" },
+    { n: "1", t: "Escolha", d: "o plano" },
     { n: "2", t: "Pague", d: "a ativação" },
     { n: "3", t: "Envie", d: "os dados" },
   ];
@@ -558,7 +559,7 @@ const Summary = () => {
   const words = ["Simples", "Profissional", "Responsiva", "Pronta"];
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: 28, justifyContent: "center" }}>
-      <HeadlineRow kicker="EM RESUMO" title="O plano START entrega:" />
+      <HeadlineRow kicker="EM RESUMO" title={`O plano ${usePlanLabel()} entrega:`} />
       <div style={{ display: "flex", flexWrap: "wrap", gap: 18 }}>
         {words.map((w, i) => {
           const s = useEnter(8 + i * 8);

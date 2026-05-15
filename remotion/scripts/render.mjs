@@ -4,6 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const compId = process.argv[2] ?? "main";
+const out = process.argv[3] ?? `/tmp/${compId}-mute.mp4`;
 
 const bundled = await bundle({
   entryPoint: path.resolve(__dirname, "../src/index.ts"),
@@ -16,17 +18,17 @@ const browser = await openBrowser("chrome", {
   chromeMode: "chrome-for-testing",
 });
 
-const composition = await selectComposition({ serveUrl: bundled, id: "main", puppeteerInstance: browser });
+const composition = await selectComposition({ serveUrl: bundled, id: compId, puppeteerInstance: browser });
 
 await renderMedia({
   composition,
   serveUrl: bundled,
   codec: "h264",
-  outputLocation: "/tmp/start-mute.mp4",
+  outputLocation: out,
   puppeteerInstance: browser,
   muted: true,
   concurrency: 1,
 });
 
 await browser.close({ silent: false });
-console.log("done");
+console.log("done", out);
