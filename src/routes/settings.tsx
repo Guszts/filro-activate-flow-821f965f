@@ -250,6 +250,19 @@ function SettingsPage() {
             <LogOut className="h-4 w-4" /> Sair
           </button>
         </motion.section>
+
+        {/* DELETE ACCOUNT */}
+        <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-6 card-elevated p-7 border-flame/30">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><Trash2 className="h-5 w-5" /></div>
+            <h2 className="font-display font-black text-xl text-ink">Excluir conta</h2>
+          </div>
+          <p className="mt-1 text-sm text-ink-soft">Esta ação é permanente. Seus dados, perfil e acesso serão removidos. Assinaturas ativas devem ser canceladas antes.</p>
+          <button onClick={() => setDeleteOpen(true)}
+            className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90">
+            <Trash2 className="h-4 w-4" /> Excluir minha conta
+          </button>
+        </motion.section>
       </main>
 
       <AnimatePresence>
