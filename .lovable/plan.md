@@ -1,111 +1,93 @@
-# Plano — Flaro Dev (Desenvolvedor) — Fase 1
+# Flaro Dev — Fase 1
 
-## Escopo da Fase 1 (esta entrega)
+Ambiente de desenvolvimento web com IA dentro do Filro Setup, acessível pelo footer via link "Desenvolvedor". Produto chamado **Flaro Dev**.
 
-UI completa do workspace + banco de dados + chat funcional com Flaro Dev (via Lovable AI) + sistema de templates + versionamento + estrutura de publicação/domínios (sem deploy real ainda). Preview do projeto gerado roda em iframe `srcDoc` com HTML/CSS/JS único — não há bundler multi-arquivo nesta fase.
+## Escopo da Fase 1
 
-## Fora do escopo da Fase 1 (vai pra Fase 2+)
+UI completa + banco + chat com IA (Lovable AI Gateway, `google/gemini-3-flash-preview`). Sem bundler real — preview é iframe `srcDoc` com HTML/CSS/JS gerado pela IA. Deploy mockado em `filro.site/id/[slug]`. Entri fica como estrutura pronta com fallback DNS manual (sem chamadas reais ainda).
 
-- Bundler multi-arquivo real no servidor (compila pages/components/routes do projeto gerado)
-- Deploy real em CDN com URL `filro.site/id/[slug]` funcionando publicamente
-- Integração Entri real (deixo estrutura + fallback "não configurado")
-- Inspector "selecionar seção e editar com prompt"
-- Compressão de imagens server-side, screenshot do preview
-- Métricas de admin, logs de webhook reais
+Bundler multi-arquivo real, CDN, Entri real, inspector visual e métricas admin ficam para Fase 2/3.
 
-## Arquitetura
+## Rotas
 
-### Banco (1 migração)
+- `/desenvolvedor` — hero + dashboard de projetos do usuário
+- `/desenvolvedor/projeto/$projectId` — workspace 3 colunas (chat | preview | painéis)
+- `/desenvolvedor/templates` — galeria de templates
+- `/desenvolvedor/publicar/$projectId` — painel publicar + domínio
+- `/id/$slug` — página pública renderizada do projeto publicado
 
-8 tabelas com RLS (user vê só os próprios, admin vê tudo):
-`flaro_projects`, `flaro_project_messages`, `flaro_project_files`, `flaro_project_versions`, `flaro_templates` (pública para leitura), `flaro_deployments`, `flaro_domains`, `flaro_attachments`.
+Footer ganha link "Desenvolvedor" → `/desenvolvedor`.
 
-Bucket de storage `flaro-assets` (privado, scoped por user_id).
+## Banco de dados (1 migration)
 
-Função `generate_unique_flaro_slug(base text)` para slug único server-side.
+Tabelas (todas com RLS escopo `auth.uid() = user_id`, admin via `has_role`):
 
-### Backend (server functions em `src/lib/flaro/`)
+- `flaro_projects` — id, user_id, name, description, slug, status (draft/published), template_id, current_version_id, published_at
+- `flaro_versions` — id, project_id, version_number, html, css, js, prompt_summary, created_by
+- `flaro_messages` — id, project_id, role (user/assistant), content, metadata (tokens, model), created_at
+- `flaro_templates` — id, name, description, category, thumbnail_url, html, css, js, is_public
+- `flaro_attachments` — id, project_id, message_id, file_name, file_url, mime_type
+- `flaro_domains` — id, project_id, domain, status (pending/dns_manual/verified), entri_state
+- `flaro_deployments` — id, project_id, version_id, slug, published_at, status
+- `flaro_seo` — id, project_id, title, description, og_image_url, favicon_url
 
-- `flaro-projects.functions.ts` — CRUD projetos, duplicar, arquivar
-- `flaro-chat.functions.ts` — envia mensagem, chama Lovable AI Gateway (`google/gemini-3-flash-preview`), salva mensagens + cria versão + atualiza arquivo principal
-- `flaro-templates.functions.ts` — listar/usar templates
-- `flaro-versions.functions.ts` — listar, restaurar, comparar
-- `flaro-publish.functions.ts` — validar projeto, gerar slug, criar deployment (status mockado: `published` com URL `filro.site/id/[slug]`)
-- `flaro-domains.functions.ts` — adicionar domínio, checar status (mockado: detecta se `ENTRI_API_KEY` existe)
-- `flaro-attachments.functions.ts` — upload signed URL, listar, remover
+Slug único global em `flaro_deployments.slug`. `flaro_rate_limits` já existe — reaproveitar.
 
-Rota pública `src/routes/api/public/flaro-entri-webhook.ts` (placeholder, valida assinatura quando configurado).
+## Server functions (`src/lib/flaro/*.functions.ts`)
 
-### Frontend (rotas)
+Todas com `requireSupabaseAuth`:
 
-- `src/routes/desenvolvedor.tsx` — hero + dashboard de projetos salvos + CTA "Criar novo projeto"
-- `src/routes/desenvolvedor.templates.tsx` — galeria de templates com filtros
-- `src/routes/desenvolvedor.projeto.$projectId.tsx` — workspace 3 colunas (desktop) / tabs (mobile)
-- `src/routes/desenvolvedor.publicar.$projectId.tsx` — fluxo de publicação + conectar domínio
-- `src/routes/id.$slug.tsx` — serve o HTML publicado de um projeto (renderiza `flaro_deployments.snapshot_html` num iframe ou direto)
+- `flaro-projects` — list/create/rename/delete/get
+- `flaro-chat` — streaming generator que chama Lovable AI Gateway, salva mensagem user + assistant, extrai HTML/CSS/JS do retorno e cria nova `flaro_versions`
+- `flaro-templates` — listar e clonar template em novo projeto
+- `flaro-versions` — listar versões, restaurar versão anterior
+- `flaro-publish` — gera slug único, cria `flaro_deployments`, marca projeto como published
+- `flaro-domains` — registra domínio custom, retorna instruções DNS (fallback manual)
+- `flaro-attachments` — upload via Supabase Storage bucket `flaro-assets` (criar no migration)
+- `flaro-seo` — get/update SEO do projeto
 
-### Componentes (`src/components/flaro/`)
+Rota pública `/id/$slug` busca último deployment via server fn pública (sem auth, só leitura de projetos published).
 
-`FlaroHero`, `FlaroProjectCard`, `FlaroProjectGrid`, `FlaroWorkspaceLayout`, `FlaroSidebar`, `FlaroChat`, `FlaroPromptComposer` (com mode selector Construir/Plano, intensidade, tipo, objetivo), `FlaroAttachments`, `FlaroPreview` (iframe srcDoc + toolbar device switcher), `FlaroFileTree`, `FlaroVersionList`, `FlaroTemplateCard`, `FlaroPublishPanel`, `FlaroDomainPanel`, `FlaroSeoPanel`, `FlaroConversionPanel`, `FlaroLogsPanel`, `FlaroEmptyState`.
+## Componentes (`src/components/flaro/*`)
 
-Tudo usando tokens do `src/styles.css` existente (paper/ink/flame/lime/azure, Archivo display, card-elevated, card-personality) — mesma linguagem do site Filro atual.
+Workspace:
+- `FlaroHero` — landing dentro de /desenvolvedor com CTA "Criar novo projeto"
+- `FlaroProjectsDashboard` — grid de projetos + empty state
+- `FlaroWorkspaceLayout` — 3 colunas desktop, tabs mobile
+- `FlaroChat` + `FlaroPromptComposer` — chat com IA, render markdown, anexar arquivos
+- `FlaroPreview` — iframe srcDoc com HTML/CSS/JS combinados, toggle desktop/mobile
+- `FlaroVersionList` — histórico de versões com restaurar
+- `FlaroTemplateCard` + `FlaroTemplatesGrid`
+- `FlaroPublishPanel` — publicar, ver URL filro.site/id/slug
+- `FlaroDomainPanel` — domínio custom + instruções DNS
+- `FlaroSeoPanel` — title, description, og image
+- `FlaroEmptyState` — componente reusável
 
-### Footer
+Estados vazios (PT-BR conforme solicitado):
+- Sem projetos: "Você ainda não criou nenhum projeto no Flaro Dev."
+- Sem templates: "Nenhum template disponível."
+- Sem deployments: "Nenhuma publicação realizada."
 
-Adicionar link "Desenvolvedor" em `src/components/SiteFooter.tsx` na coluna institucional, estilo discreto (mesmo tratamento dos outros links).
+## Design
 
-### Auth
+Sticky workspace header, hierarquia visual forte, animações sutis, grids responsivos, transições suaves, contraste acessível. Tokens semânticos de `src/styles.css` — sem cores hard-coded. Visual profissional (não infantil, não dashboard genérico). Identidade própria "Flaro Dev" — não copiar visual do Filro Setup principal, mas usar mesmos tokens.
 
-Usa `requireSupabaseAuth` em todas as server functions. Rotas `/desenvolvedor/*` ficam sob layout que redireciona pra `/login` se não autenticado (exceto `/desenvolvedor` hero, que mostra CTA de login).
+## Fluxo de chat → preview
 
-Admin (role `admin` já existente em `user_roles`) vê todos os projetos no dashboard.
+1. User envia prompt no `FlaroPromptComposer`
+2. `flaro-chat` salva mensagem user, chama Gemini com system prompt "Você é Flaro Dev. Gere um app web completo em HTML/CSS/JS. Retorne JSON {html, css, js, summary}."
+3. Stream da resposta para a UI
+4. Ao finalizar, parse JSON, cria nova `flaro_versions`, atualiza `current_version_id`
+5. `FlaroPreview` recarrega iframe srcDoc com nova versão
 
-## Layout do workspace (desktop, 3 colunas)
+## Publicação
 
-```text
-┌────────────┬─────────────────────┬──────────────┐
-│ Sidebar    │ Chat Flaro Dev      │ Preview      │
-│ - Projetos │ - mensagens         │ [Desk|Tab|M] │
-│ - Templates│ - prompt composer   │              │
-│ - Assets   │   (modo, intensid.) │  iframe      │
-│ - Versões  │   anexos            │              │
-│ - Deploy   │                     │ Publicar→    │
-│ - Domínios │                     │              │
-│ - Settings │                     │ Files / SEO  │
-└────────────┴─────────────────────┴──────────────┘
-```
-
-Mobile: tabs no topo (Prompt | Preview | Arquivos | Templates | Publicar).
-
-## Comportamento do chat
-
-Server function recebe `{ projectId, prompt, mode, intensity, type, goal, attachments }`. Monta system prompt com regras Filro (sem Lovable, sem emoji, sem fake testimonials, PT-BR). Chama Lovable AI Gateway via `@ai-sdk/openai-compatible`. Em modo `Construir`, instrui modelo a devolver JSON `{ summary, html, files_changed[] }` via `Output.object` — salva `html` em `flaro_project_files` (path `index.html`), cria nova versão, retorna pro client que dá reload no iframe. Em modo `Plano`, devolve só markdown.
-
-## Validação de slug
-
-`generate_unique_flaro_slug(base)`:
-1. Normaliza (lower, remove acentos, espaços→`-`, remove chars inválidos)
-2. Checa `flaro_projects.slug` e `flaro_deployments.slug`
-3. Se existe, anexa sufixo hex 4 chars
-4. Retorna slug único
-
-Chamada no momento de publicar, não na criação.
-
-## Entradas técnicas
-
-- Secrets opcionais: `ENTRI_API_KEY`, `ENTRI_CLIENT_ID`, `ENTRI_WEBHOOK_SECRET`, `ENTRI_ENVIRONMENT`, `PUBLIC_FILRO_BASE_URL` — UI detecta ausência e mostra "Integração Entri não configurada" com fallback DNS manual (A record + CNAME).
-- `LOVABLE_API_KEY` já existe.
-
-## Ordem de execução
-
-1. Migração SQL (8 tabelas + RLS + função slug + bucket)
-2. Server functions (7 arquivos `flaro-*.functions.ts`)
-3. Componentes base (`FlaroHero`, cards, layout)
-4. Rota `/desenvolvedor` + link no footer
-5. Rota workspace `/desenvolvedor/projeto/$projectId` + chat + preview
-6. Rota templates + publicar + página pública `/id/$slug`
-7. Smoke test: criar projeto → mandar prompt → ver preview → publicar → abrir link
+Gera slug a partir do nome + hash curto. Salva deployment. URL pública `filro.site/id/[slug]` resolve via rota `/id/$slug` que renderiza HTML/CSS/JS direto (server-side fetch + dangerouslySetInnerHTML em iframe srcDoc seguro).
 
 ## Estimativa
 
-~25–30 arquivos novos, 1 migração grande, ~1500–2000 linhas de código. Vai consumir crédito proporcional. Se algo quebrar, faço fixes pontuais sem reescrever tudo.
+~25 arquivos novos, 1 migration grande, 1 link no footer existente. Volume alto numa iteração — vou implementar tudo na sequência: migration → server fns → componentes → rotas → link no footer.
+
+## Fora do escopo (Fase 2+)
+
+Bundler real multi-arquivo, hot reload de componentes React, Entri API real, inspector visual de elementos, otimização de imagens, métricas admin, logs detalhados, webhook integrations, custom code editor (Monaco).
