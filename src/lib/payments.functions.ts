@@ -192,12 +192,28 @@ const ALLOWED_RETURN_HOSTS = new Set([
   "127.0.0.1",
 ]);
 
+const PARTNER_CODE_RE = /^[a-z0-9_-]{3,40}$/;
+
+async function resolveActivePartner(rawCode: string | null | undefined) {
+  if (!rawCode) return null;
+  const code = String(rawCode).trim().toLowerCase();
+  if (!PARTNER_CODE_RE.test(code)) return null;
+  const { data } = await supabaseAdmin
+    .from("partners")
+    .select("id, code, commission_rate, commission_scope, status")
+    .eq("code", code)
+    .eq("status", "active")
+    .maybeSingle();
+  return data ?? null;
+}
+
 export const createPlanCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: {
     planSlug: string;
     returnOrigin: string;
     environment: StripeEnv;
+    partnerCode?: string | null;
   }) => {
     if (!/^[a-z_]+$/.test(data.planSlug)) throw new Error("Invalid planSlug");
     if (data.environment !== "sandbox" && data.environment !== "live") throw new Error("Invalid environment");
@@ -207,7 +223,12 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
       throw new Error("Invalid returnOrigin protocol");
     }
     if (!ALLOWED_RETURN_HOSTS.has(parsed.hostname)) throw new Error("Disallowed return origin");
-    return { planSlug: data.planSlug, returnOrigin: parsed.origin, environment: data.environment };
+    let partnerCode: string | null = null;
+    if (typeof data.partnerCode === "string" && data.partnerCode.trim()) {
+      const c = data.partnerCode.trim().toLowerCase();
+      if (PARTNER_CODE_RE.test(c)) partnerCode = c;
+    }
+    return { planSlug: data.planSlug, returnOrigin: parsed.origin, environment: data.environment, partnerCode };
   })
   .handler(async ({ data, context }) => {
     const { userId, supabase } = context;
