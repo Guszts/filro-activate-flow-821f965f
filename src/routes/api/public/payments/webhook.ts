@@ -152,16 +152,21 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       if (!plan) break;
 
       // Record initial payment (activation + first month).
-      await supabaseAdmin.from("payments").insert({
-        user_id: userId,
-        plan_id: plan.id,
-        amount: (plan.activation_price ?? 0) + (plan.monthly_price ?? 0),
-        currency: (session.currency ?? "brl").toLowerCase(),
-        status: "paid",
-        stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
-        stripe_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : null,
-        paid_at: new Date().toISOString(),
-      });
+      const { data: paymentRow } = await supabaseAdmin
+        .from("payments")
+        .insert({
+          user_id: userId,
+          plan_id: plan.id,
+          amount: (plan.activation_price ?? 0) + (plan.monthly_price ?? 0),
+          currency: (session.currency ?? "brl").toLowerCase(),
+          status: "paid",
+          stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
+          stripe_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : null,
+          paid_at: new Date().toISOString(),
+        })
+        .select("id")
+        .maybeSingle();
+      const paymentId = paymentRow?.id ?? null;
 
       // Mark project payment_confirmed (or create one). This status maps to
       // the "Pagamento confirmado" column in the admin Kanban.
@@ -251,7 +256,11 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
             .maybeSingle();
 
           if (partner) {
-            const rate = Number(partner.commission_rate ?? 50);
+            // Snapshot da taxa: prioriza o valor congelado na criação do checkout
+            const metaRate = Number(session.metadata?.commissionRate);
+            const rate = Number.isFinite(metaRate) && metaRate > 0
+              ? metaRate
+              : Number(partner.commission_rate ?? 50);
             const activationAmount = plan.activation_price ?? 0;
             const monthlyAmount = plan.monthly_price ?? 0;
             const baseAmount = activationAmount;
@@ -285,6 +294,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
               referral_id: referralRow?.id ?? null,
               user_id: userId,
               plan_id: plan.id,
+              payment_id: paymentId,
               stripe_checkout_session_id: session.id,
               activation_amount: activationAmount,
               monthly_amount: monthlyAmount,

@@ -93,43 +93,13 @@ export const payCommission = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context.userId);
 
-    const { data: commission, error: cErr } = await supabaseAdmin
-      .from("partner_commissions")
-      .select("id, partner_id, commission_amount, status")
-      .eq("id", data.id)
-      .maybeSingle();
-    if (cErr) throw new Error(cErr.message);
-    if (!commission) throw new Error("Comissão não encontrada");
-    if (commission.status === "paid") throw new Error("Comissão já marcada como paga");
-    if (commission.status === "cancelled") throw new Error("Comissão cancelada não pode ser paga");
-
-    const { data: partner } = await supabaseAdmin
-      .from("partners")
-      .select("pix_key")
-      .eq("id", commission.partner_id)
-      .maybeSingle();
-
-    const nowIso = new Date().toISOString();
-    const { data: payout, error: pErr } = await supabaseAdmin
-      .from("partner_payouts")
-      .insert({
-        partner_id: commission.partner_id,
-        amount: commission.commission_amount,
-        method: data.method,
-        pix_key: partner?.pix_key ?? null,
-        status: "paid",
-        paid_at: nowIso,
-        notes: data.notes ?? null,
-      })
-      .select("id")
-      .single();
-    if (pErr) throw new Error(pErr.message);
-
-    const { error: uErr } = await supabaseAdmin
-      .from("partner_commissions")
-      .update({ status: "paid", paid_at: nowIso, payout_id: payout.id })
-      .eq("id", data.id);
-    if (uErr) throw new Error(uErr.message);
-
-    return { ok: true, payoutId: payout.id };
+    // Tudo atômico via RPC: trava a comissão, valida, cria o payout
+    // e atualiza a comissão para paid em uma única transação.
+    const { data: payoutId, error } = await supabaseAdmin.rpc("pay_partner_commission", {
+      _commission_id: data.id,
+      _method: data.method,
+      _notes: data.notes ?? null,
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true, payoutId };
   });
