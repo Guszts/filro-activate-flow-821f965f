@@ -277,6 +277,15 @@ function PainelPage() {
         )}
       </main>
       <SiteFooter />
+      {user && subInfo && (
+        <SubscriptionCancellationModals
+          cancelAtPeriodEnd={subInfo.cancel_at_period_end}
+          currentPeriodEnd={subInfo.current_period_end}
+          userId={user.id}
+          onReactivate={handleManageSubscription}
+          reactivating={openingPortal}
+        />
+      )}
     </div>
   );
 }
