@@ -58,7 +58,11 @@ export function SiteHeader() {
           {isAuthenticated ? (
             <div className="hidden md:block relative" onMouseEnter={() => setMenu("user")} onMouseLeave={() => setMenu(null)}>
               <button onClick={() => navigate({ to: "/settings" })} className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-border bg-paper hover:bg-muted transition-colors text-sm font-medium text-ink">
-                <div className="h-7 w-7 rounded-full bg-ink text-paper grid place-items-center text-xs font-bold">{user?.email?.[0]?.toUpperCase() ?? "U"}</div>
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
+                ) : (
+                  <div className="h-7 w-7 rounded-full bg-ink text-paper grid place-items-center text-xs font-bold">{user?.email?.[0]?.toUpperCase() ?? "U"}</div>
+                )}
                 <ChevronDown className="h-3.5 w-3.5 text-ink-soft" />
               </button>
               <AnimatePresence>
