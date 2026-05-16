@@ -316,6 +316,40 @@ function PlanDetailsPage() {
               </motion.section>
             )}
 
+            {slug === "promocional" && (
+              <motion.section
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="mx-auto max-w-[1200px] px-5 md:px-10 py-10"
+              >
+                <div className="rounded-3xl border border-lime bg-lime/10 p-7 md:p-9 flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
+                  <div className="flex-1">
+                    <span className="text-xs tracking-wide uppercase text-ink-soft">Cupom exclusivo</span>
+                    <h3 className="mt-2 font-display font-black text-2xl md:text-3xl text-ink">
+                      10% OFF na ativação
+                    </h3>
+                    <p className="mt-2 text-sm text-ink-soft">
+                      Use o código abaixo no checkout para receber 10% de desconto na ativação do plano Promocional.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <code className="px-5 py-3 rounded-2xl bg-ink text-paper font-display font-black tracking-[0.2em] text-lg">
+                      FILRO10
+                    </code>
+                    <button
+                      type="button"
+                      onClick={() => { navigator.clipboard?.writeText("FILRO10"); }}
+                      className="rounded-2xl border border-ink/20 px-4 py-3 text-sm text-ink hover:bg-ink hover:text-paper transition-colors"
+                    >
+                      Copiar
+                    </button>
+                  </div>
+                </div>
+              </motion.section>
+            )}
+
             {/* EXTRA DETAIL BLOCKS */}
             <motion.section
               initial="hidden"
