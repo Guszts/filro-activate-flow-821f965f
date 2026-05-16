@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RegisterRouteImport } from './routes/register'
@@ -49,6 +50,11 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
   path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuporteRoute = SuporteRouteImport.update({
+  id: '/suporte',
+  path: '/suporte',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -286,6 +294,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -321,6 +330,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/sitemap.xml'
+    | '/suporte'
     | '/termos'
     | '/unsubscribe'
     | '/email/unsubscribe'
@@ -354,6 +364,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/sitemap.xml'
+    | '/suporte'
     | '/termos'
     | '/unsubscribe'
     | '/email/unsubscribe'
@@ -387,6 +398,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/sitemap.xml'
+    | '/suporte'
     | '/termos'
     | '/unsubscribe'
     | '/email/unsubscribe'
@@ -421,6 +433,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SuporteRoute: typeof SuporteRoute
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
@@ -451,6 +464,13 @@ declare module '@tanstack/react-router' {
       path: '/termos'
       fullPath: '/termos'
       preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/suporte': {
+      id: '/suporte'
+      path: '/suporte'
+      fullPath: '/suporte'
+      preLoaderRoute: typeof SuporteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -677,6 +697,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SuporteRoute: SuporteRoute,
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,

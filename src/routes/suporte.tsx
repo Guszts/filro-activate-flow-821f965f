@@ -95,6 +95,7 @@ function SuportePage() {
     queryKey: ["ticket-messages", activeTicketId],
     enabled: !!activeTicketId,
     queryFn: async () => {
+      if (!activeTicketId) return [];
       const { data } = await supabase
         .from("support_messages")
         .select("*")
