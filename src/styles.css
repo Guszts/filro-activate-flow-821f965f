@@ -41,8 +41,8 @@
   --color-azure: var(--azure);
   --color-stone: var(--stone);
 
-  --font-display: "Pangram Sans Rounded", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Pangram Sans Rounded", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fredoka", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Fredoka", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
