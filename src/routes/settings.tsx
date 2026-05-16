@@ -21,7 +21,7 @@ export const Route = createFileRoute("/settings")({
 });
 
 interface ProfileRow {
-  name: string; email: string; whatsapp: string; business_name: string; business_segment: string;
+  name: string; email: string; whatsapp: string; business_name: string; business_segment: string; avatar_url: string;
 }
 
 function SettingsPage() {
