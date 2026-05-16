@@ -194,5 +194,34 @@ export const replySupportTicket = createServerFn({ method: "POST" })
     if (data.newStatus) update.status = data.newStatus as typeof update.status;
     await supabaseAdmin.from("support_tickets").update(update).eq("id", data.ticketId);
 
+    // Notifica cliente
+    try {
+      const { data: ticket } = await supabaseAdmin
+        .from("support_tickets")
+        .select("user_id,subject")
+        .eq("id", data.ticketId)
+        .maybeSingle();
+      if (ticket) {
+        const { data: prof } = await supabaseAdmin
+          .from("profiles")
+          .select("name,email")
+          .eq("user_id", ticket.user_id)
+          .maybeSingle();
+        if (prof?.email) {
+          await sendTransactionalEmailServer({
+            templateName: "support-reply",
+            recipientEmail: prof.email,
+            idempotencyKey: `support-${data.ticketId}-${Date.now()}`,
+            templateData: {
+              name: prof.name || undefined,
+              ticketSubject: ticket.subject,
+              ticketUrl: `${PANEL_URL}/suporte`,
+              preview: data.content.slice(0, 400),
+            },
+          });
+        }
+      }
+    } catch (e) { console.error("[email] support-reply failed", e); }
+
     return { ok: true };
   });
