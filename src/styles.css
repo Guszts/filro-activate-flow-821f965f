@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@500;600;700;800;900&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -41,8 +41,8 @@
   --color-azure: var(--azure);
   --color-stone: var(--stone);
 
-  --font-display: "Pangram Sans Rounded", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Pangram Sans Rounded", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fredoka", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Fredoka", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
@@ -122,8 +122,8 @@
     background-attachment: fixed;
     position: relative;
   }
-  h1, h2, h3, h4, h5, h6 { font-weight: 800; }
-  strong, b { font-weight: 800; }
+  h1, h2, h3, h4, h5, h6 { font-weight: 700; }
+  strong, b { font-weight: 700; }
   /* Grain overlay across the whole site */
   body::before {
     content: "";
@@ -146,8 +146,8 @@
   .text-pretty { text-wrap: pretty; }
   .editorial-headline {
     font-family: var(--font-display);
-    font-weight: 800;
-    letter-spacing: -0.035em;
+    font-weight: 700;
+    letter-spacing: -0.025em;
     line-height: 0.95;
   }
   .lime-mark {
