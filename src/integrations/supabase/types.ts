@@ -1041,6 +1041,10 @@ export type Database = {
         }
         Returns: number
       }
+      pay_partner_commission: {
+        Args: { _commission_id: string; _method?: string; _notes?: string }
+        Returns: string
+      }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {
