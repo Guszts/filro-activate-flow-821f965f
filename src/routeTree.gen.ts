@@ -39,6 +39,7 @@ import { Route as IdSlugRouteImport } from './routes/id.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as DesenvolvedorTemplatesRouteImport } from './routes/desenvolvedor.templates'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
+import { Route as DesenvolvedorPublicarProjectIdRouteImport } from './routes/desenvolvedor.publicar.$projectId'
 import { Route as DesenvolvedorProjetoProjectIdRouteImport } from './routes/desenvolvedor.projeto.$projectId'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -198,6 +199,12 @@ const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   path: '/lovable/email/suppression',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DesenvolvedorPublicarProjectIdRoute =
+  DesenvolvedorPublicarProjectIdRouteImport.update({
+    id: '/desenvolvedor/publicar/$projectId',
+    path: '/desenvolvedor/publicar/$projectId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DesenvolvedorProjetoProjectIdRoute =
   DesenvolvedorProjetoProjectIdRouteImport.update({
     id: '/desenvolvedor/projeto/$projectId',
@@ -277,6 +284,7 @@ export interface FileRoutesByFullPath {
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/desenvolvedor/projeto/$projectId': typeof DesenvolvedorProjetoProjectIdRoute
+  '/desenvolvedor/publicar/$projectId': typeof DesenvolvedorPublicarProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -317,6 +325,7 @@ export interface FileRoutesByTo {
   '/planos': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/desenvolvedor/projeto/$projectId': typeof DesenvolvedorProjetoProjectIdRoute
+  '/desenvolvedor/publicar/$projectId': typeof DesenvolvedorPublicarProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -358,6 +367,7 @@ export interface FileRoutesById {
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/desenvolvedor/projeto/$projectId': typeof DesenvolvedorProjetoProjectIdRoute
+  '/desenvolvedor/publicar/$projectId': typeof DesenvolvedorPublicarProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -400,6 +410,7 @@ export interface FileRouteTypes {
     | '/planos/'
     | '/api/public/notify-admin-signup'
     | '/desenvolvedor/projeto/$projectId'
+    | '/desenvolvedor/publicar/$projectId'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/api/public/notify-admin-signup'
     | '/desenvolvedor/projeto/$projectId'
+    | '/desenvolvedor/publicar/$projectId'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -480,6 +492,7 @@ export interface FileRouteTypes {
     | '/planos/'
     | '/api/public/notify-admin-signup'
     | '/desenvolvedor/projeto/$projectId'
+    | '/desenvolvedor/publicar/$projectId'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -521,6 +534,7 @@ export interface RootRouteChildren {
   PlanosIndexRoute: typeof PlanosIndexRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   DesenvolvedorProjetoProjectIdRoute: typeof DesenvolvedorProjetoProjectIdRoute
+  DesenvolvedorPublicarProjectIdRoute: typeof DesenvolvedorPublicarProjectIdRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -742,6 +756,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailSuppressionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/desenvolvedor/publicar/$projectId': {
+      id: '/desenvolvedor/publicar/$projectId'
+      path: '/desenvolvedor/publicar/$projectId'
+      fullPath: '/desenvolvedor/publicar/$projectId'
+      preLoaderRoute: typeof DesenvolvedorPublicarProjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/desenvolvedor/projeto/$projectId': {
       id: '/desenvolvedor/projeto/$projectId'
       path: '/desenvolvedor/projeto/$projectId'
@@ -833,6 +854,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosIndexRoute: PlanosIndexRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   DesenvolvedorProjetoProjectIdRoute: DesenvolvedorProjetoProjectIdRoute,
+  DesenvolvedorPublicarProjectIdRoute: DesenvolvedorPublicarProjectIdRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
@@ -844,3 +866,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
