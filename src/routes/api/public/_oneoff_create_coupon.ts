@@ -34,8 +34,8 @@ export const Route = createFileRoute('/api/public/_oneoff_create_coupon')({
         });
 
         // Create the customer-facing promotion code.
-        const promo = await (stripe.promotionCodes.create as (params: Record<string, unknown>) => Promise<{ id: string; code: string }>)({
-          coupon: coupon.id,
+        const promo = await stripe.promotionCodes.create({
+          promotion: coupon.id,
           code,
           metadata: { lovable_external_id: code.toLowerCase(), plan: 'premium' },
         });
