@@ -29,6 +29,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BusinessInfoRouteImport } from './routes/business-info'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
+import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
@@ -140,6 +141,11 @@ const PlanosIndexRoute = PlanosIndexRouteImport.update({
   path: '/planos/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjetoIdRoute = ProjetoIdRouteImport.update({
+  id: '/projeto/$id',
+  path: '/projeto/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlanosSlugRoute = PlanosSlugRouteImport.update({
   id: '/planos/$slug',
   path: '/planos/$slug',
@@ -218,6 +224,7 @@ export interface FileRoutesByFullPath {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
+  '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -250,6 +257,7 @@ export interface FileRoutesByTo {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
+  '/projeto/$id': typeof ProjetoIdRoute
   '/planos': typeof PlanosIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -283,6 +291,7 @@ export interface FileRoutesById {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
+  '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -317,6 +326,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
+    | '/projeto/$id'
     | '/planos/'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -349,6 +359,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
+    | '/projeto/$id'
     | '/planos'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -381,6 +392,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
+    | '/projeto/$id'
     | '/planos/'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -414,6 +426,7 @@ export interface RootRouteChildren {
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LeadIdRoute: typeof LeadIdRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
+  ProjetoIdRoute: typeof ProjetoIdRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -566,6 +579,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projeto/$id': {
+      id: '/projeto/$id'
+      path: '/projeto/$id'
+      fullPath: '/projeto/$id'
+      preLoaderRoute: typeof ProjetoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/planos/$slug': {
       id: '/planos/$slug'
       path: '/planos/$slug'
@@ -662,6 +682,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LeadIdRoute: LeadIdRoute,
   PlanosSlugRoute: PlanosSlugRoute,
+  ProjetoIdRoute: ProjetoIdRoute,
   PlanosIndexRoute: PlanosIndexRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,

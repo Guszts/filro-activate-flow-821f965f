@@ -328,6 +328,53 @@ export type Database = {
         }
         Relationships: []
       }
+      project_revisions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: Database["public"]["Enums"]["revision_kind"]
+          message: string
+          project_id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: Database["public"]["Enums"]["revision_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["revision_kind"]
+          message: string
+          project_id: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: Database["public"]["Enums"]["revision_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["revision_kind"]
+          message?: string
+          project_id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: Database["public"]["Enums"]["revision_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_revisions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_status_history: {
         Row: {
           changed_by: string | null
@@ -626,6 +673,12 @@ export type Database = {
         | "published"
         | "maintenance"
         | "paused"
+      revision_kind:
+        | "client_request"
+        | "admin_update"
+        | "approval"
+        | "publish_note"
+      revision_status: "open" | "in_progress" | "resolved"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -780,6 +833,13 @@ export const Constants = {
         "maintenance",
         "paused",
       ],
+      revision_kind: [
+        "client_request",
+        "admin_update",
+        "approval",
+        "publish_note",
+      ],
+      revision_status: ["open", "in_progress", "resolved"],
     },
   },
 } as const
