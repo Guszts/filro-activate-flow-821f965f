@@ -149,9 +149,9 @@
   .lime-mark {
     background-image: linear-gradient(var(--lime), var(--lime));
     background-repeat: no-repeat;
-    background-position: 0 88%;
+    background-position: 0 92%;
     background-size: 100% 0.18em;
-    padding: 0 0.08em;
+    padding: 0;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
   }
