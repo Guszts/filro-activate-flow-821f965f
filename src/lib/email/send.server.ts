@@ -4,8 +4,8 @@ import { supabaseAdmin } from '@/integrations/supabase/client.server'
 import { TEMPLATES } from '@/lib/email-templates/registry'
 
 const SITE_NAME = 'Filro'
-const SENDER_DOMAIN = 'notify.setup.filro.site'
-const FROM_DOMAIN = 'setup.filro.site'
+const SENDER_DOMAIN = 'notify.filro.site'
+const FROM_DOMAIN = 'filro.site'
 
 function genToken(): string {
   const bytes = new Uint8Array(32)
