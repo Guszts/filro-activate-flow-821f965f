@@ -78,7 +78,7 @@ function PrivacyPage() {
           <ul>
             <li><strong>Stripe</strong> (Irlanda/EUA) — processamento de pagamentos. <a href="https://stripe.com/br/privacy" target="_blank" rel="noreferrer" className="text-ink underline">Política</a>.</li>
             <li><strong>Cloudflare</strong> (EUA) — hospedagem edge e proteção DDoS.</li>
-            <li><strong>Lovable Cloud / Supabase</strong> (EUA/UE) — banco de dados e autenticação.</li>
+            <li><strong>Supabase</strong> (EUA/UE) — banco de dados e autenticação.</li>
             <li><strong>Google</strong> (caso autenticação social seja usada) — apenas e-mail e nome do perfil.</li>
             <li><strong>Autoridades públicas</strong> — somente mediante ordem judicial ou requisição legal formal.</li>
           </ul>

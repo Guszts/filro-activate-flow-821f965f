@@ -338,7 +338,7 @@ function SettingsTab() {
     <div>
       <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Configurações</h1>
       <div className="mt-8 card-elevated p-7 max-w-xl space-y-3 text-sm text-ink-soft">
-        <p><strong className="text-ink">Pagamentos:</strong> integrados via Lovable Cloud (sem chaves manuais).</p>
+        <p><strong className="text-ink">Pagamentos:</strong> integrados via Stripe (sem chaves manuais expostas).</p>
         <p><strong className="text-ink">Webhook:</strong> endpoint público em <code className="text-xs">/api/public/payments/webhook</code></p>
         <p><strong className="text-ink">Banco:</strong> RLS ativo. Apenas administradores acessam o Console.</p>
       </div>
