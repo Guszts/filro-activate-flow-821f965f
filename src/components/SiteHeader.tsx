@@ -1,6 +1,7 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Menu, X, ChevronDown, LayoutDashboard, Briefcase, Shield, Layers, PlayCircle, Rocket, Settings as SettingsIcon, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -28,6 +29,15 @@ export function SiteHeader() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<null | "user">(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) { setAvatarUrl(null); return; }
+    let active = true;
+    supabase.from("profiles").select("avatar_url").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => { if (active) setAvatarUrl(data?.avatar_url ?? null); });
+    return () => { active = false; };
+  }, [user]);
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/75 border-b border-border/40">
@@ -48,7 +58,11 @@ export function SiteHeader() {
           {isAuthenticated ? (
             <div className="hidden md:block relative" onMouseEnter={() => setMenu("user")} onMouseLeave={() => setMenu(null)}>
               <button onClick={() => navigate({ to: "/settings" })} className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-border bg-paper hover:bg-muted transition-colors text-sm font-medium text-ink">
-                <div className="h-7 w-7 rounded-full bg-ink text-paper grid place-items-center text-xs font-bold">{user?.email?.[0]?.toUpperCase() ?? "U"}</div>
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
+                ) : (
+                  <div className="h-7 w-7 rounded-full bg-ink text-paper grid place-items-center text-xs font-bold">{user?.email?.[0]?.toUpperCase() ?? "U"}</div>
+                )}
                 <ChevronDown className="h-3.5 w-3.5 text-ink-soft" />
               </button>
               <AnimatePresence>

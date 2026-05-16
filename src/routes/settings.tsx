@@ -10,7 +10,7 @@ import { createPortalSession, cancelSubscription } from "@/lib/payments.function
 import { PhoneInput } from "@/components/PhoneInput";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon, XCircle } from "lucide-react";
+import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon, XCircle, Camera, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
@@ -21,13 +21,14 @@ export const Route = createFileRoute("/settings")({
 });
 
 interface ProfileRow {
-  name: string; email: string; whatsapp: string; business_name: string; business_segment: string;
+  name: string; email: string; whatsapp: string; business_name: string; business_segment: string; avatar_url: string;
 }
 
 function SettingsPage() {
   const navigate = useNavigate();
   const { user, loading, signOut, hasPaid, isAdmin } = useAuth();
-  const [profile, setProfile] = useState<ProfileRow>({ name: "", email: "", whatsapp: "", business_name: "", business_segment: "" });
+  const [profile, setProfile] = useState<ProfileRow>({ name: "", email: "", whatsapp: "", business_name: "", business_segment: "", avatar_url: "" });
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [saving, setSaving] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [openingPortal, setOpeningPortal] = useState(false);
@@ -42,12 +43,13 @@ function SettingsPage() {
     if (!user) { navigate({ to: "/login", search: { redirect: "/settings" } }); return; }
     (async () => {
       const [{ data: prof }, { data: subs }] = await Promise.all([
-        supabase.from("profiles").select("name,email,whatsapp,business_name,business_segment").eq("user_id", user.id).maybeSingle(),
+        supabase.from("profiles").select("name,email,whatsapp,business_name,business_segment,avatar_url").eq("user_id", user.id).maybeSingle(),
         supabase.from("subscriptions").select("id").eq("user_id", user.id).neq("status", "canceled").limit(1),
       ]);
       if (prof) setProfile({
         name: prof.name ?? "", email: prof.email ?? user.email ?? "",
         whatsapp: prof.whatsapp ?? "", business_name: prof.business_name ?? "", business_segment: prof.business_segment ?? "",
+        avatar_url: prof.avatar_url ?? "",
       });
       setHasSubscription((subs ?? []).length > 0);
     })();
@@ -63,6 +65,37 @@ function SettingsPage() {
     setSaving(false);
     if (error) return toast.error(error.message);
     toast.success("Perfil atualizado");
+  };
+
+  const uploadAvatar = async (file: File) => {
+    if (!user) return;
+    if (!file.type.startsWith("image/")) return toast.error("Selecione uma imagem");
+    if (file.size > 5 * 1024 * 1024) return toast.error("Máximo 5MB");
+    setUploadingAvatar(true);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true, cacheControl: "3600" });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+      const url = pub.publicUrl;
+      const { error: dbErr } = await supabase.from("profiles").update({ avatar_url: url }).eq("user_id", user.id);
+      if (dbErr) throw dbErr;
+      setProfile((p) => ({ ...p, avatar_url: url }));
+      toast.success("Foto atualizada");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao enviar foto");
+    } finally { setUploadingAvatar(false); }
+  };
+
+  const removeAvatar = async () => {
+    if (!user) return;
+    setUploadingAvatar(true);
+    const { error } = await supabase.from("profiles").update({ avatar_url: null }).eq("user_id", user.id);
+    setUploadingAvatar(false);
+    if (error) return toast.error(error.message);
+    setProfile((p) => ({ ...p, avatar_url: "" }));
+    toast.success("Foto removida");
   };
 
   const manageBilling = async () => {
@@ -119,6 +152,27 @@ function SettingsPage() {
           <div className="flex items-center gap-3 mb-5">
             <div className="h-10 w-10 grid place-items-center rounded-2xl bg-muted text-ink"><UserIcon className="h-5 w-5" /></div>
             <h2 className="font-display font-black text-2xl text-ink">Perfil</h2>
+          </div>
+          <div className="flex items-center gap-5 mb-6">
+            <div className="relative h-20 w-20 rounded-full overflow-hidden bg-muted ring-1 ring-border grid place-items-center">
+              {profile.avatar_url ? (
+                <img src={profile.avatar_url} alt="Foto de perfil" className="h-full w-full object-cover" />
+              ) : (
+                <span className="font-display font-black text-2xl text-ink-soft">{(profile.name || profile.email || "U")[0]?.toUpperCase()}</span>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className={`inline-flex items-center gap-2 h-10 px-4 rounded-xl border border-border bg-paper text-sm font-semibold text-ink cursor-pointer hover:bg-muted ${uploadingAvatar ? "opacity-60 pointer-events-none" : ""}`}>
+                <Camera className="h-4 w-4" /> {uploadingAvatar ? "Enviando..." : profile.avatar_url ? "Trocar foto" : "Adicionar foto"}
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadAvatar(f); e.target.value = ""; }} />
+              </label>
+              {profile.avatar_url && (
+                <button type="button" onClick={removeAvatar} disabled={uploadingAvatar} className="inline-flex items-center gap-2 text-xs text-ink-soft hover:text-flame transition-colors disabled:opacity-50">
+                  <Trash2 className="h-3.5 w-3.5" /> Remover
+                </button>
+              )}
+              <span className="text-xs text-ink-soft">JPG ou PNG, até 5MB</span>
+            </div>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Nome"><input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} className={inp} /></Field>
