@@ -149,7 +149,8 @@
   .lime-mark {
     background-color: var(--lime);
     background-image: none;
-    padding: 0.05em 0.1em;
+    padding: 0.05em 0.2em;
+    border-radius: 0.25em;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
   }
