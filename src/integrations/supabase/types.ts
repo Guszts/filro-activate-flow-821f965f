@@ -259,6 +259,253 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_commissions: {
+        Row: {
+          activation_amount: number
+          approved_at: string | null
+          available_at: string | null
+          base_amount: number
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          commission_amount: number
+          commission_rate: number
+          created_at: string
+          id: string
+          monthly_amount: number
+          notes: string | null
+          paid_at: string | null
+          partner_id: string
+          payment_id: string | null
+          payout_id: string | null
+          plan_id: string | null
+          referral_id: string | null
+          status: string
+          stripe_checkout_session_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          activation_amount?: number
+          approved_at?: string | null
+          available_at?: string | null
+          base_amount?: number
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          commission_amount?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          monthly_amount?: number
+          notes?: string | null
+          paid_at?: string | null
+          partner_id: string
+          payment_id?: string | null
+          payout_id?: string | null
+          plan_id?: string | null
+          referral_id?: string | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          activation_amount?: number
+          approved_at?: string | null
+          available_at?: string | null
+          base_amount?: number
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          commission_amount?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          monthly_amount?: number
+          notes?: string | null
+          paid_at?: string | null
+          partner_id?: string
+          payment_id?: string | null
+          payout_id?: string | null
+          plan_id?: string | null
+          referral_id?: string | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_commissions_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_commissions_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "partner_referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_payouts: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          method: string
+          notes: string | null
+          paid_at: string | null
+          partner_id: string
+          pix_key: string | null
+          status: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          paid_at?: string | null
+          partner_id: string
+          pix_key?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          paid_at?: string | null
+          partner_id?: string
+          pix_key?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_payouts_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_referrals: {
+        Row: {
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          client_email: string | null
+          client_name: string | null
+          client_whatsapp: string | null
+          converted_at: string | null
+          created_at: string
+          id: string
+          landing_url: string | null
+          partner_code: string | null
+          partner_id: string
+          plan_id: string | null
+          source_url: string | null
+          status: string
+          stripe_checkout_session_id: string | null
+          stripe_customer_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          client_whatsapp?: string | null
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          landing_url?: string | null
+          partner_code?: string | null
+          partner_id: string
+          plan_id?: string | null
+          source_url?: string | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          client_whatsapp?: string | null
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          landing_url?: string | null
+          partner_code?: string | null
+          partner_id?: string
+          plan_id?: string | null
+          source_url?: string | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_referrals_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partners: {
+        Row: {
+          code: string
+          commission_rate: number
+          commission_scope: string
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          pix_key: string | null
+          status: string
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          code: string
+          commission_rate?: number
+          commission_scope?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          pix_key?: string | null
+          status?: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          code?: string
+          commission_rate?: number
+          commission_scope?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          pix_key?: string | null
+          status?: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
