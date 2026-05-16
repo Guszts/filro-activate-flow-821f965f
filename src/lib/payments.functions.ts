@@ -292,6 +292,12 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
             const productId = await resolveOrCreateProduct(stripe, data.planSlug, plan);
             activationPrice = await createPlanPrice(stripe, productId, activationKey, plan.activation_price);
           }
+          // Garante que o código promocional FILRO10 (10% off) existe na conta Stripe.
+          const productIdForPromo =
+            typeof activationPrice.product === "string" ? activationPrice.product : activationPrice.product?.id;
+          if (productIdForPromo) {
+            await ensurePromocionalPromoCode(stripe, productIdForPromo);
+          }
         } else {
           ({ activationPrice, monthlyPrice } = await resolveOrCreatePlanPrices(stripe, data.planSlug, plan));
         }
