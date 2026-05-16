@@ -79,6 +79,7 @@ function ConsolePage() {
         <nav className="mt-10 space-y-1 text-sm">
           {([
             ["overview", "Overview"],
+            ["projects", "Projetos"],
             ["users", "Usuários"],
             ["payments", "Pagamentos"],
             ["subscriptions", "Assinaturas"],
@@ -103,6 +104,7 @@ function ConsolePage() {
       </aside>
       <main className="p-6 md:p-10">
         {tab === "overview" && <OverviewTab />}
+        {tab === "projects" && <ProjectsKanban />}
         {tab === "users" && <UsersTab />}
         {tab === "payments" && <PaymentsTab />}
         {tab === "subscriptions" && <SubscriptionsTab />}
