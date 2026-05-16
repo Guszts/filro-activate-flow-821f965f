@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { getStripeEnvironment } from "@/lib/stripe";
 import { createPortalSession, cancelSubscription } from "@/lib/payments.functions";
+import { deleteOwnAccount } from "@/lib/account.functions";
 import { PhoneInput } from "@/components/PhoneInput";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,6 +38,32 @@ function SettingsPage() {
   const [cancelling, setCancelling] = useState(false);
   const openPortal = useServerFn(createPortalSession);
   const callCancel = useServerFn(cancelSubscription);
+  const callDeleteAccount = useServerFn(deleteOwnAccount);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  const confirmDeleteAccount = async () => {
+    if (deleteConfirm.trim().toUpperCase() !== "EXCLUIR") {
+      toast.error("Digite EXCLUIR para confirmar");
+      return;
+    }
+    setDeleting(true);
+    try {
+      const res = await callDeleteAccount();
+      if (res.ok) {
+        toast.success("Conta excluída");
+        await signOut();
+        navigate({ to: "/" });
+      } else {
+        toast.error(res.error || "Não foi possível excluir");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao excluir");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   useEffect(() => {
     if (loading) return;
@@ -223,6 +250,19 @@ function SettingsPage() {
             <LogOut className="h-4 w-4" /> Sair
           </button>
         </motion.section>
+
+        {/* DELETE ACCOUNT */}
+        <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-6 card-elevated p-7 border-flame/30">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><Trash2 className="h-5 w-5" /></div>
+            <h2 className="font-display font-black text-xl text-ink">Excluir conta</h2>
+          </div>
+          <p className="mt-1 text-sm text-ink-soft">Esta ação é permanente. Seus dados, perfil e acesso serão removidos. Assinaturas ativas devem ser canceladas antes.</p>
+          <button onClick={() => setDeleteOpen(true)}
+            className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90">
+            <Trash2 className="h-4 w-4" /> Excluir minha conta
+          </button>
+        </motion.section>
       </main>
 
       <AnimatePresence>
@@ -267,6 +307,51 @@ function SettingsPage() {
                   className="h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90 disabled:opacity-60 inline-flex items-center justify-center gap-2"
                 >
                   <XCircle className="h-4 w-4" /> {cancelling ? "Cancelando..." : "Confirmar cancelamento"}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+        {deleteOpen && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm grid place-items-center p-5"
+            onClick={() => !deleting && setDeleteOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.97 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md card-elevated p-7"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><Trash2 className="h-5 w-5" /></div>
+                <h3 className="font-display font-black text-2xl text-ink">Excluir conta?</h3>
+              </div>
+              <p className="mt-3 text-sm text-ink-soft">
+                Esta ação é <strong>permanente</strong> e não pode ser desfeita. Todos os seus dados serão removidos.
+                {hasSubscription && <span className="block mt-2 text-flame">Você ainda tem assinatura ativa — cancele primeiro para evitar cobranças.</span>}
+              </p>
+              <label className="block mt-5 text-xs tracking-wide text-ink-soft uppercase">Digite <strong>EXCLUIR</strong> para confirmar</label>
+              <input
+                value={deleteConfirm}
+                onChange={(e) => setDeleteConfirm(e.target.value)}
+                placeholder="EXCLUIR"
+                className="mt-2 w-full px-4 py-3 rounded-xl border border-border bg-paper outline-none focus:border-flame transition-colors text-sm"
+              />
+              <div className="mt-6 flex flex-col-reverse sm:flex-row gap-3 sm:justify-end">
+                <button
+                  onClick={() => { setDeleteOpen(false); setDeleteConfirm(""); }}
+                  disabled={deleting}
+                  className="h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted disabled:opacity-50"
+                >
+                  Voltar
+                </button>
+                <button
+                  onClick={confirmDeleteAccount}
+                  disabled={deleting || deleteConfirm.trim().toUpperCase() !== "EXCLUIR"}
+                  className="h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90 disabled:opacity-60 inline-flex items-center justify-center gap-2"
+                >
+                  <Trash2 className="h-4 w-4" /> {deleting ? "Excluindo..." : "Excluir definitivamente"}
                 </button>
               </div>
             </motion.div>
