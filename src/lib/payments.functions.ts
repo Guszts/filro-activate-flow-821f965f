@@ -224,7 +224,7 @@ async function ensurePromocionalPromoCode(
     }
 
     await stripe.promotionCodes.create({
-      coupon: couponId,
+      promotion: { type: "coupon", coupon: couponId },
       code: PROMOCIONAL_PROMO_CODE,
       active: true,
       metadata: { lovable_external_id: "promo_filro10" },
