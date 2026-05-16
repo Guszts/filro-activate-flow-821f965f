@@ -73,6 +73,13 @@ function SuccessPage() {
     return () => { cancelled = true; };
   }, [user]);
 
+  useEffect(() => {
+    if (status === "ok" && !ebookClaimed) {
+      const t = setTimeout(() => setEbookOpen(true), 1200);
+      return () => clearTimeout(t);
+    }
+  }, [status, ebookClaimed]);
+
   const payment = data?.payment;
   const plan = data?.plan;
   const sub = data?.subscription;
