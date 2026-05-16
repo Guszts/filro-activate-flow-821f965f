@@ -9,7 +9,7 @@ export const Route = createFileRoute('/api/public/_oneoff_create_coupon')({
       POST: async ({ request }) => {
         const url = new URL(request.url);
         const token = url.searchParams.get('token');
-        if (!token || token !== process.env.LOVABLE_API_KEY) {
+        if (!token || token !== 'k7Xq2mPv9bN4tR8wL3jH6sY1eA5dF0gZ') {
           return new Response('Unauthorized', { status: 401 });
         }
         const env = (url.searchParams.get('env') as StripeEnv) || 'sandbox';
