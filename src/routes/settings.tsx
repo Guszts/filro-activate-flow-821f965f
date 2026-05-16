@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { getStripeEnvironment } from "@/lib/stripe";
 import { createPortalSession, cancelSubscription } from "@/lib/payments.functions";
+import { deleteOwnAccount } from "@/lib/account.functions";
 import { PhoneInput } from "@/components/PhoneInput";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
