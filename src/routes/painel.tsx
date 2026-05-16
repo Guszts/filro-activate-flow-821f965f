@@ -191,6 +191,10 @@ function PainelPage() {
                   <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><FileText className="h-4 w-4" /> Documentação</span>
                   <ArrowRight className="h-4 w-4 text-ink-soft" />
                 </Link>
+                <Link to="/suporte" className="flex items-center justify-between p-4 rounded-2xl bg-muted hover:bg-stone transition-colors">
+                  <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><MessageCircle className="h-4 w-4" /> Suporte e chamados</span>
+                  <ArrowRight className="h-4 w-4 text-ink-soft" />
+                </Link>
                 <Link to="/" hash="faq" className="flex items-center justify-between p-4 rounded-2xl bg-muted hover:bg-stone transition-colors">
                   <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><HelpCircle className="h-4 w-4" /> Dúvidas frequentes</span>
                   <ArrowRight className="h-4 w-4 text-ink-soft" />
