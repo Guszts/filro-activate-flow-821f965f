@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -225,18 +226,6 @@
   border: 1px solid var(--border);
 }
 
-@font-face {
-  font-family: "Pangram Sans Rounded";
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("https://cdn.jsdelivr.net/gh/pangrampangram/PangramSansRounded@main/PangramSansRounded-VF.woff2") format("woff2-variations"),
-       url("https://cdn.jsdelivr.net/gh/pangrampangram/PangramSansRounded@main/PangramSansRounded-VF.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Nunito";
-  font-style: normal;
-  font-weight: 200 1000;
-  font-display: swap;
-  src: url("https://fonts.gstatic.com/s/nunito/v31/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshRTM9jo7eTWk.woff2") format("woff2");
-}
+/* Nunito is loaded via @import at the top of this file (Google Fonts).
+   "Pangram Sans Rounded" is a paid font and is not self-hosted here;
+   the font stack falls back to Nunito + ui-rounded for a rounded look. */
