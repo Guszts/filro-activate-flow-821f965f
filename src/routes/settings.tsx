@@ -38,6 +38,32 @@ function SettingsPage() {
   const [cancelling, setCancelling] = useState(false);
   const openPortal = useServerFn(createPortalSession);
   const callCancel = useServerFn(cancelSubscription);
+  const callDeleteAccount = useServerFn(deleteOwnAccount);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  const confirmDeleteAccount = async () => {
+    if (deleteConfirm.trim().toUpperCase() !== "EXCLUIR") {
+      toast.error("Digite EXCLUIR para confirmar");
+      return;
+    }
+    setDeleting(true);
+    try {
+      const res = await callDeleteAccount();
+      if (res.ok) {
+        toast.success("Conta excluída");
+        await signOut();
+        navigate({ to: "/" });
+      } else {
+        toast.error(res.error || "Não foi possível excluir");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao excluir");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   useEffect(() => {
     if (loading) return;
