@@ -61,6 +61,9 @@ export function ProjectsKanban() {
   const qc = useQueryClient();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
+  const [planFilter, setPlanFilter] = useState<string>("all");
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
 
   const { data, isLoading } = useQuery({
     queryKey: ["console-projects-kanban"],
@@ -72,7 +75,7 @@ export function ProjectsKanban() {
           .order("kanban_position", { ascending: true })
           .order("updated_at", { ascending: false }),
         supabase.from("profiles").select("user_id, name, email"),
-        supabase.from("plans").select("id, name"),
+        supabase.from("plans").select("id, name").order("display_order"),
       ]);
       return {
         projects: (projects.data ?? []) as ProjectRow[],
@@ -102,21 +105,22 @@ export function ProjectsKanban() {
   const filtered = useMemo(() => {
     if (!data) return [];
     const q = filter.trim().toLowerCase();
-    if (!q) return data.projects;
+    const from = dateFrom ? new Date(dateFrom).getTime() : null;
+    const to = dateTo ? new Date(dateTo).getTime() + 86_400_000 : null;
     return data.projects.filter((p) => {
+      if (planFilter !== "all" && p.plan_id !== planFilter) return false;
+      const created = new Date(p.created_at).getTime();
+      if (from !== null && created < from) return false;
+      if (to !== null && created >= to) return false;
+      if (!q) return true;
       const prof = data.profiles.find((x) => x.user_id === p.user_id);
-      return [
-        p.business_name,
-        p.business_segment,
-        prof?.name,
-        prof?.email,
-      ]
+      return [p.business_name, p.business_segment, prof?.name, prof?.email]
         .filter(Boolean)
         .join(" ")
         .toLowerCase()
         .includes(q);
     });
-  }, [data, filter]);
+  }, [data, filter, planFilter, dateFrom, dateTo]);
 
   const grouped = useMemo(() => {
     const map: Record<ProjectStatus, ProjectRow[]> = {
@@ -182,12 +186,52 @@ export function ProjectsKanban() {
             Quadro Kanban da operação. Arraste os cards para mover de etapa.
           </p>
         </div>
-        <input
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder="Filtrar por cliente, negócio ou segmento..."
-          className="h-11 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink w-full md:w-80"
-        />
+        <div className="flex gap-2 flex-wrap items-center">
+          <input
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            placeholder="Buscar cliente, negócio…"
+            className="h-11 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink w-full md:w-64"
+          />
+          <select
+            value={planFilter}
+            onChange={(e) => setPlanFilter(e.target.value)}
+            className="h-11 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm"
+            aria-label="Filtrar por plano"
+          >
+            <option value="all">Todos os planos</option>
+            {(data?.plans ?? []).map((pl) => (
+              <option key={pl.id} value={pl.id}>{pl.name}</option>
+            ))}
+          </select>
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            className="h-11 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm"
+            aria-label="Data inicial"
+          />
+          <input
+            type="date"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            className="h-11 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm"
+            aria-label="Data final"
+          />
+          {(planFilter !== "all" || dateFrom || dateTo || filter) && (
+            <button
+              type="button"
+              onClick={() => { setFilter(""); setPlanFilter("all"); setDateFrom(""); setDateTo(""); }}
+              className="h-11 px-3 rounded-xl text-sm text-ink-soft hover:text-ink"
+            >
+              Limpar
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-3 text-xs text-ink-soft">
+        {filtered.length} de {data?.projects.length ?? 0} projetos
       </div>
 
       {isLoading && (

@@ -163,7 +163,8 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         paid_at: new Date().toISOString(),
       });
 
-      // Mark project paid (or create one).
+      // Mark project payment_confirmed (or create one). This status maps to
+      // the "Pagamento confirmado" column in the admin Kanban.
       const { data: existing } = await supabaseAdmin
         .from("projects")
         .select("id")
@@ -171,11 +172,11 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         .maybeSingle();
       let projectId = existing?.id ?? null;
       if (existing) {
-        await supabaseAdmin.from("projects").update({ plan_id: plan.id, project_status: "paid" }).eq("id", existing.id);
+        await supabaseAdmin.from("projects").update({ plan_id: plan.id, project_status: "payment_confirmed" }).eq("id", existing.id);
       } else {
         const { data: created } = await supabaseAdmin
           .from("projects")
-          .insert({ user_id: userId, plan_id: plan.id, project_status: "paid" })
+          .insert({ user_id: userId, plan_id: plan.id, project_status: "payment_confirmed" })
           .select("id")
           .maybeSingle();
         projectId = created?.id ?? null;
