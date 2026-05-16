@@ -43,12 +43,13 @@ function SettingsPage() {
     if (!user) { navigate({ to: "/login", search: { redirect: "/settings" } }); return; }
     (async () => {
       const [{ data: prof }, { data: subs }] = await Promise.all([
-        supabase.from("profiles").select("name,email,whatsapp,business_name,business_segment").eq("user_id", user.id).maybeSingle(),
+        supabase.from("profiles").select("name,email,whatsapp,business_name,business_segment,avatar_url").eq("user_id", user.id).maybeSingle(),
         supabase.from("subscriptions").select("id").eq("user_id", user.id).neq("status", "canceled").limit(1),
       ]);
       if (prof) setProfile({
         name: prof.name ?? "", email: prof.email ?? user.email ?? "",
         whatsapp: prof.whatsapp ?? "", business_name: prof.business_name ?? "", business_segment: prof.business_segment ?? "",
+        avatar_url: prof.avatar_url ?? "",
       });
       setHasSubscription((subs ?? []).length > 0);
     })();
