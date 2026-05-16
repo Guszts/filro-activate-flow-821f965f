@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Body, Button, Container, Head, Heading, Html, Preview, Text } from '@react-email/components'
+import { Body, Button, Container, Heading, Html, Preview, Text } from '@react-email/components'
 import { brand, styles } from './_brand'
+import { BrandHead } from './_head'
 import type { TemplateEntry } from './registry'
 
 interface PaymentFailedProps {
@@ -11,7 +12,7 @@ interface PaymentFailedProps {
 
 const PaymentFailedEmail = ({ name, planName, portalUrl }: PaymentFailedProps) => (
   <Html lang="pt-BR" dir="ltr">
-    <Head />
+    <BrandHead />
     <Preview>Não conseguimos cobrar sua mensalidade do {brand.siteName}</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>

@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Body, Button, Container, Head, Heading, Html, Preview, Text } from '@react-email/components'
+import { Body, Button, Container, Heading, Html, Preview, Text } from '@react-email/components'
 import { brand, styles } from './_brand'
+import { BrandHead } from './_head'
 
 interface RecoveryEmailProps {
   siteName: string
@@ -9,7 +10,7 @@ interface RecoveryEmailProps {
 
 export const RecoveryEmail = ({ confirmationUrl }: RecoveryEmailProps) => (
   <Html lang="pt-BR" dir="ltr">
-    <Head />
+    <BrandHead />
     <Preview>Redefinir sua senha no {brand.siteName}</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>

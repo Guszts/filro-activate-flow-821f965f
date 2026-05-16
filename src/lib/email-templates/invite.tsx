@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Body, Button, Container, Head, Heading, Html, Preview, Text } from '@react-email/components'
+import { Body, Button, Container, Heading, Html, Preview, Text } from '@react-email/components'
 import { brand, styles } from './_brand'
+import { BrandHead } from './_head'
 
 interface InviteEmailProps {
   siteName: string
@@ -10,7 +11,7 @@ interface InviteEmailProps {
 
 export const InviteEmail = ({ confirmationUrl }: InviteEmailProps) => (
   <Html lang="pt-BR" dir="ltr">
-    <Head />
+    <BrandHead />
     <Preview>Você foi convidado para o {brand.siteName}</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>
