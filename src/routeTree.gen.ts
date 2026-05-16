@@ -31,16 +31,11 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BusinessInfoRouteImport } from './routes/business-info'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
-import { Route as DesenvolvedorIndexRouteImport } from './routes/desenvolvedor.index'
 import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
-import { Route as IdSlugRouteImport } from './routes/id.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
-import { Route as DesenvolvedorTemplatesRouteImport } from './routes/desenvolvedor.templates'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
-import { Route as DesenvolvedorPublicarProjectIdRouteImport } from './routes/desenvolvedor.publicar.$projectId'
-import { Route as DesenvolvedorProjetoProjectIdRouteImport } from './routes/desenvolvedor.projeto.$projectId'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -159,11 +154,6 @@ const PlanosIndexRoute = PlanosIndexRouteImport.update({
   path: '/planos/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DesenvolvedorIndexRoute = DesenvolvedorIndexRouteImport.update({
-  id: '/desenvolvedor/',
-  path: '/desenvolvedor/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProjetoIdRoute = ProjetoIdRouteImport.update({
   id: '/projeto/$id',
   path: '/projeto/$id',
@@ -179,19 +169,9 @@ const LeadIdRoute = LeadIdRouteImport.update({
   path: '/lead/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IdSlugRoute = IdSlugRouteImport.update({
-  id: '/id/$slug',
-  path: '/id/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DesenvolvedorTemplatesRoute = DesenvolvedorTemplatesRouteImport.update({
-  id: '/desenvolvedor/templates',
-  path: '/desenvolvedor/templates',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
@@ -199,18 +179,6 @@ const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   path: '/lovable/email/suppression',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DesenvolvedorPublicarProjectIdRoute =
-  DesenvolvedorPublicarProjectIdRouteImport.update({
-    id: '/desenvolvedor/publicar/$projectId',
-    path: '/desenvolvedor/publicar/$projectId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DesenvolvedorProjetoProjectIdRoute =
-  DesenvolvedorProjetoProjectIdRouteImport.update({
-    id: '/desenvolvedor/projeto/$projectId',
-    path: '/desenvolvedor/projeto/$projectId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ApiPublicNotifyAdminSignupRoute =
   ApiPublicNotifyAdminSignupRouteImport.update({
     id: '/api/public/notify-admin-signup',
@@ -274,17 +242,12 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
-  '/desenvolvedor/templates': typeof DesenvolvedorTemplatesRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
-  '/id/$slug': typeof IdSlugRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
-  '/desenvolvedor/': typeof DesenvolvedorIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
-  '/desenvolvedor/projeto/$projectId': typeof DesenvolvedorProjetoProjectIdRoute
-  '/desenvolvedor/publicar/$projectId': typeof DesenvolvedorPublicarProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -315,17 +278,12 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
-  '/desenvolvedor/templates': typeof DesenvolvedorTemplatesRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
-  '/id/$slug': typeof IdSlugRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
-  '/desenvolvedor': typeof DesenvolvedorIndexRoute
   '/planos': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
-  '/desenvolvedor/projeto/$projectId': typeof DesenvolvedorProjetoProjectIdRoute
-  '/desenvolvedor/publicar/$projectId': typeof DesenvolvedorPublicarProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -357,17 +315,12 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
-  '/desenvolvedor/templates': typeof DesenvolvedorTemplatesRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
-  '/id/$slug': typeof IdSlugRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
-  '/desenvolvedor/': typeof DesenvolvedorIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
-  '/desenvolvedor/projeto/$projectId': typeof DesenvolvedorProjetoProjectIdRoute
-  '/desenvolvedor/publicar/$projectId': typeof DesenvolvedorPublicarProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -400,17 +353,12 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
-    | '/desenvolvedor/templates'
     | '/email/unsubscribe'
-    | '/id/$slug'
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
-    | '/desenvolvedor/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
-    | '/desenvolvedor/projeto/$projectId'
-    | '/desenvolvedor/publicar/$projectId'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -441,17 +389,12 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
-    | '/desenvolvedor/templates'
     | '/email/unsubscribe'
-    | '/id/$slug'
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
-    | '/desenvolvedor'
     | '/planos'
     | '/api/public/notify-admin-signup'
-    | '/desenvolvedor/projeto/$projectId'
-    | '/desenvolvedor/publicar/$projectId'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -482,17 +425,12 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
-    | '/desenvolvedor/templates'
     | '/email/unsubscribe'
-    | '/id/$slug'
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
-    | '/desenvolvedor/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
-    | '/desenvolvedor/projeto/$projectId'
-    | '/desenvolvedor/publicar/$projectId'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -524,17 +462,12 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
-  DesenvolvedorTemplatesRoute: typeof DesenvolvedorTemplatesRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
-  IdSlugRoute: typeof IdSlugRoute
   LeadIdRoute: typeof LeadIdRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
   ProjetoIdRoute: typeof ProjetoIdRoute
-  DesenvolvedorIndexRoute: typeof DesenvolvedorIndexRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
-  DesenvolvedorProjetoProjectIdRoute: typeof DesenvolvedorProjetoProjectIdRoute
-  DesenvolvedorPublicarProjectIdRoute: typeof DesenvolvedorPublicarProjectIdRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -700,13 +633,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/desenvolvedor/': {
-      id: '/desenvolvedor/'
-      path: '/desenvolvedor'
-      fullPath: '/desenvolvedor/'
-      preLoaderRoute: typeof DesenvolvedorIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/projeto/$id': {
       id: '/projeto/$id'
       path: '/projeto/$id'
@@ -728,13 +654,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/id/$slug': {
-      id: '/id/$slug'
-      path: '/id/$slug'
-      fullPath: '/id/$slug'
-      preLoaderRoute: typeof IdSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/email/unsubscribe': {
       id: '/email/unsubscribe'
       path: '/email/unsubscribe'
@@ -742,32 +661,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/desenvolvedor/templates': {
-      id: '/desenvolvedor/templates'
-      path: '/desenvolvedor/templates'
-      fullPath: '/desenvolvedor/templates'
-      preLoaderRoute: typeof DesenvolvedorTemplatesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/lovable/email/suppression': {
       id: '/lovable/email/suppression'
       path: '/lovable/email/suppression'
       fullPath: '/lovable/email/suppression'
       preLoaderRoute: typeof LovableEmailSuppressionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/desenvolvedor/publicar/$projectId': {
-      id: '/desenvolvedor/publicar/$projectId'
-      path: '/desenvolvedor/publicar/$projectId'
-      fullPath: '/desenvolvedor/publicar/$projectId'
-      preLoaderRoute: typeof DesenvolvedorPublicarProjectIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/desenvolvedor/projeto/$projectId': {
-      id: '/desenvolvedor/projeto/$projectId'
-      path: '/desenvolvedor/projeto/$projectId'
-      fullPath: '/desenvolvedor/projeto/$projectId'
-      preLoaderRoute: typeof DesenvolvedorProjetoProjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/notify-admin-signup': {
@@ -844,17 +742,12 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VerifyEmailRoute: VerifyEmailRoute,
-  DesenvolvedorTemplatesRoute: DesenvolvedorTemplatesRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
-  IdSlugRoute: IdSlugRoute,
   LeadIdRoute: LeadIdRoute,
   PlanosSlugRoute: PlanosSlugRoute,
   ProjetoIdRoute: ProjetoIdRoute,
-  DesenvolvedorIndexRoute: DesenvolvedorIndexRoute,
   PlanosIndexRoute: PlanosIndexRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
-  DesenvolvedorProjetoProjectIdRoute: DesenvolvedorProjetoProjectIdRoute,
-  DesenvolvedorPublicarProjectIdRoute: DesenvolvedorPublicarProjectIdRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
@@ -866,3 +759,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
