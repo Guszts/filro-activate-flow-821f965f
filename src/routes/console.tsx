@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatBRL, formatDateTime } from "@/lib/format";
 import { motion } from "framer-motion";
 import { ProjectsKanban } from "@/components/console/ProjectsKanban";
+import { SupportTab, ExtraChargesTab } from "@/components/console/SupportAndCharges";
 
 export const Route = createFileRoute("/console")({
   component: ConsolePage,
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/console")({
   ]}),
 });
 
-type Tab = "overview" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "plans" | "events" | "settings";
+type Tab = "overview" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "support" | "extras" | "plans" | "events" | "settings";
 
 function useRealtimeRefetch(tables: string[], queryKeys: string[][]) {
   const qc = useQueryClient();
@@ -84,6 +85,8 @@ function ConsolePage() {
             ["payments", "Pagamentos"],
             ["subscriptions", "Assinaturas"],
             ["cancellations", "Cancelamentos"],
+            ["support", "Suporte"],
+            ["extras", "Cobranças extras"],
             ["plans", "Planos"],
             ["events", "Auditoria"],
             ["settings", "Configurações"],
@@ -109,6 +112,8 @@ function ConsolePage() {
         {tab === "payments" && <PaymentsTab />}
         {tab === "subscriptions" && <SubscriptionsTab />}
         {tab === "cancellations" && <CancellationsTab />}
+        {tab === "support" && <SupportTab />}
+        {tab === "extras" && <ExtraChargesTab />}
         {tab === "plans" && <PlansTab />}
         {tab === "events" && <EventsTab />}
         {tab === "settings" && <SettingsTab />}

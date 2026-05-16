@@ -128,6 +128,24 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.metadata?.userId;
       const planSlug = session.metadata?.planSlug;
+      const kind = session.metadata?.kind;
+      const extraChargeId = session.metadata?.extraChargeId;
+
+      // Cobrança extra (upsell via payment link)
+      if (kind === "extra_charge" && extraChargeId) {
+        await supabaseAdmin
+          .from("extra_charges")
+          .update({
+            status: "paid",
+            paid_at: new Date().toISOString(),
+            stripe_checkout_session_id: session.id,
+            stripe_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : null,
+          })
+          .eq("id", extraChargeId);
+        await logEvent("extra_charge.paid", userId ?? null, { extraChargeId, sessionId: session.id });
+        break;
+      }
+
       if (!userId || !planSlug) break;
 
       const plan = await getPlanBySlug(planSlug);
