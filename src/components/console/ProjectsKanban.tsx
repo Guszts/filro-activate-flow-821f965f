@@ -14,6 +14,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateTime } from "@/lib/format";
 import { motion } from "framer-motion";
+import { useServerFn } from "@tanstack/react-start";
+import { notifySitePublished } from "@/lib/projects.functions";
 
 type ProjectStatus =
   | "new"
@@ -59,6 +61,7 @@ const COLUMNS: { id: ProjectStatus; label: string; tone: string }[] = [
 
 export function ProjectsKanban() {
   const qc = useQueryClient();
+  const notifyPublished = useServerFn(notifySitePublished);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
   const [planFilter, setPlanFilter] = useState<string>("all");
@@ -170,6 +173,13 @@ export function ProjectsKanban() {
       // rollback
       qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
       alert(`Erro ao atualizar status: ${error.message}`);
+      return;
+    }
+
+    if (newStatus === "published") {
+      notifyPublished({ data: { projectId } }).catch((e) =>
+        console.error("[email] site-published failed", e),
+      );
     }
   }
 

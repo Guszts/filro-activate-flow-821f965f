@@ -2,6 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { createStripeClient, type StripeEnv } from "@/lib/stripe.server";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { sendTransactionalEmailServer } from "@/lib/email/send.server";
+
+const PANEL_URL = "https://filro.site/painel";
+function formatBRL(cents: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
+}
 
 async function assertAdmin(userId: string) {
   const { data } = await supabaseAdmin
@@ -93,6 +99,29 @@ export const createExtraCharge = createServerFn({ method: "POST" })
       },
     });
 
+    // Email cobrança ao cliente
+    try {
+      const { data: prof } = await supabaseAdmin
+        .from("profiles")
+        .select("name,email")
+        .eq("user_id", data.userId)
+        .maybeSingle();
+      if (prof?.email) {
+        await sendTransactionalEmailServer({
+          templateName: "extra-charge-issued",
+          recipientEmail: prof.email,
+          idempotencyKey: `extra-${charge.id}`,
+          templateData: {
+            name: prof.name || undefined,
+            title: data.title,
+            description: data.description || undefined,
+            amount: formatBRL(data.amount),
+            paymentLink: link.url,
+          },
+        });
+      }
+    } catch (e) { console.error("[email] extra-charge failed", e); }
+
     return { ok: true, charge };
   });
 
@@ -164,6 +193,35 @@ export const replySupportTicket = createServerFn({ method: "POST" })
     };
     if (data.newStatus) update.status = data.newStatus as typeof update.status;
     await supabaseAdmin.from("support_tickets").update(update).eq("id", data.ticketId);
+
+    // Notifica cliente
+    try {
+      const { data: ticket } = await supabaseAdmin
+        .from("support_tickets")
+        .select("user_id,subject")
+        .eq("id", data.ticketId)
+        .maybeSingle();
+      if (ticket) {
+        const { data: prof } = await supabaseAdmin
+          .from("profiles")
+          .select("name,email")
+          .eq("user_id", ticket.user_id)
+          .maybeSingle();
+        if (prof?.email) {
+          await sendTransactionalEmailServer({
+            templateName: "support-reply",
+            recipientEmail: prof.email,
+            idempotencyKey: `support-${data.ticketId}-${Date.now()}`,
+            templateData: {
+              name: prof.name || undefined,
+              ticketSubject: ticket.subject,
+              ticketUrl: `${PANEL_URL}/suporte`,
+              preview: data.content.slice(0, 400),
+            },
+          });
+        }
+      }
+    } catch (e) { console.error("[email] support-reply failed", e); }
 
     return { ok: true };
   });

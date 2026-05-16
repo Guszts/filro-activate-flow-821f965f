@@ -247,6 +247,26 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         }).catch((e) => console.error("[email] welcome failed", e));
       }
 
+      // Order confirmation (with order ID = payment row id)
+      if (profile?.email && paymentId) {
+        const activation = plan.activation_price ?? 0;
+        const monthly = plan.monthly_price ?? 0;
+        await sendTransactionalEmailServer({
+          templateName: "order-confirmation",
+          recipientEmail: profile.email,
+          idempotencyKey: `order-${paymentId}`,
+          templateData: {
+            name: profile.name || undefined,
+            orderId: paymentId.slice(0, 8),
+            planName: plan.name,
+            activationAmount: activation ? formatBRL(activation) : undefined,
+            monthlyAmount: monthly ? formatBRL(monthly) : undefined,
+            totalAmount: formatBRL(activation + monthly),
+            panelUrl: PANEL_URL,
+          },
+        }).catch((e) => console.error("[email] order-confirmation failed", e));
+      }
+
       // Admin notification
       const totalAmount = (plan.activation_price ?? 0) + (plan.monthly_price ?? 0);
       const admins = await getAdminEmails().catch(() => [] as string[]);
