@@ -112,6 +112,8 @@ function ConsolePage() {
         {tab === "payments" && <PaymentsTab />}
         {tab === "subscriptions" && <SubscriptionsTab />}
         {tab === "cancellations" && <CancellationsTab />}
+        {tab === "support" && <SupportTab />}
+        {tab === "extras" && <ExtraChargesTab />}
         {tab === "plans" && <PlansTab />}
         {tab === "events" && <EventsTab />}
         {tab === "settings" && <SettingsTab />}
