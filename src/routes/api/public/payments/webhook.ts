@@ -151,8 +151,13 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       const plan = await getPlanBySlug(planSlug);
       if (!plan) break;
 
-      // Record initial payment (activation + first month).
-      const { data: paymentRow } = await supabaseAdmin
+      // Record initial payment (activation + first month). Idempotente
+      // via unique stripe_checkout_session_id — se a Stripe reenviar o
+      // mesmo checkout.session.completed, reaproveitamos o pagamento já
+      // gravado em vez de duplicar e de re-criar admin_task.
+      let paymentId: string | null = null;
+      let isDuplicateSession = false;
+      const { data: paymentRow, error: paymentErr } = await supabaseAdmin
         .from("payments")
         .insert({
           user_id: userId,
@@ -162,11 +167,30 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
           status: "paid",
           stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
           stripe_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : null,
+          stripe_checkout_session_id: session.id,
           paid_at: new Date().toISOString(),
         })
         .select("id")
         .maybeSingle();
-      const paymentId = paymentRow?.id ?? null;
+      if (paymentErr && (paymentErr as { code?: string }).code === "23505") {
+        isDuplicateSession = true;
+        const { data: existingPayment } = await supabaseAdmin
+          .from("payments")
+          .select("id")
+          .eq("stripe_checkout_session_id", session.id)
+          .maybeSingle();
+        paymentId = existingPayment?.id ?? null;
+        console.log("[webhook] duplicate checkout session, reusing payment", session.id);
+      } else if (paymentErr) {
+        console.error("[webhook] payment insert failed", paymentErr);
+      } else {
+        paymentId = paymentRow?.id ?? null;
+      }
+
+      if (isDuplicateSession) {
+        await logEvent("checkout.session.completed.duplicate", userId, { sessionId: session.id });
+        break;
+      }
 
       // Mark project payment_confirmed (or create one). This status maps to
       // the "Pagamento confirmado" column in the admin Kanban.
