@@ -11,15 +11,55 @@ import { TutorialVideo } from "@/components/TutorialVideo";
 
 export const Route = createFileRoute("/planos/$slug")({
   component: PlanDetailsPage,
-  head: ({ params }) => ({
-    meta: [
-      { title: `Plano ${params.slug} — detalhes | Filro` },
-      {
-        name: "description",
-        content: `Veja todos os detalhes do plano ${params.slug}: o que está incluso, preços de ativação e manutenção, e tutorial em vídeo antes de avançar para o checkout.`,
-      },
-    ],
-  }),
+  loader: async ({ params }) => {
+    const { data } = await supabase
+      .from("plans")
+      .select("name,description,activation_price,monthly_price")
+      .eq("slug", params.slug)
+      .eq("active", true)
+      .maybeSingle();
+    return { plan: data };
+  },
+  head: ({ params, loaderData }) => {
+    const url = `https://setup.filro.site/planos/${params.slug}`;
+    const plan = loaderData?.plan;
+    const name = plan?.name ?? params.slug;
+    const title = `Plano ${name} — Filro`;
+    const desc = plan?.description
+      ?? `Detalhes do plano ${name}: o que está incluso, preços de ativação e manutenção mensal.`;
+    const scripts = plan
+      ? [{
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: `Plano ${plan.name} · Filro`,
+            description: plan.description ?? desc,
+            brand: { "@type": "Brand", name: "Filro" },
+            url,
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "BRL",
+              price: String(plan.activation_price ?? 0),
+              availability: "https://schema.org/InStock",
+              url,
+            },
+          }),
+        }]
+      : [];
+    return {
+      meta: [
+        { title },
+        { name: "description", content: desc },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "product" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts,
+    };
+  },
 });
 
 // Map of optional tutorial videos per slug. Replace embed URLs with the real

@@ -12,7 +12,9 @@ export const Route = createFileRoute("/modelos")({
       { name: "description", content: "Explore os modelos de página da Filro: padaria, clínica, restaurante, moda, automotivo e mais. Cada modelo é adaptado com seu nome, cores e conteúdo." },
       { property: "og:title", content: "Modelos · Filro" },
       { property: "og:description", content: "Modelos de página prontos para padarias, clínicas, restaurantes, moda e mais. Adaptados ao seu negócio." },
+      { property: "og:url", content: "https://setup.filro.site/modelos" },
     ],
+    links: [{ rel: "canonical", href: "https://setup.filro.site/modelos" }],
   }),
 });
 

@@ -58,7 +58,7 @@ function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen grid place-items-center px-5 py-10">
+    <main className="min-h-screen grid place-items-center px-5 py-10">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-xl">
         <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
         <h1 className="mt-10 editorial-headline text-5xl text-ink">Criar conta</h1>
@@ -81,7 +81,7 @@ function RegisterPage() {
           Já tem conta? <Link to="/login" search={{ redirect }} className="text-ink font-semibold">Entrar</Link>
         </p>
       </motion.div>
-    </div>
+    </main>
   );
 }
 
