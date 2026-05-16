@@ -9,6 +9,7 @@ const navLinks = [
   { to: "/modelos" as const, label: "Modelos", icon: Layers },
   { to: "/como-funciona" as const, label: "Como funciona", icon: PlayCircle },
   { to: "/planos" as const, label: "Planos", icon: Rocket },
+  { to: "/comparar" as const, label: "Comparar", icon: Layers },
 ] as const;
 
 const authLinks = [
