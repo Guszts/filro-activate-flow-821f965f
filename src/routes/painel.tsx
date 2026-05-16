@@ -152,9 +152,16 @@ function PainelPage() {
                 <div className="mt-6 p-5 rounded-2xl bg-azure/10 border border-azure/20">
                   <p className="text-sm text-ink font-medium">Tudo certo! Estamos preparando sua página.</p>
                   <p className="text-xs text-ink-soft mt-1">Você receberá um aviso pelo WhatsApp assim que estiver pronto.</p>
-                  <Link to="/business-info" className="mt-4 inline-flex items-center gap-2 h-11 px-5 rounded-2xl border border-ink text-ink text-sm font-semibold">
-                    <Pencil className="h-4 w-4" /> Editar informações
-                  </Link>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {project?.id && (
+                      <Link to="/projeto/$id" params={{ id: project.id }} className="inline-flex items-center gap-2 h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold">
+                        Acompanhar projeto <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    )}
+                    <Link to="/business-info" className="inline-flex items-center gap-2 h-11 px-5 rounded-2xl border border-ink text-ink text-sm font-semibold">
+                      <Pencil className="h-4 w-4" /> Editar informações
+                    </Link>
+                  </div>
                 </div>
               )}
             </motion.div>
