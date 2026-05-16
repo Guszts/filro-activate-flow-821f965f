@@ -328,45 +328,101 @@ export type Database = {
         }
         Relationships: []
       }
+      project_status_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          from_status: Database["public"]["Enums"]["project_status"] | null
+          id: string
+          note: string | null
+          project_id: string
+          to_status: Database["public"]["Enums"]["project_status"]
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["project_status"] | null
+          id?: string
+          note?: string | null
+          project_id: string
+          to_status: Database["public"]["Enums"]["project_status"]
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["project_status"] | null
+          id?: string
+          note?: string | null
+          project_id?: string
+          to_status?: Database["public"]["Enums"]["project_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_status_history_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
+          assigned_admin_id: string | null
           business_info: Json | null
           business_info_submitted: boolean
           business_name: string | null
           business_segment: string | null
           created_at: string
+          expected_delivery_at: string | null
           id: string
+          kanban_position: number
           notes: string | null
           plan_id: string | null
+          preview_url: string | null
           project_status: Database["public"]["Enums"]["project_status"]
+          published_at: string | null
+          published_url: string | null
           selected_model: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          assigned_admin_id?: string | null
           business_info?: Json | null
           business_info_submitted?: boolean
           business_name?: string | null
           business_segment?: string | null
           created_at?: string
+          expected_delivery_at?: string | null
           id?: string
+          kanban_position?: number
           notes?: string | null
           plan_id?: string | null
+          preview_url?: string | null
           project_status?: Database["public"]["Enums"]["project_status"]
+          published_at?: string | null
+          published_url?: string | null
           selected_model?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          assigned_admin_id?: string | null
           business_info?: Json | null
           business_info_submitted?: boolean
           business_name?: string | null
           business_segment?: string | null
           created_at?: string
+          expected_delivery_at?: string | null
           id?: string
+          kanban_position?: number
           notes?: string | null
           plan_id?: string | null
+          preview_url?: string | null
           project_status?: Database["public"]["Enums"]["project_status"]
+          published_at?: string | null
+          published_url?: string | null
           selected_model?: string | null
           updated_at?: string
           user_id?: string
@@ -563,6 +619,13 @@ export type Database = {
         | "delivered"
         | "on_hold"
         | "cancelled"
+        | "payment_confirmed"
+        | "briefing_received"
+        | "revision_sent"
+        | "awaiting_client"
+        | "published"
+        | "maintenance"
+        | "paused"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -709,6 +772,13 @@ export const Constants = {
         "delivered",
         "on_hold",
         "cancelled",
+        "payment_confirmed",
+        "briefing_received",
+        "revision_sent",
+        "awaiting_client",
+        "published",
+        "maintenance",
+        "paused",
       ],
     },
   },
