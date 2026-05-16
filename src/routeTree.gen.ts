@@ -37,6 +37,7 @@ import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
+import { Route as ApiPublicOneoff_create_couponRouteImport } from './routes/api/public/_oneoff_create_coupon'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
@@ -185,6 +186,12 @@ const ApiPublicNotifyAdminSignupRoute =
     path: '/api/public/notify-admin-signup',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicOneoff_create_couponRoute =
+  ApiPublicOneoff_create_couponRouteImport.update({
+    id: '/api/public/_oneoff_create_coupon',
+    path: '/api/public',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LovableEmailTransactionalSendRoute =
   LovableEmailTransactionalSendRouteImport.update({
     id: '/lovable/email/transactional/send',
@@ -247,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
+  '/api/public': typeof ApiPublicOneoff_create_couponRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -283,6 +291,7 @@ export interface FileRoutesByTo {
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos': typeof PlanosIndexRoute
+  '/api/public': typeof ApiPublicOneoff_create_couponRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -320,6 +329,7 @@ export interface FileRoutesById {
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
+  '/api/public/_oneoff_create_coupon': typeof ApiPublicOneoff_create_couponRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -358,6 +368,7 @@ export interface FileRouteTypes {
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
+    | '/api/public'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -394,6 +405,7 @@ export interface FileRouteTypes {
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos'
+    | '/api/public'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -430,6 +442,7 @@ export interface FileRouteTypes {
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
+    | '/api/public/_oneoff_create_coupon'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -467,6 +480,7 @@ export interface RootRouteChildren {
   PlanosSlugRoute: typeof PlanosSlugRoute
   ProjetoIdRoute: typeof ProjetoIdRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
+  ApiPublicOneoff_create_couponRoute: typeof ApiPublicOneoff_create_couponRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -675,6 +689,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicNotifyAdminSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/_oneoff_create_coupon': {
+      id: '/api/public/_oneoff_create_coupon'
+      path: '/api/public'
+      fullPath: '/api/public'
+      preLoaderRoute: typeof ApiPublicOneoff_create_couponRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/transactional/send': {
       id: '/lovable/email/transactional/send'
       path: '/lovable/email/transactional/send'
@@ -747,6 +768,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosSlugRoute: PlanosSlugRoute,
   ProjetoIdRoute: ProjetoIdRoute,
   PlanosIndexRoute: PlanosIndexRoute,
+  ApiPublicOneoff_create_couponRoute: ApiPublicOneoff_create_couponRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
@@ -759,13 +781,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
