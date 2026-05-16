@@ -255,7 +255,13 @@ function PlanDetailsPage() {
             </section>
 
             {/* INCLUDED FEATURES */}
-            <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16 grid lg:grid-cols-5 gap-10">
+            <motion.section
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16 grid lg:grid-cols-5 gap-10"
+            >
               <div className="lg:col-span-2">
                 <span className="text-xs tracking-wide text-ink-soft">O que está incluso</span>
                 <h2 className="mt-3 editorial-headline text-4xl md:text-5xl text-ink">
@@ -265,37 +271,71 @@ function PlanDetailsPage() {
                   Lista completa do que será entregue depois do pagamento. Itens marcados com check fazem parte do plano {plan.name}.
                 </p>
               </div>
-              <ul className="lg:col-span-3 grid sm:grid-cols-2 gap-3">
+              <motion.ul
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-80px" }}
+                variants={{
+                  hidden: {},
+                  show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+                }}
+                className="lg:col-span-3 grid sm:grid-cols-2 gap-3"
+              >
                 {((plan.features as string[]) ?? []).map((f) => (
-                  <li
+                  <motion.li
                     key={f}
-                    className="flex gap-3 items-start rounded-2xl border border-border bg-paper p-4"
+                    variants={{
+                      hidden: { opacity: 0, y: 16 },
+                      show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+                    }}
+                    className="flex gap-3 items-start rounded-2xl border border-border bg-paper p-4 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)] transition-all"
                   >
                     <span className="mt-0.5 h-6 w-6 rounded-full bg-lime grid place-items-center flex-none">
                       <Check className="h-3.5 w-3.5 text-ink" />
                     </span>
                     <span className="text-sm text-ink">{f}</span>
-                  </li>
+                  </motion.li>
                 ))}
-              </ul>
-            </section>
+              </motion.ul>
+            </motion.section>
 
-            {/* TUTORIAL VIDEO */}
-            <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16">
-              <span className="text-xs tracking-wide text-ink-soft">Tutorial em vídeo</span>
-              <h2 className="mt-3 editorial-headline text-4xl md:text-5xl text-ink">
-                Veja como funciona<br />em 2 minutos.
-              </h2>
-              <TutorialVideo url={tutorialUrl} planName={plan.name} />
-
-            </section>
+            {/* TUTORIAL VIDEO — hidden for promotional plan */}
+            {slug !== "promocional" && (
+              <motion.section
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16"
+              >
+                <span className="text-xs tracking-wide text-ink-soft">Tutorial em vídeo</span>
+                <h2 className="mt-3 editorial-headline text-4xl md:text-5xl text-ink">
+                  Veja como funciona<br />em 2 minutos.
+                </h2>
+                <TutorialVideo url={tutorialUrl} planName={plan.name} />
+              </motion.section>
+            )}
 
             {/* EXTRA DETAIL BLOCKS */}
-            <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16 grid md:grid-cols-3 gap-6">
+            <motion.section
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-80px" }}
+              variants={{
+                hidden: {},
+                show: { transition: { staggerChildren: 0.08 } },
+              }}
+              className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16 grid md:grid-cols-3 gap-6"
+            >
               {extras.map((block) => (
-                <div
+                <motion.div
                   key={block.title}
-                  className="rounded-3xl border border-border bg-paper p-7"
+                  variants={{
+                    hidden: { opacity: 0, y: 24 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+                  }}
+                  whileHover={{ y: -4 }}
+                  className="rounded-3xl border border-border bg-paper p-7 transition-shadow hover:shadow-[var(--shadow-pop)]"
                   style={{ boxShadow: "var(--shadow-card)" }}
                 >
                   <h3 className="font-display text-2xl font-black tracking-tight">{block.title}</h3>
@@ -307,49 +347,92 @@ function PlanDetailsPage() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </motion.div>
               ))}
-            </section>
+            </motion.section>
 
             {/* TRUST BADGES */}
             <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16">
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <motion.div
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-80px" }}
+                variants={{
+                  hidden: {},
+                  show: { transition: { staggerChildren: 0.07 } },
+                }}
+                className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"
+              >
                 {[
                   { t: "Entrega em 24h", d: "Após envio das informações." },
                   { t: "Pagamento seguro", d: "Processado pela Stripe." },
                   { t: "Sem fidelidade", d: "Cancele quando quiser." },
                   { t: "Suporte humano", d: "WhatsApp em horário comercial." },
                 ].map((b) => (
-                  <div key={b.t} className="rounded-2xl border border-border bg-paper p-5">
+                  <motion.div
+                    key={b.t}
+                    variants={{
+                      hidden: { opacity: 0, scale: 0.96, y: 12 },
+                      show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+                    }}
+                    whileHover={{ y: -3 }}
+                    className="rounded-2xl border border-border bg-paper p-5"
+                  >
                     <div className="font-display font-black text-base text-ink">{b.t}</div>
                     <div className="mt-1 text-sm text-ink-soft">{b.d}</div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </section>
 
             {/* PLAN-SPECIFIC FAQ */}
-            <section className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16">
+            <motion.section
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="mx-auto max-w-[1200px] px-5 md:px-10 py-12 md:py-16"
+            >
               <span className="text-xs tracking-wide text-ink-soft">Dúvidas sobre o plano</span>
               <h2 className="mt-3 editorial-headline text-4xl md:text-5xl text-ink">Perguntas comuns.</h2>
-              <div className="mt-8 grid md:grid-cols-2 gap-4">
+              <motion.div
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-80px" }}
+                variants={{
+                  hidden: {},
+                  show: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+                }}
+                className="mt-8 grid md:grid-cols-2 gap-4"
+              >
                 {[
                   { q: "Como avanço para o checkout?", a: `Clique em "Continuar para o checkout" abaixo. Você será direcionado ao pagamento seguro pela Stripe.` },
                   { q: "O que acontece após o pagamento?", a: "Você recebe um formulário guiado para enviar as informações do negócio (logo, fotos, contato, etc.). Em até 24h após o envio completo, sua página está no ar." },
                   { q: "Posso trocar de plano depois?", a: "Sim. É possível fazer upgrade a qualquer momento direto pelo painel. Downgrades ocorrem no próximo ciclo." },
                   { q: "Tem fidelidade?", a: "Não. Cancele a manutenção quando quiser direto pelo painel. A ativação é única e não recorrente." },
                 ].map((f) => (
-                  <div key={f.q} className="rounded-2xl border border-border bg-paper p-5">
+                  <motion.div
+                    key={f.q}
+                    variants={{
+                      hidden: { opacity: 0, y: 16 },
+                      show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+                    }}
+                    className="rounded-2xl border border-border bg-paper p-5"
+                  >
                     <div className="font-display font-black text-ink">{f.q}</div>
                     <p className="mt-2 text-sm text-ink-soft leading-relaxed">{f.a}</p>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
-            </section>
+              </motion.div>
+            </motion.section>
 
             {/* SUMMARY + CONTINUE */}
             <section className="mx-auto max-w-[1200px] px-5 md:px-10 pb-32 md:pb-28">
-              <div
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 className="rounded-3xl border border-border bg-paper p-7 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
