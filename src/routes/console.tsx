@@ -88,6 +88,7 @@ function ConsolePage() {
             ["cancellations", "Cancelamentos"],
             ["support", "Suporte"],
             ["extras", "Cobranças extras"],
+            ["partner", "Parceiro"],
             ["plans", "Planos"],
             ["events", "Auditoria"],
             ["settings", "Configurações"],
@@ -115,6 +116,7 @@ function ConsolePage() {
         {tab === "cancellations" && <CancellationsTab />}
         {tab === "support" && <SupportTab />}
         {tab === "extras" && <ExtraChargesTab />}
+        {tab === "partner" && <PartnerTab />}
         {tab === "plans" && <PlansTab />}
         {tab === "events" && <EventsTab />}
         {tab === "settings" && <SettingsTab />}
