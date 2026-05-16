@@ -39,6 +39,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchPaid = async (uid: string | undefined) => {
     if (!uid) return setHasPaid(false);
+    // Check subscription first — controls ongoing access
+    const { data: subs } = await supabase
+      .from("subscriptions")
+      .select("status,current_period_end,cancel_at_period_end")
+      .eq("user_id", uid)
+      .order("created_at", { ascending: false })
+      .limit(1);
+    const sub = subs?.[0];
+    if (sub) {
+      const periodEnd = sub.current_period_end ? new Date(sub.current_period_end).getTime() : 0;
+      const now = Date.now();
+      const stillInPeriod = periodEnd > now;
+      const isActive = ["active", "trialing", "past_due"].includes(sub.status);
+      setHasPaid(isActive || stillInPeriod);
+      return;
+    }
+    // No subscription row yet → fall back to payments (activation only)
     const { data } = await supabase
       .from("payments")
       .select("id")
