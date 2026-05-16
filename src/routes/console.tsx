@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatBRL, formatDateTime } from "@/lib/format";
 import { motion } from "framer-motion";
 import { ProjectsKanban } from "@/components/console/ProjectsKanban";
+import { SupportTab, ExtraChargesTab } from "@/components/console/SupportAndCharges";
 
 export const Route = createFileRoute("/console")({
   component: ConsolePage,
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/console")({
   ]}),
 });
 
-type Tab = "overview" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "plans" | "events" | "settings";
+type Tab = "overview" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "support" | "extras" | "plans" | "events" | "settings";
 
 function useRealtimeRefetch(tables: string[], queryKeys: string[][]) {
   const qc = useQueryClient();
