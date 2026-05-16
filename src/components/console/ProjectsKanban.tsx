@@ -61,6 +61,7 @@ const COLUMNS: { id: ProjectStatus; label: string; tone: string }[] = [
 
 export function ProjectsKanban() {
   const qc = useQueryClient();
+  const notifyPublished = useServerFn(notifySitePublished);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
   const [planFilter, setPlanFilter] = useState<string>("all");
