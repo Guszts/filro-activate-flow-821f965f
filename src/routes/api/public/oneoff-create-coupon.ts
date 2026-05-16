@@ -3,7 +3,7 @@ import { createStripeClient, type StripeEnv } from '@/lib/stripe.server';
 
 // One-off endpoint to create a 100% off coupon + promotion code for the Premium plan.
 // Guarded by the LOVABLE_API_KEY shared secret. Safe to delete after use.
-export const Route = createFileRoute('/api/public/_oneoff_create_coupon')({
+export const Route = createFileRoute('/api/public/oneoff-create-coupon')({
   server: {
     handlers: {
       POST: async ({ request }) => {
