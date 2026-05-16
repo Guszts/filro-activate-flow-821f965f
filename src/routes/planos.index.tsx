@@ -14,7 +14,9 @@ export const Route = createFileRoute("/planos/")({
       { name: "description", content: "Conheça todos os planos da Filro: ativação única + manutenção mensal. Do Start ao Premium, escolha o plano ideal para o seu negócio." },
       { property: "og:title", content: "Planos · Filro" },
       { property: "og:description", content: "Do Start ao Premium — ativação única + manutenção mensal. Sem fidelidade." },
+      { property: "og:url", content: "https://setup.filro.site/planos" },
     ],
+    links: [{ rel: "canonical", href: "https://setup.filro.site/planos" }],
   }),
 });
 

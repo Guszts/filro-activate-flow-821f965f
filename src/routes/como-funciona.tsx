@@ -12,7 +12,9 @@ export const Route = createFileRoute("/como-funciona")({
       { name: "description", content: "O processo Filro em 7 passos: do plano à manutenção mensal. Prazos claros, revisão antes de publicar, suporte humano." },
       { property: "og:title", content: "Como funciona · Filro" },
       { property: "og:description", content: "Escolha o plano, pague, envie suas infos, a gente monta, você revisa, publicamos. Em até 24h." },
+      { property: "og:url", content: "https://setup.filro.site/como-funciona" },
     ],
+    links: [{ rel: "canonical", href: "https://setup.filro.site/como-funciona" }],
   }),
 });
 

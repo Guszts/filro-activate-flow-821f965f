@@ -38,7 +38,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen grid place-items-center px-5 py-10">
+    <main className="min-h-screen grid place-items-center px-5 py-10">
       <div className="w-full max-w-md">
         <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
         <h1 className="mt-10 editorial-headline text-5xl text-ink">Entrar</h1>
@@ -62,6 +62,6 @@ function LoginPage() {
           Não tem conta? <Link to="/register" search={{ redirect }} className="text-ink font-semibold underline-offset-4 hover:underline">Criar conta</Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

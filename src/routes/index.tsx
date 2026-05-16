@@ -25,6 +25,12 @@ const HOME_FAQS = [
 export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
+    meta: [
+      { property: "og:url", content: "https://setup.filro.site/" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://setup.filro.site/" },
+    ],
     scripts: [
       {
         type: "application/ld+json",
@@ -84,6 +90,7 @@ function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
+      <main className="flex-1">
 
       {/* HERO */}
       <section ref={heroRef} className="relative overflow-hidden">
@@ -303,7 +310,7 @@ function HomePage() {
           </div>
         </motion.div>
       </section>
-
+      </main>
       <SiteFooter />
     </div>
   );

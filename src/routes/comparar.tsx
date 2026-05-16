@@ -16,7 +16,9 @@ export const Route = createFileRoute("/comparar")({
       { name: "description", content: "Compare lado a lado todos os planos da Filro: páginas, catálogo, SEO, suporte, prazo e mais. Escolha o ideal para o seu negócio." },
       { property: "og:title", content: "Comparar planos · Filro" },
       { property: "og:description", content: "Tabela comparativa completa dos planos Filro." },
+      { property: "og:url", content: "https://setup.filro.site/comparar" },
     ],
+    links: [{ rel: "canonical", href: "https://setup.filro.site/comparar" }],
   }),
 });
 

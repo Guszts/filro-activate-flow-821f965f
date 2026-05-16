@@ -12,6 +12,22 @@ export const Route = createFileRoute("/garantia")({
       { name: "description", content: "Pagamento seguro, sem fidelidade, dados protegidos pela LGPD e revisão antes da publicação. Como a Filro protege você." },
       { property: "og:title", content: "Garantia e segurança · Filro" },
       { property: "og:description", content: "Pagamento Stripe, sem fidelidade, LGPD, revisão antes de publicar." },
+      { property: "og:url", content: "https://setup.filro.site/garantia" },
+    ],
+    links: [{ rel: "canonical", href: "https://setup.filro.site/garantia" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      },
     ],
   }),
 });
