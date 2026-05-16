@@ -176,6 +176,71 @@ export type Database = {
         }
         Relationships: []
       }
+      extra_charges: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          currency: string
+          description: string
+          environment: string
+          id: string
+          paid_at: string | null
+          payment_link: string | null
+          project_id: string | null
+          status: Database["public"]["Enums"]["extra_charge_status"]
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string
+          environment?: string
+          id?: string
+          paid_at?: string | null
+          payment_link?: string | null
+          project_id?: string | null
+          status?: Database["public"]["Enums"]["extra_charge_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string
+          environment?: string
+          id?: string
+          paid_at?: string | null
+          payment_link?: string | null
+          project_id?: string | null
+          status?: Database["public"]["Enums"]["extra_charge_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extra_charges_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       flaro_rate_limits: {
         Row: {
           created_at: string
@@ -543,6 +608,94 @@ export type Database = {
           },
         ]
       }
+      support_messages: {
+        Row: {
+          author_id: string
+          author_role: string
+          content: string
+          created_at: string
+          id: string
+          ticket_id: string
+        }
+        Insert: {
+          author_id: string
+          author_role: string
+          content: string
+          created_at?: string
+          id?: string
+          ticket_id: string
+        }
+        Update: {
+          author_id?: string
+          author_role?: string
+          content?: string
+          created_at?: string
+          id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          closed_at: string | null
+          created_at: string
+          id: string
+          initial_message: string
+          kind: Database["public"]["Enums"]["ticket_kind"]
+          last_admin_reply_at: string | null
+          priority: Database["public"]["Enums"]["ticket_priority"]
+          project_id: string | null
+          status: Database["public"]["Enums"]["ticket_status"]
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          closed_at?: string | null
+          created_at?: string
+          id?: string
+          initial_message: string
+          kind?: Database["public"]["Enums"]["ticket_kind"]
+          last_admin_reply_at?: string | null
+          priority?: Database["public"]["Enums"]["ticket_priority"]
+          project_id?: string | null
+          status?: Database["public"]["Enums"]["ticket_status"]
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          closed_at?: string | null
+          created_at?: string
+          id?: string
+          initial_message?: string
+          kind?: Database["public"]["Enums"]["ticket_kind"]
+          last_admin_reply_at?: string | null
+          priority?: Database["public"]["Enums"]["ticket_priority"]
+          project_id?: string | null
+          status?: Database["public"]["Enums"]["ticket_status"]
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -651,6 +804,7 @@ export type Database = {
       account_type: "customer" | "admin"
       admin_task_status: "pending" | "in_progress" | "done" | "canceled"
       app_role: "admin" | "customer"
+      extra_charge_status: "draft" | "sent" | "paid" | "cancelled" | "refunded"
       payment_status:
         | "pending"
         | "processing"
@@ -679,6 +833,19 @@ export type Database = {
         | "approval"
         | "publish_note"
       revision_status: "open" | "in_progress" | "resolved"
+      ticket_kind:
+        | "question"
+        | "change_request"
+        | "bug"
+        | "cancellation"
+        | "other"
+      ticket_priority: "low" | "normal" | "high" | "urgent"
+      ticket_status:
+        | "open"
+        | "in_progress"
+        | "waiting_client"
+        | "resolved"
+        | "closed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -809,6 +976,7 @@ export const Constants = {
       account_type: ["customer", "admin"],
       admin_task_status: ["pending", "in_progress", "done", "canceled"],
       app_role: ["admin", "customer"],
+      extra_charge_status: ["draft", "sent", "paid", "cancelled", "refunded"],
       payment_status: [
         "pending",
         "processing",
@@ -840,6 +1008,21 @@ export const Constants = {
         "publish_note",
       ],
       revision_status: ["open", "in_progress", "resolved"],
+      ticket_kind: [
+        "question",
+        "change_request",
+        "bug",
+        "cancellation",
+        "other",
+      ],
+      ticket_priority: ["low", "normal", "high", "urgent"],
+      ticket_status: [
+        "open",
+        "in_progress",
+        "waiting_client",
+        "resolved",
+        "closed",
+      ],
     },
   },
 } as const
