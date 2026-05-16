@@ -5,7 +5,8 @@ import { useAuth } from "@/lib/auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
-import { Check, ArrowRight, Clock, Receipt } from "lucide-react";
+import { Check, ArrowRight, Clock, Receipt, BookOpen, Download, X } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 import { formatBRL, formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/payment-success")({
