@@ -44,6 +44,8 @@ function SuccessPage() {
   const { user } = useAuth();
   const [data, setData] = useState<ReceiptData | null>(null);
   const [status, setStatus] = useState<"checking" | "ok" | "pending">("checking");
+  const [ebookOpen, setEbookOpen] = useState(false);
+  const [ebookClaimed, setEbookClaimed] = useState(false);
 
   useEffect(() => {
     if (!user) return;
