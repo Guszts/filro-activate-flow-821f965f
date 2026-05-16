@@ -147,10 +147,11 @@
     line-height: 0.95;
   }
   .lime-mark {
-    background: var(--lime);
-    color: var(--ink);
-    padding: 0 0.18em;
-    border-radius: 0.4em;
+    background-image: linear-gradient(var(--lime), var(--lime));
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    background-size: 100% 0.18em;
+    padding: 0 0.08em;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
   }
