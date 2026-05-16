@@ -32,9 +32,9 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 
 // Configuration
 const SITE_NAME = "filro-activate-flow"
-const SENDER_DOMAIN = "notify.setup.filro.site"
-const ROOT_DOMAIN = "setup.filro.site"
-const FROM_DOMAIN = "setup.filro.site"
+const SENDER_DOMAIN = "notify.filro.site"
+const ROOT_DOMAIN = "filro.site"
+const FROM_DOMAIN = "filro.site"
 
 function redactEmail(email: string | null | undefined): string {
   if (!email) return '***'
