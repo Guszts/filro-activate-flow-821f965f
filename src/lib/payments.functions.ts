@@ -194,6 +194,46 @@ const ALLOWED_RETURN_HOSTS = new Set([
 
 const PARTNER_CODE_RE = /^[a-z0-9_-]{3,40}$/;
 
+const PROMOCIONAL_PROMO_CODE = "FILRO10";
+
+async function ensurePromocionalPromoCode(
+  stripe: ReturnType<typeof createStripeClient>,
+  productId: string,
+) {
+  try {
+    const existing = await stripe.promotionCodes.list({ code: PROMOCIONAL_PROMO_CODE, active: true, limit: 1 });
+    if (existing.data.length) return;
+
+    // Procura coupon reutilizável; cria se necessário.
+    let couponId: string | null = null;
+    const couponList = await stripe.coupons.list({ limit: 100 });
+    const found = couponList.data.find(
+      (c) => c.percent_off === 10 && c.duration === "once" && c.metadata?.lovable_external_id === "filro10_once",
+    );
+    if (found) {
+      couponId = found.id;
+    } else {
+      const coupon = await stripe.coupons.create({
+        percent_off: 10,
+        duration: "once",
+        name: "Filro 10% off",
+        applies_to: { products: [productId] },
+        metadata: { lovable_external_id: "filro10_once" },
+      });
+      couponId = coupon.id;
+    }
+
+    await stripe.promotionCodes.create({
+      coupon: couponId,
+      code: PROMOCIONAL_PROMO_CODE,
+      active: true,
+      metadata: { lovable_external_id: "promo_filro10" },
+    });
+  } catch (err) {
+    console.error("[checkout] failed to ensure promo code", err);
+  }
+}
+
 async function resolveActivePartner(rawCode: string | null | undefined) {
   if (!rawCode) return null;
   const code = String(rawCode).trim().toLowerCase();
