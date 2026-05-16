@@ -120,8 +120,8 @@ function CompararPage() {
                   </thead>
                   <tbody>
                     {groups.map((g) => (
-                      <>
-                        <tr key={`g-${g}`} className="bg-muted/30">
+                      <Fragment key={`g-${g}`}>
+                        <tr className="bg-muted/30">
                           <td colSpan={plans.length + 1} className="px-4 md:px-6 py-3 text-xs uppercase tracking-widest font-semibold text-ink-soft">
                             {g}
                           </td>
@@ -136,7 +136,7 @@ function CompararPage() {
                             ))}
                           </tr>
                         ))}
-                      </>
+                      </Fragment>
                     ))}
                     <tr className="border-t border-border bg-muted/30">
                       <td className="sticky left-0 z-10 bg-muted/30 px-4 md:px-6 py-5 text-sm font-semibold text-ink">Começar agora</td>
