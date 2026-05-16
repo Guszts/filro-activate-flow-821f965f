@@ -11,6 +11,7 @@ import { createPortalSession } from "@/lib/payments.functions";
 import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, HelpCircle, Loader2, MessageCircle, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { SubscriptionCancellationModals } from "@/components/SubscriptionCancellationModals";
 
 export const Route = createFileRoute("/painel")({
   component: PainelPage,
