@@ -341,17 +341,17 @@ function EditPartnerModal({ partner, onClose, onSaved }: { partner: Partner; onC
   return (
     <Modal title="Editar parceiro" onClose={onClose}>
       <div className="space-y-3 text-sm">
-        <Field label="Nome"><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="modal-input" /></Field>
-        <Field label="Email"><input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="modal-input" /></Field>
-        <Field label="WhatsApp"><input value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} className="modal-input" /></Field>
-        <Field label="Chave Pix"><input value={form.pix_key} onChange={(e) => setForm({ ...form, pix_key: e.target.value })} className="modal-input" /></Field>
-        <Field label="Comissão (%)"><input type="number" step="0.01" min={0} max={100} value={form.commission_rate} onChange={(e) => setForm({ ...form, commission_rate: Number(e.target.value) })} className="modal-input" /></Field>
+        <Field label="Nome"><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
+        <Field label="Email"><input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
+        <Field label="WhatsApp"><input value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
+        <Field label="Chave Pix"><input value={form.pix_key} onChange={(e) => setForm({ ...form, pix_key: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
+        <Field label="Comissão (%)"><input type="number" step="0.01" min={0} max={100} value={form.commission_rate} onChange={(e) => setForm({ ...form, commission_rate: Number(e.target.value) })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
         <Field label="Status">
-          <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as typeof form.status })} className="modal-input">
+          <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as typeof form.status })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm">
             <option value="active">Ativo</option><option value="paused">Pausado</option><option value="blocked">Bloqueado</option>
           </select>
         </Field>
-        <Field label="Observações"><textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={3} className="modal-input" /></Field>
+        <Field label="Observações"><textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={3} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
       </div>
       <div className="mt-5 flex gap-2 justify-end">
         <button onClick={onClose} className="h-10 px-4 rounded-xl border border-border text-sm">Cancelar</button>
@@ -424,12 +424,12 @@ function PayModal({ commission, partner, client, planName, onClose, onDone }: {
       </div>
       <div className="mt-4 space-y-3 text-sm">
         <Field label="Método de pagamento">
-          <select value={method} onChange={(e) => setMethod(e.target.value as typeof method)} className="modal-input">
+          <select value={method} onChange={(e) => setMethod(e.target.value as typeof method)} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm">
             <option value="pix">Pix</option><option value="bank_transfer">Transferência bancária</option>
             <option value="cash">Dinheiro</option><option value="other">Outro</option>
           </select>
         </Field>
-        <Field label="Observação (opcional)"><textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className="modal-input" /></Field>
+        <Field label="Observação (opcional)"><textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
       </div>
       <p className="mt-3 text-xs text-ink-soft">Confirme apenas depois de realizar o Pix para o parceiro.</p>
       <div className="mt-4 flex gap-2 justify-end">
@@ -457,7 +457,7 @@ function CancelModal({ commission, onClose, onDone }: { commission: Commission; 
     <Modal title="Cancelar comissão" onClose={onClose}>
       <div className="space-y-3 text-sm">
         <Field label="Motivo">
-          <select value={reason} onChange={(e) => setReason(e.target.value as typeof reason)} className="modal-input">
+          <select value={reason} onChange={(e) => setReason(e.target.value as typeof reason)} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm">
             <option value="refund">Reembolso</option>
             <option value="sale_cancelled">Venda cancelada</option>
             <option value="attribution_error">Erro de atribuição</option>
@@ -465,7 +465,7 @@ function CancelModal({ commission, onClose, onDone }: { commission: Commission; 
             <option value="other">Outro</option>
           </select>
         </Field>
-        <Field label="Observação (opcional)"><textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className="modal-input" /></Field>
+        <Field label="Observação (opcional)"><textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
       </div>
       <div className="mt-4 flex gap-2 justify-end">
         <button onClick={onClose} className="h-10 px-4 rounded-xl border border-border text-sm">Voltar</button>
