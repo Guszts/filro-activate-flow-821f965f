@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Head, Font } from '@react-email/components'
+import { Font } from '@react-email/components'
 
 // Shared <Head> with Nunito (rounded) webfont for clients that support it.
 // Fallbacks defined in _brand.ts handle the rest (ui-rounded, SF Pro Rounded, system-ui).

@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Body, Button, Container, Head, Heading, Hr, Html, Preview, Text } from '@react-email/components'
+import { Body, Button, Container, Heading, Hr, Html, Preview, Text } from '@react-email/components'
 import { brand, styles } from './_brand'
+import { BrandHead } from './_head'
 import type { TemplateEntry } from './registry'
 
 interface WelcomePurchaseProps {
@@ -12,7 +13,7 @@ interface WelcomePurchaseProps {
 
 const WelcomePurchaseEmail = ({ name, planName, businessName, panelUrl }: WelcomePurchaseProps) => (
   <Html lang="pt-BR" dir="ltr">
-    <Head />
+    <BrandHead />
     <Preview>Pagamento confirmado — vamos ativar seu {planName ?? 'plano'}</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>

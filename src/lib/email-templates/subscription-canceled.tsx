@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Body, Button, Container, Head, Heading, Html, Preview, Text } from '@react-email/components'
+import { Body, Button, Container, Heading, Html, Preview, Text } from '@react-email/components'
 import { brand, styles } from './_brand'
+import { BrandHead } from './_head'
 import type { TemplateEntry } from './registry'
 
 interface CanceledProps {
@@ -12,7 +13,7 @@ interface CanceledProps {
 
 const SubscriptionCanceledEmail = ({ name, planName, endsAt, panelUrl }: CanceledProps) => (
   <Html lang="pt-BR" dir="ltr">
-    <Head />
+    <BrandHead />
     <Preview>Cancelamento confirmado — você mantém o acesso até {endsAt ?? 'o fim do período'}</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>

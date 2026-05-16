@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Body, Container, Head, Heading, Html, Preview, Text } from '@react-email/components'
+import { Body, Container, Heading, Html, Preview, Text } from '@react-email/components'
 import { brand, styles } from './_brand'
+import { BrandHead } from './_head'
 
 interface ReauthenticationEmailProps {
   token: string
@@ -8,7 +9,7 @@ interface ReauthenticationEmailProps {
 
 export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
   <Html lang="pt-BR" dir="ltr">
-    <Head />
+    <BrandHead />
     <Preview>Seu código de verificação</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>

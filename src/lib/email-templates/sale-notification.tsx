@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Body, Container, Head, Heading, Hr, Html, Preview, Text } from '@react-email/components'
+import { Body, Container, Heading, Hr, Html, Preview, Text } from '@react-email/components'
 import { brand, styles } from './_brand'
+import { BrandHead } from './_head'
 import type { TemplateEntry } from './registry'
 
 interface SaleNotificationProps {
@@ -17,7 +18,7 @@ const SaleNotificationEmail = ({
   customerName, customerEmail, customerWhatsapp, businessName, planName, amount, sessionId,
 }: SaleNotificationProps) => (
   <Html lang="pt-BR" dir="ltr">
-    <Head />
+    <BrandHead />
     <Preview>Nova venda — {planName ?? 'plano Filro'}</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>
