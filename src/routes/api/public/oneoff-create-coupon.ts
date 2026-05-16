@@ -27,6 +27,12 @@ export const Route = createFileRoute('/api/public/oneoff-create-coupon')({
         const product = products.data[0];
         if (!product) return new Response('Premium product not found', { status: 404 });
 
+        // Deactivate any existing active promotion codes with this code so we can recreate.
+        const existing = await stripe.promotionCodes.list({ code, active: true, limit: 10 });
+        for (const p of existing.data) {
+          await stripe.promotionCodes.update(p.id, { active: false });
+        }
+
         const couponParams =
           type === 'amount'
             ? {
