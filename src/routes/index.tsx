@@ -76,6 +76,7 @@ function HomePage() {
         .from("plans")
         .select("*")
         .eq("active", true)
+        .eq("hidden", false)
         .order("display_order");
       if (error) throw error;
       return data;

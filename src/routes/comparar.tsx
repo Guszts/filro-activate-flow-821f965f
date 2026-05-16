@@ -71,7 +71,7 @@ function CompararPage() {
     queryKey: ["plans-compare"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("plans").select("*").eq("active", true).order("display_order");
+        .from("plans").select("*").eq("active", true).eq("hidden", false).order("display_order");
       if (error) throw error;
       return data;
     },

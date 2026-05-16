@@ -591,6 +591,7 @@ export type Database = {
           description: string
           display_order: number
           features: Json
+          hidden: boolean
           id: string
           monthly_price: number
           name: string
@@ -604,6 +605,7 @@ export type Database = {
           description?: string
           display_order?: number
           features?: Json
+          hidden?: boolean
           id?: string
           monthly_price: number
           name: string
@@ -617,6 +619,7 @@ export type Database = {
           description?: string
           display_order?: number
           features?: Json
+          hidden?: boolean
           id?: string
           monthly_price?: number
           name?: string

@@ -157,12 +157,15 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       // gravado em vez de duplicar e de re-criar admin_task.
       let paymentId: string | null = null;
       let isDuplicateSession = false;
+      const sessionAmount = typeof session.amount_total === "number" && session.amount_total > 0
+        ? session.amount_total
+        : (plan.activation_price ?? 0) + (plan.monthly_price ?? 0);
       const { data: paymentRow, error: paymentErr } = await supabaseAdmin
         .from("payments")
         .insert({
           user_id: userId,
           plan_id: plan.id,
-          amount: (plan.activation_price ?? 0) + (plan.monthly_price ?? 0),
+          amount: sessionAmount,
           currency: (session.currency ?? "brl").toLowerCase(),
           status: "paid",
           stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
