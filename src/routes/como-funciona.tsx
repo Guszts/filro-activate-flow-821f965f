@@ -9,27 +9,30 @@ export const Route = createFileRoute("/como-funciona")({
   head: () => ({
     meta: [
       { title: "Como funciona · Filro" },
-      { name: "description", content: "Da escolha do modelo à publicação em 24h: veja como a Filro ativa sua presença digital sem complicação." },
+      { name: "description", content: "O processo Filro em 7 passos: do plano à manutenção mensal. Prazos claros, revisão antes de publicar, suporte humano." },
       { property: "og:title", content: "Como funciona · Filro" },
-      { property: "og:description", content: "Modelo, pagamento, formulário guiado e publicação em até 24h." },
+      { property: "og:description", content: "Escolha o plano, pague, envie suas infos, a gente monta, você revisa, publicamos. Em até 24h." },
     ],
   }),
 });
 
-const steps = [
-  { n: "01", t: "Crie sua conta", d: "Registro rápido com email e WhatsApp. Sem cartão para criar conta.", accent: "azure" as const },
-  { n: "02", t: "Escolha o modelo", d: "Selecione a direção visual que combina com o seu negócio.", accent: "lime" as const },
-  { n: "03", t: "Pague com segurança", d: "Checkout Stripe. Cartão, débito ou Pix. Ativação única + mensalidade.", accent: "flame" as const },
-  { n: "04", t: "Envie suas informações", d: "Formulário guiado: identidade, contato, catálogo e referências.", accent: "ink" as const },
-  { n: "05", t: "Adaptamos ao seu negócio", d: "Nosso time monta a página com o seu conteúdo e suas cores.", accent: "azure" as const },
-  { n: "06", t: "Revisão e publicação", d: "Você aprova, publicamos no ar. Pequenos ajustes inclusos.", accent: "lime" as const },
+type Accent = "azure" | "lime" | "flame" | "ink";
+
+const steps: Array<{ n: string; t: string; d: string; eta: string; accent: Accent }> = [
+  { n: "01", t: "Escolha o plano", d: "Compare planos lado a lado e veja qual encaixa no seu negócio. Sem fidelidade, sem letras miúdas.", eta: "5 min", accent: "azure" },
+  { n: "02", t: "Pague ativação + 1ª mensalidade", d: "Checkout Stripe — cartão, débito ou Pix. A ativação é única, a manutenção é mensal e cancelável a qualquer momento.", eta: "Imediato", accent: "flame" },
+  { n: "03", t: "Envie suas informações", d: "Formulário guiado pede só o essencial: identidade, contato, produtos/serviços e referências visuais. Tudo num lugar só.", eta: "10 a 30 min", accent: "lime" },
+  { n: "04", t: "A Filro monta", d: "Nosso time real (não template engessado) adapta o modelo ao seu negócio, com suas cores, copy e fotos.", eta: "Até 24h*", accent: "ink" },
+  { n: "05", t: "Você revisa a prévia", d: "Acessa o link de prévia direto no painel. Aprova ou pede ajustes pontuais sem sair da plataforma.", eta: "Quando quiser", accent: "azure" },
+  { n: "06", t: "Publicamos no ar", d: "Após sua aprovação, sobe ao ar no domínio combinado. Avisamos por e-mail e no painel.", eta: "Mesmo dia", accent: "lime" },
+  { n: "07", t: "Manutenção mensal cuida do resto", d: "Pequenas alterações de texto, foto e contato fazem parte. Mudanças grandes você orça antes pelo painel.", eta: "Contínuo", accent: "flame" },
 ];
 
 const guarantees = [
-  { icon: Clock, title: "Entrega em 24h", desc: "Estimativa contada a partir do envio completo do formulário." },
-  { icon: ShieldCheck, title: "Pagamento seguro", desc: "Processado pela Stripe com criptografia padrão bancária." },
-  { icon: Wand2, title: "Adaptação humana", desc: "Time real revisa cada detalhe. Sem template engessado." },
-  { icon: MessageCircle, title: "Suporte direto", desc: "Fala com a gente pelo WhatsApp em horário comercial." },
+  { icon: Clock, title: "Prazo claro", desc: "Estimativas por etapa. Sem 'em breve' eterno." },
+  { icon: ShieldCheck, title: "Pagamento Stripe", desc: "Cartão e Pix com segurança padrão bancário." },
+  { icon: Wand2, title: "Adaptação humana", desc: "Time real revisa cada entrega antes de você." },
+  { icon: MessageCircle, title: "Suporte por WhatsApp", desc: "Resposta em horário comercial — gente, não bot." },
 ];
 
 function ComoFuncionaPage() {
@@ -42,11 +45,12 @@ function ComoFuncionaPage() {
             <span className="h-1.5 w-6 bg-flame" /> Como funciona
           </span>
           <h1 className="mt-4 editorial-headline text-5xl md:text-7xl text-ink max-w-3xl">
-            Do modelo à publicação em <span className="lime-mark">24h</span>.
+            Do plano à publicação em <span className="lime-mark">7 passos</span>.
           </h1>
           <p className="mt-6 max-w-2xl text-ink-soft">
-            Você não precisa entender de tecnologia. Escolhe o modelo, paga, envia as informações do negócio e a gente cuida do resto.
+            Sem tecnologia complicada, sem disco rígido cheio de PDFs. Você compra, envia o conteúdo num formulário guiado, a Filro adapta o modelo ao seu negócio e a página vai ao ar em até 24h*.
           </p>
+          <p className="mt-3 text-xs text-ink-soft/80">*Contado a partir do envio completo do formulário. Planos maiores podem ter prazo diferente — veja a tabela comparativa.</p>
         </section>
 
         <section className="mx-auto max-w-[1400px] px-5 md:px-10 py-12">
@@ -57,7 +61,7 @@ function ComoFuncionaPage() {
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ delay: i * 0.06, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ delay: i * 0.05, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -6 }}
                 className="group card-personality relative rounded-3xl bg-paper border border-border p-7 overflow-hidden"
                 style={{ boxShadow: "var(--shadow-card)" }}
@@ -69,11 +73,14 @@ function ComoFuncionaPage() {
                   "bg-ink/10"
                 }`} />
                 <div className="relative">
-                  <div className={`font-display font-black text-5xl ${
-                    s.accent === "azure" ? "text-azure" :
-                    s.accent === "flame" ? "text-flame" :
-                    "text-ink"
-                  }`}>{s.n}</div>
+                  <div className="flex items-center justify-between">
+                    <div className={`font-display font-black text-5xl ${
+                      s.accent === "azure" ? "text-azure" :
+                      s.accent === "flame" ? "text-flame" :
+                      "text-ink"
+                    }`}>{s.n}</div>
+                    <span className="text-[10px] uppercase tracking-widest text-ink-soft bg-muted px-2 py-1 rounded-full">{s.eta}</span>
+                  </div>
                   <h3 className="mt-6 font-display font-black text-xl tracking-tight">{s.t}</h3>
                   <p className="mt-2 text-sm text-ink-soft">{s.d}</p>
                 </div>
@@ -83,8 +90,8 @@ function ComoFuncionaPage() {
         </section>
 
         <section className="mx-auto max-w-[1400px] px-5 md:px-10 py-16 md:py-24">
-          <span className="text-xs tracking-wide text-ink-soft">Garantias</span>
-          <h2 className="mt-3 editorial-headline text-4xl md:text-6xl text-ink max-w-2xl">O que você pode esperar.</h2>
+          <span className="text-xs tracking-wide text-ink-soft">O que você pode esperar</span>
+          <h2 className="mt-3 editorial-headline text-4xl md:text-6xl text-ink max-w-2xl">Sem surpresa em nenhuma etapa.</h2>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {guarantees.map((g) => {
               const Icon = g.icon;
@@ -96,6 +103,14 @@ function ComoFuncionaPage() {
                 </div>
               );
             })}
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link to="/comparar" className="inline-flex items-center h-11 px-5 rounded-2xl border border-border bg-paper text-ink text-sm font-semibold hover:bg-muted transition-colors">
+              Ver tabela comparativa
+            </Link>
+            <Link to="/garantia" className="inline-flex items-center h-11 px-5 rounded-2xl border border-border bg-paper text-ink text-sm font-semibold hover:bg-muted transition-colors">
+              Garantia e segurança
+            </Link>
           </div>
         </section>
 

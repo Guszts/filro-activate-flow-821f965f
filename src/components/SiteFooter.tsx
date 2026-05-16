@@ -19,6 +19,8 @@ export function SiteFooter() {
             <li><Link to="/modelos" className="hover:text-ink transition-colors">Modelos</Link></li>
             <li><Link to="/como-funciona" className="hover:text-ink transition-colors">Como funciona</Link></li>
             <li><Link to="/planos" className="hover:text-ink transition-colors">Planos</Link></li>
+            <li><Link to="/comparar" className="hover:text-ink transition-colors">Comparar planos</Link></li>
+            <li><Link to="/garantia" className="hover:text-ink transition-colors">Garantia e segurança</Link></li>
           </ul>
         </div>
         <div className="text-sm text-ink-soft">
