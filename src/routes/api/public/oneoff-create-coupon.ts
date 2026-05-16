@@ -14,6 +14,9 @@ export const Route = createFileRoute('/api/public/oneoff-create-coupon')({
         }
         const env = (url.searchParams.get('env') as StripeEnv) || 'sandbox';
         const code = url.searchParams.get('code') || 'FILRO100';
+        const type = url.searchParams.get('type') || 'percent'; // 'percent' | 'amount'
+        const amountOff = Number(url.searchParams.get('amount_off') || '0');
+        const currency = (url.searchParams.get('currency') || 'brl').toLowerCase();
         const stripe = createStripeClient(env);
 
         // Find the Premium product by lovable_external_id metadata = plan_premium
@@ -24,11 +27,22 @@ export const Route = createFileRoute('/api/public/oneoff-create-coupon')({
         const product = products.data[0];
         if (!product) return new Response('Premium product not found', { status: 404 });
 
-        // Create coupon: 100% off, forever, applies only to the Premium product.
+        const couponParams =
+          type === 'amount'
+            ? {
+                amount_off: amountOff,
+                currency,
+                duration: 'once' as const,
+                name: `${code} - Premium R$${(amountOff / 100).toFixed(2)} off`,
+              }
+            : {
+                percent_off: 100,
+                duration: 'forever' as const,
+                name: `${code} - Premium 100% off`,
+              };
+
         const coupon = await stripe.coupons.create({
-          percent_off: 100,
-          duration: 'forever',
-          name: `${code} - Premium 100% off`,
+          ...couponParams,
           applies_to: { products: [product.id] },
           metadata: { lovable_external_id: code.toLowerCase(), plan: 'premium' },
         });
