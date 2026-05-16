@@ -1,157 +1,93 @@
-# Plano — Transformar Filro em máquina operacional
+# Programa de Parceiro Comercial (B2B Privado)
 
-Escopo aprovado: 4 blocos no nível **completo e polido**, em ondas separadas + correção do `.env`. Cada onda termina em estado utilizável antes de seguir para a próxima.
+Implementar atribuição de vendas por código de parceiro, cálculo de comissão sobre **ativação apenas** e gestão no Console. Sem painel público, sem Stripe Connect, repasse manual via Pix.
 
----
+## 1. Banco de dados (migration única)
 
-## Onda 0 — Segurança `.env` (imediata, ~5min)
+Criar 4 tabelas + seed do parceiro `tio`:
 
-- Remover `.env`, `.env.production`, `.env.development` do versionamento.
-- Atualizar `.gitignore` para ignorar `.env*` exceto `.env.example`.
-- `.env.example` já existe — só conferir que cobre todas as chaves usadas.
-- Sem rotação de chaves (são publicáveis/anon, baixo risco real).
+- **`partners`** — cadastro do parceiro (code único, pix_key, commission_rate default 50%, status: active/paused/blocked).
+- **`partner_referrals`** — uma linha por checkout iniciado com `?ref=`. Único por `stripe_checkout_session_id`. Status: started/checkout_created/paid/cancelled/refunded.
+- **`partner_commissions`** — comissão calculada na confirmação do pagamento. Único por `stripe_checkout_session_id` (garante idempotência). Status: pending/approved/paid/cancelled. Inclui `activation_amount`, `monthly_amount`, `base_amount`, `commission_rate`, `commission_amount` (todos em centavos).
+- **`partner_payouts`** — registro do Pix manual. method: pix/bank_transfer/cash/other.
 
----
+**Seed:** `INSERT ... ON CONFLICT (code) DO NOTHING` para criar `tio` com 50% activation_only.
 
-## Onda 1 — Páginas comerciais (sem backend, ~rápida)
+**RLS:** ativado em todas. Apenas admins (`has_role(auth.uid(),'admin')`) leem/escrevem. Webhook usa `supabaseAdmin` (service role bypassa RLS). Sem políticas para anon.
 
-Três páginas/seções novas que reforçam conversão sem mexer em dados:
+Índices nas colunas de busca (code, status, partner_id, session_id, available_at).
 
-1. **`/comparar` — tabela comparativa de planos**
-   - Colunas: todos os planos ativos (lidos do banco, ordenados por `display_order`).
-   - Linhas: páginas, catálogo, animações, SEO, domínio, suporte, prazo, revisões, integrações, analytics, prioridade.
-   - Linha de preço (ativação + mensal) + CTA por coluna.
-   - Linkado do header e da página de planos.
+## 2. Captura do código (frontend)
 
-2. **`/como-funciona` — reforço operacional**
-   - Já existe — reescrever conteúdo em 7 passos claros (Escolha → Pague → Envie infos → Filro monta → Você revisa → Publicação → Manutenção mensal).
-   - Adicionar prazos estimados por etapa, ícones, prova social leve (sem inventar depoimentos).
+Novo módulo `src/lib/partner.ts`:
 
-3. **`/garantia` — segurança e confiança**
-   - Pagamento seguro (Stripe), sem fidelidade, cancele quando quiser, dados protegidos (LGPD), processo documentado, suporte humano, revisão antes de publicar.
-   - CTA para `/planos`.
+- Lê `?ref|partner|parceiro|codigo` da URL na montagem do app (em `__root.tsx`).
+- Valida: 3–40 chars, `[a-z0-9_-]`, minúsculo.
+- Persiste em `localStorage['filro:partnerCode']` + cookie `filro_partner_code` (30 dias).
+- Helper `getStoredPartnerCode()` lê o valor (preferindo localStorage, fallback cookie).
 
-- Adicionar links no `SiteHeader` e `SiteFooter`.
-- Incluir as 3 novas rotas no `sitemap.xml.ts`.
-- SEO completo: `head()` por rota com title/description/og únicos.
+Sem banner, sem UI visível pro visitante.
 
----
+## 3. Checkout
 
-## Onda 2 — Fluxo de status + Kanban admin (backend pesado)
+Editar `src/lib/payments.functions.ts`:
 
-### Schema (migration)
-- Expandir enum `project_status` para: `paid`, `briefing_pending`, `briefing_received`, `in_production`, `awaiting_client`, `revision_sent`, `published`, `maintenance`, `canceled`.
-- Adicionar em `projects`:
-  - `priority text` (low/normal/high)
-  - `deadline_at timestamptz`
-  - `published_url text`
-  - `internal_notes text` (admin-only)
-  - `preview_url text`
-- Nova tabela `project_status_history` (project_id, from_status, to_status, changed_by, note, created_at) com RLS: admin lê tudo, cliente lê do próprio projeto.
-- Trigger para registrar histórico em UPDATE de `project_status`.
+- `createPlanCheckoutSession` aceita `partnerCode?: string` opcional no input.
+- Valida formato. Faz lookup em `partners` (admin client) com `status='active'`.
+- Se parceiro válido: adiciona `partnerId`, `partnerCode`, `commissionRate`, `commissionScope` ao `metadata` da sessão Stripe **e** ao `subscription_data.metadata`.
+- Se inválido/inexistente/pausado: segue checkout normal sem comissão, sem erro.
+- Loga evento `partner.checkout_created`.
 
-### UI Console (`/console`)
-- Nova aba "Kanban" com colunas por status.
-- Card: business_name, plano, WhatsApp (botão direto `wa.me`), data compra, prazo (com cor se atrasado), status, link projeto, observações internas (popover).
-- Drag-and-drop entre colunas → atualiza status + grava histórico.
-- Filtros: plano, prioridade, atrasados, inadimplentes.
-- Toggle "Lista" ↔ "Kanban".
+Editar `src/routes/checkout.tsx`:
 
-### UI Painel cliente (`/painel`)
-- Mostrar status atual com badge colorido + descrição amigável.
-- Timeline visual do projeto (status atuais + próximos).
+- Lê `getStoredPartnerCode()` antes de chamar `createPlanCheckoutSession` e envia no payload.
 
----
+## 4. Webhook Stripe
 
-## Onda 3 — Página de entrega + ciclo de revisão (frontend + schema leve)
+Editar `src/routes/api/public/payments/webhook.ts` no case `checkout.session.completed`, **depois** do insert em `payments`:
 
-### Schema (migration)
-- Nova tabela `project_revisions`:
-  - project_id, requested_by, type (`approval`, `change_request`), message, attachments (jsonb), status (`pending`, `in_progress`, `done`, `rejected`), admin_response, created_at, resolved_at.
-- RLS: cliente CRUD nos próprios; admin tudo.
+1. Ler `partnerId/partnerCode/commissionRate` do `session.metadata`. Se ausente: pula.
+2. Revalidar parceiro no banco (`status='active'`).
+3. Calcular: `base_amount = plan.activation_price`, `commission_amount = round(base * rate / 100)`.
+4. Upsert em `partner_referrals` por `stripe_checkout_session_id` → status `paid`, `converted_at = now()`.
+5. Insert em `partner_commissions` com `ON CONFLICT (stripe_checkout_session_id) DO NOTHING` (idempotência forte). Status `pending`, `available_at = now()`.
+6. Loga `partner.commission_created`.
 
-### Rota `/projeto/$id`
-- Cliente acessa via link do painel.
-- Mostra: status, plano, datas, preview_url (iframe ou botão), published_url, infos enviadas (read-only), histórico de revisões.
-- Botão **"Aprovar entrega"** → muda status para `published`.
-- Botão **"Solicitar ajuste"** → modal com mensagem + anexo opcional → cria revision.
-- Histórico cronológico (status + revisões mesclados).
+`invoice.payment_succeeded` **não** cria comissão (já pulava o billing_reason inicial — só processa renovações, que não geram comissão por regra).
 
-### Console admin
-- Aba "Revisões" — fila de revisions pending/in_progress.
-- Botão "Marcar como feito" + resposta opcional → notifica cliente (email).
+## 5. Console — aba "Parceiro"
 
-### Email (template novo)
-- `revision-received` (para admin quando cliente solicita ajuste).
-- `revision-resolved` (para cliente quando admin marca como feito).
-- `preview-ready` (para cliente quando admin envia preview_url).
+Adicionar aba `partner` ao `src/routes/console.tsx` e criar `src/components/console/PartnerTab.tsx`:
 
----
+**Seções:**
 
-## Onda 4 — Suporte + alterações + upsell + inadimplência
+1. **Resumo financeiro** — 6 cards: total gerado, pendente, aprovada, paga, a pagar agora (pending+approved), receita recorrente preservada (soma de `monthly_amount` em comissões pagas+pendentes).
+2. **Parceiro atual** — card com nome, código, link `https://setup.filro.site/?ref=<code>`, WhatsApp, Pix, comissão, status. Botão "Copiar link" e modal "Editar parceiro" (nome, email, whatsapp, pix_key, commission_rate, status, notes).
+3. **Comissões** — tabela com colunas data/parceiro/cliente/plano/ativação/mensalidade/%/comissão/status/disponível em/pago em/ações. Ações: Aprovar, Marcar paga (abre modal com método+observação, cria payout, atualiza commission), Cancelar (modal com motivo: reembolso/cancelada/erro/fraude/outro).
+4. **Indicações/Vendas** — tabela de `partner_referrals`.
+5. **Repasses** — tabela de `partner_payouts`.
 
-### Schema (migration)
-- Tabela `support_tickets`: project_id, user_id, type (`change`, `bug`, `question`, `cancel`, `domain`, `payment`), priority, subject, message, status (`open`, `in_progress`, `resolved`, `closed`), created_at, resolved_at.
-- Tabela `ticket_messages` (thread): ticket_id, author_id, is_admin, message, attachments, created_at.
-- Tabela `change_requests` (subtipo especial): ticket_id, scope (`small`, `medium`, `large`), old_content, new_content, image_url, page_url, status, extra_charge_id (FK opcional).
-- Tabela `extra_charges`: project_id, user_id, name, description, amount_cents, status (`draft`, `sent`, `paid`, `canceled`), stripe_checkout_url, stripe_payment_intent_id, created_at, paid_at.
-- Ampliar `subscriptions` (status já existe) + computar `payment_status` derivado no painel: `in_good_standing`, `past_due`, `suspended`.
+Mutações via server functions em `src/lib/partner.functions.ts` (admin-only, usa `requireSupabaseAuth` + checagem `has_role`):
 
-### UI Painel cliente
-- Aba **"Suporte"** — lista tickets, abrir novo (form com tipo/prioridade/mensagem/anexo), thread de mensagens.
-- Aba **"Solicitar alteração"** — form guiado (o que mudar, antigo, novo, imagem, urgência) → cria ticket tipo `change`.
-- Banner se `payment_status != in_good_standing`: alerta + botão "Regularizar" (abre portal Stripe).
-- Aba **"Cobranças extras"** — lista charges com botão "Pagar" (abre checkout Stripe).
+- `updatePartner`, `approveCommission`, `cancelCommission`, `payCommission` (cria payout + atualiza commission atomicamente).
 
-### Console admin
-- Aba **"Suporte"** — fila de tickets com filtros (tipo, prioridade, status).
-- Detalhe do ticket: thread, marcar status, atribuir escopo (small/medium/large), botão "Gerar cobrança extra" → cria `extra_charges` + Stripe Checkout one-time + envia email com link.
-- Aba **"Cobranças"** — lista de extra_charges + status de pagamento.
-- Aba **"Inadimplência"** — projetos com `past_due` (lê de `subscriptions`), botões "Notificar", "Suspender", "Reativar".
+UI segue padrão existente (cards/tabelas/StatusBadge), responsivo mobile, sem emojis.
 
-### Stripe / server functions
-- `createExtraChargeCheckout` (one-time payment, mode: `payment`, metadata projectId+chargeId).
-- Webhook já existente trata `checkout.session.completed` — adicionar branch para marcar `extra_charges.status = paid`.
-- `createPortalSession` já existe via padrão Stripe — só expor botão.
+## 6. Detalhes técnicos
 
-### Email (novos templates)
-- `ticket-opened` (admin).
-- `ticket-replied` (cliente quando admin responde).
-- `extra-charge-sent` (cliente, com link de pagamento).
-- `payment-past-due` (cliente, dunning leve).
-- `project-suspended` (cliente).
+- Valores em centavos no banco, `formatBRL()` já existe em `src/lib/format.ts`.
+- Tipos Supabase regenerados automaticamente após migration.
+- Sem alteração em rotas públicas, planos, ou fluxo de pagamento existente além dos pontos listados.
 
-### Regra de escopo visível
-- No form de solicitação de alteração: aviso fixo "Manutenção inclui pequenas alterações. Mudanças grandes, novas páginas, redesigns, automações e integrações são cobrados separadamente."
+## Arquivos novos
+- `src/lib/partner.ts` (captura/persistência client-side)
+- `src/lib/partner.functions.ts` (server fns admin)
+- `src/components/console/PartnerTab.tsx`
+- Migration SQL (4 tabelas + seed)
 
----
-
-## O que fica para depois (não nesta rodada)
-
-- **Analytics do cliente** (visitas, cliques WhatsApp) + GA/Meta Pixel — requer tracking script + tabela `analytics_events` + jobs de agregação. Onda 5.
-- **Sistema de leads recebidos** — depende do analytics. Onda 5.
-- **admin_tasks** virar produto real (checklists automáticos por status) — Onda 6, depois que kanban estabilizar.
-
----
-
-## Sequência de entrega proposta
-
-1. Onda 0 (.env) + Onda 1 (páginas comerciais) — entrego juntas, baixo risco.
-2. Confirma → Onda 2 (kanban + status).
-3. Confirma → Onda 3 (entrega + revisão).
-4. Confirma → Onda 4 (suporte + upsell + inadimplência).
-
-A cada onda você revisa, eu não emendo a próxima sem ok.
-
----
-
-## Detalhes técnicos
-
-- Toda nova tabela: RLS ativo, policies via `has_role(auth.uid(), 'admin')` para admin + `auth.uid() = user_id` para cliente.
-- Mutations sensíveis em `createServerFn` com `requireSupabaseAuth`; admin checks server-side com `has_role`.
-- Histórico de status via trigger no Postgres (não em código).
-- Emails via `sendTransactionalEmailServer` (já existe).
-- Drag-and-drop kanban: `@dnd-kit/core` (já comum no stack).
-- Stripe extras: `mode: 'payment'` (one-time), `managed_payments: { enabled: true }` para herdar tax compliance.
-- Realtime no kanban e em `/projeto/$id` via Supabase channel.
-- Sitemap atualizado a cada onda que adiciona rota pública.
+## Arquivos editados
+- `src/routes/__root.tsx` — captura `?ref=` no mount
+- `src/lib/payments.functions.ts` — aceita partnerCode + metadata
+- `src/routes/checkout.tsx` — envia partnerCode
+- `src/routes/api/public/payments/webhook.ts` — cria referral+commission
+- `src/routes/console.tsx` — nova aba "Parceiro"
