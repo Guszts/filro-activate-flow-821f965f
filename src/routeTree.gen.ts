@@ -20,8 +20,10 @@ import { Route as PaymentFailedRouteImport } from './routes/payment-failed'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as ModelosRouteImport } from './routes/modelos'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as GarantiaRouteImport } from './routes/garantia'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as ConsoleRouteImport } from './routes/console'
+import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BusinessInfoRouteImport } from './routes/business-info'
@@ -93,6 +95,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GarantiaRoute = GarantiaRouteImport.update({
+  id: '/garantia',
+  path: '/garantia',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
   path: '/docs',
@@ -101,6 +108,11 @@ const DocsRoute = DocsRouteImport.update({
 const ConsoleRoute = ConsoleRouteImport.update({
   id: '/console',
   path: '/console',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompararRoute = CompararRouteImport.update({
+  id: '/comparar',
+  path: '/comparar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComoFuncionaRoute = ComoFuncionaRouteImport.update({
@@ -188,8 +200,10 @@ export interface FileRoutesByFullPath {
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
+  '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
+  '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
   '/painel': typeof PainelRoute
@@ -218,8 +232,10 @@ export interface FileRoutesByTo {
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
+  '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
+  '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
   '/painel': typeof PainelRoute
@@ -249,8 +265,10 @@ export interface FileRoutesById {
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
+  '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
+  '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
   '/painel': typeof PainelRoute
@@ -281,8 +299,10 @@ export interface FileRouteTypes {
     | '/business-info'
     | '/checkout'
     | '/como-funciona'
+    | '/comparar'
     | '/console'
     | '/docs'
+    | '/garantia'
     | '/login'
     | '/modelos'
     | '/painel'
@@ -311,8 +331,10 @@ export interface FileRouteTypes {
     | '/business-info'
     | '/checkout'
     | '/como-funciona'
+    | '/comparar'
     | '/console'
     | '/docs'
+    | '/garantia'
     | '/login'
     | '/modelos'
     | '/painel'
@@ -341,8 +363,10 @@ export interface FileRouteTypes {
     | '/business-info'
     | '/checkout'
     | '/como-funciona'
+    | '/comparar'
     | '/console'
     | '/docs'
+    | '/garantia'
     | '/login'
     | '/modelos'
     | '/painel'
@@ -372,8 +396,10 @@ export interface RootRouteChildren {
   BusinessInfoRoute: typeof BusinessInfoRoute
   CheckoutRoute: typeof CheckoutRoute
   ComoFuncionaRoute: typeof ComoFuncionaRoute
+  CompararRoute: typeof CompararRoute
   ConsoleRoute: typeof ConsoleRoute
   DocsRoute: typeof DocsRoute
+  GarantiaRoute: typeof GarantiaRoute
   LoginRoute: typeof LoginRoute
   ModelosRoute: typeof ModelosRoute
   PainelRoute: typeof PainelRoute
@@ -477,6 +503,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/garantia': {
+      id: '/garantia'
+      path: '/garantia'
+      fullPath: '/garantia'
+      preLoaderRoute: typeof GarantiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/docs': {
       id: '/docs'
       path: '/docs'
@@ -489,6 +522,13 @@ declare module '@tanstack/react-router' {
       path: '/console'
       fullPath: '/console'
       preLoaderRoute: typeof ConsoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparar': {
+      id: '/comparar'
+      path: '/comparar'
+      fullPath: '/comparar'
+      preLoaderRoute: typeof CompararRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/como-funciona': {
@@ -604,8 +644,10 @@ const rootRouteChildren: RootRouteChildren = {
   BusinessInfoRoute: BusinessInfoRoute,
   CheckoutRoute: CheckoutRoute,
   ComoFuncionaRoute: ComoFuncionaRoute,
+  CompararRoute: CompararRoute,
   ConsoleRoute: ConsoleRoute,
   DocsRoute: DocsRoute,
+  GarantiaRoute: GarantiaRoute,
   LoginRoute: LoginRoute,
   ModelosRoute: ModelosRoute,
   PainelRoute: PainelRoute,
