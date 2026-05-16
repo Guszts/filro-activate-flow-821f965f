@@ -11,6 +11,7 @@ import { createPortalSession } from "@/lib/payments.functions";
 import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, HelpCircle, Loader2, MessageCircle, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { SubscriptionCancellationModals } from "@/components/SubscriptionCancellationModals";
 
 export const Route = createFileRoute("/painel")({
   component: PainelPage,
@@ -49,6 +50,7 @@ function PainelPage() {
   const [plans, setPlans] = useState<Record<string, PlanRow>>({});
   const [loadingData, setLoadingData] = useState(true);
   const [hasSubscription, setHasSubscription] = useState(false);
+  const [subInfo, setSubInfo] = useState<{ cancel_at_period_end: boolean; current_period_end: string | null } | null>(null);
   const [openingPortal, setOpeningPortal] = useState(false);
   const openPortal = useServerFn(createPortalSession);
 
@@ -77,14 +79,16 @@ function PainelPage() {
         supabase.from("projects").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("payments").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
         supabase.from("plans").select("id,name,activation_price,monthly_price"),
-        supabase.from("subscriptions").select("id").eq("user_id", user.id).neq("status", "canceled").limit(1),
+        supabase.from("subscriptions").select("id,status,cancel_at_period_end,current_period_end").eq("user_id", user.id).order("created_at", { ascending: false }).limit(1),
       ]);
       setProject(projRes.data as ProjectRow | null);
       setPayments((payRes.data ?? []) as PaymentRow[]);
       const map: Record<string, PlanRow> = {};
       (planRes.data ?? []).forEach((p) => { map[p.id] = p as PlanRow; });
       setPlans(map);
-      setHasSubscription((subRes.data ?? []).length > 0);
+      const subRow = (subRes.data ?? [])[0] as { id: string; status: string; cancel_at_period_end: boolean; current_period_end: string | null } | undefined;
+      setHasSubscription(!!subRow && subRow.status !== "canceled");
+      setSubInfo(subRow ? { cancel_at_period_end: subRow.cancel_at_period_end, current_period_end: subRow.current_period_end } : null);
       setLoadingData(false);
     })();
   }, [loading, user, hasPaid, isAdmin, navigate]);
@@ -100,13 +104,34 @@ function PainelPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
           <div>
             <span className="text-xs tracking-wide text-ink-soft">Painel</span>
-            <h1 className="mt-2 editorial-headline text-5xl md:text-6xl text-ink">Olá, <span className="lime-mark">{user?.email?.split("@")[0]}</span></h1>
+            <h1 className="mt-2 editorial-headline text-4xl sm:text-5xl md:text-6xl text-ink leading-tight">Olá, <span className="lime-mark">{user?.email?.split("@")[0]}</span></h1>
             <p className="mt-3 text-ink-soft">Acompanhe seu projeto, pagamentos e edite as informações do negócio.</p>
           </div>
-          <a href="https://wa.me/5592993561754" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-lime text-ink font-semibold text-sm">
+          <a href="https://wa.me/5592993561754" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-lime text-ink font-semibold text-sm self-start">
             <MessageCircle className="h-4 w-4" /> Suporte WhatsApp
           </a>
         </div>
+
+        {subInfo?.cancel_at_period_end && subInfo.current_period_end && (
+          <div className="mb-6 p-4 sm:p-5 rounded-2xl border border-flame/30 bg-flame/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="text-sm">
+              <p className="font-semibold text-ink">Assinatura cancelada</p>
+              <p className="text-ink-soft mt-1">
+                Seu site e o acesso ao painel ficam ativos até{" "}
+                <strong className="text-ink">
+                  {new Date(subInfo.current_period_end).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
+                </strong>.
+              </p>
+            </div>
+            <button
+              onClick={handleManageSubscription}
+              disabled={openingPortal}
+              className="h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold whitespace-nowrap disabled:opacity-60"
+            >
+              {openingPortal ? "Abrindo..." : "Voltar com a assinatura"}
+            </button>
+          </div>
+        )}
 
         {loadingData ? (
           <div className="grid gap-5 md:grid-cols-2">
@@ -252,6 +277,15 @@ function PainelPage() {
         )}
       </main>
       <SiteFooter />
+      {user && subInfo && (
+        <SubscriptionCancellationModals
+          cancelAtPeriodEnd={subInfo.cancel_at_period_end}
+          currentPeriodEnd={subInfo.current_period_end}
+          userId={user.id}
+          onReactivate={handleManageSubscription}
+          reactivating={openingPortal}
+        />
+      )}
     </div>
   );
 }
