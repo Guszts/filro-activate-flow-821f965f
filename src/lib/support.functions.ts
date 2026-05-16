@@ -159,10 +159,10 @@ export const replySupportTicket = createServerFn({ method: "POST" })
     });
     if (msgErr) throw new Error(msgErr.message);
 
-    const update: Record<string, unknown> = {
+    const update: { last_admin_reply_at: string; status?: "open" | "in_progress" | "waiting_client" | "resolved" | "closed" } = {
       last_admin_reply_at: new Date().toISOString(),
     };
-    if (data.newStatus) update.status = data.newStatus;
+    if (data.newStatus) update.status = data.newStatus as typeof update.status;
     await supabaseAdmin.from("support_tickets").update(update).eq("id", data.ticketId);
 
     return { ok: true };
