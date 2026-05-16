@@ -173,6 +173,13 @@ export function ProjectsKanban() {
       // rollback
       qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
       alert(`Erro ao atualizar status: ${error.message}`);
+      return;
+    }
+
+    if (newStatus === "published") {
+      notifyPublished({ data: { projectId } }).catch((e) =>
+        console.error("[email] site-published failed", e),
+      );
     }
   }
 
