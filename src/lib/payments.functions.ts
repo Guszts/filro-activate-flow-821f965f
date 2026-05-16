@@ -255,6 +255,16 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
         userId,
       });
 
+      const partner = await resolveActivePartner(data.partnerCode);
+      const partnerMeta: Record<string, string> = partner
+        ? {
+            partnerId: partner.id,
+            partnerCode: partner.code,
+            commissionRate: String(partner.commission_rate),
+            commissionScope: partner.commission_scope,
+          }
+        : {};
+
       const session = await stripe.checkout.sessions.create({
         line_items: [
           { price: monthlyPrice.id, quantity: 1 },
@@ -265,11 +275,32 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
         return_url: returnUrl,
         allow_promotion_codes: true,
         customer: customerId,
-        metadata: { userId, planSlug: data.planSlug },
-        subscription_data: { metadata: { userId, planSlug: data.planSlug } },
+        metadata: { userId, planSlug: data.planSlug, ...partnerMeta },
+        subscription_data: { metadata: { userId, planSlug: data.planSlug, ...partnerMeta } },
       });
 
       if (!session.client_secret) throw new Error("Falha ao criar sessão");
+
+      // Pre-cria/atualiza o referral em status checkout_created para rastrear cliques convertidos.
+      if (partner) {
+        await supabaseAdmin
+          .from("partner_referrals")
+          .upsert(
+            {
+              partner_id: partner.id,
+              partner_code: partner.code,
+              user_id: userId,
+              stripe_checkout_session_id: session.id,
+              status: "checkout_created",
+            },
+            { onConflict: "stripe_checkout_session_id" },
+          );
+        await supabaseAdmin.from("events").insert({
+          event_type: "partner.checkout_created",
+          user_id: userId,
+          event_data: { partnerId: partner.id, partnerCode: partner.code, sessionId: session.id } as never,
+        }).catch(() => { /* noop */ });
+      }
 
       try {
         await supabaseAdmin.from("events").insert({
@@ -280,6 +311,7 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
             sessionId: session.id,
             environment: data.environment,
             email: customerEmail ?? null,
+            partnerCode: partner?.code ?? null,
           } as never,
         });
       } catch (e) {
