@@ -134,7 +134,7 @@ function CheckoutPage() {
                 )}
                 {plan.slug === "promocional" && (
                   <div className="text-xs text-ink-soft pt-1">
-                    Manutenção de {formatBRL(plan.monthly_price)}/mês cobrada apenas a partir do segundo mês.
+                    Manutenção de {formatBRL(plan.monthly_price)}/mês cobrada à parte — hoje você paga apenas a ativação.
                   </div>
                 )}
               </div>
