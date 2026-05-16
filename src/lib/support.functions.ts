@@ -99,6 +99,29 @@ export const createExtraCharge = createServerFn({ method: "POST" })
       },
     });
 
+    // Email cobrança ao cliente
+    try {
+      const { data: prof } = await supabaseAdmin
+        .from("profiles")
+        .select("name,email")
+        .eq("user_id", data.userId)
+        .maybeSingle();
+      if (prof?.email) {
+        await sendTransactionalEmailServer({
+          templateName: "extra-charge-issued",
+          recipientEmail: prof.email,
+          idempotencyKey: `extra-${charge.id}`,
+          templateData: {
+            name: prof.name || undefined,
+            title: data.title,
+            description: data.description || undefined,
+            amount: formatBRL(data.amount),
+            paymentLink: link.url,
+          },
+        });
+      }
+    } catch (e) { console.error("[email] extra-charge failed", e); }
+
     return { ok: true, charge };
   });
 
