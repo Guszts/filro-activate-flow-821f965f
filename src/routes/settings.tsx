@@ -27,7 +27,8 @@ interface ProfileRow {
 function SettingsPage() {
   const navigate = useNavigate();
   const { user, loading, signOut, hasPaid, isAdmin } = useAuth();
-  const [profile, setProfile] = useState<ProfileRow>({ name: "", email: "", whatsapp: "", business_name: "", business_segment: "" });
+  const [profile, setProfile] = useState<ProfileRow>({ name: "", email: "", whatsapp: "", business_name: "", business_segment: "", avatar_url: "" });
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [saving, setSaving] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [openingPortal, setOpeningPortal] = useState(false);
