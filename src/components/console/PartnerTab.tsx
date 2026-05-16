@@ -75,7 +75,7 @@ function Metric({ label, value, sub }: { label: string; value: string; sub?: str
 export function PartnerTab() {
   const qc = useQueryClient();
 
-  const { data } = useQuery({
+  const { data, error: loadError, isLoading } = useQuery({
     queryKey: ["console-partner"],
     queryFn: async () => {
       const [partnersR, commissionsR, referralsR, payoutsR, profilesR, plansR] = await Promise.all([
@@ -86,6 +86,10 @@ export function PartnerTab() {
         supabase.from("profiles").select("user_id, name, email"),
         supabase.from("plans").select("id, name"),
       ]);
+      const firstError =
+        partnersR.error || commissionsR.error || referralsR.error ||
+        payoutsR.error || profilesR.error || plansR.error;
+      if (firstError) throw new Error(firstError.message);
       return {
         partners: (partnersR.data ?? []) as Partner[],
         commissions: (commissionsR.data ?? []) as Commission[],
@@ -96,6 +100,21 @@ export function PartnerTab() {
       };
     },
   });
+
+  if (loadError) {
+    return (
+      <div>
+        <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Parceiro</h1>
+        <div className="mt-6 card-elevated p-6 border border-flame/40 bg-flame/5 text-ink">
+          <div className="font-semibold">Falha ao carregar dados de parceiros.</div>
+          <div className="mt-1 text-sm text-ink-soft">{loadError instanceof Error ? loadError.message : String(loadError)}</div>
+        </div>
+      </div>
+    );
+  }
+  if (isLoading) {
+    return <div className="p-6 text-ink-soft">Carregando dados de parceiros…</div>;
+  }
 
   const partners = data?.partners ?? [];
   const commissions = data?.commissions ?? [];
