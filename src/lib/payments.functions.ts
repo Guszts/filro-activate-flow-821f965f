@@ -295,11 +295,13 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
             },
             { onConflict: "stripe_checkout_session_id" },
           );
-        await supabaseAdmin.from("events").insert({
-          event_type: "partner.checkout_created",
-          user_id: userId,
-          event_data: { partnerId: partner.id, partnerCode: partner.code, sessionId: session.id } as never,
-        }).catch(() => { /* noop */ });
+        try {
+          await supabaseAdmin.from("events").insert({
+            event_type: "partner.checkout_created",
+            user_id: userId,
+            event_data: { partnerId: partner.id, partnerCode: partner.code, sessionId: session.id } as never,
+          });
+        } catch { /* noop */ }
       }
 
       try {
