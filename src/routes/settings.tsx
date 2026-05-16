@@ -153,7 +153,27 @@ function SettingsPage() {
             <div className="h-10 w-10 grid place-items-center rounded-2xl bg-muted text-ink"><UserIcon className="h-5 w-5" /></div>
             <h2 className="font-display font-black text-2xl text-ink">Perfil</h2>
           </div>
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="flex items-center gap-5 mb-6">
+            <div className="relative h-20 w-20 rounded-full overflow-hidden bg-muted ring-1 ring-border grid place-items-center">
+              {profile.avatar_url ? (
+                <img src={profile.avatar_url} alt="Foto de perfil" className="h-full w-full object-cover" />
+              ) : (
+                <span className="font-display font-black text-2xl text-ink-soft">{(profile.name || profile.email || "U")[0]?.toUpperCase()}</span>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className={`inline-flex items-center gap-2 h-10 px-4 rounded-xl border border-border bg-paper text-sm font-semibold text-ink cursor-pointer hover:bg-muted ${uploadingAvatar ? "opacity-60 pointer-events-none" : ""}`}>
+                <Camera className="h-4 w-4" /> {uploadingAvatar ? "Enviando..." : profile.avatar_url ? "Trocar foto" : "Adicionar foto"}
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadAvatar(f); e.target.value = ""; }} />
+              </label>
+              {profile.avatar_url && (
+                <button type="button" onClick={removeAvatar} disabled={uploadingAvatar} className="inline-flex items-center gap-2 text-xs text-ink-soft hover:text-flame transition-colors disabled:opacity-50">
+                  <Trash2 className="h-3.5 w-3.5" /> Remover
+                </button>
+              )}
+              <span className="text-xs text-ink-soft">JPG ou PNG, até 5MB</span>
+            </div>
+          </div>
             <Field label="Nome"><input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} className={inp} /></Field>
             <Field label="WhatsApp"><PhoneInput value={profile.whatsapp} onChange={(v) => setProfile({ ...profile, whatsapp: v })} /></Field>
             <Field label="Nome do negócio"><input value={profile.business_name} onChange={(e) => setProfile({ ...profile, business_name: e.target.value })} className={inp} /></Field>
