@@ -10,7 +10,7 @@ import { createPortalSession, cancelSubscription } from "@/lib/payments.function
 import { PhoneInput } from "@/components/PhoneInput";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon, XCircle } from "lucide-react";
+import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon, XCircle, Camera, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
