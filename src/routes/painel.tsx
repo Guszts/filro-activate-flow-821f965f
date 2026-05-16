@@ -50,6 +50,7 @@ function PainelPage() {
   const [plans, setPlans] = useState<Record<string, PlanRow>>({});
   const [loadingData, setLoadingData] = useState(true);
   const [hasSubscription, setHasSubscription] = useState(false);
+  const [subInfo, setSubInfo] = useState<{ cancel_at_period_end: boolean; current_period_end: string | null } | null>(null);
   const [openingPortal, setOpeningPortal] = useState(false);
   const openPortal = useServerFn(createPortalSession);
 
