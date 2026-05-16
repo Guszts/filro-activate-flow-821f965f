@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatBRL, formatDateTime } from "@/lib/format";
 import { motion } from "framer-motion";
+import { ProjectsKanban } from "@/components/console/ProjectsKanban";
 
 export const Route = createFileRoute("/console")({
   component: ConsolePage,
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/console")({
   ]}),
 });
 
-type Tab = "overview" | "users" | "payments" | "subscriptions" | "cancellations" | "plans" | "events" | "settings";
+type Tab = "overview" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "plans" | "events" | "settings";
 
 function useRealtimeRefetch(tables: string[], queryKeys: string[][]) {
   const qc = useQueryClient();
