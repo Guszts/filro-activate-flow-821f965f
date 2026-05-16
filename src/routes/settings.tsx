@@ -174,6 +174,7 @@ function SettingsPage() {
               <span className="text-xs text-ink-soft">JPG ou PNG, até 5MB</span>
             </div>
           </div>
+          <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Nome"><input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} className={inp} /></Field>
             <Field label="WhatsApp"><PhoneInput value={profile.whatsapp} onChange={(v) => setProfile({ ...profile, whatsapp: v })} /></Field>
             <Field label="Nome do negócio"><input value={profile.business_name} onChange={(e) => setProfile({ ...profile, business_name: e.target.value })} className={inp} /></Field>
