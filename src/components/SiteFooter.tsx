@@ -27,7 +27,6 @@ export function SiteFooter() {
           <div className="font-semibold text-ink mb-4">Recursos</div>
           <ul className="space-y-2.5">
             <li><Link to="/docs" className="hover:text-ink transition-colors">Documentação</Link></li>
-            <li><Link to="/desenvolvedor" className="hover:text-ink transition-colors">Desenvolvedor</Link></li>
             <li><Link to="/termos" className="hover:text-ink transition-colors">Termos de Uso</Link></li>
             <li><Link to="/privacidade" className="hover:text-ink transition-colors">Privacidade</Link></li>
           </ul>
