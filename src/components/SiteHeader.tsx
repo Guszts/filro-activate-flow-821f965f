@@ -29,6 +29,15 @@ export function SiteHeader() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<null | "user">(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) { setAvatarUrl(null); return; }
+    let active = true;
+    supabase.from("profiles").select("avatar_url").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => { if (active) setAvatarUrl(data?.avatar_url ?? null); });
+    return () => { active = false; };
+  }, [user]);
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/75 border-b border-border/40">
