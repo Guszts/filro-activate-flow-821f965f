@@ -192,12 +192,28 @@ const ALLOWED_RETURN_HOSTS = new Set([
   "127.0.0.1",
 ]);
 
+const PARTNER_CODE_RE = /^[a-z0-9_-]{3,40}$/;
+
+async function resolveActivePartner(rawCode: string | null | undefined) {
+  if (!rawCode) return null;
+  const code = String(rawCode).trim().toLowerCase();
+  if (!PARTNER_CODE_RE.test(code)) return null;
+  const { data } = await supabaseAdmin
+    .from("partners")
+    .select("id, code, commission_rate, commission_scope, status")
+    .eq("code", code)
+    .eq("status", "active")
+    .maybeSingle();
+  return data ?? null;
+}
+
 export const createPlanCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: {
     planSlug: string;
     returnOrigin: string;
     environment: StripeEnv;
+    partnerCode?: string | null;
   }) => {
     if (!/^[a-z_]+$/.test(data.planSlug)) throw new Error("Invalid planSlug");
     if (data.environment !== "sandbox" && data.environment !== "live") throw new Error("Invalid environment");
@@ -207,7 +223,12 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
       throw new Error("Invalid returnOrigin protocol");
     }
     if (!ALLOWED_RETURN_HOSTS.has(parsed.hostname)) throw new Error("Disallowed return origin");
-    return { planSlug: data.planSlug, returnOrigin: parsed.origin, environment: data.environment };
+    let partnerCode: string | null = null;
+    if (typeof data.partnerCode === "string" && data.partnerCode.trim()) {
+      const c = data.partnerCode.trim().toLowerCase();
+      if (PARTNER_CODE_RE.test(c)) partnerCode = c;
+    }
+    return { planSlug: data.planSlug, returnOrigin: parsed.origin, environment: data.environment, partnerCode };
   })
   .handler(async ({ data, context }) => {
     const { userId, supabase } = context;
@@ -234,6 +255,16 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
         userId,
       });
 
+      const partner = await resolveActivePartner(data.partnerCode);
+      const partnerMeta: Record<string, string> = partner
+        ? {
+            partnerId: partner.id,
+            partnerCode: partner.code,
+            commissionRate: String(partner.commission_rate),
+            commissionScope: partner.commission_scope,
+          }
+        : {};
+
       const session = await stripe.checkout.sessions.create({
         line_items: [
           { price: monthlyPrice.id, quantity: 1 },
@@ -244,11 +275,34 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
         return_url: returnUrl,
         allow_promotion_codes: true,
         customer: customerId,
-        metadata: { userId, planSlug: data.planSlug },
-        subscription_data: { metadata: { userId, planSlug: data.planSlug } },
+        metadata: { userId, planSlug: data.planSlug, ...partnerMeta },
+        subscription_data: { metadata: { userId, planSlug: data.planSlug, ...partnerMeta } },
       });
 
       if (!session.client_secret) throw new Error("Falha ao criar sessão");
+
+      // Pre-cria/atualiza o referral em status checkout_created para rastrear cliques convertidos.
+      if (partner) {
+        await supabaseAdmin
+          .from("partner_referrals")
+          .upsert(
+            {
+              partner_id: partner.id,
+              partner_code: partner.code,
+              user_id: userId,
+              stripe_checkout_session_id: session.id,
+              status: "checkout_created",
+            },
+            { onConflict: "stripe_checkout_session_id" },
+          );
+        try {
+          await supabaseAdmin.from("events").insert({
+            event_type: "partner.checkout_created",
+            user_id: userId,
+            event_data: { partnerId: partner.id, partnerCode: partner.code, sessionId: session.id } as never,
+          });
+        } catch { /* noop */ }
+      }
 
       try {
         await supabaseAdmin.from("events").insert({
@@ -259,6 +313,7 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
             sessionId: session.id,
             environment: data.environment,
             email: customerEmail ?? null,
+            partnerCode: partner?.code ?? null,
           } as never,
         });
       } catch (e) {

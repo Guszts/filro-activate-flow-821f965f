@@ -238,6 +238,78 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         }).catch((e) => console.error("[email] sale-notification failed", e));
       }
 
+      // -------- Comissão de parceiro (B2B privado) --------
+      try {
+        const partnerId = session.metadata?.partnerId;
+        const partnerCode = session.metadata?.partnerCode;
+        if (partnerId && partnerCode) {
+          const { data: partner } = await supabaseAdmin
+            .from("partners")
+            .select("id, commission_rate, status")
+            .eq("id", partnerId)
+            .eq("status", "active")
+            .maybeSingle();
+
+          if (partner) {
+            const rate = Number(partner.commission_rate ?? 50);
+            const activationAmount = plan.activation_price ?? 0;
+            const monthlyAmount = plan.monthly_price ?? 0;
+            const baseAmount = activationAmount;
+            const commissionAmount = Math.round((baseAmount * rate) / 100);
+
+            // Upsert referral → paid
+            const { data: referralRow } = await supabaseAdmin
+              .from("partner_referrals")
+              .upsert(
+                {
+                  partner_id: partner.id,
+                  partner_code: partnerCode,
+                  user_id: userId,
+                  plan_id: plan.id,
+                  client_name: profile?.name ?? null,
+                  client_email: profile?.email ?? null,
+                  client_whatsapp: profile?.whatsapp ?? null,
+                  stripe_checkout_session_id: session.id,
+                  stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
+                  status: "paid",
+                  converted_at: new Date().toISOString(),
+                },
+                { onConflict: "stripe_checkout_session_id" },
+              )
+              .select("id")
+              .maybeSingle();
+
+            // Insert commission (idempotente via unique stripe_checkout_session_id)
+            const { error: cErr } = await supabaseAdmin.from("partner_commissions").insert({
+              partner_id: partner.id,
+              referral_id: referralRow?.id ?? null,
+              user_id: userId,
+              plan_id: plan.id,
+              stripe_checkout_session_id: session.id,
+              activation_amount: activationAmount,
+              monthly_amount: monthlyAmount,
+              base_amount: baseAmount,
+              commission_rate: rate,
+              commission_amount: commissionAmount,
+              status: "pending",
+              available_at: new Date().toISOString(),
+            });
+            if (cErr && (cErr as { code?: string }).code !== "23505") {
+              console.error("[webhook] commission insert failed", cErr);
+            } else if (!cErr) {
+              await logEvent("partner.commission_created", userId, {
+                partnerId: partner.id,
+                partnerCode,
+                sessionId: session.id,
+                commissionAmount,
+              });
+            }
+          }
+        }
+      } catch (e) {
+        console.error("[webhook] partner commission flow failed", e);
+      }
+
       await logEvent("checkout.session.completed", userId, { planSlug, sessionId: session.id });
       break;
     }
