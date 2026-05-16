@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createPlanCheckoutSession } from "@/lib/payments.functions";
+import { getStoredPartnerCode } from "@/lib/partner";
 
 export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
