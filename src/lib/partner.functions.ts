@@ -98,7 +98,7 @@ export const payCommission = createServerFn({ method: "POST" })
     const { data: payoutId, error } = await supabaseAdmin.rpc("pay_partner_commission", {
       _commission_id: data.id,
       _method: data.method,
-      _notes: data.notes ?? null,
+      _notes: data.notes ?? undefined,
     });
     if (error) throw new Error(error.message);
     return { ok: true, payoutId };
