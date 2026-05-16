@@ -22,7 +22,7 @@ const SaleNotificationEmail = ({
     <Body style={styles.main}>
       <Container style={styles.container}>
         <Text style={styles.brand}>{brand.siteName} · admin</Text>
-        <Heading style={styles.h1}>💸 Nova venda</Heading>
+        <Heading style={styles.h1}>Nova venda</Heading>
         <Text style={styles.text}>Um novo pedido foi confirmado e já aparece em <strong style={{ color: brand.ink }}>Tarefas Admin</strong>.</Text>
 
         <div style={styles.card}>
@@ -43,7 +43,7 @@ const SaleNotificationEmail = ({
 
 export const template = {
   component: SaleNotificationEmail,
-  subject: (d: Record<string, any>) => `💸 Nova venda — ${d.planName ?? 'Filro'}`,
+  subject: (d: Record<string, any>) => `Nova venda — ${d.planName ?? 'Filro'}`,
   displayName: 'Notificação de venda (admin)',
   previewData: {
     customerName: 'Maria Silva',
