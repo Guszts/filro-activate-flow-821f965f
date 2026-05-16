@@ -155,6 +155,77 @@ function SuccessPage() {
         </div>
       </main>
       <SiteFooter />
+
+      <AnimatePresence>
+        {ebookOpen && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-ink/70 backdrop-blur-sm grid place-items-center p-4"
+            onClick={() => setEbookOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 10, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.6, bounce: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-lg rounded-3xl bg-paper p-8 md:p-10 shadow-elegant overflow-hidden"
+            >
+              <button
+                onClick={() => setEbookOpen(false)}
+                aria-label="Fechar"
+                className="absolute top-4 right-4 h-9 w-9 grid place-items-center rounded-full hover:bg-muted transition"
+              >
+                <X className="h-4 w-4 text-ink-soft" />
+              </button>
+
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lime text-ink text-xs font-bold uppercase tracking-wide">
+                Bônus exclusivo
+              </div>
+              <div className="mt-5 flex items-start gap-4">
+                <div className="h-14 w-14 shrink-0 rounded-2xl bg-ink grid place-items-center">
+                  <BookOpen className="h-7 w-7 text-lime" />
+                </div>
+                <div>
+                  <h2 className="editorial-headline text-3xl md:text-4xl text-ink leading-tight">
+                    Manual do Filro
+                  </h2>
+                  <p className="mt-1 text-sm text-ink-soft">
+                    150 páginas de estratégias, dicas e bastidores pra você extrair o máximo do seu plano.
+                  </p>
+                </div>
+              </div>
+
+              <ul className="mt-6 space-y-2 text-sm text-ink">
+                {[
+                  "Onboarding completo passo a passo",
+                  "Como vender mais pelo WhatsApp",
+                  "SEO local e casos reais de clientes",
+                ].map((t) => (
+                  <li key={t} className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-flame" strokeWidth={3} /> {t}
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href="/filro-ebook.pdf"
+                download="manual-do-filro.pdf"
+                onClick={() => { setEbookClaimed(true); setTimeout(() => setEbookOpen(false), 400); }}
+                className="mt-7 w-full inline-flex items-center justify-center gap-2 h-12 px-6 rounded-2xl bg-lime text-ink font-bold hover:scale-[1.02] transition-transform shadow-elegant"
+              >
+                <Download className="h-4 w-4" /> Receber meu ebook
+              </a>
+              <button
+                onClick={() => setEbookOpen(false)}
+                className="mt-2 w-full text-xs text-ink-soft hover:text-ink transition py-2"
+              >
+                Agora não
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
