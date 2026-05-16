@@ -53,8 +53,8 @@ function RegisterPage() {
     });
     setLoading(false);
     if (error) return toast.error(error.message);
-    toast.success("Conta criada");
-    navigate({ to: redirect });
+    toast.success("Enviamos um código de 6 dígitos para seu e-mail");
+    navigate({ to: "/verify-email", search: { email: form.email, redirect } });
   };
 
   return (
