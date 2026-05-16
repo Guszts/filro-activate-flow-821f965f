@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Archivo:wght@500;600;700;800;900&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -41,8 +41,8 @@
   --color-azure: var(--azure);
   --color-stone: var(--stone);
 
-  --font-display: "Pangram Sans Rounded", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Pangram Sans Rounded", "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 :root {
@@ -115,15 +115,15 @@
   html, body { background-color: var(--color-background); color: var(--color-foreground); }
   body {
     font-family: var(--font-sans);
-    font-weight: 600;
+    font-weight: 400;
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
     background-image: var(--gradient-page);
     background-attachment: fixed;
     position: relative;
   }
-  h1, h2, h3, h4, h5, h6 { font-weight: 800; }
-  strong, b { font-weight: 800; }
+  h1, h2, h3, h4, h5, h6 { font-weight: 700; }
+  strong, b { font-weight: 700; }
   /* Grain overlay across the whole site */
   body::before {
     content: "";
