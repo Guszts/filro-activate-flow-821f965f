@@ -55,6 +55,7 @@ function CheckoutPage() {
             planSlug,
             returnOrigin: window.location.origin,
             environment: getStripeEnvironment(),
+            partnerCode: getStoredPartnerCode(),
           },
         });
         if (paymentSession.error) throw new Error(paymentSession.error);
