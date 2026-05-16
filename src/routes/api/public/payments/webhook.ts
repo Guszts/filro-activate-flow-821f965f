@@ -376,6 +376,19 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         const { data: profile } = await supabaseAdmin
           .from("profiles").select("name, email").eq("user_id", userId).maybeSingle();
         const plan = await getPlanBySlug(sub.metadata?.planSlug);
+
+        // Notify admin: close user's site + revoke access
+        const { data: proj } = await supabaseAdmin
+          .from("projects").select("id, plan_id, business_name").eq("user_id", userId).maybeSingle();
+        await supabaseAdmin.from("admin_tasks").insert({
+          user_id: userId,
+          project_id: proj?.id ?? null,
+          plan_id: proj?.plan_id ?? null,
+          title: `Encerrar site cancelado — ${proj?.business_name ?? profile?.name ?? profile?.email ?? userId}`,
+          description: `Assinatura encerrada em ${formatDate(endsAtIso) ?? "—"}. Tirar o site do ar, revogar acessos e arquivar o projeto. E-mail do cliente: ${profile?.email ?? "—"}.`,
+          status: "pending",
+        });
+
         if (profile?.email) {
           await sendTransactionalEmailServer({
             templateName: "subscription-canceled",
