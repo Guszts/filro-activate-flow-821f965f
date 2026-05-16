@@ -341,6 +341,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "partner_commissions_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_commissions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "partner_commissions_referral_id_fkey"
             columns: ["referral_id"]
             isOneToOne: false
@@ -459,6 +473,13 @@ export type Database = {
             referencedRelation: "partners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "partner_referrals_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
         ]
       }
       partners: {
@@ -516,6 +537,7 @@ export type Database = {
           paid_at: string | null
           plan_id: string
           status: Database["public"]["Enums"]["payment_status"]
+          stripe_checkout_session_id: string | null
           stripe_customer_id: string | null
           stripe_payment_intent_id: string | null
           updated_at: string
@@ -530,6 +552,7 @@ export type Database = {
           paid_at?: string | null
           plan_id: string
           status?: Database["public"]["Enums"]["payment_status"]
+          stripe_checkout_session_id?: string | null
           stripe_customer_id?: string | null
           stripe_payment_intent_id?: string | null
           updated_at?: string
@@ -544,6 +567,7 @@ export type Database = {
           paid_at?: string | null
           plan_id?: string
           status?: Database["public"]["Enums"]["payment_status"]
+          stripe_checkout_session_id?: string | null
           stripe_customer_id?: string | null
           stripe_payment_intent_id?: string | null
           updated_at?: string
