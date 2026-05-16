@@ -85,6 +85,8 @@ function ConsolePage() {
             ["payments", "Pagamentos"],
             ["subscriptions", "Assinaturas"],
             ["cancellations", "Cancelamentos"],
+            ["support", "Suporte"],
+            ["extras", "Cobranças extras"],
             ["plans", "Planos"],
             ["events", "Auditoria"],
             ["settings", "Configurações"],
