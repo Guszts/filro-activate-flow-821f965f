@@ -18,7 +18,7 @@ export const Route = createFileRoute("/checkout")({
   ]}),
 });
 
-interface PlanInfo { name: string; activation_price: number; monthly_price: number }
+interface PlanInfo { name: string; activation_price: number; monthly_price: number; slug: string }
 
 function CheckoutPage() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ function CheckoutPage() {
       try {
         const { data: planRow, error: pErr } = await supabase
           .from("plans")
-          .select("name, activation_price, monthly_price")
+          .select("name, activation_price, monthly_price, slug")
           .eq("slug", planSlug)
           .maybeSingle();
         if (pErr) throw pErr;
@@ -126,16 +126,25 @@ function CheckoutPage() {
                   <span className="text-ink-soft">Ativação (única)</span>
                   <span className="text-ink font-medium">{formatBRL(plan.activation_price)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-ink-soft">Mensalidade</span>
-                  <span className="text-ink font-medium">{formatBRL(plan.monthly_price)}/mês</span>
-                </div>
+                {plan.slug !== "promocional" && (
+                  <div className="flex justify-between">
+                    <span className="text-ink-soft">Mensalidade</span>
+                    <span className="text-ink font-medium">{formatBRL(plan.monthly_price)}/mês</span>
+                  </div>
+                )}
+                {plan.slug === "promocional" && (
+                  <div className="text-xs text-ink-soft pt-1">
+                    Manutenção de {formatBRL(plan.monthly_price)}/mês cobrada apenas a partir do segundo mês.
+                  </div>
+                )}
               </div>
             )}
             <div className="mt-6 border-t border-border pt-6 flex justify-between items-baseline">
               <span className="text-ink-soft">Total hoje</span>
               <span className="font-display font-black text-3xl text-ink">
-                {plan ? formatBRL(plan.activation_price + plan.monthly_price) : "—"}
+                {plan
+                  ? formatBRL(plan.slug === "promocional" ? plan.activation_price : plan.activation_price + plan.monthly_price)
+                  : "—"}
               </span>
             </div>
             <p className="mt-6 text-xs text-ink-soft">Após o pagamento confirmado, você poderá enviar as informações do negócio.</p>
