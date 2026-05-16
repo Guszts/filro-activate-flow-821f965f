@@ -2,6 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { createStripeClient, type StripeEnv } from "@/lib/stripe.server";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { sendTransactionalEmailServer } from "@/lib/email/send.server";
+
+const PANEL_URL = "https://filro.site/painel";
+function formatBRL(cents: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
+}
 
 async function assertAdmin(userId: string) {
   const { data } = await supabaseAdmin
