@@ -7,6 +7,7 @@ import { formatBRL, formatDateTime } from "@/lib/format";
 import { motion } from "framer-motion";
 import { ProjectsKanban } from "@/components/console/ProjectsKanban";
 import { SupportTab, ExtraChargesTab } from "@/components/console/SupportAndCharges";
+import { PartnerTab } from "@/components/console/PartnerTab";
 
 export const Route = createFileRoute("/console")({
   component: ConsolePage,
