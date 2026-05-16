@@ -460,7 +460,7 @@ function PlanDetailsPage() {
                     Continuar para o checkout <ArrowRight className="ml-2 h-4 w-4" />
                   </button>
                 </div>
-              </div>
+              </motion.div>
             </section>
 
             {/* MOBILE STICKY CTA */}
