@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { formatBRL } from "@/lib/format";
-import { Check, Minus, ArrowRight, Sparkles } from "lucide-react";
+import { Check, Minus, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/comparar")({
@@ -109,7 +109,7 @@ function CompararPage() {
                           <div className="flex flex-col items-center gap-1">
                             {p.slug === "plus" && (
                               <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest bg-flame text-paper px-2 py-0.5 rounded-full">
-                                <Sparkles className="h-3 w-3" /> Popular
+                                Popular
                               </span>
                             )}
                             <div className="font-display font-black text-lg text-ink">{p.name}</div>

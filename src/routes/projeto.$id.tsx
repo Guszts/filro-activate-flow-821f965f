@@ -16,7 +16,6 @@ import {
   Loader2,
   MessageSquare,
   Send,
-  Sparkles,
 } from "lucide-react";
 
 export const Route = createFileRoute("/projeto/$id")({
@@ -211,7 +210,7 @@ function ProjectDeliveryPage() {
               )}
             </div>
             <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${meta.tone}`}>
-              <Sparkles className="h-4 w-4" /> {meta.label}
+              {meta.label}
             </span>
           </div>
 
