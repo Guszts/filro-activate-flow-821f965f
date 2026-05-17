@@ -151,15 +151,44 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       const plan = await getPlanBySlug(planSlug);
       if (!plan) break;
 
+      // Re-fetch the session with discounts/promotion_code expanded so we
+      // can capture coupon usage. Cheap, idempotent, and the webhook payload
+      // does NOT include the promotion_code object by default.
+      let expandedSession: Stripe.Checkout.Session = session;
+      try {
+        expandedSession = await stripe.checkout.sessions.retrieve(session.id, {
+          expand: ["total_details.breakdown.discounts", "discounts.promotion_code"],
+        });
+      } catch (e) {
+        console.warn("[webhook] could not expand session for discount info", e);
+      }
+
+      const fullActivation = plan.activation_price ?? 0;
+      const fullMonthly = plan.monthly_price ?? 0;
+      const planTotal = fullActivation + fullMonthly;
+      const amountPaid = typeof expandedSession.amount_total === "number"
+        ? expandedSession.amount_total
+        : planTotal;
+      const amountSubtotal = typeof expandedSession.amount_subtotal === "number"
+        ? expandedSession.amount_subtotal
+        : planTotal;
+      const discountAmount = Math.max(0, amountSubtotal - amountPaid);
+      let promoCode: string | null = null;
+      const sessionDiscounts = (expandedSession as any).discounts as Array<{
+        promotion_code?: string | { id?: string; code?: string } | null;
+      }> | undefined;
+      if (sessionDiscounts?.length) {
+        const promo = sessionDiscounts[0].promotion_code;
+        if (typeof promo === "object" && promo?.code) promoCode = promo.code;
+      }
+
       // Record initial payment (activation + first month). Idempotente
       // via unique stripe_checkout_session_id — se a Stripe reenviar o
       // mesmo checkout.session.completed, reaproveitamos o pagamento já
       // gravado em vez de duplicar e de re-criar admin_task.
       let paymentId: string | null = null;
       let isDuplicateSession = false;
-      const sessionAmount = typeof session.amount_total === "number" && session.amount_total > 0
-        ? session.amount_total
-        : (plan.activation_price ?? 0) + (plan.monthly_price ?? 0);
+      const sessionAmount = amountPaid > 0 ? amountPaid : planTotal;
       const { data: paymentRow, error: paymentErr } = await supabaseAdmin
         .from("payments")
         .insert({
