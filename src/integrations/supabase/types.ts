@@ -65,6 +65,371 @@ export type Database = {
           },
         ]
       }
+      dev_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          environment: string
+          id: string
+          paid_at: string | null
+          plan_id: string | null
+          project_id: string | null
+          status: Database["public"]["Enums"]["dev_payment_status"]
+          stripe_checkout_session_id: string | null
+          stripe_customer_id: string | null
+          stripe_payment_intent_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          environment?: string
+          id?: string
+          paid_at?: string | null
+          plan_id?: string | null
+          project_id?: string | null
+          status?: Database["public"]["Enums"]["dev_payment_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          environment?: string
+          id?: string
+          paid_at?: string | null
+          plan_id?: string | null
+          project_id?: string | null
+          status?: Database["public"]["Enums"]["dev_payment_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dev_payments_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "dev_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dev_payments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "dev_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dev_plans: {
+        Row: {
+          activation_price: number
+          active: boolean
+          created_at: string
+          currency: string
+          description: string
+          display_order: number
+          features: Json
+          id: string
+          max_pages: number
+          max_revisions_month: number
+          monthly_price: number
+          name: string
+          slug: Database["public"]["Enums"]["dev_plan_slug"]
+          stripe_activation_price_lookup_key: string | null
+          stripe_monthly_price_lookup_key: string | null
+          tagline: string
+          updated_at: string
+        }
+        Insert: {
+          activation_price: number
+          active?: boolean
+          created_at?: string
+          currency?: string
+          description?: string
+          display_order?: number
+          features?: Json
+          id?: string
+          max_pages?: number
+          max_revisions_month?: number
+          monthly_price: number
+          name: string
+          slug: Database["public"]["Enums"]["dev_plan_slug"]
+          stripe_activation_price_lookup_key?: string | null
+          stripe_monthly_price_lookup_key?: string | null
+          tagline?: string
+          updated_at?: string
+        }
+        Update: {
+          activation_price?: number
+          active?: boolean
+          created_at?: string
+          currency?: string
+          description?: string
+          display_order?: number
+          features?: Json
+          id?: string
+          max_pages?: number
+          max_revisions_month?: number
+          monthly_price?: number
+          name?: string
+          slug?: Database["public"]["Enums"]["dev_plan_slug"]
+          stripe_activation_price_lookup_key?: string | null
+          stripe_monthly_price_lookup_key?: string | null
+          tagline?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      dev_project_versions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          generated_site: Json
+          id: string
+          notes: string
+          project_id: string
+          version_number: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          generated_site?: Json
+          id?: string
+          notes?: string
+          project_id: string
+          version_number?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          generated_site?: Json
+          id?: string
+          notes?: string
+          project_id?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dev_project_versions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "dev_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dev_projects: {
+        Row: {
+          activation_paid_at: string | null
+          assigned_admin_id: string | null
+          briefing: Json
+          business_name: string
+          business_segment: string
+          created_at: string
+          id: string
+          notes: string
+          plan_id: string | null
+          plan_slug: Database["public"]["Enums"]["dev_plan_slug"] | null
+          preview_url: string | null
+          published_at: string | null
+          published_url: string | null
+          status: Database["public"]["Enums"]["dev_project_status"]
+          template_id: string | null
+          template_slug: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activation_paid_at?: string | null
+          assigned_admin_id?: string | null
+          briefing?: Json
+          business_name?: string
+          business_segment?: string
+          created_at?: string
+          id?: string
+          notes?: string
+          plan_id?: string | null
+          plan_slug?: Database["public"]["Enums"]["dev_plan_slug"] | null
+          preview_url?: string | null
+          published_at?: string | null
+          published_url?: string | null
+          status?: Database["public"]["Enums"]["dev_project_status"]
+          template_id?: string | null
+          template_slug?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activation_paid_at?: string | null
+          assigned_admin_id?: string | null
+          briefing?: Json
+          business_name?: string
+          business_segment?: string
+          created_at?: string
+          id?: string
+          notes?: string
+          plan_id?: string | null
+          plan_slug?: Database["public"]["Enums"]["dev_plan_slug"] | null
+          preview_url?: string | null
+          published_at?: string | null
+          published_url?: string | null
+          status?: Database["public"]["Enums"]["dev_project_status"]
+          template_id?: string | null
+          template_slug?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dev_projects_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "dev_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dev_projects_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "dev_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dev_subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          canceled_at: string | null
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          environment: string
+          id: string
+          plan_id: string | null
+          price_id: string | null
+          project_id: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_subscription_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          canceled_at?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          environment?: string
+          id?: string
+          plan_id?: string | null
+          price_id?: string | null
+          project_id?: string | null
+          status?: string
+          stripe_customer_id: string
+          stripe_subscription_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          canceled_at?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          environment?: string
+          id?: string
+          plan_id?: string | null
+          price_id?: string | null
+          project_id?: string | null
+          status?: string
+          stripe_customer_id?: string
+          stripe_subscription_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dev_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "dev_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dev_subscriptions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "dev_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dev_templates: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string
+          display_order: number
+          highlights: Json
+          id: string
+          name: string
+          preview_image_url: string | null
+          preview_url: string | null
+          recommended_plan: Database["public"]["Enums"]["dev_plan_slug"] | null
+          sections: Json
+          segment: string
+          slug: string
+          tagline: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          display_order?: number
+          highlights?: Json
+          id?: string
+          name: string
+          preview_image_url?: string | null
+          preview_url?: string | null
+          recommended_plan?: Database["public"]["Enums"]["dev_plan_slug"] | null
+          sections?: Json
+          segment?: string
+          slug: string
+          tagline?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          display_order?: number
+          highlights?: Json
+          id?: string
+          name?: string
+          preview_image_url?: string | null
+          preview_url?: string | null
+          recommended_plan?: Database["public"]["Enums"]["dev_plan_slug"] | null
+          sections?: Json
+          segment?: string
+          slug?: string
+          tagline?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -1187,6 +1552,22 @@ export type Database = {
       account_type: "customer" | "admin"
       admin_task_status: "pending" | "in_progress" | "done" | "canceled"
       app_role: "admin" | "customer"
+      dev_payment_status:
+        | "pending"
+        | "paid"
+        | "failed"
+        | "refunded"
+        | "cancelled"
+      dev_plan_slug: "dev_start" | "dev_plus" | "dev_pro" | "dev_scale"
+      dev_project_status:
+        | "briefing"
+        | "awaiting_payment"
+        | "queued"
+        | "in_production"
+        | "review"
+        | "published"
+        | "paused"
+        | "cancelled"
       extra_charge_status: "draft" | "sent" | "paid" | "cancelled" | "refunded"
       payment_status:
         | "pending"
@@ -1359,6 +1740,24 @@ export const Constants = {
       account_type: ["customer", "admin"],
       admin_task_status: ["pending", "in_progress", "done", "canceled"],
       app_role: ["admin", "customer"],
+      dev_payment_status: [
+        "pending",
+        "paid",
+        "failed",
+        "refunded",
+        "cancelled",
+      ],
+      dev_plan_slug: ["dev_start", "dev_plus", "dev_pro", "dev_scale"],
+      dev_project_status: [
+        "briefing",
+        "awaiting_payment",
+        "queued",
+        "in_production",
+        "review",
+        "published",
+        "paused",
+        "cancelled",
+      ],
       extra_charge_status: ["draft", "sent", "paid", "cancelled", "refunded"],
       payment_status: [
         "pending",
