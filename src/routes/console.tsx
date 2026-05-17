@@ -73,26 +73,44 @@ function ConsolePage() {
   }
 
 
+  const tabs = [
+    ["overview", "Overview"],
+    ["projects", "Projetos"],
+    ["users", "Usuários"],
+    ["payments", "Pagamentos"],
+    ["subscriptions", "Assinaturas"],
+    ["cancellations", "Cancelamentos"],
+    ["support", "Suporte"],
+    ["extras", "Cobranças extras"],
+    ["partner", "Parceiro"],
+    ["plans", "Planos"],
+    ["events", "Auditoria"],
+    ["settings", "Configurações"],
+  ] as const;
+
   return (
-    <div className="min-h-screen grid md:grid-cols-[260px_1fr]">
-      <aside className="border-r border-border bg-paper p-6 flex flex-col">
+    <div className="min-h-screen md:grid md:grid-cols-[260px_1fr]">
+      {/* Mobile top bar */}
+      <div className="md:hidden sticky top-0 z-30 bg-paper border-b border-border px-4 py-3 flex items-center gap-3">
+        <Link to="/" className="text-xs text-ink-soft shrink-0">← Início</Link>
+        <select
+          value={tab}
+          onChange={(e) => setTab(e.target.value as Tab)}
+          className="flex-1 min-w-0 h-10 px-3 rounded-lg border border-border bg-paper text-sm font-medium text-ink"
+        >
+          {tabs.map(([k, label]) => (
+            <option key={k} value={k}>{label}</option>
+          ))}
+        </select>
+        <button onClick={async () => { await signOut(); navigate({ to: "/" }); }} className="text-xs text-ink-soft shrink-0">Sair</button>
+      </div>
+
+      {/* Desktop sidebar */}
+      <aside className="hidden md:flex border-r border-border bg-paper p-6 flex-col">
         <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
         <div className="text-xs tracking-wide text-ink-soft mt-1">Console</div>
         <nav className="mt-10 space-y-1 text-sm">
-          {([
-            ["overview", "Overview"],
-            ["projects", "Projetos"],
-            ["users", "Usuários"],
-            ["payments", "Pagamentos"],
-            ["subscriptions", "Assinaturas"],
-            ["cancellations", "Cancelamentos"],
-            ["support", "Suporte"],
-            ["extras", "Cobranças extras"],
-            ["partner", "Parceiro"],
-            ["plans", "Planos"],
-            ["events", "Auditoria"],
-            ["settings", "Configurações"],
-          ] as const).map(([k, label]) => (
+          {tabs.map(([k, label]) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -103,11 +121,11 @@ function ConsolePage() {
           ))}
         </nav>
         <div className="mt-auto pt-6 text-xs text-ink-soft">
-          <div>{user?.email}</div>
+          <div className="truncate">{user?.email}</div>
           <button onClick={async () => { await signOut(); navigate({ to: "/" }); }} className="mt-2 text-ink hover:underline">Sair</button>
         </div>
       </aside>
-      <main className="p-6 md:p-10">
+      <main className="min-w-0 p-4 md:p-10 overflow-x-hidden">
         {tab === "overview" && <OverviewTab />}
         {tab === "projects" && <ProjectsKanban />}
         {tab === "users" && <UsersTab />}
