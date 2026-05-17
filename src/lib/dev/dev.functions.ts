@@ -113,7 +113,7 @@ export const createDevProject = createServerFn({ method: "POST" })
 
     const [{ data: tpl }, { data: plan }] = await Promise.all([
       supabaseAdmin.from("dev_templates").select("id, slug").eq("slug", data.templateSlug).eq("active", true).maybeSingle(),
-      supabaseAdmin.from("dev_plans").select("id, slug").eq("slug", data.planSlug).eq("active", true).maybeSingle(),
+      supabaseAdmin.from("dev_plans").select("id, slug").eq("slug", data.planSlug as "dev_start" | "dev_plus" | "dev_pro" | "dev_scale").eq("active", true).maybeSingle(),
     ]);
     if (!tpl) return { projectId: null, error: "Modelo não encontrado" };
     if (!plan) return { projectId: null, error: "Plano não encontrado" };
