@@ -125,7 +125,7 @@ export const createDevProject = createServerFn({ method: "POST" })
         template_id: tpl.id,
         template_slug: tpl.slug,
         plan_id: plan.id,
-        plan_slug: data.planSlug,
+        plan_slug: data.planSlug as "dev_start" | "dev_plus" | "dev_pro" | "dev_scale",
         status: "briefing",
       })
       .select("id")
