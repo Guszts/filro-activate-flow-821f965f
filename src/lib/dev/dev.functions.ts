@@ -341,7 +341,7 @@ export const adminUpdateDevProject = createServerFn({ method: "POST" })
     if (typeof data.publishedUrl === "string") patch.published_url = data.publishedUrl || null;
     if (typeof data.notes === "string") patch.notes = data.notes;
     if (data.status === "published") patch.published_at = new Date().toISOString();
-    const { error } = await supabaseAdmin.from("dev_projects").update(patch).eq("id", data.projectId);
+    const { error } = await supabaseAdmin.from("dev_projects").update(patch as never).eq("id", data.projectId);
     if (error) return { ok: false, error: error.message };
     return { ok: true, error: null };
   });
@@ -361,7 +361,7 @@ export const adminRespondDevChangeRequest = createServerFn({ method: "POST" })
     const patch: Record<string, unknown> = { status: data.status };
     if (typeof data.response === "string") patch.admin_response = data.response;
     if (data.status === "done" || data.status === "rejected") patch.resolved_at = new Date().toISOString();
-    const { error } = await supabaseAdmin.from("dev_change_requests").update(patch).eq("id", data.requestId);
+    const { error } = await supabaseAdmin.from("dev_change_requests").update(patch as never).eq("id", data.requestId);
     if (error) return { ok: false, error: error.message };
     return { ok: true, error: null };
   });
