@@ -28,7 +28,7 @@ export const notifySitePublished = createServerFn({ method: "POST" })
     await assertAdmin(context.userId);
     const { data: project } = await supabaseAdmin
       .from("projects")
-      .select("user_id,published_url,business_name")
+      .select("user_id,published_url,business_name,project_pdf_url,delivered_email_sent_at")
       .eq("id", data.projectId)
       .maybeSingle();
     if (!project) return { ok: false };
@@ -46,8 +46,33 @@ export const notifySitePublished = createServerFn({ method: "POST" })
         name: prof.name || undefined,
         businessName: project.business_name || prof.business_name || undefined,
         publishedUrl: project.published_url || undefined,
+        projectPdfUrl: project.project_pdf_url || undefined,
         panelUrl: PANEL_URL,
       },
     });
+    await supabaseAdmin
+      .from("projects")
+      .update({ delivered_email_sent_at: new Date().toISOString() })
+      .eq("id", data.projectId);
+    return { ok: true };
+  });
+
+/**
+ * Atualiza a URL do PDF do projeto (admin upload manual).
+ */
+export const setProjectPdfUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string; pdfUrl: string | null }) => {
+    if (!data.projectId) throw new Error("projectId obrigatório");
+    if (data.pdfUrl && !/^https?:\/\//.test(data.pdfUrl)) throw new Error("URL inválida");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const { error } = await supabaseAdmin
+      .from("projects")
+      .update({ project_pdf_url: data.pdfUrl })
+      .eq("id", data.projectId);
+    if (error) throw new Error(error.message);
     return { ok: true };
   });

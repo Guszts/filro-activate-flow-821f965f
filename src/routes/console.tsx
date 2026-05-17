@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import { ProjectsKanban } from "@/components/console/ProjectsKanban";
 import { SupportTab, ExtraChargesTab } from "@/components/console/SupportAndCharges";
 import { PartnerTab } from "@/components/console/PartnerTab";
+import { CouponsTab } from "@/components/console/CouponsTab";
+import { DashboardTab } from "@/components/console/DashboardTab";
 
 export const Route = createFileRoute("/console")({
   component: ConsolePage,
@@ -17,7 +19,7 @@ export const Route = createFileRoute("/console")({
   ]}),
 });
 
-type Tab = "overview" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "support" | "extras" | "partner" | "plans" | "events" | "settings";
+type Tab = "overview" | "dashboard" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "support" | "extras" | "coupons" | "partner" | "plans" | "events" | "settings";
 
 function useRealtimeRefetch(tables: string[], queryKeys: string[][]) {
   const qc = useQueryClient();
@@ -75,6 +77,7 @@ function ConsolePage() {
 
   const tabs = [
     ["overview", "Overview"],
+    ["dashboard", "Dashboard"],
     ["projects", "Projetos"],
     ["users", "Usuários"],
     ["payments", "Pagamentos"],
@@ -82,6 +85,7 @@ function ConsolePage() {
     ["cancellations", "Cancelamentos"],
     ["support", "Suporte"],
     ["extras", "Cobranças extras"],
+    ["coupons", "Cupons"],
     ["partner", "Parceiro"],
     ["plans", "Planos"],
     ["events", "Auditoria"],
@@ -127,6 +131,7 @@ function ConsolePage() {
       </aside>
       <main className="min-w-0 p-4 md:p-10 overflow-x-hidden">
         {tab === "overview" && <OverviewTab />}
+        {tab === "dashboard" && <DashboardTab />}
         {tab === "projects" && <ProjectsKanban />}
         {tab === "users" && <UsersTab />}
         {tab === "payments" && <PaymentsTab />}
@@ -134,6 +139,7 @@ function ConsolePage() {
         {tab === "cancellations" && <CancellationsTab />}
         {tab === "support" && <SupportTab />}
         {tab === "extras" && <ExtraChargesTab />}
+        {tab === "coupons" && <CouponsTab />}
         {tab === "partner" && <PartnerTab />}
         {tab === "plans" && <PlansTab />}
         {tab === "events" && <EventsTab />}
