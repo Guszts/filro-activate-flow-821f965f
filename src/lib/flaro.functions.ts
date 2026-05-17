@@ -40,7 +40,7 @@ function getIdentity(): string {
   }
 }
 
-const SYSTEM_PROMPT = `Você é o Flaro, o atendente inteligente da Filro.
+const BASE_PROMPT = `Você é o Flaro, o atendente inteligente da Filro.
 
 Sobre a Filro:
 - A Filro cria e ativa páginas profissionais para pequenos negócios em estimativa de até 24 horas após o envio das informações.
@@ -51,21 +51,12 @@ Sobre a Filro:
 - Hospedagem, suporte por WhatsApp e pequenas alterações estão inclusos na manutenção mensal.
 - Tudo é gerenciado pelo painel: edição de conteúdo, integração com WhatsApp, captação de leads.
 
-PREÇOS (tabela oficial — use SEMPRE estes valores quando perguntarem):
-- **Start**: R$ 197 de ativação + R$ 97/mês. Plano de entrada: página única, contato e WhatsApp.
-- **Essencial**: R$ 297 de ativação + R$ 49/mês. Boa relação custo-benefício: identidade visual + seções básicas.
-- **Plus**: R$ 497 de ativação + R$ 97/mês. **Plano mais escolhido (destaque).** Equilíbrio ideal entre preço, recursos e personalização.
-- **Profissional**: R$ 497 de ativação + R$ 79/mês. Foco em negócios com catálogo / portfólio estruturado.
-- **Priority**: R$ 797 de ativação + R$ 97/mês. Entrega prioritária e mais blocos de conteúdo.
-- **Premium**: R$ 897 de ativação + R$ 129/mês. Plano mais completo, com mais seções, mais refinamento visual e manutenção avançada.
-
-Quando perguntarem "qual o melhor / mais escolhido / recomendado", recomende o **Plus** (R$ 497 + R$ 97/mês), explicando que é o mais escolhido por equilibrar preço, recursos e personalização.
-
 Como responder:
 - Sempre em português do Brasil, tom acolhedor, direto e confiante.
 - Respostas curtas (máx. 3-4 parágrafos curtos ou listas com poucos itens).
 - Se o usuário pedir para ativar a página, oriente clicar em "Ativar agora" no topo do site ou ir em /planos.
-- NUNCA invente preços. Se a pessoa perguntar um valor que não está na tabela acima, diga que confirma com o time.
+- NUNCA invente preços. Use SEMPRE a tabela atualizada injetada abaixo.
+- NUNCA invente cupons. Use SEMPRE a lista atualizada injetada abaixo. Se a pessoa perguntar um cupom que não está listado, diga que não está disponível.
 - NUNCA invente recursos. Se não souber algo específico (integração específica, prazo fora do padrão), assuma honestidade e sugira falar com o time pelo WhatsApp.
 - Você se chama Flaro. Nunca diga que é um modelo de IA da OpenAI/Groq/Meta — apenas "sou o Flaro, atendente inteligente da Filro".
 
@@ -74,6 +65,58 @@ Formatação:
 - Quando indicar contato por WhatsApp, use o número +55 92 99356-1754 — a interface do chat converte automaticamente em um botão "Falar no WhatsApp", então pode mencionar naturalmente.
 - Quando indicar contato por e-mail, escreva filro.site@gmail.com — a interface vira um botão "Enviar e-mail".
 - Quando recomendar ativação ou planos, mencione "ver planos" ou "iniciar ativação" — a interface adiciona um botão "Ver planos".`;
+
+function formatPriceBRL(cents: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 }).format(cents / 100);
+}
+
+async function buildDynamicContext(): Promise<string> {
+  try {
+    const [{ data: plans }, { data: codes }] = await Promise.all([
+      supabaseAdmin
+        .from("plans")
+        .select("name, slug, activation_price, monthly_price, description, display_order")
+        .eq("active", true)
+        .eq("hidden", false)
+        .order("display_order"),
+      supabaseAdmin
+        .from("promo_codes")
+        .select("code, discount_percent, plan_slug, description, expires_at, max_uses, used_count")
+        .eq("active", true),
+    ]);
+
+    const now = Date.now();
+    const planLines = (plans ?? []).map((p) => {
+      const monthly = p.monthly_price > 0 ? ` + ${formatPriceBRL(p.monthly_price)}/mês` : "";
+      return `- **${p.name}** (slug \`${p.slug}\`): ${formatPriceBRL(p.activation_price)} de ativação${monthly}. ${p.description ?? ""}`.trim();
+    }).join("\n");
+
+    const validCodes = (codes ?? []).filter((c) => {
+      if (c.expires_at && new Date(c.expires_at).getTime() < now) return false;
+      if (c.max_uses != null && (c.used_count ?? 0) >= c.max_uses) return false;
+      return true;
+    });
+    const codeLines = validCodes.length
+      ? validCodes.map((c) => {
+          const scope = c.plan_slug ? `só no plano \`${c.plan_slug}\`` : "em qualquer plano";
+          return `- \`${c.code}\` — ${c.discount_percent}% off, ${scope}${c.description ? ` (${c.description})` : ""}`;
+        }).join("\n")
+      : "- (nenhum cupom público ativo no momento)";
+
+    return `
+
+PREÇOS ATUAIS (tabela oficial — use SEMPRE estes valores):
+${planLines || "- (planos não disponíveis no momento)"}
+
+CUPONS DISPONÍVEIS (use SEMPRE esta lista — não invente cupons):
+${codeLines}
+
+Quando perguntarem "qual o melhor / mais escolhido / recomendado", recomende o **Plus** se existir, ou o plano de melhor custo-benefício da lista acima.`;
+  } catch (err) {
+    console.warn("[Flaro] failed to build dynamic context", err);
+    return "";
+  }
+}
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile";
