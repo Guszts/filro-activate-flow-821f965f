@@ -8,6 +8,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { getDevProject } from "@/lib/dev/dev.functions";
 import { getDevPlan } from "@/lib/dev/plans";
 import { getDevTemplate } from "@/lib/dev/templates";
+import { DevChangeChat } from "@/components/dev/DevChangeChat";
 
 const SearchSchema = z.object({
   checkout: z.string().optional(),
@@ -134,14 +135,20 @@ function ProjetoPage() {
                 <ol className="mt-3 space-y-3 text-sm text-ink">
                   <li>1. Equipe revisa briefing e prepara a primeira versão.</li>
                   <li>2. Preview disponível para sua revisão.</li>
-                  <li>3. Solicitações de mudanças pelo chat do projeto.</li>
+                  <li>3. Solicitações de mudanças pelo chat abaixo.</li>
                   <li>4. Publicação no seu domínio ou subdomínio Filro.</li>
                 </ol>
                 <div className="mt-6 text-xs text-ink-soft">
-                  Chat de alterações chega na próxima fase. Por enquanto, dúvidas podem ser enviadas por <Link to="/painel/suporte" className="underline">Suporte</Link>.
+                  Dúvidas gerais (não relacionadas ao projeto) podem ser enviadas por <Link to="/suporte" className="underline">Suporte</Link>.
                 </div>
               </aside>
             </section>
+
+            {project.status !== "briefing" && project.status !== "awaiting_payment" && (
+              <section className="mt-10">
+                <DevChangeChat projectId={project.id} />
+              </section>
+            )}
 
             <section className="mt-10 rounded-3xl border border-border bg-paper p-6 md:p-8">
               <div className="text-xs tracking-wide text-ink-soft">Briefing enviado</div>

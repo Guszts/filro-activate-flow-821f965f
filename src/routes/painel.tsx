@@ -8,7 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/format";
 import { getStripeEnvironment } from "@/lib/stripe";
 import { createPortalSession } from "@/lib/payments.functions";
-import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, HelpCircle, Loader2, MessageCircle, Pencil } from "lucide-react";
+import { listMyDevProjects } from "@/lib/dev/dev.functions";
+import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, HelpCircle, Loader2, MessageCircle, Pencil, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { SubscriptionCancellationModals } from "@/components/SubscriptionCancellationModals";
@@ -48,11 +49,13 @@ function PainelPage() {
   const [project, setProject] = useState<ProjectRow | null>(null);
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [plans, setPlans] = useState<Record<string, PlanRow>>({});
+  const [devProjects, setDevProjects] = useState<Array<{ id: string; business_name: string | null; status: string; template_slug: string | null; plan_slug: string | null; updated_at: string }>>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [subInfo, setSubInfo] = useState<{ cancel_at_period_end: boolean; current_period_end: string | null } | null>(null);
   const [openingPortal, setOpeningPortal] = useState(false);
   const openPortal = useServerFn(createPortalSession);
+  const fetchDev = useServerFn(listMyDevProjects);
 
   async function handleManageSubscription() {
     setOpeningPortal(true);
@@ -73,13 +76,13 @@ function PainelPage() {
   useEffect(() => {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/painel" } }); return; }
-    if (!hasPaid && !isAdmin) { navigate({ to: "/" }); return; }
     (async () => {
-      const [projRes, payRes, planRes, subRes] = await Promise.all([
+      const [projRes, payRes, planRes, subRes, devRes] = await Promise.all([
         supabase.from("projects").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("payments").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
         supabase.from("plans").select("id,name,activation_price,monthly_price"),
         supabase.from("subscriptions").select("id,status,cancel_at_period_end,current_period_end").eq("user_id", user.id).order("created_at", { ascending: false }).limit(1),
+        fetchDev().catch(() => ({ projects: [], error: null as string | null })),
       ]);
       setProject(projRes.data as ProjectRow | null);
       setPayments((payRes.data ?? []) as PaymentRow[]);
@@ -89,9 +92,13 @@ function PainelPage() {
       const subRow = (subRes.data ?? [])[0] as { id: string; status: string; cancel_at_period_end: boolean; current_period_end: string | null } | undefined;
       setHasSubscription(!!subRow && subRow.status !== "canceled");
       setSubInfo(subRow ? { cancel_at_period_end: subRow.cancel_at_period_end, current_period_end: subRow.current_period_end } : null);
+      const dev = (devRes.projects ?? []) as typeof devProjects;
+      setDevProjects(dev);
+      const hasAny = !!(projRes.data || (payRes.data && payRes.data.length) || dev.length || isAdmin || hasPaid);
+      if (!hasAny) { navigate({ to: "/" }); return; }
       setLoadingData(false);
     })();
-  }, [loading, user, hasPaid, isAdmin, navigate]);
+  }, [loading, user, hasPaid, isAdmin, navigate, fetchDev]);
 
   const status = STATUS_LABEL[project?.project_status ?? "new"] ?? STATUS_LABEL.new;
   const StatusIcon = status.icon;
@@ -225,6 +232,53 @@ function PainelPage() {
                   <ArrowRight className="h-4 w-4 text-ink-soft" />
                 </Link>
               </div>
+            </motion.div>
+
+            {/* FLARO DEV PROJECTS */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.4 }}
+              className="lg:col-span-3 card-elevated p-7"
+            >
+              <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
+                <div>
+                  <div className="text-xs tracking-wide text-ink-soft inline-flex items-center gap-2">
+                    <Sparkles className="h-3.5 w-3.5" /> Flaro Dev
+                  </div>
+                  <h2 className="mt-1 font-display font-black text-2xl text-ink">Sites sob demanda</h2>
+                </div>
+                <Link to="/dev/novo" className="inline-flex items-center gap-2 h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold">
+                  Novo projeto Dev <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+              {devProjects.length === 0 ? (
+                <p className="text-sm text-ink-soft">
+                  Você ainda não tem projetos Flaro Dev. <Link to="/dev" className="underline">Conheça os modelos</Link> para começar.
+                </p>
+              ) : (
+                <ul className="grid sm:grid-cols-2 gap-3">
+                  {devProjects.map((dp) => (
+                    <li key={dp.id}>
+                      <Link
+                        to="/dev/projeto/$projectId"
+                        params={{ projectId: dp.id }}
+                        className="block rounded-2xl border border-border p-4 hover:bg-muted/40 transition-colors"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="text-sm font-semibold text-ink truncate">{dp.business_name || "Projeto Dev"}</div>
+                            <div className="text-xs text-ink-soft truncate">
+                              {dp.template_slug ?? "modelo"} · {dp.plan_slug ?? "plano"}
+                            </div>
+                          </div>
+                          <span className="text-[11px] inline-flex items-center px-2 py-0.5 rounded-full bg-muted text-ink-soft">
+                            {dp.status}
+                          </span>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </motion.div>
 
             {/* PAYMENTS */}
