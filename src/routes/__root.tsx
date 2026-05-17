@@ -132,7 +132,7 @@ function RootComponent() {
         </div>
         <PaymentTestModeBanner />
         <Outlet />
-        <FlaroChat />
+        <ConditionalFlaroChat />
         <Toaster />
       </AuthProvider>
     </QueryClientProvider>
