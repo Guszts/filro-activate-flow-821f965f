@@ -65,6 +65,54 @@ export type Database = {
           },
         ]
       }
+      dev_change_requests: {
+        Row: {
+          admin_response: string
+          admin_task_id: string | null
+          ai_category: Database["public"]["Enums"]["dev_change_request_category"]
+          ai_priority: Database["public"]["Enums"]["dev_change_request_priority"]
+          ai_summary: string
+          created_at: string
+          id: string
+          message: string
+          project_id: string
+          resolved_at: string | null
+          status: Database["public"]["Enums"]["dev_change_request_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_response?: string
+          admin_task_id?: string | null
+          ai_category?: Database["public"]["Enums"]["dev_change_request_category"]
+          ai_priority?: Database["public"]["Enums"]["dev_change_request_priority"]
+          ai_summary?: string
+          created_at?: string
+          id?: string
+          message: string
+          project_id: string
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["dev_change_request_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_response?: string
+          admin_task_id?: string | null
+          ai_category?: Database["public"]["Enums"]["dev_change_request_category"]
+          ai_priority?: Database["public"]["Enums"]["dev_change_request_priority"]
+          ai_summary?: string
+          created_at?: string
+          id?: string
+          message?: string
+          project_id?: string
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["dev_change_request_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       dev_payments: {
         Row: {
           amount: number
@@ -1552,6 +1600,15 @@ export type Database = {
       account_type: "customer" | "admin"
       admin_task_status: "pending" | "in_progress" | "done" | "canceled"
       app_role: "admin" | "customer"
+      dev_change_request_category:
+        | "content"
+        | "design"
+        | "feature"
+        | "bug"
+        | "question"
+        | "other"
+      dev_change_request_priority: "low" | "normal" | "high"
+      dev_change_request_status: "open" | "in_progress" | "done" | "rejected"
       dev_payment_status:
         | "pending"
         | "paid"
@@ -1740,6 +1797,16 @@ export const Constants = {
       account_type: ["customer", "admin"],
       admin_task_status: ["pending", "in_progress", "done", "canceled"],
       app_role: ["admin", "customer"],
+      dev_change_request_category: [
+        "content",
+        "design",
+        "feature",
+        "bug",
+        "question",
+        "other",
+      ],
+      dev_change_request_priority: ["low", "normal", "high"],
+      dev_change_request_status: ["open", "in_progress", "done", "rejected"],
       dev_payment_status: [
         "pending",
         "paid",
