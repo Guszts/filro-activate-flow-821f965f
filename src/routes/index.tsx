@@ -69,19 +69,7 @@ function HomePage() {
   const yText = useTransform(scrollYProgress, [0, 1], [0, -60]);
   const scaleImg = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
 
-  const { data: plans } = useQuery({
-    queryKey: ["plans"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("plans")
-        .select("*")
-        .eq("active", true)
-        .eq("hidden", false)
-        .order("display_order");
-      if (error) throw error;
-      return data;
-    },
-  });
+  const plans = Route.useLoaderData();
 
   const handleSelect = (slug: string) => {
     sessionStorage.setItem("filro:selectedPlan", slug);
