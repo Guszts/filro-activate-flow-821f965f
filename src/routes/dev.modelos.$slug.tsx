@@ -70,7 +70,7 @@ function DevTemplateDetailPage() {
           <p className="mt-6 max-w-2xl text-ink-soft text-pretty text-lg">{t.longDescription}</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/dev" hash="planos" className="inline-flex items-center h-14 px-8 rounded-2xl bg-ink text-paper font-semibold hover:scale-[1.02] transition-transform">
+            <Link to="/dev/novo" search={{ template: t.slug }} className="inline-flex items-center h-14 px-8 rounded-2xl bg-ink text-paper font-semibold hover:scale-[1.02] transition-transform">
               Usar este modelo <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
             <Link to="/dev/modelos" className="inline-flex items-center h-14 px-8 rounded-2xl border border-border bg-paper text-ink font-semibold hover:bg-muted transition-colors">
