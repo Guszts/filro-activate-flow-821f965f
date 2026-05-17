@@ -329,7 +329,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       if (promoCode) {
         try {
           const { data: pc } = await supabaseAdmin
-            .from("promo_codes").select("id").eq("code", promoCode).maybeSingle();
+            .from("promo_codes").select("id, used_count").eq("code", promoCode).maybeSingle();
           if (pc?.id) {
             await supabaseAdmin.from("promo_code_redemptions").insert({
               promo_code_id: pc.id,
@@ -339,7 +339,9 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
               stripe_checkout_session_id: session.id,
               discount_amount: discountAmount,
             });
-            await supabaseAdmin.rpc("increment_promo_code_use" as never, { _code: promoCode } as never).catch(() => {});
+            await supabaseAdmin.from("promo_codes")
+              .update({ used_count: (pc.used_count ?? 0) + 1 })
+              .eq("id", pc.id);
           }
         } catch (e) {
           console.warn("[webhook] promo redemption log failed", e);
