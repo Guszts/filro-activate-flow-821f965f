@@ -387,15 +387,24 @@ function BusinessInfoPage() {
               </div>
             )}
 
-            <div className="flex justify-between items-center pt-4">
+            <div className="flex flex-wrap justify-between items-center gap-3 pt-4">
               <div className="flex gap-2">
                 {sections.map(([k]) => (
-                  <span key={k} className={`h-2 w-2 rounded-full ${currentSection === k ? "bg-ink" : "bg-border"}`} />
+                  <span key={k} className={`h-2 w-2 rounded-full ${currentSection === k ? "bg-ink" : sectionValid[k] ? "bg-emerald-500" : "bg-border"}`} />
                 ))}
               </div>
-              <button onClick={submit} disabled={saving} className="h-13 px-8 py-3 rounded-full bg-ink text-paper font-semibold hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50">
-                {saving ? "Salvando..." : project.business_info_submitted ? "Atualizar informações" : "Enviar para ativação"}
-              </button>
+              <div className="flex items-center gap-3">
+                {!allValid && !project.business_info_submitted && (
+                  <span className="text-xs text-ink-soft">Complete todas as seções para enviar</span>
+                )}
+                <button
+                  onClick={submit}
+                  disabled={saving || (!allValid && !project.business_info_submitted)}
+                  className="h-13 px-8 py-3 rounded-full bg-ink text-paper font-semibold hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+                >
+                  {saving ? "Salvando..." : project.business_info_submitted ? "Atualizar informações" : "Enviar para ativação"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
