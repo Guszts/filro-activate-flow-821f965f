@@ -779,6 +779,7 @@ export type Database = {
           notes: string | null
           plan_id: string | null
           preview_url: string | null
+          project_pdf_path: string | null
           project_pdf_url: string | null
           project_status: Database["public"]["Enums"]["project_status"]
           published_at: string | null
@@ -801,6 +802,7 @@ export type Database = {
           notes?: string | null
           plan_id?: string | null
           preview_url?: string | null
+          project_pdf_path?: string | null
           project_pdf_url?: string | null
           project_status?: Database["public"]["Enums"]["project_status"]
           published_at?: string | null
@@ -823,6 +825,7 @@ export type Database = {
           notes?: string | null
           plan_id?: string | null
           preview_url?: string | null
+          project_pdf_path?: string | null
           project_pdf_url?: string | null
           project_status?: Database["public"]["Enums"]["project_status"]
           published_at?: string | null
