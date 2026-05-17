@@ -1,13 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PlanCard } from "@/components/PlanCard";
 import { formatBRL } from "@/lib/format";
+import { listPublicPlans } from "@/lib/plans.functions";
 
 export const Route = createFileRoute("/planos/")({
   component: PlanosIndexPage,
+  loader: () => listPublicPlans(),
   head: () => ({
     meta: [
       { title: "Planos · Filro" },
@@ -22,19 +22,7 @@ export const Route = createFileRoute("/planos/")({
 
 function PlanosIndexPage() {
   const navigate = useNavigate();
-  const { data: plans } = useQuery({
-    queryKey: ["plans"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("plans")
-        .select("*")
-        .eq("active", true)
-        .eq("hidden", false)
-        .order("display_order");
-      if (error) throw error;
-      return data;
-    },
-  });
+  const plans = Route.useLoaderData();
 
   const handleSelect = (slug: string) => {
     sessionStorage.setItem("filro:selectedPlan", slug);
@@ -59,7 +47,7 @@ function PlanosIndexPage() {
 
         <section className="mx-auto max-w-[1400px] px-5 md:px-10 pb-20 md:pb-28">
           <div className="grid gap-6 lg:grid-cols-3">
-            {(plans ?? []).map((p, i) => (
+            {(plans ?? []).map((p: any, i: number) => (
               <PlanCard
                 key={p.id}
                 index={i}

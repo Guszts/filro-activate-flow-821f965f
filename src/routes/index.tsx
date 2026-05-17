@@ -8,9 +8,8 @@ import { VideoHero } from "@/components/VideoHero";
 import { PlanCard } from "@/components/PlanCard";
 import { FAQ } from "@/components/FAQ";
 
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { listPublicPlans } from "@/lib/plans.functions";
 import { formatBRL } from "@/lib/format";
 import heroImg from "@/assets/hero-flaro.jpg?w=1088&format=webp";
 import { ArrowRight } from "lucide-react";
@@ -24,6 +23,7 @@ const HOME_FAQS = [
 
 export const Route = createFileRoute("/")({
   component: HomePage,
+  loader: () => listPublicPlans(),
   head: () => ({
     meta: [
       { property: "og:url", content: "https://setup.filro.site/" },
@@ -69,19 +69,7 @@ function HomePage() {
   const yText = useTransform(scrollYProgress, [0, 1], [0, -60]);
   const scaleImg = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
 
-  const { data: plans } = useQuery({
-    queryKey: ["plans"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("plans")
-        .select("*")
-        .eq("active", true)
-        .eq("hidden", false)
-        .order("display_order");
-      if (error) throw error;
-      return data;
-    },
-  });
+  const plans = Route.useLoaderData();
 
   const handleSelect = (slug: string) => {
     sessionStorage.setItem("filro:selectedPlan", slug);
@@ -234,7 +222,7 @@ function HomePage() {
           </p>
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
-          {(plans ?? []).map((p, i) => (
+          {(plans ?? []).map((p: any, i: number) => (
             <PlanCard
               key={p.id}
               index={i}
