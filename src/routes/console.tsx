@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import { ProjectsKanban } from "@/components/console/ProjectsKanban";
 import { SupportTab, ExtraChargesTab } from "@/components/console/SupportAndCharges";
 import { PartnerTab } from "@/components/console/PartnerTab";
+import { CouponsTab } from "@/components/console/CouponsTab";
+import { DashboardTab } from "@/components/console/DashboardTab";
 
 export const Route = createFileRoute("/console")({
   component: ConsolePage,
