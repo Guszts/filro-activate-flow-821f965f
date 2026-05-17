@@ -55,9 +55,9 @@ function DevLanding() {
             <Link to="/dev/modelos" className="inline-flex items-center h-14 px-8 rounded-2xl bg-ink text-paper font-semibold tracking-wide hover:scale-[1.02] transition-transform">
               Escolher modelo <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
-            <a href="#planos" className="inline-flex items-center h-14 px-8 rounded-2xl border border-border bg-paper text-ink font-semibold hover:bg-muted transition-colors">
+            <Link to="/dev/precos" className="inline-flex items-center h-14 px-8 rounded-2xl border border-border bg-paper text-ink font-semibold hover:bg-muted transition-colors">
               Ver planos
-            </a>
+            </Link>
           </div>
 
           {/* mockup */}
