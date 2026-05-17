@@ -85,11 +85,11 @@ async function logEvent(eventType: string, userId: string | null, data: Record<s
 async function upsertSubscription(sub: Stripe.Subscription, env: StripeEnv) {
   const userId = sub.metadata?.userId ?? null;
   const planSlug = sub.metadata?.planSlug ?? null;
+  const kind = sub.metadata?.kind ?? null;
   if (!userId) {
     console.warn("[webhook] subscription without userId metadata", { id: sub.id });
     return;
   }
-  const plan = await getPlanBySlug(planSlug);
 
   const item = sub.items?.data?.[0];
   const priceId = item?.price?.lookup_key
@@ -97,12 +97,39 @@ async function upsertSubscription(sub: Stripe.Subscription, env: StripeEnv) {
     || item?.price?.id
     || null;
 
-  // Basil API: period fields can live on the item OR the subscription.
   const periodStart = (item as { current_period_start?: number } | undefined)?.current_period_start
     ?? (sub as unknown as { current_period_start?: number }).current_period_start;
   const periodEnd = (item as { current_period_end?: number } | undefined)?.current_period_end
     ?? (sub as unknown as { current_period_end?: number }).current_period_end;
 
+  // Flaro Dev — grava em dev_subscriptions e ignora subscriptions legado.
+  if (kind === "dev") {
+    const devProjectId = sub.metadata?.devProjectId ?? null;
+    const { data: devPlan } = planSlug
+      ? await supabaseAdmin.from("dev_plans").select("id").eq("slug", planSlug as "dev_start" | "dev_plus" | "dev_pro" | "dev_scale").maybeSingle()
+      : { data: null as { id: string } | null };
+    await supabaseAdmin.from("dev_subscriptions").upsert(
+      {
+        user_id: userId,
+        project_id: devProjectId,
+        plan_id: devPlan?.id ?? null,
+        stripe_subscription_id: sub.id,
+        stripe_customer_id: typeof sub.customer === "string" ? sub.customer : sub.customer.id,
+        price_id: priceId,
+        status: sub.status,
+        current_period_start: tsToISO(periodStart),
+        current_period_end: tsToISO(periodEnd),
+        cancel_at_period_end: sub.cancel_at_period_end ?? false,
+        canceled_at: tsToISO(sub.canceled_at),
+        environment: env,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "stripe_subscription_id" },
+    );
+    return;
+  }
+
+  const plan = await getPlanBySlug(planSlug);
   await supabaseAdmin.from("subscriptions").upsert(
     {
       user_id: userId,
@@ -131,6 +158,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       const planSlug = session.metadata?.planSlug;
       const kind = session.metadata?.kind;
       const extraChargeId = session.metadata?.extraChargeId;
+      const devProjectId = session.metadata?.devProjectId;
 
       // Cobrança extra (upsell via payment link)
       if (kind === "extra_charge" && extraChargeId) {
@@ -144,6 +172,50 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
           })
           .eq("id", extraChargeId);
         await logEvent("extra_charge.paid", userId ?? null, { extraChargeId, sessionId: session.id });
+        break;
+      }
+
+      // Flaro Dev — fluxo independente dos planos legados
+      if (kind === "dev" && userId && devProjectId) {
+        await supabaseAdmin
+          .from("dev_payments")
+          .update({
+            status: "paid",
+            paid_at: new Date().toISOString(),
+            stripe_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : null,
+            stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
+          })
+          .eq("stripe_checkout_session_id", session.id);
+
+        await supabaseAdmin
+          .from("dev_projects")
+          .update({ status: "queued", activation_paid_at: new Date().toISOString() })
+          .eq("id", devProjectId)
+          .eq("user_id", userId);
+
+        const { data: devProj } = await supabaseAdmin
+          .from("dev_projects")
+          .select("business_name, template_slug, plan_slug")
+          .eq("id", devProjectId)
+          .maybeSingle();
+
+        const { data: profile } = await supabaseAdmin
+          .from("profiles").select("name, email, whatsapp").eq("user_id", userId).maybeSingle();
+
+        await supabaseAdmin.from("admin_tasks").insert({
+          user_id: userId,
+          title: `Flaro Dev — Novo projeto pago — ${devProj?.business_name || profile?.email || userId}`,
+          description: [
+            `Cliente: ${profile?.name || "—"} (${profile?.email || "—"})`,
+            `WhatsApp: ${profile?.whatsapp || "—"}`,
+            `Negócio: ${devProj?.business_name || "—"}`,
+            `Modelo: ${devProj?.template_slug || "—"}`,
+            `Plano: ${devProj?.plan_slug || "—"}`,
+            `Stripe session: ${session.id}`,
+          ].join("\n"),
+        });
+
+        await logEvent("dev.checkout.completed", userId, { devProjectId, sessionId: session.id });
         break;
       }
 
