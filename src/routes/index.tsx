@@ -8,9 +8,8 @@ import { VideoHero } from "@/components/VideoHero";
 import { PlanCard } from "@/components/PlanCard";
 import { FAQ } from "@/components/FAQ";
 
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { listPublicPlans } from "@/lib/plans.functions";
 import { formatBRL } from "@/lib/format";
 import heroImg from "@/assets/hero-flaro.jpg?w=1088&format=webp";
 import { ArrowRight } from "lucide-react";
