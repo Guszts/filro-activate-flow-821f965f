@@ -339,6 +339,9 @@ function KanbanCard({
   plans: { id: string; name: string }[];
   dragging?: boolean;
 }) {
+  const qc = useQueryClient();
+  const setPdf = useServerFn(setProjectPdfUrl);
+  const [uploading, setUploading] = useState(false);
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: project.id,
   });
@@ -348,48 +351,96 @@ function KanbanCard({
     ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : undefined;
 
+  async function handlePdfUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (file.size > 20 * 1024 * 1024) { toast.error("PDF maior que 20MB"); return; }
+    setUploading(true);
+    try {
+      const path = `${project.user_id}/projects/${project.id}-${Date.now()}.pdf`;
+      const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true, contentType: "application/pdf" });
+      if (error) throw error;
+      const { data } = supabase.storage.from("business-assets").getPublicUrl(path);
+      await setPdf({ data: { projectId: project.id, pdfUrl: data.publicUrl } });
+      toast.success("PDF anexado ao projeto");
+      qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
+    } catch (err) {
+      toast.error("Falha ao enviar PDF: " + (err as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handlePdfRemove(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (!confirm("Remover o PDF deste projeto?")) return;
+    await setPdf({ data: { projectId: project.id, pdfUrl: null } });
+    qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
+  }
+
   return (
     <motion.div
       ref={setNodeRef}
       style={style}
-      {...listeners}
-      {...attributes}
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: isDragging && !dragging ? 0.3 : 1, y: 0 }}
-      className={`card-elevated p-3 cursor-grab active:cursor-grabbing select-none ${
+      className={`card-elevated p-3 select-none ${
         dragging ? "ring-2 ring-ink shadow-2xl rotate-2" : ""
       }`}
     >
-      <div className="font-semibold text-sm text-ink truncate">
-        {project.business_name || "Sem nome"}
-      </div>
-      <div className="text-xs text-ink-soft truncate mt-0.5">
-        {prof?.name || prof?.email || "—"}
-      </div>
-      <div className="mt-2 flex items-center gap-2 flex-wrap">
-        {plan && (
-          <span className="inline-flex px-2 py-0.5 rounded-full bg-muted text-[10px] font-semibold text-ink">
-            {plan.name}
-          </span>
-        )}
-        {project.business_info_submitted && (
-          <span className="inline-flex px-2 py-0.5 rounded-full bg-lime text-[10px] font-semibold text-ink">
-            Briefing
-          </span>
-        )}
-        {project.preview_url && (
-          <span className="inline-flex px-2 py-0.5 rounded-full bg-azure/20 text-[10px] font-semibold text-ink">
-            Preview
-          </span>
-        )}
-      </div>
-      {project.expected_delivery_at && (
-        <div className="mt-2 text-[10px] text-ink-soft">
-          Entrega prevista: {formatDateTime(project.expected_delivery_at)}
+      <div {...listeners} {...attributes} className="cursor-grab active:cursor-grabbing">
+        <div className="font-semibold text-sm text-ink truncate">
+          {project.business_name || "Sem nome"}
         </div>
-      )}
-      <div className="mt-1 text-[10px] text-ink-soft">
-        Atualizado: {formatDateTime(project.updated_at)}
+        <div className="text-xs text-ink-soft truncate mt-0.5">
+          {prof?.name || prof?.email || "—"}
+        </div>
+        <div className="mt-2 flex items-center gap-2 flex-wrap">
+          {plan && (
+            <span className="inline-flex px-2 py-0.5 rounded-full bg-muted text-[10px] font-semibold text-ink">
+              {plan.name}
+            </span>
+          )}
+          {project.business_info_submitted && (
+            <span className="inline-flex px-2 py-0.5 rounded-full bg-lime text-[10px] font-semibold text-ink">
+              Briefing
+            </span>
+          )}
+          {project.preview_url && (
+            <span className="inline-flex px-2 py-0.5 rounded-full bg-azure/20 text-[10px] font-semibold text-ink">
+              Preview
+            </span>
+          )}
+          {project.project_pdf_url && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-flame/15 text-[10px] font-semibold text-ink">
+              <FileText className="h-3 w-3" /> PDF
+            </span>
+          )}
+        </div>
+        {project.expected_delivery_at && (
+          <div className="mt-2 text-[10px] text-ink-soft">
+            Entrega prevista: {formatDateTime(project.expected_delivery_at)}
+          </div>
+        )}
+        <div className="mt-1 text-[10px] text-ink-soft">
+          Atualizado: {formatDateTime(project.updated_at)}
+        </div>
+      </div>
+      <div className="mt-2 pt-2 border-t border-border flex items-center gap-2">
+        <label className="inline-flex items-center gap-1 text-[10px] text-ink-soft hover:text-ink cursor-pointer">
+          <UploadIcon className="h-3 w-3" />
+          {uploading ? "Enviando…" : project.project_pdf_url ? "Trocar PDF" : "Anexar PDF"}
+          <input type="file" accept="application/pdf" className="hidden" onChange={handlePdfUpload} disabled={uploading} />
+        </label>
+        {project.project_pdf_url && (
+          <>
+            <a href={project.project_pdf_url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-[10px] text-ink-soft hover:text-ink underline">Ver</a>
+            <button type="button" onClick={handlePdfRemove} className="ml-auto text-[10px] text-flame hover:opacity-80 inline-flex items-center gap-0.5">
+              <X className="h-3 w-3" /> Remover
+            </button>
+          </>
+        )}
       </div>
     </motion.div>
   );
