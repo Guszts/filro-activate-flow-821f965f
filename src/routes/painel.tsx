@@ -234,6 +234,53 @@ function PainelPage() {
               </div>
             </motion.div>
 
+            {/* FLARO DEV PROJECTS */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.4 }}
+              className="lg:col-span-3 card-elevated p-7"
+            >
+              <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
+                <div>
+                  <div className="text-xs tracking-wide text-ink-soft inline-flex items-center gap-2">
+                    <Sparkles className="h-3.5 w-3.5" /> Flaro Dev
+                  </div>
+                  <h2 className="mt-1 font-display font-black text-2xl text-ink">Sites sob demanda</h2>
+                </div>
+                <Link to="/dev/novo" className="inline-flex items-center gap-2 h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold">
+                  Novo projeto Dev <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+              {devProjects.length === 0 ? (
+                <p className="text-sm text-ink-soft">
+                  Você ainda não tem projetos Flaro Dev. <Link to="/dev" className="underline">Conheça os modelos</Link> para começar.
+                </p>
+              ) : (
+                <ul className="grid sm:grid-cols-2 gap-3">
+                  {devProjects.map((dp) => (
+                    <li key={dp.id}>
+                      <Link
+                        to="/dev/projeto/$projectId"
+                        params={{ projectId: dp.id }}
+                        className="block rounded-2xl border border-border p-4 hover:bg-muted/40 transition-colors"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="text-sm font-semibold text-ink truncate">{dp.business_name || "Projeto Dev"}</div>
+                            <div className="text-xs text-ink-soft truncate">
+                              {dp.template_slug ?? "modelo"} · {dp.plan_slug ?? "plano"}
+                            </div>
+                          </div>
+                          <span className="text-[11px] inline-flex items-center px-2 py-0.5 rounded-full bg-muted text-ink-soft">
+                            {dp.status}
+                          </span>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </motion.div>
+
             {/* PAYMENTS */}
             <motion.div
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}
