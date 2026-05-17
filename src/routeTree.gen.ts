@@ -36,6 +36,7 @@ import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as DevNovoRouteImport } from './routes/dev.novo'
 import { Route as DevModelosIndexRouteImport } from './routes/dev.modelos.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
@@ -182,6 +183,11 @@ const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   path: '/email/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevNovoRoute = DevNovoRouteImport.update({
+  id: '/dev/novo',
+  path: '/dev/novo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevModelosIndexRoute = DevModelosIndexRouteImport.update({
   id: '/dev/modelos/',
   path: '/dev/modelos/',
@@ -260,6 +266,7 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/dev/novo': typeof DevNovoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/dev/novo': typeof DevNovoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/dev/novo': typeof DevNovoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
@@ -380,6 +389,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/dev/novo'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
@@ -419,6 +429,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/dev/novo'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
@@ -458,6 +469,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/dev/novo'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
@@ -498,6 +510,7 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
+  DevNovoRoute: typeof DevNovoRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LeadIdRoute: typeof LeadIdRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
@@ -707,6 +720,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/novo': {
+      id: '/dev/novo'
+      path: '/dev/novo'
+      fullPath: '/dev/novo'
+      preLoaderRoute: typeof DevNovoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev/modelos/': {
       id: '/dev/modelos/'
       path: '/dev/modelos'
@@ -802,6 +822,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VerifyEmailRoute: VerifyEmailRoute,
+  DevNovoRoute: DevNovoRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LeadIdRoute: LeadIdRoute,
   PlanosSlugRoute: PlanosSlugRoute,
