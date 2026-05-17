@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { createStripeClient, type StripeEnv } from "@/lib/stripe.server";
+import { sendTransactionalEmailServer } from "@/lib/email/send.server";
 import type Stripe from "stripe";
 
 // ---------- helpers ----------
@@ -363,6 +364,39 @@ export const adminRespondDevChangeRequest = createServerFn({ method: "POST" })
     if (data.status === "done" || data.status === "rejected") patch.resolved_at = new Date().toISOString();
     const { error } = await supabaseAdmin.from("dev_change_requests").update(patch as never).eq("id", data.requestId);
     if (error) return { ok: false, error: error.message };
+
+    // Notifica o cliente por e-mail quando há resposta ou mudança relevante de status
+    try {
+      const { data: req } = await supabaseAdmin
+        .from("dev_change_requests")
+        .select("project_id, user_id, ai_summary, message")
+        .eq("id", data.requestId)
+        .maybeSingle();
+      if (req?.user_id) {
+        const [{ data: profile }, { data: project }] = await Promise.all([
+          supabaseAdmin.from("profiles").select("name, email").eq("user_id", req.user_id).maybeSingle(),
+          supabaseAdmin.from("dev_projects").select("business_name").eq("id", req.project_id).maybeSingle(),
+        ]);
+        if (profile?.email) {
+          await sendTransactionalEmailServer({
+            templateName: "dev-change-answered",
+            recipientEmail: profile.email,
+            idempotencyKey: `dev-answered-${data.requestId}-${data.status}`,
+            templateData: {
+              name: profile.name || undefined,
+              businessName: project?.business_name || undefined,
+              requestSummary: req.ai_summary || (req.message ?? "").slice(0, 140),
+              status: data.status,
+              response: data.response || undefined,
+              projectUrl: `https://setup.filro.site/dev/projeto/${req.project_id}`,
+            },
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("[email] dev-change-answered failed", e);
+    }
+
     return { ok: true, error: null };
   });
 
@@ -435,6 +469,38 @@ export const adminPublishDevVersion = createServerFn({ method: "POST" })
       user_id: userId,
       event_data: { projectId: data.projectId, version: nextVersion, markPublished: !!data.markPublished } as never,
     });
+
+    // Notifica o cliente dono do projeto
+    try {
+      const { data: project } = await supabaseAdmin
+        .from("dev_projects")
+        .select("user_id, business_name, preview_url, published_url")
+        .eq("id", data.projectId)
+        .maybeSingle();
+      if (project?.user_id) {
+        const { data: profile } = await supabaseAdmin
+          .from("profiles").select("name, email").eq("user_id", project.user_id).maybeSingle();
+        if (profile?.email) {
+          await sendTransactionalEmailServer({
+            templateName: "dev-version-published",
+            recipientEmail: profile.email,
+            idempotencyKey: `dev-version-${data.projectId}-${nextVersion}`,
+            templateData: {
+              name: profile.name || undefined,
+              businessName: project.business_name || undefined,
+              versionNumber: nextVersion,
+              previewUrl: data.previewUrl || project.preview_url || undefined,
+              publishedUrl: data.publishedUrl || project.published_url || undefined,
+              notes: data.notes || undefined,
+              projectUrl: `https://setup.filro.site/dev/projeto/${data.projectId}`,
+              isPublished: !!data.markPublished,
+            },
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("[email] dev-version-published failed", e);
+    }
 
     return { ok: true, error: null, version: nextVersion };
   });
