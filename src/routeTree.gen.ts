@@ -40,6 +40,7 @@ import { Route as DevNovoRouteImport } from './routes/dev.novo'
 import { Route as DevModelosIndexRouteImport } from './routes/dev.modelos.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
+import { Route as DevCheckoutProjectIdRouteImport } from './routes/dev.checkout.$projectId'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -203,6 +204,11 @@ const DevModelosSlugRoute = DevModelosSlugRouteImport.update({
   path: '/dev/modelos/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevCheckoutProjectIdRoute = DevCheckoutProjectIdRouteImport.update({
+  id: '/dev/checkout/$projectId',
+  path: '/dev/checkout/$projectId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicNotifyAdminSignupRoute =
   ApiPublicNotifyAdminSignupRouteImport.update({
     id: '/api/public/notify-admin-signup',
@@ -274,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
+  '/dev/checkout/$projectId': typeof DevCheckoutProjectIdRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/dev/modelos/': typeof DevModelosIndexRoute
@@ -314,6 +321,7 @@ export interface FileRoutesByTo {
   '/dev': typeof DevIndexRoute
   '/planos': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
+  '/dev/checkout/$projectId': typeof DevCheckoutProjectIdRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/dev/modelos': typeof DevModelosIndexRoute
@@ -355,6 +363,7 @@ export interface FileRoutesById {
   '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
+  '/dev/checkout/$projectId': typeof DevCheckoutProjectIdRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/dev/modelos/': typeof DevModelosIndexRoute
@@ -397,6 +406,7 @@ export interface FileRouteTypes {
     | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
+    | '/dev/checkout/$projectId'
     | '/dev/modelos/$slug'
     | '/lovable/email/suppression'
     | '/dev/modelos/'
@@ -437,6 +447,7 @@ export interface FileRouteTypes {
     | '/dev'
     | '/planos'
     | '/api/public/notify-admin-signup'
+    | '/dev/checkout/$projectId'
     | '/dev/modelos/$slug'
     | '/lovable/email/suppression'
     | '/dev/modelos'
@@ -477,6 +488,7 @@ export interface FileRouteTypes {
     | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
+    | '/dev/checkout/$projectId'
     | '/dev/modelos/$slug'
     | '/lovable/email/suppression'
     | '/dev/modelos/'
@@ -518,6 +530,7 @@ export interface RootRouteChildren {
   DevIndexRoute: typeof DevIndexRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
+  DevCheckoutProjectIdRoute: typeof DevCheckoutProjectIdRoute
   DevModelosSlugRoute: typeof DevModelosSlugRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   DevModelosIndexRoute: typeof DevModelosIndexRoute
@@ -748,6 +761,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevModelosSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/checkout/$projectId': {
+      id: '/dev/checkout/$projectId'
+      path: '/dev/checkout/$projectId'
+      fullPath: '/dev/checkout/$projectId'
+      preLoaderRoute: typeof DevCheckoutProjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/notify-admin-signup': {
       id: '/api/public/notify-admin-signup'
       path: '/api/public/notify-admin-signup'
@@ -830,6 +850,7 @@ const rootRouteChildren: RootRouteChildren = {
   DevIndexRoute: DevIndexRoute,
   PlanosIndexRoute: PlanosIndexRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
+  DevCheckoutProjectIdRoute: DevCheckoutProjectIdRoute,
   DevModelosSlugRoute: DevModelosSlugRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   DevModelosIndexRoute: DevModelosIndexRoute,
