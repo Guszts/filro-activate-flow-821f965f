@@ -364,6 +364,39 @@ export const adminRespondDevChangeRequest = createServerFn({ method: "POST" })
     if (data.status === "done" || data.status === "rejected") patch.resolved_at = new Date().toISOString();
     const { error } = await supabaseAdmin.from("dev_change_requests").update(patch as never).eq("id", data.requestId);
     if (error) return { ok: false, error: error.message };
+
+    // Notifica o cliente por e-mail quando há resposta ou mudança relevante de status
+    try {
+      const { data: req } = await supabaseAdmin
+        .from("dev_change_requests")
+        .select("project_id, user_id, ai_summary, message")
+        .eq("id", data.requestId)
+        .maybeSingle();
+      if (req?.user_id) {
+        const [{ data: profile }, { data: project }] = await Promise.all([
+          supabaseAdmin.from("profiles").select("name, email").eq("user_id", req.user_id).maybeSingle(),
+          supabaseAdmin.from("dev_projects").select("business_name").eq("id", req.project_id).maybeSingle(),
+        ]);
+        if (profile?.email) {
+          await sendTransactionalEmailServer({
+            templateName: "dev-change-answered",
+            recipientEmail: profile.email,
+            idempotencyKey: `dev-answered-${data.requestId}-${data.status}`,
+            templateData: {
+              name: profile.name || undefined,
+              businessName: project?.business_name || undefined,
+              requestSummary: req.ai_summary || (req.message ?? "").slice(0, 140),
+              status: data.status,
+              response: data.response || undefined,
+              projectUrl: `https://setup.filro.site/dev/projeto/${req.project_id}`,
+            },
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("[email] dev-change-answered failed", e);
+    }
+
     return { ok: true, error: null };
   });
 
