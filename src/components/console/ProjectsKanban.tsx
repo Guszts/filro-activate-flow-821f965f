@@ -15,7 +15,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDateTime } from "@/lib/format";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
-import { notifySitePublished, setProjectPdfUrl } from "@/lib/projects.functions";
+import {
+  notifySitePublished,
+  createProjectPdfUploadUrl,
+  confirmProjectPdfUpload,
+  removeProjectPdf,
+  getProjectPdfDownloadUrl,
+} from "@/lib/projects.functions";
 import { FileText, Upload as UploadIcon, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -47,6 +53,7 @@ type ProjectRow = {
   kanban_position: number;
   plan_id: string | null;
   project_pdf_url: string | null;
+  project_pdf_path: string | null;
 };
 
 const COLUMNS: { id: ProjectStatus; label: string; tone: string }[] = [
@@ -340,7 +347,10 @@ function KanbanCard({
   dragging?: boolean;
 }) {
   const qc = useQueryClient();
-  const setPdf = useServerFn(setProjectPdfUrl);
+  const createUploadUrl = useServerFn(createProjectPdfUploadUrl);
+  const confirmUpload = useServerFn(confirmProjectPdfUpload);
+  const removePdf = useServerFn(removeProjectPdf);
+  const getDownloadUrl = useServerFn(getProjectPdfDownloadUrl);
   const [uploading, setUploading] = useState(false);
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: project.id,
@@ -351,19 +361,25 @@ function KanbanCard({
     ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : undefined;
 
+  const hasPdf = Boolean(project.project_pdf_path || project.project_pdf_url);
+
   async function handlePdfUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
+    if (file.type !== "application/pdf") { toast.error("Apenas arquivos PDF"); return; }
     if (file.size > 20 * 1024 * 1024) { toast.error("PDF maior que 20MB"); return; }
     setUploading(true);
     try {
-      const path = `${project.user_id}/projects/${project.id}-${Date.now()}.pdf`;
-      const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true, contentType: "application/pdf" });
-      if (error) throw error;
-      const { data } = supabase.storage.from("business-assets").getPublicUrl(path);
-      await setPdf({ data: { projectId: project.id, pdfUrl: data.publicUrl } });
-      toast.success("PDF anexado ao projeto");
+      const { uploadUrl, path } = await createUploadUrl({ data: { projectId: project.id } });
+      const putRes = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: { "Content-Type": "application/pdf", "x-upsert": "true" },
+        body: file,
+      });
+      if (!putRes.ok) throw new Error(`Upload falhou (${putRes.status})`);
+      await confirmUpload({ data: { projectId: project.id, path } });
+      toast.success("PDF anexado em armazenamento privado");
       qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
     } catch (err) {
       toast.error("Falha ao enviar PDF: " + (err as Error).message);
@@ -372,11 +388,25 @@ function KanbanCard({
     }
   }
 
+  async function handleView(e: React.MouseEvent) {
+    e.stopPropagation();
+    try {
+      const { url } = await getDownloadUrl({ data: { projectId: project.id } });
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      toast.error("Não foi possível gerar link: " + (err as Error).message);
+    }
+  }
+
   async function handlePdfRemove(e: React.MouseEvent) {
     e.stopPropagation();
     if (!confirm("Remover o PDF deste projeto?")) return;
-    await setPdf({ data: { projectId: project.id, pdfUrl: null } });
-    qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
+    try {
+      await removePdf({ data: { projectId: project.id } });
+      qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
+    } catch (err) {
+      toast.error("Falha ao remover: " + (err as Error).message);
+    }
   }
 
   return (
@@ -412,7 +442,7 @@ function KanbanCard({
               Preview
             </span>
           )}
-          {project.project_pdf_url && (
+          {hasPdf && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-flame/15 text-[10px] font-semibold text-ink">
               <FileText className="h-3 w-3" /> PDF
             </span>
@@ -430,12 +460,12 @@ function KanbanCard({
       <div className="mt-2 pt-2 border-t border-border flex items-center gap-2">
         <label className="inline-flex items-center gap-1 text-[10px] text-ink-soft hover:text-ink cursor-pointer">
           <UploadIcon className="h-3 w-3" />
-          {uploading ? "Enviando…" : project.project_pdf_url ? "Trocar PDF" : "Anexar PDF"}
+          {uploading ? "Enviando…" : hasPdf ? "Trocar PDF" : "Anexar PDF"}
           <input type="file" accept="application/pdf" className="hidden" onChange={handlePdfUpload} disabled={uploading} />
         </label>
-        {project.project_pdf_url && (
+        {hasPdf && (
           <>
-            <a href={project.project_pdf_url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-[10px] text-ink-soft hover:text-ink underline">Ver</a>
+            <button type="button" onClick={handleView} className="text-[10px] text-ink-soft hover:text-ink underline">Ver</button>
             <button type="button" onClick={handlePdfRemove} className="ml-auto text-[10px] text-flame hover:opacity-80 inline-flex items-center gap-0.5">
               <X className="h-3 w-3" /> Remover
             </button>

@@ -4,19 +4,140 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { sendTransactionalEmailServer } from "@/lib/email/send.server";
 
 const PANEL_URL = "https://filro.site/painel";
+const PDF_BUCKET = "project-pdfs";
 
-async function assertAdmin(userId: string) {
+async function isAdmin(userId: string): Promise<boolean> {
   const { data } = await supabaseAdmin
     .from("user_roles")
     .select("role")
     .eq("user_id", userId)
     .eq("role", "admin")
     .maybeSingle();
-  if (!data) throw new Error("Acesso restrito a administradores.");
+  return Boolean(data);
+}
+
+async function assertAdmin(userId: string) {
+  if (!(await isAdmin(userId))) throw new Error("Acesso restrito a administradores.");
+}
+
+async function assertOwnerOrAdmin(userId: string, projectId: string) {
+  const { data: project } = await supabaseAdmin
+    .from("projects")
+    .select("user_id")
+    .eq("id", projectId)
+    .maybeSingle();
+  if (!project) throw new Error("Projeto não encontrado.");
+  if (project.user_id === userId) return;
+  if (await isAdmin(userId)) return;
+  throw new Error("Acesso negado a este projeto.");
 }
 
 /**
+ * Gera URL assinada de download do PDF do projeto (válida por 1h).
+ * Acessível apenas pelo dono do projeto ou um admin.
+ */
+export const getProjectPdfDownloadUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string }) => {
+    if (!data.projectId) throw new Error("projectId obrigatório");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    await assertOwnerOrAdmin(context.userId, data.projectId);
+    const { data: project } = await supabaseAdmin
+      .from("projects")
+      .select("project_pdf_path,project_pdf_url")
+      .eq("id", data.projectId)
+      .maybeSingle();
+    if (!project) throw new Error("Projeto não encontrado.");
+    if (project.project_pdf_path) {
+      const { data: signed, error } = await supabaseAdmin.storage
+        .from(PDF_BUCKET)
+        .createSignedUrl(project.project_pdf_path, 60 * 60);
+      if (error) throw new Error(error.message);
+      return { url: signed.signedUrl };
+    }
+    // Legacy public URL fallback
+    if (project.project_pdf_url) return { url: project.project_pdf_url };
+    throw new Error("Nenhum PDF anexado a este projeto.");
+  });
+
+/**
+ * Gera URL assinada de UPLOAD para o PDF (admin apenas).
+ * O cliente faz PUT direto na URL retornada, depois chama confirmProjectPdfUpload.
+ */
+export const createProjectPdfUploadUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string }) => {
+    if (!data.projectId) throw new Error("projectId obrigatório");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const path = `${data.projectId}/${Date.now()}-${crypto.randomUUID()}.pdf`;
+    const { data: signed, error } = await supabaseAdmin.storage
+      .from(PDF_BUCKET)
+      .createSignedUploadUrl(path);
+    if (error) throw new Error(error.message);
+    return { uploadUrl: signed.signedUrl, token: signed.token, path };
+  });
+
+/**
+ * Confirma o upload do PDF: grava o caminho privado em projects.project_pdf_path
+ * e limpa a URL pública legada. Apenas admin.
+ */
+export const confirmProjectPdfUpload = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string; path: string }) => {
+    if (!data.projectId) throw new Error("projectId obrigatório");
+    if (!data.path) throw new Error("path obrigatório");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    // Verifica que o arquivo realmente existe no bucket privado
+    const { data: head, error: headErr } = await supabaseAdmin.storage
+      .from(PDF_BUCKET)
+      .createSignedUrl(data.path, 60);
+    if (headErr || !head) throw new Error("Upload não confirmado no bucket.");
+    const { error } = await supabaseAdmin
+      .from("projects")
+      .update({ project_pdf_path: data.path, project_pdf_url: null })
+      .eq("id", data.projectId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+/**
+ * Remove o PDF do projeto (apaga arquivo do bucket privado). Apenas admin.
+ */
+export const removeProjectPdf = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string }) => {
+    if (!data.projectId) throw new Error("projectId obrigatório");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const { data: project } = await supabaseAdmin
+      .from("projects")
+      .select("project_pdf_path")
+      .eq("id", data.projectId)
+      .maybeSingle();
+    if (project?.project_pdf_path) {
+      await supabaseAdmin.storage.from(PDF_BUCKET).remove([project.project_pdf_path]);
+    }
+    const { error } = await supabaseAdmin
+      .from("projects")
+      .update({ project_pdf_path: null, project_pdf_url: null })
+      .eq("id", data.projectId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+/**
  * Notifica o cliente quando o projeto é publicado. Idempotente por project_id.
+ * Gera URL assinada de longa duração (7 dias) para o PDF, se existir.
  */
 export const notifySitePublished = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -28,7 +149,7 @@ export const notifySitePublished = createServerFn({ method: "POST" })
     await assertAdmin(context.userId);
     const { data: project } = await supabaseAdmin
       .from("projects")
-      .select("user_id,published_url,business_name,project_pdf_url,delivered_email_sent_at")
+      .select("user_id,published_url,business_name,project_pdf_path,project_pdf_url,delivered_email_sent_at")
       .eq("id", data.projectId)
       .maybeSingle();
     if (!project) return { ok: false };
@@ -38,6 +159,17 @@ export const notifySitePublished = createServerFn({ method: "POST" })
       .eq("user_id", project.user_id)
       .maybeSingle();
     if (!prof?.email) return { ok: false };
+
+    let pdfUrl: string | undefined;
+    if (project.project_pdf_path) {
+      const { data: signed } = await supabaseAdmin.storage
+        .from(PDF_BUCKET)
+        .createSignedUrl(project.project_pdf_path, 60 * 60 * 24 * 7);
+      pdfUrl = signed?.signedUrl;
+    } else if (project.project_pdf_url) {
+      pdfUrl = project.project_pdf_url;
+    }
+
     await sendTransactionalEmailServer({
       templateName: "site-published",
       recipientEmail: prof.email,
@@ -46,7 +178,7 @@ export const notifySitePublished = createServerFn({ method: "POST" })
         name: prof.name || undefined,
         businessName: project.business_name || prof.business_name || undefined,
         publishedUrl: project.published_url || undefined,
-        projectPdfUrl: project.project_pdf_url || undefined,
+        projectPdfUrl: pdfUrl,
         panelUrl: PANEL_URL,
       },
     });
@@ -57,22 +189,3 @@ export const notifySitePublished = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-/**
- * Atualiza a URL do PDF do projeto (admin upload manual).
- */
-export const setProjectPdfUrl = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((data: { projectId: string; pdfUrl: string | null }) => {
-    if (!data.projectId) throw new Error("projectId obrigatório");
-    if (data.pdfUrl && !/^https?:\/\//.test(data.pdfUrl)) throw new Error("URL inválida");
-    return data;
-  })
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context.userId);
-    const { error } = await supabaseAdmin
-      .from("projects")
-      .update({ project_pdf_url: data.pdfUrl })
-      .eq("id", data.projectId);
-    if (error) throw new Error(error.message);
-    return { ok: true };
-  });
