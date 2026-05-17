@@ -24,7 +24,6 @@ import { Route as ModelosRouteImport } from './routes/modelos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GarantiaRouteImport } from './routes/garantia'
 import { Route as DocsRouteImport } from './routes/docs'
-import { Route as DevRouteImport } from './routes/dev'
 import { Route as ConsoleRouteImport } from './routes/console'
 import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
@@ -32,6 +31,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BusinessInfoRouteImport } from './routes/business-info'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
+import { Route as DevIndexRouteImport } from './routes/dev.index'
 import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
@@ -120,11 +120,6 @@ const DocsRoute = DocsRouteImport.update({
   path: '/docs',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DevRoute = DevRouteImport.update({
-  id: '/dev',
-  path: '/dev',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ConsoleRoute = ConsoleRouteImport.update({
   id: '/console',
   path: '/console',
@@ -158,6 +153,11 @@ const IndexRoute = IndexRouteImport.update({
 const PlanosIndexRoute = PlanosIndexRouteImport.update({
   id: '/planos/',
   path: '/planos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevIndexRoute = DevIndexRouteImport.update({
+  id: '/dev/',
+  path: '/dev/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjetoIdRoute = ProjetoIdRouteImport.update({
@@ -233,7 +233,6 @@ export interface FileRoutesByFullPath {
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
-  '/dev': typeof DevRoute
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
@@ -253,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
+  '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -270,7 +270,6 @@ export interface FileRoutesByTo {
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
-  '/dev': typeof DevRoute
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
@@ -290,6 +289,7 @@ export interface FileRoutesByTo {
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
+  '/dev': typeof DevIndexRoute
   '/planos': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -308,7 +308,6 @@ export interface FileRoutesById {
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
-  '/dev': typeof DevRoute
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
@@ -328,6 +327,7 @@ export interface FileRoutesById {
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
+  '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -347,7 +347,6 @@ export interface FileRouteTypes {
     | '/como-funciona'
     | '/comparar'
     | '/console'
-    | '/dev'
     | '/docs'
     | '/garantia'
     | '/login'
@@ -367,6 +366,7 @@ export interface FileRouteTypes {
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
+    | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
@@ -384,7 +384,6 @@ export interface FileRouteTypes {
     | '/como-funciona'
     | '/comparar'
     | '/console'
-    | '/dev'
     | '/docs'
     | '/garantia'
     | '/login'
@@ -404,6 +403,7 @@ export interface FileRouteTypes {
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
+    | '/dev'
     | '/planos'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
@@ -421,7 +421,6 @@ export interface FileRouteTypes {
     | '/como-funciona'
     | '/comparar'
     | '/console'
-    | '/dev'
     | '/docs'
     | '/garantia'
     | '/login'
@@ -441,6 +440,7 @@ export interface FileRouteTypes {
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
+    | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
@@ -459,7 +459,6 @@ export interface RootRouteChildren {
   ComoFuncionaRoute: typeof ComoFuncionaRoute
   CompararRoute: typeof CompararRoute
   ConsoleRoute: typeof ConsoleRoute
-  DevRoute: typeof DevRoute
   DocsRoute: typeof DocsRoute
   GarantiaRoute: typeof GarantiaRoute
   LoginRoute: typeof LoginRoute
@@ -479,6 +478,7 @@ export interface RootRouteChildren {
   LeadIdRoute: typeof LeadIdRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
   ProjetoIdRoute: typeof ProjetoIdRoute
+  DevIndexRoute: typeof DevIndexRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
@@ -597,13 +597,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dev': {
-      id: '/dev'
-      path: '/dev'
-      fullPath: '/dev'
-      preLoaderRoute: typeof DevRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/console': {
       id: '/console'
       path: '/console'
@@ -651,6 +644,13 @@ declare module '@tanstack/react-router' {
       path: '/planos'
       fullPath: '/planos/'
       preLoaderRoute: typeof PlanosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/': {
+      id: '/dev/'
+      path: '/dev'
+      fullPath: '/dev/'
+      preLoaderRoute: typeof DevIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projeto/$id': {
@@ -747,7 +747,6 @@ const rootRouteChildren: RootRouteChildren = {
   ComoFuncionaRoute: ComoFuncionaRoute,
   CompararRoute: CompararRoute,
   ConsoleRoute: ConsoleRoute,
-  DevRoute: DevRoute,
   DocsRoute: DocsRoute,
   GarantiaRoute: GarantiaRoute,
   LoginRoute: LoginRoute,
@@ -767,6 +766,7 @@ const rootRouteChildren: RootRouteChildren = {
   LeadIdRoute: LeadIdRoute,
   PlanosSlugRoute: PlanosSlugRoute,
   ProjetoIdRoute: ProjetoIdRoute,
+  DevIndexRoute: DevIndexRoute,
   PlanosIndexRoute: PlanosIndexRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
@@ -780,3 +780,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
