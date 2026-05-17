@@ -203,7 +203,7 @@ export const flaroChat = createServerFn({ method: "POST" })
 
     for (let i = 0; i < keys.length; i++) {
       try {
-        const res = await callGroq(keys[i], data.messages);
+        const res = await callGroq(keys[i], data.messages, systemPrompt);
         if (res.ok) {
           const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
           const reply = json.choices?.[0]?.message?.content?.trim() || "";
