@@ -108,7 +108,8 @@ function BusinessInfoPage() {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/business-info" } }); return; }
     (async () => {
-      const { data: pay } = await supabase.from("payments").select("id, plan_id, status, plans(slug)").eq("user_id", user.id).eq("status", "paid").maybeSingle();
+      const { data: payRows } = await supabase.from("payments").select("id, plan_id, status, paid_at, plans(slug)").eq("user_id", user.id).eq("status", "paid").order("paid_at", { ascending: false }).limit(1);
+      const pay = payRows?.[0];
       if (!pay) { toast.error("Você precisa concluir um pagamento primeiro."); navigate({ to: "/" }); return; }
       const slug = (pay as { plans?: { slug?: string } | null })?.plans?.slug ?? "plus";
       setPlanSlug(slug);
