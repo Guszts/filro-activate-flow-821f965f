@@ -134,16 +134,13 @@ function getKeys(): string[] {
   ].filter((k): k is string => !!k && k.length > 10);
 }
 
-async function callGroq(apiKey: string, messages: ChatMessage) {
+async function callGroq(apiKey: string, messages: ChatMessage, systemPrompt: string) {
   const res = await fetch(GROQ_URL, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       model: MODEL,
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+      messages: [{ role: "system", content: systemPrompt }, ...messages],
       temperature: 0.6,
       max_tokens: 700,
     }),
@@ -151,16 +148,13 @@ async function callGroq(apiKey: string, messages: ChatMessage) {
   return res;
 }
 
-async function callLovableAi(apiKey: string, messages: ChatMessage) {
+async function callLovableAi(apiKey: string, messages: ChatMessage, systemPrompt: string) {
   const res = await fetch(LOVABLE_AI_URL, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       model: LOVABLE_AI_MODEL,
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+      messages: [{ role: "system", content: systemPrompt }, ...messages],
       temperature: 0.55,
       max_tokens: 700,
     }),
