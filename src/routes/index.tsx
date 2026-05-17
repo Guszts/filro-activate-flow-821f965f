@@ -222,7 +222,7 @@ function HomePage() {
           </p>
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
-          {(plans ?? []).map((p, i) => (
+          {(plans ?? []).map((p: any, i: number) => (
             <PlanCard
               key={p.id}
               index={i}
