@@ -215,6 +215,23 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
           ].join("\n"),
         });
 
+        if (profile?.email) {
+          const planLabel = devProj?.plan_slug
+            ? devProj.plan_slug.replace(/^dev_/, "Dev ").replace(/^./, (c) => c.toUpperCase())
+            : undefined;
+          await sendTransactionalEmailServer({
+            templateName: "dev-project-paid",
+            recipientEmail: profile.email,
+            idempotencyKey: `dev-paid-${session.id}`,
+            templateData: {
+              name: profile.name || undefined,
+              businessName: devProj?.business_name || undefined,
+              planName: planLabel,
+              projectUrl: `https://setup.filro.site/dev/projeto/${devProjectId}`,
+            },
+          }).catch((e) => console.error("[email] dev-project-paid failed", e));
+        }
+
         await logEvent("dev.checkout.completed", userId, { devProjectId, sessionId: session.id });
         break;
       }
