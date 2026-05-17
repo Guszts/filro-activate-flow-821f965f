@@ -181,10 +181,23 @@ function BusinessInfoPage() {
   const removeProduct = (idx: number) => setInfo((p) => ({ ...p, products: p.products.filter((_, i) => i !== idx) }));
   const updProduct = (idx: number, k: keyof Product, v: string) => setInfo((p) => ({ ...p, products: p.products.map((pr, i) => i === idx ? { ...pr, [k]: v } : pr) }));
 
+  // Per-section validation: each section returns true when complete.
+  const sectionValid: Record<SectionKey, boolean> = {
+    identidade: Boolean(info.name.trim() && info.segment.trim() && info.description.trim().length >= 20 && info.logo_url),
+    contato: Boolean(info.whatsapp.trim() && info.address.trim()),
+    catalogo: info.products.length > 0 && info.products.every((p) => p.name.trim() && p.price.trim()),
+    modelo: Boolean(info.model_notes.trim()),
+    premium: Boolean(info.premium_brand_voice.trim() && info.premium_target_audience.trim()),
+  };
+
   const submit = async () => {
     if (!project || !user) return;
-    if (!info.name) return toast.error("Nome do negócio é obrigatório");
-    if (!info.whatsapp) return toast.error("WhatsApp é obrigatório");
+    const missing = (PLAN_SECTIONS[planSlug] ?? PLAN_SECTIONS.plus).filter((s) => !sectionValid[s]);
+    if (missing.length > 0) {
+      toast.error(`Complete todas as seções primeiro: ${missing.map((m) => SECTION_LABELS[m]).join(", ")}`);
+      setSection(missing[0]);
+      return;
+    }
     setSaving(true);
     const { error } = await supabase.from("projects").update({
       business_info: info as never,
@@ -205,6 +218,7 @@ function BusinessInfoPage() {
   const activeSectionKeys = PLAN_SECTIONS[planSlug] ?? PLAN_SECTIONS.plus;
   const sections = activeSectionKeys.map((k) => [k, SECTION_LABELS[k]] as const);
   const currentSection = activeSectionKeys.includes(section) ? section : activeSectionKeys[0];
+  const allValid = activeSectionKeys.every((s) => sectionValid[s]);
 
   return (
     <div className="min-h-screen flex flex-col">
