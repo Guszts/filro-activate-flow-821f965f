@@ -53,7 +53,8 @@ export const Route = createFileRoute("/dev/modelos/$slug")({
 });
 
 function DevTemplateDetailPage() {
-  const { template: t } = Route.useLoaderData();
+  const data = Route.useLoaderData();
+  const t = data.template;
   const plan = getDevPlan(t.recommendedPlan);
 
   return (
