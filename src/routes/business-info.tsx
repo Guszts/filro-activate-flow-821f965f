@@ -245,12 +245,21 @@ function BusinessInfoPage() {
 
         <div className="mt-10 grid lg:grid-cols-[240px_1fr] gap-8">
           <nav className="lg:sticky lg:top-28 h-fit space-y-1">
-            {sections.map(([k, label]) => (
-              <button key={k} onClick={() => setSection(k)}
-                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors ${currentSection === k ? "bg-ink text-paper" : "text-ink-soft hover:bg-muted"}`}>
-                {label}
-              </button>
-            ))}
+            {sections.map(([k, label]) => {
+              const ok = sectionValid[k];
+              return (
+                <button key={k} onClick={() => setSection(k)}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors flex items-center justify-between gap-2 ${currentSection === k ? "bg-ink text-paper" : "text-ink-soft hover:bg-muted"}`}>
+                  <span>{label}</span>
+                  {ok
+                    ? <Check className={`h-3.5 w-3.5 ${currentSection === k ? "text-lime" : "text-emerald-600"}`} />
+                    : <Clock className={`h-3.5 w-3.5 ${currentSection === k ? "text-paper/60" : "text-ink-soft/60"}`} />}
+                </button>
+              );
+            })}
+            <div className="mt-3 px-4 text-[10px] uppercase tracking-widest text-ink-soft">
+              {activeSectionKeys.filter((s) => sectionValid[s]).length}/{activeSectionKeys.length} seções completas
+            </div>
           </nav>
 
           <div className="space-y-6">
