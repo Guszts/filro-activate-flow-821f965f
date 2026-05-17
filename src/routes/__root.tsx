@@ -11,6 +11,29 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { FlaroChat } from "@/components/FlaroChat";
+import { useRouterState } from "@tanstack/react-router";
+
+function ConditionalFlaroChat() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const hiddenPrefixes = [
+    "/checkout",
+    "/console",
+    "/painel",
+    "/projeto",
+    "/lead",
+    "/settings",
+    "/business-info",
+    "/payment-success",
+    "/payment-failed",
+    "/login",
+    "/register",
+    "/verify-email",
+    "/unsubscribe",
+    "/suporte",
+  ];
+  if (hiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + "/"))) return null;
+  return <FlaroChat />;
+}
 import { capturePartnerFromUrl } from "@/lib/partner";
 import appCss from "../styles.css?url";
 
