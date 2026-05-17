@@ -37,5 +37,5 @@ export const template = {
   component: PaymentFailedEmail,
   subject: 'Falha ao processar sua mensalidade',
   displayName: 'Falha de pagamento',
-  previewData: { name: 'João', planName: 'Plano Plus', portalUrl: 'https://filro.app/painel' },
+  previewData: { name: 'João', planName: 'Plano Plus', portalUrl: 'https://setup.filro.site/painel' },
 } satisfies TemplateEntry

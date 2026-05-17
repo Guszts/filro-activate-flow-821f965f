@@ -44,5 +44,5 @@ export const template = {
   component: WelcomePurchaseEmail,
   subject: (d: Record<string, any>) => `Pagamento confirmado — ${d.planName ?? 'seu plano Filro'}`,
   displayName: 'Boas-vindas pós-compra',
-  previewData: { name: 'João', planName: 'Plano Plus', businessName: 'Padaria do João', panelUrl: 'https://filro.app/painel' },
+  previewData: { name: 'João', planName: 'Plano Plus', businessName: 'Padaria do João', panelUrl: 'https://setup.filro.site/painel' },
 } satisfies TemplateEntry

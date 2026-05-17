@@ -4,7 +4,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { sendTransactionalEmailServer, getAdminEmails } from "@/lib/email/send.server";
 import type Stripe from "stripe";
 
-const PANEL_URL = "https://filro.app/painel";
+const PANEL_URL = "https://setup.filro.site/painel";
 
 function formatBRL(cents: number) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);

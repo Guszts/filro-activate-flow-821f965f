@@ -28,7 +28,7 @@ const faqs = [
   },
   {
     q: "Preciso ter domínio próprio?",
-    a: "Não é obrigatório. Entregamos em um subdomínio nosso (ex.: seu-negocio.filro.app), mas se você tiver um domínio (ex.: meunegocio.com.br) configuramos sem custo adicional.",
+    a: "Não é obrigatório. Entregamos em um subdomínio nosso (ex.: seu-negocio.filro.site), mas se você tiver um domínio (ex.: meunegocio.com.br) configuramos sem custo adicional.",
   },
   {
     q: "Funciona bem no celular?",

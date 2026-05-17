@@ -5,7 +5,7 @@ export function PaymentTestModeBanner() {
   if (!clientToken?.startsWith("pk_test_")) return null;
   return (
     <div className="w-full bg-orange-100 border-b border-orange-300 px-4 py-2 text-center text-xs md:text-sm text-orange-800">
-      <strong>Ambiente de pré-visualização</strong> — pagamentos em modo de teste. No site publicado (filro.app), as cobranças são reais.
+      <strong>Ambiente de pré-visualização</strong> — pagamentos em modo de teste. No site publicado (filro.site), as cobranças são reais.
     </div>
   );
 }
