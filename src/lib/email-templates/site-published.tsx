@@ -32,6 +32,11 @@ const SitePublishedEmail = ({ name, businessName, publishedUrl, panelUrl, projec
           </div>
         )}
         {publishedUrl && <Button style={styles.button} href={publishedUrl}>Ver meu site</Button>}
+        {projectPdfUrl && (
+          <Button style={{ ...styles.button, marginTop: 12, backgroundColor: 'transparent', color: '#000', border: '1px solid #000' }} href={projectPdfUrl}>
+            Baixar PDF do projeto
+          </Button>
+        )}
         <Hr style={styles.hr} />
         {panelUrl && (
           <Text style={styles.text}>
