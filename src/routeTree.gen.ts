@@ -31,11 +31,14 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BusinessInfoRouteImport } from './routes/business-info'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
+import { Route as DevIndexRouteImport } from './routes/dev.index'
 import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as DevModelosIndexRouteImport } from './routes/dev.modelos.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
+import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -154,6 +157,11 @@ const PlanosIndexRoute = PlanosIndexRouteImport.update({
   path: '/planos/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevIndexRoute = DevIndexRouteImport.update({
+  id: '/dev/',
+  path: '/dev/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjetoIdRoute = ProjetoIdRouteImport.update({
   id: '/projeto/$id',
   path: '/projeto/$id',
@@ -174,9 +182,19 @@ const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   path: '/email/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevModelosIndexRoute = DevModelosIndexRouteImport.update({
+  id: '/dev/modelos/',
+  path: '/dev/modelos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   id: '/lovable/email/suppression',
   path: '/lovable/email/suppression',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevModelosSlugRoute = DevModelosSlugRouteImport.update({
+  id: '/dev/modelos/$slug',
+  path: '/dev/modelos/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicNotifyAdminSignupRoute =
@@ -246,9 +264,12 @@ export interface FileRoutesByFullPath {
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
+  '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
+  '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/dev/modelos/': typeof DevModelosIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -282,9 +303,12 @@ export interface FileRoutesByTo {
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
+  '/dev': typeof DevIndexRoute
   '/planos': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
+  '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/dev/modelos': typeof DevModelosIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -319,9 +343,12 @@ export interface FileRoutesById {
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
+  '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
+  '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/dev/modelos/': typeof DevModelosIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -357,9 +384,12 @@ export interface FileRouteTypes {
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
+    | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
+    | '/dev/modelos/$slug'
     | '/lovable/email/suppression'
+    | '/dev/modelos/'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -393,9 +423,12 @@ export interface FileRouteTypes {
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
+    | '/dev'
     | '/planos'
     | '/api/public/notify-admin-signup'
+    | '/dev/modelos/$slug'
     | '/lovable/email/suppression'
+    | '/dev/modelos'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -429,9 +462,12 @@ export interface FileRouteTypes {
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
+    | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
+    | '/dev/modelos/$slug'
     | '/lovable/email/suppression'
+    | '/dev/modelos/'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -466,9 +502,12 @@ export interface RootRouteChildren {
   LeadIdRoute: typeof LeadIdRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
   ProjetoIdRoute: typeof ProjetoIdRoute
+  DevIndexRoute: typeof DevIndexRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
+  DevModelosSlugRoute: typeof DevModelosSlugRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
+  DevModelosIndexRoute: typeof DevModelosIndexRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -633,6 +672,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/': {
+      id: '/dev/'
+      path: '/dev'
+      fullPath: '/dev/'
+      preLoaderRoute: typeof DevIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projeto/$id': {
       id: '/projeto/$id'
       path: '/projeto/$id'
@@ -661,11 +707,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/modelos/': {
+      id: '/dev/modelos/'
+      path: '/dev/modelos'
+      fullPath: '/dev/modelos/'
+      preLoaderRoute: typeof DevModelosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/suppression': {
       id: '/lovable/email/suppression'
       path: '/lovable/email/suppression'
       fullPath: '/lovable/email/suppression'
       preLoaderRoute: typeof LovableEmailSuppressionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/modelos/$slug': {
+      id: '/dev/modelos/$slug'
+      path: '/dev/modelos/$slug'
+      fullPath: '/dev/modelos/$slug'
+      preLoaderRoute: typeof DevModelosSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/notify-admin-signup': {
@@ -746,9 +806,12 @@ const rootRouteChildren: RootRouteChildren = {
   LeadIdRoute: LeadIdRoute,
   PlanosSlugRoute: PlanosSlugRoute,
   ProjetoIdRoute: ProjetoIdRoute,
+  DevIndexRoute: DevIndexRoute,
   PlanosIndexRoute: PlanosIndexRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
+  DevModelosSlugRoute: DevModelosSlugRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
+  DevModelosIndexRoute: DevModelosIndexRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
