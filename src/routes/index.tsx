@@ -23,6 +23,7 @@ const HOME_FAQS = [
 
 export const Route = createFileRoute("/")({
   component: HomePage,
+  loader: () => listPublicPlans(),
   head: () => ({
     meta: [
       { property: "og:url", content: "https://setup.filro.site/" },
