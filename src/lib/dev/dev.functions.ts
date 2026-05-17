@@ -470,6 +470,38 @@ export const adminPublishDevVersion = createServerFn({ method: "POST" })
       event_data: { projectId: data.projectId, version: nextVersion, markPublished: !!data.markPublished } as never,
     });
 
+    // Notifica o cliente dono do projeto
+    try {
+      const { data: project } = await supabaseAdmin
+        .from("dev_projects")
+        .select("user_id, business_name, preview_url, published_url")
+        .eq("id", data.projectId)
+        .maybeSingle();
+      if (project?.user_id) {
+        const { data: profile } = await supabaseAdmin
+          .from("profiles").select("name, email").eq("user_id", project.user_id).maybeSingle();
+        if (profile?.email) {
+          await sendTransactionalEmailServer({
+            templateName: "dev-version-published",
+            recipientEmail: profile.email,
+            idempotencyKey: `dev-version-${data.projectId}-${nextVersion}`,
+            templateData: {
+              name: profile.name || undefined,
+              businessName: project.business_name || undefined,
+              versionNumber: nextVersion,
+              previewUrl: data.previewUrl || project.preview_url || undefined,
+              publishedUrl: data.publishedUrl || project.published_url || undefined,
+              notes: data.notes || undefined,
+              projectUrl: `https://setup.filro.site/dev/projeto/${data.projectId}`,
+              isPublished: !!data.markPublished,
+            },
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("[email] dev-version-published failed", e);
+    }
+
     return { ok: true, error: null, version: nextVersion };
   });
 
