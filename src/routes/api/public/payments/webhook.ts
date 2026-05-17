@@ -303,8 +303,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         }).catch((e) => console.error("[email] order-confirmation failed", e));
       }
 
-      // Admin notification
-      const totalAmount = (plan.activation_price ?? 0) + (plan.monthly_price ?? 0);
+      // Admin notification — mostra o valor REALMENTE pago e cupom aplicado
       const admins = await getAdminEmails().catch(() => [] as string[]);
       for (const adminEmail of admins) {
         await sendTransactionalEmailServer({
@@ -317,10 +316,34 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
             customerWhatsapp: profile?.whatsapp,
             businessName: profile?.business_name,
             planName: plan.name,
-            amount: formatBRL(totalAmount),
+            amount: formatBRL(amountPaid),
+            originalAmount: discountAmount > 0 ? formatBRL(planTotal) : undefined,
+            discountAmount: discountAmount > 0 ? formatBRL(discountAmount) : undefined,
+            promoCode: promoCode || undefined,
             sessionId: session.id,
           },
         }).catch((e) => console.error("[email] sale-notification failed", e));
+      }
+
+      // Registra resgate do cupom (best-effort)
+      if (promoCode) {
+        try {
+          const { data: pc } = await supabaseAdmin
+            .from("promo_codes").select("id").eq("code", promoCode).maybeSingle();
+          if (pc?.id) {
+            await supabaseAdmin.from("promo_code_redemptions").insert({
+              promo_code_id: pc.id,
+              code: promoCode,
+              user_id: userId,
+              payment_id: paymentId,
+              stripe_checkout_session_id: session.id,
+              discount_amount: discountAmount,
+            });
+            await supabaseAdmin.rpc("increment_promo_code_use" as never, { _code: promoCode } as never).catch(() => {});
+          }
+        } catch (e) {
+          console.warn("[webhook] promo redemption log failed", e);
+        }
       }
 
       // -------- Comissão de parceiro (B2B privado) --------
