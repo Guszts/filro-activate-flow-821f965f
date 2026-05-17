@@ -53,5 +53,5 @@ export const template = {
   component: SitePublishedEmail,
   subject: 'Seu site Filro está no ar',
   displayName: 'Site publicado',
-  previewData: { name: 'João', businessName: 'Padaria do João', publishedUrl: 'https://padariadojoao.filro.site', panelUrl: 'https://filro.site/painel' },
+  previewData: { name: 'João', businessName: 'Padaria do João', publishedUrl: 'https://padariadojoao.filro.site', panelUrl: 'https://setup.filro.site/painel' },
 } satisfies TemplateEntry

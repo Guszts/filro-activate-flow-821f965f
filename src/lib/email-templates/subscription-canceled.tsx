@@ -41,5 +41,5 @@ export const template = {
   component: SubscriptionCanceledEmail,
   subject: 'Cancelamento confirmado',
   displayName: 'Cancelamento de assinatura',
-  previewData: { name: 'João', planName: 'Plano Plus', endsAt: '15/06/2026', panelUrl: 'https://filro.app/painel' },
+  previewData: { name: 'João', planName: 'Plano Plus', endsAt: '15/06/2026', panelUrl: 'https://setup.filro.site/painel' },
 } satisfies TemplateEntry

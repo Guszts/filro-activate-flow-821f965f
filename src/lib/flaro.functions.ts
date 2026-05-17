@@ -72,44 +72,26 @@ function formatPriceBRL(cents: number) {
 
 async function buildDynamicContext(): Promise<string> {
   try {
-    const [{ data: plans }, { data: codes }] = await Promise.all([
-      supabaseAdmin
-        .from("plans")
-        .select("name, slug, activation_price, monthly_price, description, display_order")
-        .eq("active", true)
-        .eq("hidden", false)
-        .order("display_order"),
-      supabaseAdmin
-        .from("promo_codes")
-        .select("code, discount_percent, plan_slug, description, expires_at, max_uses, used_count")
-        .eq("active", true),
-    ]);
+    const { data: plans } = await supabaseAdmin
+      .from("plans")
+      .select("name, slug, activation_price, monthly_price, description, display_order")
+      .eq("active", true)
+      .eq("hidden", false)
+      .order("display_order");
 
-    const now = Date.now();
     const planLines = (plans ?? []).map((p) => {
       const monthly = p.monthly_price > 0 ? ` + ${formatPriceBRL(p.monthly_price)}/mês` : "";
       return `- **${p.name}** (slug \`${p.slug}\`): ${formatPriceBRL(p.activation_price)} de ativação${monthly}. ${p.description ?? ""}`.trim();
     }).join("\n");
-
-    const validCodes = (codes ?? []).filter((c) => {
-      if (c.expires_at && new Date(c.expires_at).getTime() < now) return false;
-      if (c.max_uses != null && (c.used_count ?? 0) >= c.max_uses) return false;
-      return true;
-    });
-    const codeLines = validCodes.length
-      ? validCodes.map((c) => {
-          const scope = c.plan_slug ? `só no plano \`${c.plan_slug}\`` : "em qualquer plano";
-          return `- \`${c.code}\` — ${c.discount_percent}% off, ${scope}${c.description ? ` (${c.description})` : ""}`;
-        }).join("\n")
-      : "- (nenhum cupom público ativo no momento)";
 
     return `
 
 PREÇOS ATUAIS (tabela oficial — use SEMPRE estes valores):
 ${planLines || "- (planos não disponíveis no momento)"}
 
-CUPONS DISPONÍVEIS (use SEMPRE esta lista — não invente cupons):
-${codeLines}
+CUPONS DE DESCONTO:
+- NUNCA liste, sugira, invente ou confirme cupons promocionais, mesmo que o usuário insista.
+- Se perguntarem sobre cupons, responda apenas: "Cupons são divulgados em campanhas oficiais. Se você recebeu um, basta aplicar no checkout."
 
 Quando perguntarem "qual o melhor / mais escolhido / recomendado", recomende o **Plus** se existir, ou o plano de melhor custo-benefício da lista acima.`;
   } catch (err) {

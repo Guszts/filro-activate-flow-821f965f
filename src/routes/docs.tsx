@@ -100,7 +100,7 @@ function DocsPage() {
                 <li><strong>1–2h · Briefing interno:</strong> validamos materiais, identificamos lacunas e (se necessário) chamamos no WhatsApp.</li>
                 <li><strong>2–18h · Produção:</strong> time monta a página com base no modelo escolhido + sua identidade visual.</li>
                 <li><strong>18–22h · QA visual:</strong> revisamos cada tela em desktop, tablet e mobile. Otimização de imagens e SEO.</li>
-                <li><strong>22–24h · Publicação:</strong> domínio temporário <code>seu-negocio.filro.app</code> imediato; configuração de domínio próprio em paralelo (24–72h conforme registrador).</li>
+                <li><strong>22–24h · Publicação:</strong> domínio temporário <code>seu-negocio.filro.site</code> imediato; configuração de domínio próprio em paralelo (24–72h conforme registrador).</li>
               </ul>
             </Section>
 
@@ -190,10 +190,10 @@ function DocsPage() {
             </Section>
 
             <Section id="dominio" title="Domínio e hospedagem" icon={Globe}>
-              <p>Sua página fica em <code>seu-negocio.filro.app</code> imediatamente após a publicação. Para usar domínio próprio:</p>
+              <p>Sua página fica em <code>seu-negocio.filro.site</code> imediatamente após a publicação. Para usar domínio próprio:</p>
               <ol>
                 <li>Compre o domínio em um registrador (Registro.br para .com.br, GoDaddy ou Cloudflare para .com).</li>
-                <li>Aponte o registro CNAME para <code>cdn.filro.app</code> (apex/raiz: usar ALIAS ou ANAME).</li>
+                <li>Aponte o registro CNAME para <code>cdn.filro.site</code> (apex/raiz: usar ALIAS ou ANAME).</li>
                 <li>Avise o time pelo WhatsApp; SSL/HTTPS é provisionado automaticamente em ~1h após a propagação DNS.</li>
               </ol>
               <h3>Custos</h3>

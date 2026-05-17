@@ -49,5 +49,5 @@ export const template = {
   component: OrderConfirmationEmail,
   subject: (d: Record<string, any>) => `Pedido #${d.orderId ?? ''} confirmado — ${d.planName ?? 'Filro'}`,
   displayName: 'Confirmação de pedido',
-  previewData: { name: 'João', orderId: 'a1b2c3d4', planName: 'Plano Plus', activationAmount: 'R$ 297,00', monthlyAmount: 'R$ 97,00', totalAmount: 'R$ 394,00', panelUrl: 'https://filro.site/painel' },
+  previewData: { name: 'João', orderId: 'a1b2c3d4', planName: 'Plano Plus', activationAmount: 'R$ 297,00', monthlyAmount: 'R$ 97,00', totalAmount: 'R$ 394,00', panelUrl: 'https://setup.filro.site/painel' },
 } satisfies TemplateEntry
