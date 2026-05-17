@@ -1,93 +1,124 @@
-# Flaro Dev — Fase 1
+# Plano: Pagamentos, Formulários por Plano, Cupons, Suporte e Dashboard Admin
 
-Ambiente de desenvolvimento web com IA dentro do Filro Setup, acessível pelo footer via link "Desenvolvedor". Produto chamado **Flaro Dev**.
+Quebrei o pedido em 6 frentes. Cada uma pode ser feita de forma independente — se você quiser priorizar, me diga.
 
-## Escopo da Fase 1
+---
 
-UI completa + banco + chat com IA (Lovable AI Gateway, `google/gemini-3-flash-preview`). Sem bundler real — preview é iframe `srcDoc` com HTML/CSS/JS gerado pela IA. Deploy mockado em `filro.site/id/[slug]`. Entri fica como estrutura pronta com fallback DNS manual (sem chamadas reais ainda).
+## 1. Email do admin com valor realmente pago
 
-Bundler multi-arquivo real, CDN, Entri real, inspector visual e métricas admin ficam para Fase 2/3.
+Hoje o template `sale-notification` mostra o valor "de tabela" do plano. Com cupons (inclusive o de 100%), o valor real pode ser diferente.
 
-## Rotas
+**Mudanças:**
+- No webhook do Stripe (`src/routes/api/public/payments/webhook.ts`), ao gravar `payments.amount`, usar `amount_total` da Checkout Session (que já reflete o desconto do cupom), não o preço do plano.
+- No envio de `sale-notification` para o admin, passar `amountPaid` (centavos reais), `discount` (centavos), `couponCode` (se houver) e renderizar no template.
+- Atualizar `src/lib/email-templates/sale-notification.tsx` para mostrar:
+  - Valor pago (em destaque)
+  - Valor original (riscado, se houve desconto)
+  - Cupom aplicado
 
-- `/desenvolvedor` — hero + dashboard de projetos do usuário
-- `/desenvolvedor/projeto/$projectId` — workspace 3 colunas (chat | preview | painéis)
-- `/desenvolvedor/templates` — galeria de templates
-- `/desenvolvedor/publicar/$projectId` — painel publicar + domínio
-- `/id/$slug` — página pública renderizada do projeto publicado
+---
 
-Footer ganha link "Desenvolvedor" → `/desenvolvedor`.
+## 2. Email separado com PDF do projeto entregue
 
-## Banco de dados (1 migration)
+Quando o admin marca o projeto como "delivered/published", o cliente recebe um email com:
+- Link de preview / link publicado
+- Botão "Baixar PDF do projeto"
 
-Tabelas (todas com RLS escopo `auth.uid() = user_id`, admin via `has_role`):
+**Decisão pendente — o que é o "PDF do projeto"?** Opções:
+- **(a)** PDF gerado automaticamente com um resumo: dados do negócio enviados, plano, modelo escolhido, links — gerado server-side com `@react-pdf/renderer` ou similar.
+- **(b)** PDF que o admin faz upload manualmente em cada projeto (campo `project_pdf_url` na tabela `projects`, upload para Supabase Storage).
+- **(c)** As duas coisas: gerar resumo automático + permitir o admin substituir por um PDF customizado.
 
-- `flaro_projects` — id, user_id, name, description, slug, status (draft/published), template_id, current_version_id, published_at
-- `flaro_versions` — id, project_id, version_number, html, css, js, prompt_summary, created_by
-- `flaro_messages` — id, project_id, role (user/assistant), content, metadata (tokens, model), created_at
-- `flaro_templates` — id, name, description, category, thumbnail_url, html, css, js, is_public
-- `flaro_attachments` — id, project_id, message_id, file_name, file_url, mime_type
-- `flaro_domains` — id, project_id, domain, status (pending/dns_manual/verified), entri_state
-- `flaro_deployments` — id, project_id, version_id, slug, published_at, status
-- `flaro_seo` — id, project_id, title, description, og_image_url, favicon_url
+**Minha sugestão:** (c). Se você não responder, vou de (b) — é o mais previsível.
 
-Slug único global em `flaro_deployments.slug`. `flaro_rate_limits` já existe — reaproveitar.
+Cria-se novo template `project-delivered.tsx` e dispara no momento em que `project_status` muda para `delivered`/`published`.
 
-## Server functions (`src/lib/flaro/*.functions.ts`)
+---
 
-Todas com `requireSupabaseAuth`:
+## 3. Bloquear envio do business-info até todas as etapas concluídas
 
-- `flaro-projects` — list/create/rename/delete/get
-- `flaro-chat` — streaming generator que chama Lovable AI Gateway, salva mensagem user + assistant, extrai HTML/CSS/JS do retorno e cria nova `flaro_versions`
-- `flaro-templates` — listar e clonar template em novo projeto
-- `flaro-versions` — listar versões, restaurar versão anterior
-- `flaro-publish` — gera slug único, cria `flaro_deployments`, marca projeto como published
-- `flaro-domains` — registra domínio custom, retorna instruções DNS (fallback manual)
-- `flaro-attachments` — upload via Supabase Storage bucket `flaro-assets` (criar no migration)
-- `flaro-seo` — get/update SEO do projeto
+Hoje o usuário pode salvar parcial. Vou:
+- Marcar todos os campos obrigatórios (por seção) no schema Zod do formulário.
+- Botão "Enviar para produção" só fica habilitado quando todas as seções estão válidas + um indicador visual por seção (✅ / ⏳).
+- Validação dupla: client + server function `submitBusinessInfo` rejeita se faltar campo.
 
-Rota pública `/id/$slug` busca último deployment via server fn pública (sem auth, só leitura de projetos published).
+---
 
-## Componentes (`src/components/flaro/*`)
+## 4. Formulário de business-info diferente por plano
 
-Workspace:
-- `FlaroHero` — landing dentro de /desenvolvedor com CTA "Criar novo projeto"
-- `FlaroProjectsDashboard` — grid de projetos + empty state
-- `FlaroWorkspaceLayout` — 3 colunas desktop, tabs mobile
-- `FlaroChat` + `FlaroPromptComposer` — chat com IA, render markdown, anexar arquivos
-- `FlaroPreview` — iframe srcDoc com HTML/CSS/JS combinados, toggle desktop/mobile
-- `FlaroVersionList` — histórico de versões com restaurar
-- `FlaroTemplateCard` + `FlaroTemplatesGrid`
-- `FlaroPublishPanel` — publicar, ver URL filro.site/id/slug
-- `FlaroDomainPanel` — domínio custom + instruções DNS
-- `FlaroSeoPanel` — title, description, og image
-- `FlaroEmptyState` — componente reusável
+Cada plano (`essencial`, `profissional`, `premium`, `priority`, `hero`) terá seu próprio conjunto de seções e perguntas, refletindo o que ele entrega.
 
-Estados vazios (PT-BR conforme solicitado):
-- Sem projetos: "Você ainda não criou nenhum projeto no Flaro Dev."
-- Sem templates: "Nenhum template disponível."
-- Sem deployments: "Nenhuma publicação realizada."
+**Estrutura proposta:**
+- Novo arquivo `src/lib/business-info-schemas.ts` exportando um mapa `{ [planSlug]: FormSchema }`.
+- Cada schema tem seções (`identidade`, `seo`, `conteudo`, `integracoes`, etc.) com campos específicos.
+- Ex.: planos com SEO ganham seção de palavras-chave, descrição meta, concorrentes, público-alvo. Planos sem SEO não veem essa seção.
+- A página `business-info.tsx` renderiza dinamicamente com base no plano do pagamento mais recente.
 
-## Design
+**Decisão pendente:** você prefere que eu defina o conteúdo de cada formulário com base no que cada plano entrega hoje (vou inferir do `plans.features` no banco e dos vídeos Remotion), ou você quer me passar a lista exata de perguntas por plano?
 
-Sticky workspace header, hierarquia visual forte, animações sutis, grids responsivos, transições suaves, contraste acessível. Tokens semânticos de `src/styles.css` — sem cores hard-coded. Visual profissional (não infantil, não dashboard genérico). Identidade própria "Flaro Dev" — não copiar visual do Filro Setup principal, mas usar mesmos tokens.
+---
 
-## Fluxo de chat → preview
+## 5. Códigos promocionais + suporte Flaro atualizado
 
-1. User envia prompt no `FlaroPromptComposer`
-2. `flaro-chat` salva mensagem user, chama Gemini com system prompt "Você é Flaro Dev. Gere um app web completo em HTML/CSS/JS. Retorne JSON {html, css, js, summary}."
-3. Stream da resposta para a UI
-4. Ao finalizar, parse JSON, cria nova `flaro_versions`, atualiza `current_version_id`
-5. `FlaroPreview` recarrega iframe srcDoc com nova versão
+**Cupons:** hoje existe `PROMO10` (10%) e provavelmente `PROMO100` (100%) hardcoded em `src/lib/payments.functions.ts`. Vou:
+- Criar tabela `promo_codes` (code, discount_percent, plan_slug nullable = todos, max_uses, used_count, expires_at, active).
+- Migrar os cupons existentes para essa tabela.
+- Aba "Cupons" no console admin para criar/listar/desativar.
+- Vou popular com um conjunto inicial variado:
+  - `BEMVINDO10`, `BEMVINDO20` — geral
+  - `ESSENCIAL15`, `PROFISSIONAL15`, `PREMIUM15` — por plano
+  - `BLACKFRIDAY30` — sazonal
+  - `EQUIPE100` — interno 100%
+  - (me diga se quer outros nomes/valores)
 
-## Publicação
+**Suporte Flaro:** o `flaro.functions.ts` injeta contexto no prompt. Vou:
+- Adicionar query que busca planos ativos, cupons ativos e features do site em cada chamada.
+- Atualizar o system prompt para incluir esses dados dinamicamente.
+- Assim ele sempre responde com info atualizada (preços, cupons disponíveis, o que cada plano entrega).
 
-Gera slug a partir do nome + hash curto. Salva deployment. URL pública `filro.site/id/[slug]` resolve via rota `/id/$slug` que renderiza HTML/CSS/JS direto (server-side fetch + dangerouslySetInnerHTML em iframe srcDoc seguro).
+---
 
-## Estimativa
+## 6. Dashboard de vendas (admin)
 
-~25 arquivos novos, 1 migration grande, 1 link no footer existente. Volume alto numa iteração — vou implementar tudo na sequência: migration → server fns → componentes → rotas → link no footer.
+Nova rota `/dashboard` (separada do `/console`), acessível só para admin, com link no header/sidebar quando logado como admin.
 
-## Fora do escopo (Fase 2+)
+**Conteúdo:**
+- **KPIs no topo:** Receita total, MRR, ARR, ticket médio, nº de clientes ativos, nº de cancelamentos, churn rate.
+- **Filtro de período:** Hoje, Ontem, Últimos 7 dias, Últimos 30 dias, Este mês, Mês passado, Personalizado (date range picker).
+- **Gráfico de receita** ao longo do período (linha/área, Recharts).
+- **Gráfico de pedidos por plano** (donut/bar).
+- **Tabelas:**
+  - Pedidos recentes
+  - Maiores pedidos
+  - Menores pedidos
+  - Pedidos mais antigos (ainda em produção)
+  - Clientes mais fiéis (mais pagamentos / maior LTV)
+- **Cancelamentos:** lista com motivo + data.
 
-Bundler real multi-arquivo, hot reload de componentes React, Entri API real, inspector visual de elementos, otimização de imagens, métricas admin, logs detalhados, webhook integrations, custom code editor (Monaco).
+**Cálculos:**
+- MRR = soma de `subscriptions.monthly_price` ativas no env atual.
+- ARR = MRR × 12.
+- Receita = soma `payments.amount` onde `status='paid'` no período.
+- Churn = canceladas no período / ativas no início do período.
+
+Reutiliza `payments`, `subscriptions`, `profiles`. Sem novas tabelas.
+
+---
+
+## Ordem de execução sugerida
+
+1. (Rápido) Email admin com valor real pago
+2. (Rápido) Bloquear submit business-info até completo
+3. Cupons em banco + suporte Flaro atualizado
+4. Formulário por plano
+5. Email de projeto entregue + PDF
+6. Dashboard admin
+
+---
+
+## Preciso de você antes de começar
+
+1. **PDF do projeto** — opção (a), (b) ou (c)?
+2. **Perguntas por plano** — eu infiro do `plans.features`, ou você me passa a lista?
+3. **Cupons iniciais** — pode ser a lista que sugeri acima, ou você quer customizar?
+4. **Posso começar tudo** ou prefere uma frente por vez?
