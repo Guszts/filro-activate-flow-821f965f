@@ -198,7 +198,7 @@ export function DashboardTab() {
                     <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                     <YAxis tick={{ fontSize: 11 }} />
                     <Tooltip formatter={(v: number) => formatBRL(Math.round(v * 100))} />
-                    <Area type="monotone" dataKey="value" stroke="hsl(var(--foreground))" fill="hsl(var(--foreground))" fillOpacity={0.15} />
+                    <Area type="monotone" dataKey="value" stroke="var(--ink)" fill="var(--ink)" fillOpacity={0.15} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -212,7 +212,7 @@ export function DashboardTab() {
                     <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                     <YAxis tick={{ fontSize: 11 }} />
                     <Tooltip />
-                    <Bar dataKey="count" fill="hsl(var(--foreground))" />
+                    <Bar dataKey="count" fill="var(--ink)" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
