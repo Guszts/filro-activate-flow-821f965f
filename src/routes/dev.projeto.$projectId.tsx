@@ -9,6 +9,7 @@ import { getDevProject } from "@/lib/dev/dev.functions";
 import { getDevPlan } from "@/lib/dev/plans";
 import { getDevTemplate } from "@/lib/dev/templates";
 import { DevChangeChat } from "@/components/dev/DevChangeChat";
+import { DevVersionsList } from "@/components/dev/DevVersionsList";
 
 const SearchSchema = z.object({
   checkout: z.string().optional(),
@@ -147,6 +148,13 @@ function ProjetoPage() {
             {project.status !== "briefing" && project.status !== "awaiting_payment" && (
               <section className="mt-10">
                 <DevChangeChat projectId={project.id} />
+              </section>
+            )}
+
+            {project.status !== "briefing" && project.status !== "awaiting_payment" && (
+              <section className="mt-10">
+                <h2 className="text-xs tracking-wide text-ink-soft mb-3">Histórico de versões</h2>
+                <DevVersionsList projectId={project.id} />
               </section>
             )}
 

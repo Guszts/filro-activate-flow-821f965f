@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { adminListDevProjects, adminUpdateDevProject, adminRespondDevChangeRequest } from "@/lib/dev/dev.functions";
+import { adminListDevProjects, adminUpdateDevProject, adminRespondDevChangeRequest, adminPublishDevVersion } from "@/lib/dev/dev.functions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -37,6 +37,7 @@ export function DevAdminTab() {
   const list = useServerFn(adminListDevProjects);
   const upd = useServerFn(adminUpdateDevProject);
   const respond = useServerFn(adminRespondDevChangeRequest);
+  const publish = useServerFn(adminPublishDevVersion);
   const qc = useQueryClient();
 
   const { data: projData, isLoading: projLoading } = useQuery({
@@ -184,6 +185,18 @@ export function DevAdminTab() {
                   >
                     {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                     Salvar alterações
+                  </button>
+                  <button
+                    onClick={async () => {
+                      const notes = window.prompt("Notas da versão (opcional):", "") ?? "";
+                      const markPub = window.confirm("Marcar projeto como PUBLICADO? OK = publicar, Cancelar = só registrar versão para revisão.");
+                      const res = await publish({ data: { projectId: selected.id, previewUrl: editing.preview || undefined, publishedUrl: editing.published || undefined, notes, markPublished: markPub } });
+                      if (res.error) toast.error(res.error);
+                      else { toast.success(`Versão ${res.version} registrada`); qc.invalidateQueries({ queryKey: ["admin-dev-projects"] }); }
+                    }}
+                    className="mt-4 ml-3 inline-flex items-center h-11 px-5 rounded-xl border border-border text-sm font-semibold"
+                  >
+                    Publicar nova versão
                   </button>
                 </div>
 

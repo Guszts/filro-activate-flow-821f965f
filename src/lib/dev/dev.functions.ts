@@ -366,6 +366,79 @@ export const adminRespondDevChangeRequest = createServerFn({ method: "POST" })
     return { ok: true, error: null };
   });
 
+// ---------- versions ----------
+export const listDevProjectVersions = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string }) => {
+    if (!/^[0-9a-f-]{36}$/i.test(data.projectId)) throw new Error("Invalid projectId");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: rows, error } = await supabase
+      .from("dev_project_versions")
+      .select("id, version_number, notes, generated_site, created_at, created_by")
+      .eq("project_id", data.projectId)
+      .order("version_number", { ascending: false })
+      .limit(50);
+    if (error) return { versions: [], error: error.message };
+    return { versions: rows ?? [], error: null };
+  });
+
+export const adminPublishDevVersion = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string; previewUrl?: string; publishedUrl?: string; notes?: string; markPublished?: boolean }) => {
+    if (!/^[0-9a-f-]{36}$/i.test(data.projectId)) throw new Error("Invalid projectId");
+    if (data.previewUrl && data.previewUrl.length > 500) throw new Error("Preview URL inválida");
+    if (data.publishedUrl && data.publishedUrl.length > 500) throw new Error("Published URL inválida");
+    if (data.notes && data.notes.length > 4000) throw new Error("Notas muito longas");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: roleRow } = await supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin").maybeSingle();
+    if (!roleRow) return { ok: false, error: "Acesso restrito" };
+
+    const { data: last } = await supabaseAdmin
+      .from("dev_project_versions")
+      .select("version_number")
+      .eq("project_id", data.projectId)
+      .order("version_number", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const nextVersion = (last?.version_number ?? 0) + 1;
+
+    const { error: vErr } = await supabaseAdmin.from("dev_project_versions").insert({
+      project_id: data.projectId,
+      version_number: nextVersion,
+      notes: data.notes ?? "",
+      generated_site: { previewUrl: data.previewUrl ?? null, publishedUrl: data.publishedUrl ?? null } as never,
+      created_by: userId,
+    });
+    if (vErr) return { ok: false, error: vErr.message };
+
+    const patch: Record<string, unknown> = {};
+    if (data.previewUrl) patch.preview_url = data.previewUrl;
+    if (data.publishedUrl) patch.published_url = data.publishedUrl;
+    if (data.markPublished) {
+      patch.status = "published";
+      patch.published_at = new Date().toISOString();
+    } else {
+      patch.status = "review";
+    }
+    if (Object.keys(patch).length) {
+      await supabaseAdmin.from("dev_projects").update(patch as never).eq("id", data.projectId);
+    }
+
+    await supabaseAdmin.from("events").insert({
+      event_type: "dev.version.published",
+      user_id: userId,
+      event_data: { projectId: data.projectId, version: nextVersion, markPublished: !!data.markPublished } as never,
+    });
+
+    return { ok: true, error: null, version: nextVersion };
+  });
+
 // ---------- checkout ----------
 export const createDevCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
