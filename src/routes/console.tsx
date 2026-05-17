@@ -77,6 +77,7 @@ function ConsolePage() {
 
   const tabs = [
     ["overview", "Overview"],
+    ["dashboard", "Dashboard"],
     ["projects", "Projetos"],
     ["users", "Usuários"],
     ["payments", "Pagamentos"],
@@ -84,6 +85,7 @@ function ConsolePage() {
     ["cancellations", "Cancelamentos"],
     ["support", "Suporte"],
     ["extras", "Cobranças extras"],
+    ["coupons", "Cupons"],
     ["partner", "Parceiro"],
     ["plans", "Planos"],
     ["events", "Auditoria"],
