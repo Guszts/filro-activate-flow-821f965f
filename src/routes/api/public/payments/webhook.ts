@@ -123,6 +123,7 @@ async function upsertSubscription(sub: Stripe.Subscription, env: StripeEnv) {
 }
 
 async function handleEvent(event: Stripe.Event, env: StripeEnv) {
+  const stripe = createStripeClient(env);
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
@@ -151,21 +152,53 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       const plan = await getPlanBySlug(planSlug);
       if (!plan) break;
 
+      // Re-fetch the session with discounts/promotion_code expanded so we
+      // can capture coupon usage. Cheap, idempotent, and the webhook payload
+      // does NOT include the promotion_code object by default.
+      let expandedSession: Stripe.Checkout.Session = session;
+      try {
+        expandedSession = await stripe.checkout.sessions.retrieve(session.id, {
+          expand: ["total_details.breakdown.discounts", "discounts.promotion_code"],
+        });
+      } catch (e) {
+        console.warn("[webhook] could not expand session for discount info", e);
+      }
+
+      const fullActivation = plan.activation_price ?? 0;
+      const fullMonthly = plan.monthly_price ?? 0;
+      const planTotal = fullActivation + fullMonthly;
+      const amountPaid = typeof expandedSession.amount_total === "number"
+        ? expandedSession.amount_total
+        : planTotal;
+      const amountSubtotal = typeof expandedSession.amount_subtotal === "number"
+        ? expandedSession.amount_subtotal
+        : planTotal;
+      const discountAmount = Math.max(0, amountSubtotal - amountPaid);
+      let promoCode: string | null = null;
+      const sessionDiscounts = (expandedSession as any).discounts as Array<{
+        promotion_code?: string | { id?: string; code?: string } | null;
+      }> | undefined;
+      if (sessionDiscounts?.length) {
+        const promo = sessionDiscounts[0].promotion_code;
+        if (typeof promo === "object" && promo?.code) promoCode = promo.code;
+      }
+
       // Record initial payment (activation + first month). Idempotente
       // via unique stripe_checkout_session_id — se a Stripe reenviar o
       // mesmo checkout.session.completed, reaproveitamos o pagamento já
       // gravado em vez de duplicar e de re-criar admin_task.
       let paymentId: string | null = null;
       let isDuplicateSession = false;
-      const sessionAmount = typeof session.amount_total === "number" && session.amount_total > 0
-        ? session.amount_total
-        : (plan.activation_price ?? 0) + (plan.monthly_price ?? 0);
+      const sessionAmount = amountPaid > 0 ? amountPaid : planTotal;
       const { data: paymentRow, error: paymentErr } = await supabaseAdmin
         .from("payments")
         .insert({
           user_id: userId,
           plan_id: plan.id,
           amount: sessionAmount,
+          amount_paid: amountPaid,
+          discount_amount: discountAmount,
+          promo_code: promoCode,
           currency: (session.currency ?? "brl").toLowerCase(),
           status: "paid",
           stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
@@ -270,8 +303,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         }).catch((e) => console.error("[email] order-confirmation failed", e));
       }
 
-      // Admin notification
-      const totalAmount = (plan.activation_price ?? 0) + (plan.monthly_price ?? 0);
+      // Admin notification — mostra o valor REALMENTE pago e cupom aplicado
       const admins = await getAdminEmails().catch(() => [] as string[]);
       for (const adminEmail of admins) {
         await sendTransactionalEmailServer({
@@ -284,10 +316,36 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
             customerWhatsapp: profile?.whatsapp,
             businessName: profile?.business_name,
             planName: plan.name,
-            amount: formatBRL(totalAmount),
+            amount: formatBRL(amountPaid),
+            originalAmount: discountAmount > 0 ? formatBRL(planTotal) : undefined,
+            discountAmount: discountAmount > 0 ? formatBRL(discountAmount) : undefined,
+            promoCode: promoCode || undefined,
             sessionId: session.id,
           },
         }).catch((e) => console.error("[email] sale-notification failed", e));
+      }
+
+      // Registra resgate do cupom (best-effort)
+      if (promoCode) {
+        try {
+          const { data: pc } = await supabaseAdmin
+            .from("promo_codes").select("id, used_count").eq("code", promoCode).maybeSingle();
+          if (pc?.id) {
+            await supabaseAdmin.from("promo_code_redemptions").insert({
+              promo_code_id: pc.id,
+              code: promoCode,
+              user_id: userId,
+              payment_id: paymentId,
+              stripe_checkout_session_id: session.id,
+              discount_amount: discountAmount,
+            });
+            await supabaseAdmin.from("promo_codes")
+              .update({ used_count: (pc.used_count ?? 0) + 1 })
+              .eq("id", pc.id);
+          }
+        } catch (e) {
+          console.warn("[webhook] promo redemption log failed", e);
+        }
       }
 
       // -------- Comissão de parceiro (B2B privado) --------

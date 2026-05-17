@@ -181,10 +181,23 @@ function BusinessInfoPage() {
   const removeProduct = (idx: number) => setInfo((p) => ({ ...p, products: p.products.filter((_, i) => i !== idx) }));
   const updProduct = (idx: number, k: keyof Product, v: string) => setInfo((p) => ({ ...p, products: p.products.map((pr, i) => i === idx ? { ...pr, [k]: v } : pr) }));
 
+  // Per-section validation: each section returns true when complete.
+  const sectionValid: Record<SectionKey, boolean> = {
+    identidade: Boolean(info.name.trim() && info.segment.trim() && info.description.trim().length >= 20 && info.logo_url),
+    contato: Boolean(info.whatsapp.trim() && info.address.trim()),
+    catalogo: info.products.length > 0 && info.products.every((p) => p.name.trim() && p.price.trim()),
+    modelo: Boolean(info.model_notes.trim()),
+    premium: Boolean(info.premium_brand_voice.trim() && info.premium_target_audience.trim()),
+  };
+
   const submit = async () => {
     if (!project || !user) return;
-    if (!info.name) return toast.error("Nome do negócio é obrigatório");
-    if (!info.whatsapp) return toast.error("WhatsApp é obrigatório");
+    const missing = (PLAN_SECTIONS[planSlug] ?? PLAN_SECTIONS.plus).filter((s) => !sectionValid[s]);
+    if (missing.length > 0) {
+      toast.error(`Complete todas as seções primeiro: ${missing.map((m) => SECTION_LABELS[m]).join(", ")}`);
+      setSection(missing[0]);
+      return;
+    }
     setSaving(true);
     const { error } = await supabase.from("projects").update({
       business_info: info as never,
@@ -205,6 +218,7 @@ function BusinessInfoPage() {
   const activeSectionKeys = PLAN_SECTIONS[planSlug] ?? PLAN_SECTIONS.plus;
   const sections = activeSectionKeys.map((k) => [k, SECTION_LABELS[k]] as const);
   const currentSection = activeSectionKeys.includes(section) ? section : activeSectionKeys[0];
+  const allValid = activeSectionKeys.every((s) => sectionValid[s]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -231,12 +245,21 @@ function BusinessInfoPage() {
 
         <div className="mt-10 grid lg:grid-cols-[240px_1fr] gap-8">
           <nav className="lg:sticky lg:top-28 h-fit space-y-1">
-            {sections.map(([k, label]) => (
-              <button key={k} onClick={() => setSection(k)}
-                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors ${currentSection === k ? "bg-ink text-paper" : "text-ink-soft hover:bg-muted"}`}>
-                {label}
-              </button>
-            ))}
+            {sections.map(([k, label]) => {
+              const ok = sectionValid[k];
+              return (
+                <button key={k} onClick={() => setSection(k)}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors flex items-center justify-between gap-2 ${currentSection === k ? "bg-ink text-paper" : "text-ink-soft hover:bg-muted"}`}>
+                  <span>{label}</span>
+                  {ok
+                    ? <Check className={`h-3.5 w-3.5 ${currentSection === k ? "text-lime" : "text-emerald-600"}`} />
+                    : <Clock className={`h-3.5 w-3.5 ${currentSection === k ? "text-paper/60" : "text-ink-soft/60"}`} />}
+                </button>
+              );
+            })}
+            <div className="mt-3 px-4 text-[10px] uppercase tracking-widest text-ink-soft">
+              {activeSectionKeys.filter((s) => sectionValid[s]).length}/{activeSectionKeys.length} seções completas
+            </div>
           </nav>
 
           <div className="space-y-6">
@@ -364,15 +387,24 @@ function BusinessInfoPage() {
               </div>
             )}
 
-            <div className="flex justify-between items-center pt-4">
+            <div className="flex flex-wrap justify-between items-center gap-3 pt-4">
               <div className="flex gap-2">
                 {sections.map(([k]) => (
-                  <span key={k} className={`h-2 w-2 rounded-full ${currentSection === k ? "bg-ink" : "bg-border"}`} />
+                  <span key={k} className={`h-2 w-2 rounded-full ${currentSection === k ? "bg-ink" : sectionValid[k] ? "bg-emerald-500" : "bg-border"}`} />
                 ))}
               </div>
-              <button onClick={submit} disabled={saving} className="h-13 px-8 py-3 rounded-full bg-ink text-paper font-semibold hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50">
-                {saving ? "Salvando..." : project.business_info_submitted ? "Atualizar informações" : "Enviar para ativação"}
-              </button>
+              <div className="flex items-center gap-3">
+                {!allValid && !project.business_info_submitted && (
+                  <span className="text-xs text-ink-soft">Complete todas as seções para enviar</span>
+                )}
+                <button
+                  onClick={submit}
+                  disabled={saving || (!allValid && !project.business_info_submitted)}
+                  className="h-13 px-8 py-3 rounded-full bg-ink text-paper font-semibold hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+                >
+                  {saving ? "Salvando..." : project.business_info_submitted ? "Atualizar informações" : "Enviar para ativação"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

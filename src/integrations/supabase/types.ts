@@ -530,12 +530,15 @@ export type Database = {
       payments: {
         Row: {
           amount: number
+          amount_paid: number | null
           created_at: string
           currency: string
+          discount_amount: number
           failure_reason: string | null
           id: string
           paid_at: string | null
           plan_id: string
+          promo_code: string | null
           status: Database["public"]["Enums"]["payment_status"]
           stripe_checkout_session_id: string | null
           stripe_customer_id: string | null
@@ -545,12 +548,15 @@ export type Database = {
         }
         Insert: {
           amount: number
+          amount_paid?: number | null
           created_at?: string
           currency?: string
+          discount_amount?: number
           failure_reason?: string | null
           id?: string
           paid_at?: string | null
           plan_id: string
+          promo_code?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
           stripe_checkout_session_id?: string | null
           stripe_customer_id?: string | null
@@ -560,12 +566,15 @@ export type Database = {
         }
         Update: {
           amount?: number
+          amount_paid?: number | null
           created_at?: string
           currency?: string
+          discount_amount?: number
           failure_reason?: string | null
           id?: string
           paid_at?: string | null
           plan_id?: string
+          promo_code?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
           stripe_checkout_session_id?: string | null
           stripe_customer_id?: string | null
@@ -763,12 +772,14 @@ export type Database = {
           business_name: string | null
           business_segment: string | null
           created_at: string
+          delivered_email_sent_at: string | null
           expected_delivery_at: string | null
           id: string
           kanban_position: number
           notes: string | null
           plan_id: string | null
           preview_url: string | null
+          project_pdf_url: string | null
           project_status: Database["public"]["Enums"]["project_status"]
           published_at: string | null
           published_url: string | null
@@ -783,12 +794,14 @@ export type Database = {
           business_name?: string | null
           business_segment?: string | null
           created_at?: string
+          delivered_email_sent_at?: string | null
           expected_delivery_at?: string | null
           id?: string
           kanban_position?: number
           notes?: string | null
           plan_id?: string | null
           preview_url?: string | null
+          project_pdf_url?: string | null
           project_status?: Database["public"]["Enums"]["project_status"]
           published_at?: string | null
           published_url?: string | null
@@ -803,12 +816,14 @@ export type Database = {
           business_name?: string | null
           business_segment?: string | null
           created_at?: string
+          delivered_email_sent_at?: string | null
           expected_delivery_at?: string | null
           id?: string
           kanban_position?: number
           notes?: string | null
           plan_id?: string | null
           preview_url?: string | null
+          project_pdf_url?: string | null
           project_status?: Database["public"]["Enums"]["project_status"]
           published_at?: string | null
           published_url?: string | null
@@ -825,6 +840,90 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      promo_code_redemptions: {
+        Row: {
+          code: string
+          created_at: string
+          discount_amount: number
+          id: string
+          payment_id: string | null
+          promo_code_id: string
+          stripe_checkout_session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          discount_amount?: number
+          id?: string
+          payment_id?: string | null
+          promo_code_id: string
+          stripe_checkout_session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          discount_amount?: number
+          id?: string
+          payment_id?: string | null
+          promo_code_id?: string
+          stripe_checkout_session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      promo_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          discount_percent: number
+          expires_at: string | null
+          id: string
+          max_uses: number | null
+          plan_slug: string | null
+          stripe_coupon_id: string | null
+          stripe_promotion_code_id: string | null
+          updated_at: string
+          used_count: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          discount_percent: number
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          plan_slug?: string | null
+          stripe_coupon_id?: string | null
+          stripe_promotion_code_id?: string | null
+          updated_at?: string
+          used_count?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          discount_percent?: number
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          plan_slug?: string | null
+          stripe_coupon_id?: string | null
+          stripe_promotion_code_id?: string | null
+          updated_at?: string
+          used_count?: number
+        }
+        Relationships: []
       }
       subscriptions: {
         Row: {
