@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { createStripeClient, type StripeEnv } from "@/lib/stripe.server";
+import { sendTransactionalEmailServer } from "@/lib/email/send.server";
 import type Stripe from "stripe";
 
 // ---------- helpers ----------
