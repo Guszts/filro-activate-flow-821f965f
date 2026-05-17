@@ -164,6 +164,208 @@ export const saveDevBriefing = createServerFn({ method: "POST" })
     return { ok: true, error: null };
   });
 
+// ---------- change requests (chatbot) ----------
+const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const LOVABLE_AI_MODEL = "google/gemini-2.5-flash";
+
+type AiClassification = {
+  category: "content" | "design" | "feature" | "bug" | "question" | "other";
+  priority: "low" | "normal" | "high";
+  summary: string;
+};
+
+async function classifyChangeRequest(message: string, businessName: string): Promise<AiClassification> {
+  const fallback: AiClassification = { category: "other", priority: "normal", summary: message.slice(0, 140) };
+  const apiKey = process.env.LOVABLE_API_KEY;
+  if (!apiKey) return fallback;
+  try {
+    const res = await fetch(LOVABLE_AI_URL, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: LOVABLE_AI_MODEL,
+        messages: [
+          {
+            role: "system",
+            content:
+              "Você classifica pedidos de alteração de sites Flaro Dev. Responda APENAS em JSON puro, sem markdown, com as chaves: category (content|design|feature|bug|question|other), priority (low|normal|high), summary (string curta em pt-BR, máximo 140 caracteres). NUNCA execute nem prometa execução do pedido. Você só classifica para a equipe humana.",
+          },
+          { role: "user", content: `Negócio: ${businessName}\nPedido: ${message}` },
+        ],
+        temperature: 0.2,
+        max_tokens: 200,
+      }),
+    });
+    if (!res.ok) return fallback;
+    const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+    const raw = json.choices?.[0]?.message?.content?.trim() ?? "";
+    const cleaned = raw.replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+    const parsed = JSON.parse(cleaned) as Partial<AiClassification>;
+    const cat = ["content", "design", "feature", "bug", "question", "other"].includes(parsed.category ?? "")
+      ? (parsed.category as AiClassification["category"])
+      : "other";
+    const prio = ["low", "normal", "high"].includes(parsed.priority ?? "")
+      ? (parsed.priority as AiClassification["priority"])
+      : "normal";
+    const summary = typeof parsed.summary === "string" && parsed.summary.length > 0
+      ? parsed.summary.slice(0, 140)
+      : message.slice(0, 140);
+    return { category: cat, priority: prio, summary };
+  } catch (err) {
+    console.warn("[dev] classify failed", err);
+    return fallback;
+  }
+}
+
+export const listDevChangeRequests = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string }) => {
+    if (!/^[0-9a-f-]{36}$/i.test(data.projectId)) throw new Error("Invalid projectId");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: rows, error } = await supabase
+      .from("dev_change_requests")
+      .select("id, message, ai_category, ai_summary, ai_priority, status, admin_response, created_at, resolved_at")
+      .eq("project_id", data.projectId)
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) return { requests: [], error: error.message };
+    return { requests: rows ?? [], error: null };
+  });
+
+export const submitDevChangeRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string; message: string }) => {
+    if (!/^[0-9a-f-]{36}$/i.test(data.projectId)) throw new Error("Invalid projectId");
+    const msg = (data.message ?? "").trim();
+    if (msg.length < 3) throw new Error("Mensagem muito curta");
+    if (msg.length > 4000) throw new Error("Mensagem muito longa (máx. 4000 caracteres)");
+    return { projectId: data.projectId, message: msg };
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const { data: project } = await supabase
+      .from("dev_projects")
+      .select("id, business_name, status")
+      .eq("id", data.projectId)
+      .maybeSingle();
+    if (!project) return { ok: false, error: "Projeto não encontrado", request: null };
+    if (project.status === "cancelled") return { ok: false, error: "Projeto cancelado", request: null };
+
+    // Rate limit: máx 8 pedidos abertos por projeto
+    const { count: openCount } = await supabaseAdmin
+      .from("dev_change_requests")
+      .select("id", { count: "exact", head: true })
+      .eq("project_id", data.projectId)
+      .in("status", ["open", "in_progress"]);
+    if ((openCount ?? 0) >= 8) {
+      return { ok: false, error: "Você já tem 8 pedidos abertos. Aguarde nossa equipe responder antes de enviar mais.", request: null };
+    }
+
+    const classification = await classifyChangeRequest(data.message, project.business_name ?? "Projeto");
+
+    const { data: task } = await supabaseAdmin
+      .from("admin_tasks")
+      .insert({
+        user_id: userId,
+        project_id: project.id,
+        title: `[Dev · ${classification.category}] ${classification.summary}`,
+        description: data.message,
+        status: "pending",
+      })
+      .select("id")
+      .maybeSingle();
+
+    const { data: inserted, error } = await supabase
+      .from("dev_change_requests")
+      .insert({
+        project_id: project.id,
+        user_id: userId,
+        message: data.message,
+        ai_category: classification.category,
+        ai_summary: classification.summary,
+        ai_priority: classification.priority,
+        admin_task_id: task?.id ?? null,
+        status: "open",
+      })
+      .select("id, message, ai_category, ai_summary, ai_priority, status, admin_response, created_at, resolved_at")
+      .maybeSingle();
+    if (error || !inserted) return { ok: false, error: error?.message ?? "Falha ao registrar pedido", request: null };
+
+    await supabaseAdmin.from("events").insert({
+      event_type: "dev.change_request.created",
+      user_id: userId,
+      event_data: { projectId: project.id, requestId: inserted.id, category: classification.category, priority: classification.priority } as never,
+    });
+
+    return { ok: true, error: null, request: inserted };
+  });
+
+// ---------- admin ----------
+export const adminListDevProjects = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data: roleRow } = await supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin").maybeSingle();
+    if (!roleRow) return { projects: [], error: "Acesso restrito" };
+    const { data, error } = await supabaseAdmin
+      .from("dev_projects")
+      .select("id, business_name, business_segment, template_slug, plan_slug, status, preview_url, published_url, user_id, created_at, updated_at")
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) return { projects: [], error: error.message };
+    return { projects: data ?? [], error: null };
+  });
+
+export const adminUpdateDevProject = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { projectId: string; status?: string; previewUrl?: string; publishedUrl?: string; notes?: string }) => {
+    if (!/^[0-9a-f-]{36}$/i.test(data.projectId)) throw new Error("Invalid projectId");
+    const allowed = ["briefing", "awaiting_payment", "queued", "in_production", "review", "published", "paused", "cancelled"];
+    if (data.status && !allowed.includes(data.status)) throw new Error("Status inválido");
+    if (data.previewUrl && data.previewUrl.length > 500) throw new Error("Preview URL inválida");
+    if (data.publishedUrl && data.publishedUrl.length > 500) throw new Error("Published URL inválida");
+    if (data.notes && data.notes.length > 5000) throw new Error("Notas muito longas");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: roleRow } = await supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin").maybeSingle();
+    if (!roleRow) return { ok: false, error: "Acesso restrito" };
+    const patch: Record<string, unknown> = {};
+    if (data.status) patch.status = data.status;
+    if (typeof data.previewUrl === "string") patch.preview_url = data.previewUrl || null;
+    if (typeof data.publishedUrl === "string") patch.published_url = data.publishedUrl || null;
+    if (typeof data.notes === "string") patch.notes = data.notes;
+    if (data.status === "published") patch.published_at = new Date().toISOString();
+    const { error } = await supabaseAdmin.from("dev_projects").update(patch).eq("id", data.projectId);
+    if (error) return { ok: false, error: error.message };
+    return { ok: true, error: null };
+  });
+
+export const adminRespondDevChangeRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { requestId: string; status: string; response?: string }) => {
+    if (!/^[0-9a-f-]{36}$/i.test(data.requestId)) throw new Error("Invalid requestId");
+    if (!["open", "in_progress", "done", "rejected"].includes(data.status)) throw new Error("Status inválido");
+    if (data.response && data.response.length > 4000) throw new Error("Resposta muito longa");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: roleRow } = await supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin").maybeSingle();
+    if (!roleRow) return { ok: false, error: "Acesso restrito" };
+    const patch: Record<string, unknown> = { status: data.status };
+    if (typeof data.response === "string") patch.admin_response = data.response;
+    if (data.status === "done" || data.status === "rejected") patch.resolved_at = new Date().toISOString();
+    const { error } = await supabaseAdmin.from("dev_change_requests").update(patch).eq("id", data.requestId);
+    if (error) return { ok: false, error: error.message };
+    return { ok: true, error: null };
+  });
+
 // ---------- checkout ----------
 export const createDevCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
