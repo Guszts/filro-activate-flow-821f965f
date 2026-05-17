@@ -5,7 +5,7 @@ import { DEV_TEMPLATES } from "@/lib/dev/templates";
 import { DEV_PLANS, formatBRL } from "@/lib/dev/plans";
 import { ArrowRight, Check, MessageSquare, Layers, FileText, Eye, Rocket, Sparkles } from "lucide-react";
 
-export const Route = createFileRoute("/dev")({
+export const Route = createFileRoute("/dev/")({
   component: DevLanding,
   head: () => ({
     meta: [

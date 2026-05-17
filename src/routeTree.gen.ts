@@ -24,6 +24,7 @@ import { Route as ModelosRouteImport } from './routes/modelos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GarantiaRouteImport } from './routes/garantia'
 import { Route as DocsRouteImport } from './routes/docs'
+import { Route as DevRouteImport } from './routes/dev'
 import { Route as ConsoleRouteImport } from './routes/console'
 import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
@@ -117,6 +118,11 @@ const GarantiaRoute = GarantiaRouteImport.update({
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
   path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevRoute = DevRouteImport.update({
+  id: '/dev',
+  path: '/dev',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConsoleRoute = ConsoleRouteImport.update({
@@ -227,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
+  '/dev': typeof DevRoute
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
@@ -263,6 +270,7 @@ export interface FileRoutesByTo {
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
+  '/dev': typeof DevRoute
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
@@ -300,6 +308,7 @@ export interface FileRoutesById {
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
+  '/dev': typeof DevRoute
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
@@ -338,6 +347,7 @@ export interface FileRouteTypes {
     | '/como-funciona'
     | '/comparar'
     | '/console'
+    | '/dev'
     | '/docs'
     | '/garantia'
     | '/login'
@@ -374,6 +384,7 @@ export interface FileRouteTypes {
     | '/como-funciona'
     | '/comparar'
     | '/console'
+    | '/dev'
     | '/docs'
     | '/garantia'
     | '/login'
@@ -410,6 +421,7 @@ export interface FileRouteTypes {
     | '/como-funciona'
     | '/comparar'
     | '/console'
+    | '/dev'
     | '/docs'
     | '/garantia'
     | '/login'
@@ -447,6 +459,7 @@ export interface RootRouteChildren {
   ComoFuncionaRoute: typeof ComoFuncionaRoute
   CompararRoute: typeof CompararRoute
   ConsoleRoute: typeof ConsoleRoute
+  DevRoute: typeof DevRoute
   DocsRoute: typeof DocsRoute
   GarantiaRoute: typeof GarantiaRoute
   LoginRoute: typeof LoginRoute
@@ -582,6 +595,13 @@ declare module '@tanstack/react-router' {
       path: '/docs'
       fullPath: '/docs'
       preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev': {
+      id: '/dev'
+      path: '/dev'
+      fullPath: '/dev'
+      preLoaderRoute: typeof DevRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/console': {
@@ -727,6 +747,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComoFuncionaRoute: ComoFuncionaRoute,
   CompararRoute: CompararRoute,
   ConsoleRoute: ConsoleRoute,
+  DevRoute: DevRoute,
   DocsRoute: DocsRoute,
   GarantiaRoute: GarantiaRoute,
   LoginRoute: LoginRoute,
