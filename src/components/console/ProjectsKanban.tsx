@@ -442,7 +442,7 @@ function KanbanCard({
               Preview
             </span>
           )}
-          {project.project_pdf_url && (
+          {hasPdf && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-flame/15 text-[10px] font-semibold text-ink">
               <FileText className="h-3 w-3" /> PDF
             </span>
@@ -460,12 +460,12 @@ function KanbanCard({
       <div className="mt-2 pt-2 border-t border-border flex items-center gap-2">
         <label className="inline-flex items-center gap-1 text-[10px] text-ink-soft hover:text-ink cursor-pointer">
           <UploadIcon className="h-3 w-3" />
-          {uploading ? "Enviando…" : project.project_pdf_url ? "Trocar PDF" : "Anexar PDF"}
+          {uploading ? "Enviando…" : hasPdf ? "Trocar PDF" : "Anexar PDF"}
           <input type="file" accept="application/pdf" className="hidden" onChange={handlePdfUpload} disabled={uploading} />
         </label>
-        {project.project_pdf_url && (
+        {hasPdf && (
           <>
-            <a href={project.project_pdf_url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-[10px] text-ink-soft hover:text-ink underline">Ver</a>
+            <button type="button" onClick={handleView} className="text-[10px] text-ink-soft hover:text-ink underline">Ver</button>
             <button type="button" onClick={handlePdfRemove} className="ml-auto text-[10px] text-flame hover:opacity-80 inline-flex items-center gap-0.5">
               <X className="h-3 w-3" /> Remover
             </button>
