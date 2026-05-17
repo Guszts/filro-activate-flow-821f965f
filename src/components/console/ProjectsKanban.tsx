@@ -46,6 +46,7 @@ type ProjectRow = {
   created_at: string;
   kanban_position: number;
   plan_id: string | null;
+  project_pdf_url: string | null;
 };
 
 const COLUMNS: { id: ProjectStatus; label: string; tone: string }[] = [
