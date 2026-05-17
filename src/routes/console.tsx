@@ -19,7 +19,7 @@ export const Route = createFileRoute("/console")({
   ]}),
 });
 
-type Tab = "overview" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "support" | "extras" | "partner" | "plans" | "events" | "settings";
+type Tab = "overview" | "dashboard" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "support" | "extras" | "coupons" | "partner" | "plans" | "events" | "settings";
 
 function useRealtimeRefetch(tables: string[], queryKeys: string[][]) {
   const qc = useQueryClient();
