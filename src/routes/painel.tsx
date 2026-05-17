@@ -76,13 +76,13 @@ function PainelPage() {
   useEffect(() => {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/painel" } }); return; }
-    if (!hasPaid && !isAdmin) { navigate({ to: "/" }); return; }
     (async () => {
-      const [projRes, payRes, planRes, subRes] = await Promise.all([
+      const [projRes, payRes, planRes, subRes, devRes] = await Promise.all([
         supabase.from("projects").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("payments").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
         supabase.from("plans").select("id,name,activation_price,monthly_price"),
         supabase.from("subscriptions").select("id,status,cancel_at_period_end,current_period_end").eq("user_id", user.id).order("created_at", { ascending: false }).limit(1),
+        fetchDev().catch(() => ({ projects: [], error: null as string | null })),
       ]);
       setProject(projRes.data as ProjectRow | null);
       setPayments((payRes.data ?? []) as PaymentRow[]);
@@ -92,9 +92,13 @@ function PainelPage() {
       const subRow = (subRes.data ?? [])[0] as { id: string; status: string; cancel_at_period_end: boolean; current_period_end: string | null } | undefined;
       setHasSubscription(!!subRow && subRow.status !== "canceled");
       setSubInfo(subRow ? { cancel_at_period_end: subRow.cancel_at_period_end, current_period_end: subRow.current_period_end } : null);
+      const dev = (devRes.projects ?? []) as typeof devProjects;
+      setDevProjects(dev);
+      const hasAny = !!(projRes.data || (payRes.data && payRes.data.length) || dev.length || isAdmin || hasPaid);
+      if (!hasAny) { navigate({ to: "/" }); return; }
       setLoadingData(false);
     })();
-  }, [loading, user, hasPaid, isAdmin, navigate]);
+  }, [loading, user, hasPaid, isAdmin, navigate, fetchDev]);
 
   const status = STATUS_LABEL[project?.project_status ?? "new"] ?? STATUS_LABEL.new;
   const StatusIcon = status.icon;
