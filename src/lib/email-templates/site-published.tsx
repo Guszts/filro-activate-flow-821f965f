@@ -9,9 +9,10 @@ interface SitePublishedProps {
   businessName?: string
   publishedUrl?: string
   panelUrl?: string
+  projectPdfUrl?: string
 }
 
-const SitePublishedEmail = ({ name, businessName, publishedUrl, panelUrl }: SitePublishedProps) => (
+const SitePublishedEmail = ({ name, businessName, publishedUrl, panelUrl, projectPdfUrl }: SitePublishedProps) => (
   <Html lang="pt-BR" dir="ltr">
     <BrandHead />
     <Preview>Seu site está no ar</Preview>
