@@ -18,6 +18,7 @@ export function SiteFooter() {
           <ul className="space-y-2.5">
             <li><Link to="/modelos" className="hover:text-ink transition-colors">Modelos</Link></li>
             <li><Link to="/dev" className="hover:text-ink transition-colors">Flaro Dev</Link></li>
+            <li><Link to="/dev/precos" className="hover:text-ink transition-colors">Planos Flaro Dev</Link></li>
             <li><Link to="/como-funciona" className="hover:text-ink transition-colors">Como funciona</Link></li>
             <li><Link to="/planos" className="hover:text-ink transition-colors">Planos</Link></li>
             <li><Link to="/comparar" className="hover:text-ink transition-colors">Comparar planos</Link></li>
