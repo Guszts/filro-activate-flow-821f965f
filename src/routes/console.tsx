@@ -10,6 +10,7 @@ import { SupportTab, ExtraChargesTab } from "@/components/console/SupportAndChar
 import { PartnerTab } from "@/components/console/PartnerTab";
 import { CouponsTab } from "@/components/console/CouponsTab";
 import { DashboardTab } from "@/components/console/DashboardTab";
+import { DevAdminTab } from "@/components/console/DevAdminTab";
 
 export const Route = createFileRoute("/console")({
   component: ConsolePage,
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/console")({
   ]}),
 });
 
-type Tab = "overview" | "dashboard" | "projects" | "users" | "payments" | "subscriptions" | "cancellations" | "support" | "extras" | "coupons" | "partner" | "plans" | "events" | "settings";
+type Tab = "overview" | "dashboard" | "projects" | "dev" | "users" | "payments" | "subscriptions" | "cancellations" | "support" | "extras" | "coupons" | "partner" | "plans" | "events" | "settings";
 
 function useRealtimeRefetch(tables: string[], queryKeys: string[][]) {
   const qc = useQueryClient();
@@ -79,6 +80,7 @@ function ConsolePage() {
     ["overview", "Overview"],
     ["dashboard", "Dashboard"],
     ["projects", "Projetos"],
+    ["dev", "Flaro Dev"],
     ["users", "Usuários"],
     ["payments", "Pagamentos"],
     ["subscriptions", "Assinaturas"],
@@ -133,6 +135,7 @@ function ConsolePage() {
         {tab === "overview" && <OverviewTab />}
         {tab === "dashboard" && <DashboardTab />}
         {tab === "projects" && <ProjectsKanban />}
+        {tab === "dev" && <DevAdminTab />}
         {tab === "users" && <UsersTab />}
         {tab === "payments" && <PaymentsTab />}
         {tab === "subscriptions" && <SubscriptionsTab />}
