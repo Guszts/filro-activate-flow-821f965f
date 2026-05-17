@@ -174,10 +174,12 @@ export const flaroChat = createServerFn({ method: "POST" })
       };
     }
 
+    const systemPrompt = BASE_PROMPT + (await buildDynamicContext());
+
     const lovableApiKey = process.env.LOVABLE_API_KEY;
     if (lovableApiKey) {
       try {
-        const res = await callLovableAi(lovableApiKey, data.messages);
+        const res = await callLovableAi(lovableApiKey, data.messages, systemPrompt);
         if (res.ok) {
           const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
           const reply = json.choices?.[0]?.message?.content?.trim() || "";
