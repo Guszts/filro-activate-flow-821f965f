@@ -347,7 +347,10 @@ function KanbanCard({
   dragging?: boolean;
 }) {
   const qc = useQueryClient();
-  const setPdf = useServerFn(setProjectPdfUrl);
+  const createUploadUrl = useServerFn(createProjectPdfUploadUrl);
+  const confirmUpload = useServerFn(confirmProjectPdfUpload);
+  const removePdf = useServerFn(removeProjectPdf);
+  const getDownloadUrl = useServerFn(getProjectPdfDownloadUrl);
   const [uploading, setUploading] = useState(false);
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: project.id,
@@ -358,19 +361,25 @@ function KanbanCard({
     ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : undefined;
 
+  const hasPdf = Boolean(project.project_pdf_path || project.project_pdf_url);
+
   async function handlePdfUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
+    if (file.type !== "application/pdf") { toast.error("Apenas arquivos PDF"); return; }
     if (file.size > 20 * 1024 * 1024) { toast.error("PDF maior que 20MB"); return; }
     setUploading(true);
     try {
-      const path = `${project.user_id}/projects/${project.id}-${Date.now()}.pdf`;
-      const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true, contentType: "application/pdf" });
-      if (error) throw error;
-      const { data } = supabase.storage.from("business-assets").getPublicUrl(path);
-      await setPdf({ data: { projectId: project.id, pdfUrl: data.publicUrl } });
-      toast.success("PDF anexado ao projeto");
+      const { uploadUrl, path } = await createUploadUrl({ data: { projectId: project.id } });
+      const putRes = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: { "Content-Type": "application/pdf", "x-upsert": "true" },
+        body: file,
+      });
+      if (!putRes.ok) throw new Error(`Upload falhou (${putRes.status})`);
+      await confirmUpload({ data: { projectId: project.id, path } });
+      toast.success("PDF anexado em armazenamento privado");
       qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
     } catch (err) {
       toast.error("Falha ao enviar PDF: " + (err as Error).message);
@@ -379,11 +388,25 @@ function KanbanCard({
     }
   }
 
+  async function handleView(e: React.MouseEvent) {
+    e.stopPropagation();
+    try {
+      const { url } = await getDownloadUrl({ data: { projectId: project.id } });
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      toast.error("Não foi possível gerar link: " + (err as Error).message);
+    }
+  }
+
   async function handlePdfRemove(e: React.MouseEvent) {
     e.stopPropagation();
     if (!confirm("Remover o PDF deste projeto?")) return;
-    await setPdf({ data: { projectId: project.id, pdfUrl: null } });
-    qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
+    try {
+      await removePdf({ data: { projectId: project.id } });
+      qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
+    } catch (err) {
+      toast.error("Falha ao remover: " + (err as Error).message);
+    }
   }
 
   return (
