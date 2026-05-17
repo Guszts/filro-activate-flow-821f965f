@@ -123,6 +123,8 @@ async function upsertSubscription(sub: Stripe.Subscription, env: StripeEnv) {
 }
 
 async function handleEvent(event: Stripe.Event, env: StripeEnv) {
+  const stripe = createStripeClient(env);
+  void stripe;
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
