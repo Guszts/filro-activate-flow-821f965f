@@ -131,6 +131,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       const planSlug = session.metadata?.planSlug;
       const kind = session.metadata?.kind;
       const extraChargeId = session.metadata?.extraChargeId;
+      const devProjectId = session.metadata?.devProjectId;
 
       // Cobrança extra (upsell via payment link)
       if (kind === "extra_charge" && extraChargeId) {
@@ -144,6 +145,50 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
           })
           .eq("id", extraChargeId);
         await logEvent("extra_charge.paid", userId ?? null, { extraChargeId, sessionId: session.id });
+        break;
+      }
+
+      // Flaro Dev — fluxo independente dos planos legados
+      if (kind === "dev" && userId && devProjectId) {
+        await supabaseAdmin
+          .from("dev_payments")
+          .update({
+            status: "paid",
+            paid_at: new Date().toISOString(),
+            stripe_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : null,
+            stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
+          })
+          .eq("stripe_checkout_session_id", session.id);
+
+        await supabaseAdmin
+          .from("dev_projects")
+          .update({ status: "queued", activation_paid_at: new Date().toISOString() })
+          .eq("id", devProjectId)
+          .eq("user_id", userId);
+
+        const { data: devProj } = await supabaseAdmin
+          .from("dev_projects")
+          .select("business_name, template_slug, plan_slug")
+          .eq("id", devProjectId)
+          .maybeSingle();
+
+        const { data: profile } = await supabaseAdmin
+          .from("profiles").select("name, email, whatsapp").eq("user_id", userId).maybeSingle();
+
+        await supabaseAdmin.from("admin_tasks").insert({
+          user_id: userId,
+          title: `Flaro Dev — Novo projeto pago — ${devProj?.business_name || profile?.email || userId}`,
+          description: [
+            `Cliente: ${profile?.name || "—"} (${profile?.email || "—"})`,
+            `WhatsApp: ${profile?.whatsapp || "—"}`,
+            `Negócio: ${devProj?.business_name || "—"}`,
+            `Modelo: ${devProj?.template_slug || "—"}`,
+            `Plano: ${devProj?.plan_slug || "—"}`,
+            `Stripe session: ${session.id}`,
+          ].join("\n"),
+        });
+
+        await logEvent("dev.checkout.completed", userId, { devProjectId, sessionId: session.id });
         break;
       }
 
