@@ -131,6 +131,7 @@ function ConsolePage() {
       </aside>
       <main className="min-w-0 p-4 md:p-10 overflow-x-hidden">
         {tab === "overview" && <OverviewTab />}
+        {tab === "dashboard" && <DashboardTab />}
         {tab === "projects" && <ProjectsKanban />}
         {tab === "users" && <UsersTab />}
         {tab === "payments" && <PaymentsTab />}
@@ -138,6 +139,7 @@ function ConsolePage() {
         {tab === "cancellations" && <CancellationsTab />}
         {tab === "support" && <SupportTab />}
         {tab === "extras" && <ExtraChargesTab />}
+        {tab === "coupons" && <CouponsTab />}
         {tab === "partner" && <PartnerTab />}
         {tab === "plans" && <PlansTab />}
         {tab === "events" && <EventsTab />}
