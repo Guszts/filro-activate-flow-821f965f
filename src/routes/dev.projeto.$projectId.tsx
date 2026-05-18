@@ -1,62 +1,48 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { z } from "zod";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
 import { useServerFn } from "@tanstack/react-start";
 import { getDevProject } from "@/lib/dev/dev.functions";
-import { getDevPlan } from "@/lib/dev/plans";
-import { getDevTemplate } from "@/lib/dev/templates";
-import { DevChangeChat } from "@/components/dev/DevChangeChat";
-import { DevVersionsList } from "@/components/dev/DevVersionsList";
+import { editDevSiteWithAI } from "@/lib/dev/generator.functions";
+import { getMyCredits } from "@/lib/credits/credits.functions";
+import { Zap, Loader2, ExternalLink, Wand2 } from "lucide-react";
 
-const SearchSchema = z.object({
-  checkout: z.string().optional(),
-  session_id: z.string().optional(),
-});
+const SearchSchema = z.object({ generated: z.string().optional() });
 
 export const Route = createFileRoute("/dev/projeto/$projectId")({
   validateSearch: SearchSchema,
   component: ProjetoPage,
-  head: () => ({ meta: [
-    { title: "Meu projeto · Flaro Dev" },
-    { name: "robots", content: "noindex,nofollow" },
-  ]}),
+  head: () => ({ meta: [{ title: "Meu site · Flaro Dev" }, { name: "robots", content: "noindex,nofollow" }] }),
 });
 
-type DevProjectRow = {
+type Project = {
   id: string;
   business_name: string | null;
   business_segment: string | null;
-  status: string;
-  template_slug: string | null;
-  plan_slug: string | null;
-  preview_url: string | null;
+  slug: string | null;
   published_url: string | null;
-  briefing: Record<string, unknown> | null;
-  created_at: string;
-};
-
-const STATUS_LABEL: Record<string, { label: string; tone: string }> = {
-  briefing: { label: "Briefing em preenchimento", tone: "bg-muted text-ink-soft" },
-  awaiting_payment: { label: "Aguardando pagamento", tone: "bg-orange-100 text-orange-800" },
-  queued: { label: "Pagamento confirmado — na fila", tone: "bg-emerald-100 text-emerald-800" },
-  in_production: { label: "Em produção", tone: "bg-blue-100 text-blue-800" },
-  review: { label: "Pronto para revisão", tone: "bg-violet-100 text-violet-800" },
-  published: { label: "Site publicado", tone: "bg-emerald-100 text-emerald-800" },
-  paused: { label: "Pausado", tone: "bg-muted text-ink-soft" },
-  cancelled: { label: "Cancelado", tone: "bg-muted text-ink-soft" },
+  status: string;
+  generated_content: Record<string, unknown> | null;
+  template_slug: string | null;
 };
 
 function ProjetoPage() {
   const { projectId } = Route.useParams();
-  const { checkout } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [project, setProject] = useState<DevProjectRow | null>(null);
+  const [project, setProject] = useState<Project | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [balance, setBalance] = useState<number | null>(null);
+  const [instruction, setInstruction] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const fetchProject = useServerFn(getDevProject);
+  const editAI = useServerFn(editDevSiteWithAI);
+  const fetchCredits = useServerFn(getMyCredits);
 
   useEffect(() => {
     if (loading) return;
@@ -64,35 +50,43 @@ function ProjetoPage() {
     (async () => {
       const res = await fetchProject({ data: { projectId } });
       if (res.error) setError(res.error);
-      else setProject(res.project as DevProjectRow | null);
+      else setProject(res.project as Project | null);
     })();
-  }, [loading, user, projectId, navigate, fetchProject]);
+    fetchCredits().then((r) => setBalance(r.balance)).catch(() => {});
+  }, [loading, user, projectId, navigate, fetchProject, fetchCredits, reloadKey]);
 
-  const plan = project?.plan_slug ? getDevPlan(project.plan_slug) : undefined;
-  const template = project?.template_slug ? getDevTemplate(project.template_slug) : undefined;
-  const status = project ? STATUS_LABEL[project.status] ?? { label: project.status, tone: "bg-muted text-ink-soft" } : null;
+  async function handleEdit() {
+    if (!instruction.trim()) return;
+    if ((balance ?? 0) < 1) { toast.error("Sem créditos suficientes."); return; }
+    setEditing(true);
+    try {
+      const res = await editAI({ data: { projectId, instruction: instruction.trim() } });
+      if (!res.ok) throw new Error(res.error ?? "Falha na edição");
+      toast.success("Edição aplicada!");
+      setInstruction("");
+      setReloadKey((k) => k + 1);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Falha");
+    } finally {
+      setEditing(false);
+    }
+  }
+
+  const publicUrl = project?.slug ? `/s/${project.slug}` : project?.published_url ?? null;
 
   return (
     <div className="min-h-screen flex flex-col bg-paper">
       <SiteHeader />
-      <main className="mx-auto max-w-[1100px] w-full px-5 md:px-10 py-12 md:py-16">
+      <main className="mx-auto max-w-[1280px] w-full px-5 md:px-10 py-10 md:py-14">
         <nav className="text-xs text-ink-soft mb-4">
-          <Link to="/dev" className="hover:text-ink">Flaro Dev</Link> <span className="mx-1">/</span> Meu projeto
+          <Link to="/dev" className="hover:text-ink">Flaro Dev</Link> <span className="mx-1">/</span> Meu site
         </nav>
 
-        {checkout === "success" && (
-          <div className="mb-6 rounded-2xl bg-emerald-50 border border-emerald-200 px-5 py-4 text-emerald-900 text-sm">
-            Pagamento recebido. Seu projeto entrou na fila de produção e nossa equipe vai começar nas próximas horas.
-          </div>
-        )}
-
         {error && <div className="text-destructive text-sm">{error}</div>}
-
         {!project && !error && (
           <div className="space-y-3">
             <div className="h-8 w-1/2 bg-muted rounded animate-pulse" />
-            <div className="h-4 w-1/3 bg-muted rounded animate-pulse" />
-            <div className="h-40 w-full bg-muted rounded-2xl animate-pulse" />
+            <div className="h-72 w-full bg-muted rounded-2xl animate-pulse" />
           </div>
         )}
 
@@ -100,88 +94,73 @@ function ProjetoPage() {
           <>
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <h1 className="editorial-headline text-4xl md:text-5xl text-ink">{project.business_name || "Meu projeto"}</h1>
-                <p className="mt-2 text-ink-soft text-sm">
-                  {template?.name ?? "Modelo"} · Plano {plan?.name ?? "—"}
-                </p>
-              </div>
-              {status && (
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${status.tone}`}>
-                  {status.label}
-                </span>
-              )}
-            </div>
-
-            <section className="mt-10 grid lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 rounded-3xl border border-border bg-paper p-6 md:p-8">
-                <div className="text-xs tracking-wide text-ink-soft">Preview do site</div>
-                {project.preview_url ? (
-                  <div className="mt-4 aspect-video w-full overflow-hidden rounded-2xl border border-border bg-muted">
-                    <iframe src={project.preview_url} title="Preview" className="w-full h-full" />
-                  </div>
-                ) : (
-                  <div className="mt-4 aspect-video w-full rounded-2xl border border-dashed border-border bg-muted/40 flex items-center justify-center text-sm text-ink-soft">
-                    O preview aparece aqui assim que a primeira versão estiver pronta.
-                  </div>
-                )}
-                {project.published_url && (
-                  <a href={project.published_url} target="_blank" rel="noreferrer" className="mt-4 inline-flex h-11 px-5 items-center rounded-xl bg-ink text-paper font-semibold text-sm">
-                    Ver site publicado →
+                <h1 className="editorial-headline text-4xl md:text-5xl text-ink">{project.business_name || "Meu site"}</h1>
+                {project.slug && (
+                  <a href={`/s/${project.slug}`} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-sm text-flame hover:underline">
+                    /s/{project.slug} <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 )}
               </div>
+              {balance !== null && (
+                <div className="inline-flex items-center gap-2 px-3 h-10 rounded-full border border-border bg-paper text-sm">
+                  <Zap className="h-4 w-4 text-flame" />
+                  <span className="font-bold text-ink">{balance}</span>
+                  <span className="text-ink-soft">créditos</span>
+                </div>
+              )}
+            </div>
 
-              <aside className="rounded-3xl border border-border bg-muted/30 p-6">
-                <div className="text-xs tracking-wide text-ink-soft">Próximos passos</div>
-                <ol className="mt-3 space-y-3 text-sm text-ink">
-                  <li>1. Equipe revisa briefing e prepara a primeira versão.</li>
-                  <li>2. Preview disponível para sua revisão.</li>
-                  <li>3. Solicitações de mudanças pelo chat abaixo.</li>
-                  <li>4. Publicação no seu domínio ou subdomínio Filro.</li>
-                </ol>
-                <div className="mt-6 text-xs text-ink-soft">
-                  Dúvidas gerais (não relacionadas ao projeto) podem ser enviadas por <Link to="/suporte" className="underline">Suporte</Link>.
+            <section className="mt-8 grid lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 rounded-3xl border border-border bg-paper overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-2.5 border-b border-border text-xs text-ink-soft">
+                  <span>Pré-visualização</span>
+                  {publicUrl && (
+                    <a href={publicUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-ink">Abrir <ExternalLink className="h-3 w-3" /></a>
+                  )}
+                </div>
+                {publicUrl ? (
+                  <iframe src={`${publicUrl}?v=${reloadKey}`} title="Preview" className="w-full" style={{ height: "70vh" }} />
+                ) : (
+                  <div className="p-10 text-center text-ink-soft text-sm">Site não publicado ainda.</div>
+                )}
+              </div>
+
+              <aside className="rounded-3xl border border-border bg-muted/30 p-6 flex flex-col gap-5">
+                <div>
+                  <div className="text-xs uppercase tracking-widest text-ink-soft inline-flex items-center gap-1.5"><Wand2 className="h-3.5 w-3.5" /> Editor com IA</div>
+                  <p className="mt-2 text-xs text-ink-soft">Descreva o que mudar. Custa 1 crédito por edição.</p>
+                  <textarea
+                    value={instruction}
+                    onChange={(e) => setInstruction(e.target.value)}
+                    rows={4}
+                    maxLength={1500}
+                    className="mt-3 input w-full"
+                    placeholder='Ex: "Troque o título do hero para focar em entrega rápida" ou "Adicione mais um serviço de manicure"'
+                  />
+                  <button
+                    onClick={handleEdit}
+                    disabled={editing || !instruction.trim() || (balance ?? 0) < 1}
+                    className="mt-3 w-full inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-ink text-paper font-semibold text-sm disabled:opacity-50"
+                  >
+                    {editing ? <><Loader2 className="h-4 w-4 animate-spin" /> Aplicando…</> : <>Aplicar edição (1 crédito)</>}
+                  </button>
+                  {(balance ?? 0) < 1 && (
+                    <Link to="/dev/precos" className="mt-2 block text-center text-xs underline text-flame">Sem créditos · ver planos</Link>
+                  )}
+                </div>
+
+                <div className="border-t border-border pt-5">
+                  <div className="text-xs uppercase tracking-widest text-ink-soft">Quer mudar tudo?</div>
+                  <Link to="/dev/novo" className="mt-2 block w-full text-center h-11 leading-[44px] rounded-xl border border-border bg-paper text-sm font-semibold hover:bg-muted">
+                    Gerar outro site (5 créditos)
+                  </Link>
                 </div>
               </aside>
-            </section>
-
-            {project.status !== "briefing" && project.status !== "awaiting_payment" && (
-              <section className="mt-10">
-                <DevChangeChat projectId={project.id} />
-              </section>
-            )}
-
-            {project.status !== "briefing" && project.status !== "awaiting_payment" && (
-              <section className="mt-10">
-                <h2 className="text-xs tracking-wide text-ink-soft mb-3">Histórico de versões</h2>
-                <DevVersionsList projectId={project.id} />
-              </section>
-            )}
-
-            <section className="mt-10 rounded-3xl border border-border bg-paper p-6 md:p-8">
-              <div className="text-xs tracking-wide text-ink-soft">Briefing enviado</div>
-              <dl className="mt-4 grid sm:grid-cols-2 gap-4 text-sm">
-                <Info label="Segmento" value={project.business_segment} />
-                <Info label="WhatsApp" value={(project.briefing as Record<string,string> | null)?.whatsapp} />
-                <Info label="Cidade" value={(project.briefing as Record<string,string> | null)?.city} />
-                <Info label="Cores" value={(project.briefing as Record<string,string> | null)?.colors} />
-                <Info label="Tom" value={(project.briefing as Record<string,string> | null)?.tone} />
-                <Info label="Oferta" value={(project.briefing as Record<string,string> | null)?.offer} />
-              </dl>
             </section>
           </>
         )}
       </main>
       <SiteFooter />
-    </div>
-  );
-}
-
-function Info({ label, value }: { label: string; value?: string | null }) {
-  return (
-    <div>
-      <dt className="text-xs tracking-wide text-ink-soft">{label}</dt>
-      <dd className="mt-1 text-ink">{value && value.trim() ? value : "—"}</dd>
     </div>
   );
 }
