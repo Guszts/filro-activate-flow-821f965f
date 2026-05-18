@@ -80,7 +80,7 @@ function ConsolePage() {
     ["overview", "Overview"],
     ["dashboard", "Dashboard"],
     ["projects", "Projetos"],
-    ["dev", "Flaro Dev"],
+    
     ["users", "Usuários"],
     ["payments", "Pagamentos"],
     ["subscriptions", "Assinaturas"],
