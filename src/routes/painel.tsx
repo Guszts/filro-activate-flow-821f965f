@@ -9,7 +9,7 @@ import { formatBRL } from "@/lib/format";
 import { getStripeEnvironment } from "@/lib/stripe";
 import { createPortalSession } from "@/lib/payments.functions";
 import { listMyDevProjects } from "@/lib/dev/dev.functions";
-import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, HelpCircle, Loader2, MessageCircle, Pencil, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Clock, CreditCard, FileText, HelpCircle, Loader2, MessageCircle, Pencil, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { SubscriptionCancellationModals } from "@/components/SubscriptionCancellationModals";
@@ -242,7 +242,7 @@ function PainelPage() {
               <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
                 <div>
                   <div className="text-xs tracking-wide text-ink-soft inline-flex items-center gap-2">
-                    <Sparkles className="h-3.5 w-3.5" /> Flaro Dev
+                    <Zap className="h-3.5 w-3.5" /> Flaro Dev
                   </div>
                   <h2 className="mt-1 font-display font-black text-2xl text-ink">Sites sob demanda</h2>
                 </div>
