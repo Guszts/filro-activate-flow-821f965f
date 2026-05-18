@@ -221,6 +221,18 @@
   50% { transform: translate3d(14px, -22px, 0) rotate(3deg); }
 }
 
+@keyframes marquee-x {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@layer utilities {
+  .animate-marquee-x { animation: marquee-x 40s linear infinite; }
+  .marquee-mask {
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+}
+
 /* Stripe Element overrides */
 .StripeElement {
   background: var(--paper);
