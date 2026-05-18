@@ -1,101 +1,168 @@
-# Plano: Flaro Dev — rota `/dev`
+# Flaro Dev → SaaS automático por créditos
 
-Produto novo dentro do Filro: usuário escolhe um modelo de site, envia briefing, paga um plano Dev, recebe um projeto estruturado e pede alterações por um chatbot que **classifica** (não edita). Admin executa as mudanças no console.
+## Visão geral
 
-Tabelas `dev_*` separadas, planos Dev convivem com os planos atuais, checkout reaproveita Stripe existente. Nada do que já existe é removido.
+Transformar o Flaro Dev de um serviço assistido por equipe humana em um **gerador automático** onde o usuário:
 
----
+1. Escolhe um modelo e descreve o negócio
+2. IA (Lovable AI / Gemini) preenche os textos do template
+3. Sistema publica imediatamente em `https://{slug}.filro.site`
+4. Cada geração/edição consome **créditos** (modelo Lovable)
 
-## Execução em 6 fases — você aprova entre cada uma
-
-### Fase 1 — Landing pública `/dev` + catálogo + planos (sem backend novo)
-- `src/routes/dev.tsx` (landing) + `src/routes/dev.modelos.tsx` + `src/routes/dev.modelos.$slug.tsx`
-- Componentes: `DevHero`, `DevHowItWorks`, `DevTemplateCatalog`, `DevTemplateCard`, `DevTemplateDetails`, `DevPlanCard`, `DevFAQ`
-- Seed dos 6 modelos e 4 planos como constantes em `src/lib/dev/templates.ts` e `src/lib/dev/plans.ts` (sem banco ainda — vira tabela na Fase 2)
-- Link no `SiteFooter` ("Flaro Dev")
-- SEO: head() por rota, canonical, og
-- **Sem risco** para checkout / console / public site existentes
-
-### Fase 2 — Banco, briefing, criação de projeto, checkout
-- Migration: `dev_templates`, `dev_plans`, `dev_projects`, `dev_project_versions` (+ RLS)
-- Seed das 6 templates e 4 planos para as tabelas
-- `dev_plans` ganha `stripe_product_id` / `stripe_price_activation_id` / `stripe_price_monthly_id`; criação dos produtos no Stripe via `payments--batch_create_product`
-- Rota `/dev/briefing` — wizard de 10 steps com autosave (server fn `saveDevBriefingDraft`)
-- Rota `/dev/checkout` — reutiliza `src/lib/payments.functions.ts` (cria session com price activation + subscription monthly do plano Dev)
-- Webhook `src/routes/api/public/payments/webhook.ts` aprende `dev_*` metadata e cria registro em `dev_projects` no sucesso
-- `generateDevSiteStructure` (server fn): monta `generated_site` jsonb a partir do template + briefing (puro JS, sem IA — determinístico)
-- Rota `/dev/meus-projetos` lista projetos do usuário
-
-### Fase 3 — Workspace do projeto + preview
-- Rota `/dev/projeto/$id` — header de status, créditos, briefing summary, timeline, CTAs
-- Rota `/dev/projeto/$id/preview` — `DevGeneratedSitePreview` renderiza `generated_site` (desktop/mobile toggle, placeholders "Informação pendente")
-- Integração com painel do cliente: bloco "Meus projetos Dev" em `/painel`
-- RLS valida ownership em toda leitura
-
-### Fase 4 — Chatbot editor (classificador via Lovable AI)
-- Tabelas: `dev_chat_messages`, `dev_change_requests`
-- Rota `/dev/projeto/$id/editor` — UI 3 colunas (resumo / chat / changelog), mobile com tabs
-- Server fn `streamDevChat` usando AI SDK + Lovable Gateway (`google/gemini-3-flash-preview`)
-- Tool `classifyChangeRequest` com `Output.object` (Zod): retorna `{classification, summary, credit_cost, needs_admin, user_visible_response}`
-- Fluxo:
-  1. Usuário escreve pedido
-  2. IA classifica e responde com proposta + custo em créditos
-  3. Botão "Confirmar pedido" → `createDevChangeTask` server fn deduz crédito e cria registro em `dev_change_requests` (status `pending`) + `admin_tasks`
-  4. IA **nunca** muta `generated_site` direto; só admin marca como aplicado
-- Validação Zod no servidor antes de gravar
-- Quick prompts (chips) acima do input
-- Status badges, histórico persistido, sem fingir que editou
-
-### Fase 5 — Publish flow + cobranças extras + emails
-- Tabelas: `dev_publish_requests`, `dev_extra_charges`
-- Rota `/dev/projeto/$id/publicar` — form de publicação, status realista (sem prometer DNS automático)
-- Major changes (classificação da IA) → cria `dev_extra_charges` (reutiliza fluxo de `extra_charges` existente, com `dev_project_id`)
-- 7 templates de email em `src/lib/email-templates/dev-*.tsx`: briefing recebido, site estruturado, alteração recebida/aplicada, cobrança extra, publicação solicitada/publicado
-- Notificação admin nos mesmos eventos
-
-### Fase 6 — Console admin
-- Nova aba "Flaro Dev" em `/console`: `DevAdminProjectTable` (filtros por status/plano/template), `DevAdminProjectDetails`, `DevAdminChangeRequestPanel`, `DevAdminTemplateManager`, `DevAdminPlanManager`
-- Admin pode: ver briefing/site/chat, aprovar/aplicar mudanças, criar cobrança extra, atualizar status, definir `public_url`, gerenciar templates/planos
-- Reaproveita componentes existentes do console (Kanban, tabs)
+Mais dois pedidos rápidos:
+- Remover todos os ícones `Sparkles` do site
+- Aplicar identidade Flaro (paleta, tipografia, espaçamento) na `/dev`
 
 ---
 
-## Schema resumido (Fase 2-5)
+## Fase 1 — Limpeza visual (rápido)
 
-```text
-dev_templates       slug, name, segment, description, sections jsonb, recommended_plan, is_active
-dev_plans           slug, name, activation_price, monthly_price, monthly_change_credits,
-                    features jsonb, stripe_product_id, stripe_price_activation_id,
-                    stripe_price_monthly_id, is_active
-dev_projects        user_id, template_id, plan_id, business_name, project_name, status,
-                    briefing_data jsonb, generated_site jsonb, current_version_id,
-                    remaining_change_credits, payment_status, subscription_id,
-                    public_url, requested_domain
-dev_project_versions   project_id, version_number, generated_site jsonb, change_summary, created_by
-dev_change_requests    project_id, user_id, message, classification, status,
-                       credit_cost, admin_notes, before_data jsonb, proposed_changes jsonb, applied_at
-dev_chat_messages      project_id, user_id, role, content, metadata jsonb
-dev_publish_requests   project_id, user_id, domain_type, requested_domain, dns_access, status, admin_notes
-dev_extra_charges      project_id, user_id, change_request_id, title, description, amount,
-                       status, payment_link
-```
+- Remover `Sparkles` (lucide-react) em todas as ocorrências; trocar por ícone neutro (`Zap`, `Wand2`, `Star`) ou simplesmente remover quando for decorativo
+- Auditar com `rg "Sparkles" src/`
 
-RLS: usuário só vê linhas com `user_id = auth.uid()`; admin via `has_role(auth.uid(), 'admin')`. Templates/planos ativos públicos para leitura.
+## Fase 2 — Redesign /dev com identidade Flaro
+
+A `/dev` atual é genérica. Aplicar:
+- Hero com tipografia Flaro (já no `styles.css`), gradientes/sombras existentes
+- Cards de modelos com mesmo visual do `/modelos` principal
+- CTA dupla: "Gerar grátis (10 créditos)" e "Ver planos"
+- Reaproveitar componentes do site principal (botões, badges, PlanCard adaptado)
+
+## Fase 3 — Sistema de créditos
+
+### Banco
+- **`user_credits`**: `user_id` (unique), `balance` (int), `lifetime_earned`, `lifetime_spent`, timestamps
+- **`credit_transactions`**: `user_id`, `delta` (int, +/−), `reason` (text: 'signup_bonus', 'plan_grant', 'site_generation', 'site_edit', 'manual'), `ref_id` (uuid opcional → projeto/pagamento), `created_at`
+- Trigger no `auth.users` para conceder **10 créditos grátis** no signup
+- Cron mensal/Stripe webhook concede créditos do plano
+
+### Reformular `dev_plans`
+Substituir colunas `activation_price`/`monthly_price`/`max_revisions_month` por:
+- `monthly_price` (mantém)
+- `monthly_credits` (int)
+- `extra_credit_price_cents` (int, custo de comprar pacote avulso)
+
+Novos planos:
+| Slug | Nome | Mensal | Créditos/mês |
+|---|---|---|---|
+| free | Grátis | 0 | 10 (one-time no signup) |
+| starter | Starter | R$ 47 | 50 |
+| pro | Pro | R$ 97 | 150 |
+| scale | Scale | R$ 197 | 400 |
+
+### Custos em créditos
+- Gerar site novo: **5 créditos**
+- Editar texto via IA: **1 crédito**
+- Trocar imagem/cor: 0 (gratuito, sem IA)
+- Publicar/republicar: 0
+
+## Fase 4 — Geração automática (híbrido template + IA)
+
+### Server function `generateDevSite`
+1. Valida créditos (≥ 5)
+2. Chama Lovable AI Gateway (`google/gemini-2.5-flash`) com prompt estruturado:
+   - Input: nome do negócio, segmento, descrição livre, tom de voz
+   - Output: JSON com `hero`, `about`, `services[]`, `cta`, `faq[]`, cores sugeridas
+3. Persiste em `dev_projects.briefing` + cria `dev_project_versions` v1
+4. Gera `slug` único (kebab-case do business_name + sufixo se colisão)
+5. Marca `status='published'`, `published_url = https://{slug}.filro.site`
+6. Debita 5 créditos, registra transação
+7. Dispara email `dev-site-generated` (novo template)
+
+### Server function `editDevSiteWithAI`
+1. Valida 1 crédito
+2. Recebe `projectId` + `instruction` (ex: "trocar o título do hero para X")
+3. Carrega versão atual, manda IA reescrever o campo solicitado
+4. Cria nova versão, debita crédito
+
+### Editor manual (sem IA, grátis)
+- Form simples na `/dev/projeto/{id}` para editar campos diretamente
+
+## Fase 5 — Hospedagem em subdomínio
+
+### Rota wildcard
+- Nova rota `src/routes/_site/$.tsx` que:
+  - Lê `Host` header em loader server-side
+  - Extrai slug do subdomínio (`{slug}.filro.site`)
+  - Busca `dev_projects` por slug (público, via `supabaseAdmin` server-fn)
+  - Renderiza o template correspondente com os dados gerados
+- Fallback: se host = `filro.site` ou `setup.filro.site` ou `lovable.app`, segue rota normal (root layout decide)
+
+### DNS
+- Documentar para o usuário adicionar registro **wildcard `*.filro.site → 185.158.133.1`** no provedor DNS
+- Hosting Lovable já cobre via custom domain; nota: SSL wildcard depende do provedor — se não der, fallback automático para `/s/{slug}` em rota `src/routes/s.$slug.tsx` espelhada
+
+### Componente de renderização
+- `src/components/dev-site/RenderedSite.tsx` → recebe `template_slug` + dados gerados, monta hero/sobre/serviços/CTA com o design do template escolhido
+- Inicialmente um único template "essencial" funcional; outros marcados "em breve"
+
+## Fase 6 — UX do fluxo novo
+
+- `/dev` (landing) → CTA "Criar grátis"
+- `/dev/novo` → wizard de 2 passos:
+  1. Escolher modelo
+  2. Briefing (nome, segmento, descrição curta, telefone/WhatsApp, cor preferida)
+- Botão "Gerar meu site (5 créditos)" → chama `generateDevSite` → redireciona para `/dev/projeto/{id}` com URL publicada visível
+- `/dev/projeto/{id}` → mostra preview embed (iframe da URL), botão "Editar com IA (1 crédito)" + form manual, lista de versões, contador de créditos
+- Header global: badge com saldo de créditos ao lado do avatar quando logado
+- `/dev/precos` → reformular para mostrar créditos em vez de "ativação + mensal"
+
+## Fase 7 — Limpeza do antigo modelo assistido
+
+- Remover/ocultar:
+  - `DevAdminTab` (fluxo manual de produção/publicação) → manter só visualização, sem botão publicar manual
+  - `DevChangeChat` (chat de revisões com equipe) → substituir pelo editor IA
+  - Email `dev-project-paid` e `dev-change-answered` → manter como deprecated, parar de enviar
+- Stripe: arquivar produtos `dev_*_activation`, criar novos `dev_credits_starter/pro/scale` (assinatura mensal)
+- Webhook atualizado para conceder créditos via `credit_transactions` ao confirmar assinatura
 
 ---
 
-## Regras invioláveis (todas as fases)
+## Detalhes técnicos
 
-1. Não tocar em `plans`, `payments`, `subscriptions`, `projects`, `console`, `/painel`, `/checkout` existentes
-2. Reutilizar `payments.functions.ts`, `stripe.server.ts`, webhook, `email/send.server.ts`, `auth.tsx`, `requireSupabaseAuth`
-3. IA só **classifica** — admin executa
-4. Créditos só descontam após confirmação do usuário
-5. Major change → cobrança extra (não consome crédito)
-6. Sem promessas falsas ("site pronto em segundos", "DNS automático")
-7. Português BR profissional, identidade visual atual da Filro
+### Migrations
+1. Criar `user_credits` + `credit_transactions` + trigger signup bonus
+2. Adicionar `slug` (text, unique) e `generated_content` (jsonb) em `dev_projects`
+3. Adicionar `monthly_credits` em `dev_plans`; popular novos planos
+
+### Server functions novas
+- `src/lib/credits/credits.functions.ts`: `getMyCredits`, `consumeCredits` (internal helper, não exposta)
+- `src/lib/dev/dev.functions.ts`: `generateDevSite`, `editDevSiteWithAI`, `updateDevSiteManual`, `checkSlugAvailability`
+
+### Lovable AI Gateway
+- Modelo: `google/gemini-2.5-flash` (rápido/barato)
+- Prompt em PT-BR retornando JSON estrito (com `response_format: { type: 'json_object' }`)
+
+### Componentes
+- `src/components/dev/CreditsBadge.tsx`
+- `src/components/dev/GeneratorWizard.tsx`
+- `src/components/dev/AIEditor.tsx`
+- `src/components/dev-site/templates/EssencialTemplate.tsx`
+
+### Rotas novas/alteradas
+- `src/routes/dev.index.tsx` (redesign)
+- `src/routes/dev.novo.tsx` (wizard simplificado)
+- `src/routes/dev.projeto.$projectId.tsx` (novo editor)
+- `src/routes/dev.precos.tsx` (créditos)
+- `src/routes/_site.$.tsx` (wildcard subdomínio)
+- `src/routes/s.$slug.tsx` (fallback)
 
 ---
 
-## O que vou fazer agora
+## Escopo desta entrega
 
-Aguardar sua aprovação e começar pela **Fase 1** (landing + catálogo + planos, sem banco). Ao final da Fase 1 paro, mostro funcionando, e você decide se quer seguir para a Fase 2.
+Por tamanho, sugiro entregar em **2 marcos**:
+
+**Marco A (esta resposta):**
+- Fase 1 (Sparkles)
+- Fase 2 (redesign /dev)
+- Fases 3+4+6: créditos, geração IA, editor, wizard novo, /dev/precos com créditos
+- Renderização do site em rota `/s/{slug}` (sem subdomínio ainda — funciona já)
+- Esconde o fluxo antigo (DevAdminTab/DevChangeChat) sem deletar
+
+**Marco B (próxima resposta, se aprovado):**
+- Wildcard subdomínio `*.filro.site` com DNS + roteamento por Host
+- Migração Stripe (arquivar produtos antigos, criar pacotes de créditos)
+- Limpeza definitiva dos componentes antigos
+
+Confirma o Marco A?
