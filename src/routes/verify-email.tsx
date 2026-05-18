@@ -61,12 +61,16 @@ function VerifyEmailPage() {
         idempotencyKey: `welcome-signup-${data.user?.id}`,
         templateData: { name: userName, checkoutUrl: `${window.location.origin}/checkout` },
       }).catch(() => {});
-      // admin notify via server fn (uses admin client)
+      // admin notify (requires auth — endpoint forces userId = caller)
       await fetch("/api/public/notify-admin-signup", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: data.user?.id }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${data.session.access_token}`,
+        },
+        body: JSON.stringify({}),
       }).catch(() => {});
+
     } catch {}
 
     toast.success("E-mail confirmado");
