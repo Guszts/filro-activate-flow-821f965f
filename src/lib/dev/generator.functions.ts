@@ -266,7 +266,7 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
     if (ins.length < 5 || ins.length > 1500) throw new Error("Instrução muito curta ou longa");
     return { projectId: data.projectId, instruction: ins };
   })
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data, context }): Promise<{ ok: true; error: null; content: Record<string, unknown> } | { ok: false; error: string; content: null }> => {
     const { userId } = context;
     const { data: credits } = await supabaseAdmin
       .from("user_credits").select("balance").eq("user_id", userId).maybeSingle();
@@ -329,7 +329,7 @@ ${JSON.stringify(project.generated_content, null, 2)}`;
       _metadata: { instruction: data.instruction.slice(0, 200) } as never,
     } as never);
 
-    return { ok: true as const, error: null, content: updated };
+    return { ok: true as const, error: null, content: updated as Record<string, unknown> };
   });
 
 // ---------- update manual ----------

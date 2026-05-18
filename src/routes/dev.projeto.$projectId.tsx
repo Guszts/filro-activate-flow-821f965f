@@ -48,11 +48,11 @@ function ProjetoPage() {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: `/dev/projeto/${projectId}` } }); return; }
     (async () => {
-      const res = await fetchProject({ data: { projectId } });
+      const res = (await fetchProject({ data: { projectId } })) as { error: string | null; project: unknown };
       if (res.error) setError(res.error);
       else setProject(res.project as Project | null);
     })();
-    fetchCredits().then((r) => setBalance(r.balance)).catch(() => {});
+    fetchCredits().then((r) => setBalance((r as { balance: number }).balance)).catch(() => {});
   }, [loading, user, projectId, navigate, fetchProject, fetchCredits, reloadKey]);
 
   async function handleEdit() {
