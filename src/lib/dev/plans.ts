@@ -1,8 +1,10 @@
+export type DevPlanSlug = "dev_start" | "dev_pro" | "dev_scale";
+
 export type DevPlan = {
-  slug: "free" | "starter" | "pro" | "scale";
+  slug: DevPlanSlug;
   name: string;
   tagline: string;
-  monthlyPrice: number; // BRL
+  monthlyPrice: number; // BRL (cents → divide by 100 for display)
   monthlyCredits: number;
   features: string[];
   bestFor: string;
@@ -11,24 +13,10 @@ export type DevPlan = {
 
 export const DEV_PLANS: DevPlan[] = [
   {
-    slug: "free",
-    name: "Grátis",
-    tagline: "Comece agora, sem cartão.",
-    monthlyPrice: 0,
-    monthlyCredits: 10,
-    features: [
-      "10 créditos ao criar a conta",
-      "1 site publicado em {seu-slug}.filro.site",
-      "Editor manual ilimitado",
-      "Editor com IA (1 crédito por edição)",
-    ],
-    bestFor: "Quem quer testar e publicar um site simples na hora.",
-  },
-  {
-    slug: "starter",
+    slug: "dev_start",
     name: "Starter",
     tagline: "Para um site profissional pessoal ou de pequeno negócio.",
-    monthlyPrice: 47,
+    monthlyPrice: 4700,
     monthlyCredits: 50,
     features: [
       "50 créditos por mês",
@@ -39,10 +27,10 @@ export const DEV_PLANS: DevPlan[] = [
     bestFor: "Negócios começando que iteram conteúdo com regularidade.",
   },
   {
-    slug: "pro",
+    slug: "dev_pro",
     name: "Pro",
     tagline: "Para quem mantém vários sites e campanhas ativas.",
-    monthlyPrice: 97,
+    monthlyPrice: 9700,
     monthlyCredits: 150,
     features: [
       "150 créditos por mês",
@@ -55,10 +43,10 @@ export const DEV_PLANS: DevPlan[] = [
     highlight: true,
   },
   {
-    slug: "scale",
+    slug: "dev_scale",
     name: "Scale",
     tagline: "Volume para times e operações maiores.",
-    monthlyPrice: 197,
+    monthlyPrice: 19700,
     monthlyCredits: 400,
     features: [
       "400 créditos por mês",
@@ -76,14 +64,16 @@ export const CREDIT_COSTS = {
   aiEdit: 1,
 } as const;
 
+export const FREE_SIGNUP_CREDITS = 10;
+
 export function getDevPlan(slug: string): DevPlan | undefined {
   return DEV_PLANS.find((p) => p.slug === slug);
 }
 
-export function formatBRL(value: number): string {
+export function formatBRL(valueInCents: number): string {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
     maximumFractionDigits: 0,
-  }).format(value);
+  }).format(valueInCents / 100);
 }
