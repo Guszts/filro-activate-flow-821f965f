@@ -40,7 +40,7 @@ function LoginPage() {
       const isAdmin = roles?.some((r) => r.role === "admin");
       if (isAdmin) return navigate({ to: "/console" });
     }
-    navigate({ to: redirect });
+    navigate({ to: safeRedirect(redirect) });
   };
 
   return (
@@ -65,7 +65,7 @@ function LoginPage() {
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-ink-soft">
-          Não tem conta? <Link to="/register" search={{ redirect }} className="text-ink font-semibold underline-offset-4 hover:underline">Criar conta</Link>
+          Não tem conta? <Link to="/register" search={{ redirect: safeRedirect(redirect) }} className="text-ink font-semibold underline-offset-4 hover:underline">Criar conta</Link>
         </p>
       </div>
     </main>
