@@ -7,22 +7,6 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { imagetools } from "vite-imagetools";
 
-const supabaseUrl =
-  process.env.VITE_SUPABASE_URL ??
-  process.env.SUPABASE_URL ??
-  "";
-
-const supabasePublishableKey =
-  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
-  process.env.SUPABASE_PUBLISHABLE_KEY ??
-  process.env.VITE_SUPABASE_ANON_KEY ??
-  process.env.SUPABASE_ANON_KEY ??
-  "";
-
-if (!supabaseUrl || !supabasePublishableKey) {
-  console.warn("[vite] Supabase env vars missing — runtime calls will fail until VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY are set.");
-}
-
 // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
 // @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
 export default defineConfig({
@@ -31,11 +15,5 @@ export default defineConfig({
   },
   vite: {
     plugins: [imagetools()],
-    define: {
-      "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(supabaseUrl),
-      "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(supabasePublishableKey),
-      "process.env.SUPABASE_URL": JSON.stringify(supabaseUrl),
-      "process.env.SUPABASE_PUBLISHABLE_KEY": JSON.stringify(supabasePublishableKey),
-    },
   },
 });
