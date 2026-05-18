@@ -103,7 +103,7 @@ async function upsertSubscription(sub: Stripe.Subscription, env: StripeEnv) {
     ?? (sub as unknown as { current_period_end?: number }).current_period_end;
 
   // Flaro Dev — grava em dev_subscriptions e ignora subscriptions legado.
-  if (kind === "dev") {
+  if (kind === "dev" || kind === "dev_plan") {
     const devProjectId = sub.metadata?.devProjectId ?? null;
     const { data: devPlan } = planSlug
       ? await supabaseAdmin.from("dev_plans").select("id").eq("slug", planSlug as "dev_start" | "dev_plus" | "dev_pro" | "dev_scale").maybeSingle()
