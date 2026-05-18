@@ -42,6 +42,7 @@ import { Route as DevNovoRouteImport } from './routes/dev.novo'
 import { Route as DevModelosIndexRouteImport } from './routes/dev.modelos.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as DevProjetoProjectIdRouteImport } from './routes/dev.projeto.$projectId'
+import { Route as DevPreviewViagemWishesRouteImport } from './routes/dev.preview.viagem-wishes'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -216,6 +217,11 @@ const DevProjetoProjectIdRoute = DevProjetoProjectIdRouteImport.update({
   path: '/dev/projeto/$projectId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevPreviewViagemWishesRoute = DevPreviewViagemWishesRouteImport.update({
+  id: '/dev/preview/viagem-wishes',
+  path: '/dev/preview/viagem-wishes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevModelosSlugRoute = DevModelosSlugRouteImport.update({
   id: '/dev/modelos/$slug',
   path: '/dev/modelos/$slug',
@@ -295,6 +301,7 @@ export interface FileRoutesByFullPath {
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
+  '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/dev/modelos/': typeof DevModelosIndexRoute
@@ -338,6 +345,7 @@ export interface FileRoutesByTo {
   '/planos': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
+  '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/dev/modelos': typeof DevModelosIndexRoute
@@ -382,6 +390,7 @@ export interface FileRoutesById {
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
+  '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/dev/modelos/': typeof DevModelosIndexRoute
@@ -427,6 +436,7 @@ export interface FileRouteTypes {
     | '/planos/'
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
+    | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
     | '/dev/modelos/'
@@ -470,6 +480,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
+    | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
     | '/dev/modelos'
@@ -513,6 +524,7 @@ export interface FileRouteTypes {
     | '/planos/'
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
+    | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
     | '/dev/modelos/'
@@ -557,6 +569,7 @@ export interface RootRouteChildren {
   PlanosIndexRoute: typeof PlanosIndexRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   DevModelosSlugRoute: typeof DevModelosSlugRoute
+  DevPreviewViagemWishesRoute: typeof DevPreviewViagemWishesRoute
   DevProjetoProjectIdRoute: typeof DevProjetoProjectIdRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   DevModelosIndexRoute: typeof DevModelosIndexRoute
@@ -801,6 +814,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevProjetoProjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/preview/viagem-wishes': {
+      id: '/dev/preview/viagem-wishes'
+      path: '/dev/preview/viagem-wishes'
+      fullPath: '/dev/preview/viagem-wishes'
+      preLoaderRoute: typeof DevPreviewViagemWishesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev/modelos/$slug': {
       id: '/dev/modelos/$slug'
       path: '/dev/modelos/$slug'
@@ -893,6 +913,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosIndexRoute: PlanosIndexRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   DevModelosSlugRoute: DevModelosSlugRoute,
+  DevPreviewViagemWishesRoute: DevPreviewViagemWishesRoute,
   DevProjetoProjectIdRoute: DevProjetoProjectIdRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   DevModelosIndexRoute: DevModelosIndexRoute,
