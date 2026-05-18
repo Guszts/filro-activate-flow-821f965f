@@ -3,9 +3,15 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+function safeRedirect(raw: unknown, fallback = "/") {
+  if (typeof raw !== "string") return fallback;
+  if (!raw.startsWith("/") || raw.startsWith("//")) return fallback;
+  return raw;
+}
+
 export const Route = createFileRoute("/login")({
   component: LoginPage,
-  validateSearch: (s: Record<string, unknown>) => ({ redirect: (s.redirect as string) || "/" }),
+  validateSearch: (s: Record<string, unknown>) => ({ redirect: safeRedirect(s.redirect) }),
   head: () => ({ meta: [
     { title: "Entrar · Filro" },
     { name: "description", content: "Acesse sua conta Filro para gerenciar sua página, conteúdos e ativação." },
