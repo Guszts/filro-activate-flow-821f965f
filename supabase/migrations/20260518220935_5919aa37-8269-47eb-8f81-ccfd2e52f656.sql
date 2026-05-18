@@ -1,0 +1,2 @@
+SELECT public.grant_credits('1f37b037-0d56-4df6-936d-6cf2ce9c851c'::uuid, 1000, 'admin_grant', NULL, '{"note":"manual admin top-up"}'::jsonb);
+SELECT public.grant_credits('f01a72bb-913e-4eb9-a38c-f2d003682b1f'::uuid, 1000, 'admin_grant', NULL, '{"note":"manual admin top-up"}'::jsonb);
