@@ -143,6 +143,48 @@ export type Database = {
         }
         Relationships: []
       }
+      dev_credit_packs: {
+        Row: {
+          active: boolean
+          created_at: string
+          credits: number
+          currency: string
+          display_order: number
+          id: string
+          name: string
+          price: number
+          slug: string
+          stripe_price_lookup_key: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          credits: number
+          currency?: string
+          display_order?: number
+          id?: string
+          name: string
+          price: number
+          slug: string
+          stripe_price_lookup_key?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          credits?: number
+          currency?: string
+          display_order?: number
+          id?: string
+          name?: string
+          price?: number
+          slug?: string
+          stripe_price_lookup_key?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       dev_payments: {
         Row: {
           amount: number
