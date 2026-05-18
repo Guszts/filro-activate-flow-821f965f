@@ -329,7 +329,7 @@ ${JSON.stringify(project.generated_content, null, 2)}`;
       _metadata: { instruction: data.instruction.slice(0, 200) } as never,
     } as never);
 
-    return { ok: true as const, error: null, content: updated as Record<string, unknown> };
+    return { ok: true as const, error: null };
   });
 
 // ---------- update manual ----------
