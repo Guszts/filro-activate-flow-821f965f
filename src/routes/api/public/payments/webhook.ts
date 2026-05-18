@@ -103,7 +103,7 @@ async function upsertSubscription(sub: Stripe.Subscription, env: StripeEnv) {
     ?? (sub as unknown as { current_period_end?: number }).current_period_end;
 
   // Flaro Dev — grava em dev_subscriptions e ignora subscriptions legado.
-  if (kind === "dev") {
+  if (kind === "dev" || kind === "dev_plan") {
     const devProjectId = sub.metadata?.devProjectId ?? null;
     const { data: devPlan } = planSlug
       ? await supabaseAdmin.from("dev_plans").select("id").eq("slug", planSlug as "dev_start" | "dev_plus" | "dev_pro" | "dev_scale").maybeSingle()
@@ -172,6 +172,40 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
           })
           .eq("id", extraChargeId);
         await logEvent("extra_charge.paid", userId ?? null, { extraChargeId, sessionId: session.id });
+        break;
+      }
+
+      // Filro Dev — pacote avulso de créditos (one-time)
+      if (kind === "dev_pack" && userId) {
+        const credits = Number(session.metadata?.credits || 0);
+        const packSlug = session.metadata?.packSlug || null;
+        if (credits > 0) {
+          await supabaseAdmin.rpc("grant_credits", {
+            _user_id: userId,
+            _delta: credits,
+            _reason: "credit_pack_purchase",
+            _ref_id: null,
+            _metadata: { packSlug, sessionId: session.id, environment: env } as never,
+          } as never);
+        }
+        await logEvent("dev.pack.purchased", userId, { packSlug, credits, sessionId: session.id });
+        break;
+      }
+
+      // Filro Dev — assinatura mensal de plano (crédito inicial)
+      if (kind === "dev_plan" && userId) {
+        const credits = Number(session.metadata?.monthlyCredits || 0);
+        const planSlugMeta = session.metadata?.planSlug || null;
+        if (credits > 0) {
+          await supabaseAdmin.rpc("grant_credits", {
+            _user_id: userId,
+            _delta: credits,
+            _reason: "plan_subscription_start",
+            _ref_id: null,
+            _metadata: { planSlug: planSlugMeta, sessionId: session.id, environment: env } as never,
+          } as never);
+        }
+        await logEvent("dev.plan.subscribed", userId, { planSlug: planSlugMeta, credits, sessionId: session.id });
         break;
       }
 
@@ -582,15 +616,43 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         subscription?: string | Stripe.Subscription;
         billing_reason?: string;
       };
+      const subId = typeof invoice.subscription === "string"
+        ? invoice.subscription
+        : invoice.subscription?.id;
+
+      // Filro Dev — renovação mensal: credita nova quantidade
+      if (subId && invoice.billing_reason !== "subscription_create") {
+        try {
+          const stripeSub = await stripe.subscriptions.retrieve(subId);
+          if (stripeSub.metadata?.kind === "dev_plan" && stripeSub.metadata?.userId) {
+            const credits = Number(stripeSub.metadata?.monthlyCredits || 0);
+            if (credits > 0) {
+              await supabaseAdmin.rpc("grant_credits", {
+                _user_id: stripeSub.metadata.userId,
+                _delta: credits,
+                _reason: "plan_subscription_renewal",
+                _ref_id: null,
+                _metadata: { planSlug: stripeSub.metadata.planSlug ?? null, invoiceId: invoice.id, environment: env } as never,
+              } as never);
+            }
+            await logEvent("dev.plan.renewed", stripeSub.metadata.userId, {
+              planSlug: stripeSub.metadata.planSlug ?? null,
+              credits,
+              invoiceId: invoice.id,
+            });
+            break;
+          }
+        } catch (e) {
+          console.error("[webhook] dev plan renewal lookup failed", e);
+        }
+      }
+
       // Evita duplicação: a fatura inicial (subscription_create) já foi
       // registrada em checkout.session.completed.
       if (invoice.billing_reason === "subscription_create") {
         await logEvent("invoice.payment_succeeded.skipped_initial", null, { invoiceId: invoice.id });
         break;
       }
-      const subId = typeof invoice.subscription === "string"
-        ? invoice.subscription
-        : invoice.subscription?.id;
       const userIdMeta = invoice.metadata?.userId ?? null;
 
       const { data: sub } = subId
