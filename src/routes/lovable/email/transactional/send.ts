@@ -88,6 +88,33 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
           )
         }
 
+        // SECURITY: authenticated callers can only trigger a small whitelist
+        // of self-service templates, and only addressed to their own email.
+        // Privileged/transactional templates (order-confirmation, payment-failed,
+        // extra-charge-issued, admin-*, sale-notification, etc.) must only be
+        // sent by trusted server code via sendTransactionalEmailServer.
+        const SELF_SERVICE_TEMPLATES = new Set(['welcome-signup'])
+        if (!SELF_SERVICE_TEMPLATES.has(templateName)) {
+          return Response.json(
+            { error: 'Template not allowed for direct client send' },
+            { status: 403 }
+          )
+        }
+        const userEmail = user.email?.toLowerCase()
+        if (!userEmail) {
+          return Response.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+        if (recipientEmail && recipientEmail.toLowerCase() !== userEmail) {
+          return Response.json(
+            { error: 'Recipient must be the authenticated user' },
+            { status: 403 }
+          )
+        }
+        recipientEmail = userEmail
+        // Drop any caller-controlled templateData to prevent impersonation of
+        // platform messaging. Self-service templates render with defaults.
+        templateData = {}
+
         // 1. Look up template from registry (early — needed to resolve recipient)
         const template = TEMPLATES[templateName]
 
@@ -95,11 +122,12 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
           console.error('Template not found in registry', { templateName })
           return Response.json(
             {
-              error: `Template '${templateName}' not found. Available: ${Object.keys(TEMPLATES).join(', ')}`,
+              error: `Template '${templateName}' not found`,
             },
             { status: 404 }
           )
         }
+
 
         // Resolve effective recipient: template-level `to` takes precedence over
         // the caller-provided recipientEmail. This allows notification templates
