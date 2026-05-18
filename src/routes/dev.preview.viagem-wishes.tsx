@@ -356,7 +356,7 @@ function Header({
 
 // ---------------- Home ----------------
 function Home(props: {
-  searchRef: React.RefObject<HTMLDivElement>;
+  searchRef: React.RefObject<HTMLDivElement | null>;
   openDropdown: null | "loc" | "date" | "guests";
   setOpenDropdown: (v: null | "loc" | "date" | "guests") => void;
   loc: string; setLoc: (s: string) => void;
