@@ -148,7 +148,7 @@ function DevPrecos() {
             <span className="text-xs uppercase tracking-widest text-ink-soft">Pacotes avulsos</span>
             <h2 className="mt-3 editorial-headline text-3xl md:text-5xl text-ink max-w-3xl">Sem assinatura? Compre só os créditos que precisar.</h2>
             <div className="mt-8 grid md:grid-cols-3 gap-5">
-              {packs.map((pack) => (
+              {packs.map((pack: { slug: string; name: string; credits: number; price: number }) => (
                 <div key={pack.slug} className="rounded-2xl border border-border p-6 bg-paper">
                   <div className="text-lg font-semibold text-ink">{pack.name}</div>
                   <div className="mt-3 text-3xl font-bold text-ink">{formatBRL(pack.price)}</div>
