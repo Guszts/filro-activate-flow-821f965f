@@ -175,6 +175,40 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         break;
       }
 
+      // Filro Dev — pacote avulso de créditos (one-time)
+      if (kind === "dev_pack" && userId) {
+        const credits = Number(session.metadata?.credits || 0);
+        const packSlug = session.metadata?.packSlug || null;
+        if (credits > 0) {
+          await supabaseAdmin.rpc("grant_credits", {
+            _user_id: userId,
+            _delta: credits,
+            _reason: "credit_pack_purchase",
+            _ref_id: null,
+            _metadata: { packSlug, sessionId: session.id, environment: env } as never,
+          } as never);
+        }
+        await logEvent("dev.pack.purchased", userId, { packSlug, credits, sessionId: session.id });
+        break;
+      }
+
+      // Filro Dev — assinatura mensal de plano (crédito inicial)
+      if (kind === "dev_plan" && userId) {
+        const credits = Number(session.metadata?.monthlyCredits || 0);
+        const planSlugMeta = session.metadata?.planSlug || null;
+        if (credits > 0) {
+          await supabaseAdmin.rpc("grant_credits", {
+            _user_id: userId,
+            _delta: credits,
+            _reason: "plan_subscription_start",
+            _ref_id: null,
+            _metadata: { planSlug: planSlugMeta, sessionId: session.id, environment: env } as never,
+          } as never);
+        }
+        await logEvent("dev.plan.subscribed", userId, { planSlug: planSlugMeta, credits, sessionId: session.id });
+        break;
+      }
+
       // Flaro Dev — fluxo independente dos planos legados
       if (kind === "dev" && userId && devProjectId) {
         await supabaseAdmin
