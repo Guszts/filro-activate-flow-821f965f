@@ -266,7 +266,7 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
     if (ins.length < 5 || ins.length > 1500) throw new Error("Instrução muito curta ou longa");
     return { projectId: data.projectId, instruction: ins };
   })
-  .handler(async ({ data, context }): Promise<{ ok: true; error: null; content: Record<string, unknown> } | { ok: false; error: string; content: null }> => {
+  .handler(async ({ data, context }) => {
     const { userId } = context;
     const { data: credits } = await supabaseAdmin
       .from("user_credits").select("balance").eq("user_id", userId).maybeSingle();
