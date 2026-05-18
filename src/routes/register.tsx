@@ -60,7 +60,7 @@ function RegisterPage() {
     setLoading(false);
     if (error) return toast.error(error.message);
     toast.success("Enviamos um código de 6 dígitos para seu e-mail");
-    navigate({ to: "/verify-email", search: { email: form.email, redirect } });
+    navigate({ to: "/verify-email", search: { email: form.email, redirect: safeRedirect(redirect) } });
   };
 
   return (
@@ -84,7 +84,7 @@ function RegisterPage() {
           </p>
         </form>
         <p className="mt-6 text-center text-sm text-ink-soft">
-          Já tem conta? <Link to="/login" search={{ redirect }} className="text-ink font-semibold">Entrar</Link>
+          Já tem conta? <Link to="/login" search={{ redirect: safeRedirect(redirect) }} className="text-ink font-semibold">Entrar</Link>
         </p>
       </motion.div>
     </main>
