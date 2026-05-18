@@ -168,7 +168,6 @@ function RootComponent() {
 
   if (subdomainSite) {
     // Renderiza site público diretamente (subdomínio {slug}.filro.site)
-    const RenderedSite = require("@/components/dev-site/RenderedSite").RenderedSite;
     return (
       <QueryClientProvider client={queryClient}>
         <RenderedSite
