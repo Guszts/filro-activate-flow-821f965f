@@ -135,7 +135,7 @@ function ConsolePage() {
         {tab === "overview" && <OverviewTab />}
         {tab === "dashboard" && <DashboardTab />}
         {tab === "projects" && <ProjectsKanban />}
-        {tab === "dev" && <DevAdminTab />}
+        
         {tab === "users" && <UsersTab />}
         {tab === "payments" && <PaymentsTab />}
         {tab === "subscriptions" && <SubscriptionsTab />}
