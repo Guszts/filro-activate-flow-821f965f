@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Menu, X, ChevronDown, LayoutDashboard, Briefcase, Shield, Layers, PlayCircle, Rocket, Settings as SettingsIcon, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CreditsBadge } from "@/components/dev/CreditsBadge";
 
 const navLinks = [
   { to: "/" as const, label: "Início", icon: Home },
