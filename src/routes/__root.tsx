@@ -35,6 +35,7 @@ function ConditionalFlaroChat() {
   return <FlaroChat />;
 }
 import { capturePartnerFromUrl } from "@/lib/partner";
+import { RenderedSite } from "@/components/dev-site/RenderedSite";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -63,7 +64,28 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const RESERVED_SUBDOMAINS = new Set(["www", "setup", "app", "api", "admin", "dev", "id-preview", "preview", "filro-activate-flow"]);
+
+async function detectSubdomainSite(): Promise<{ site: any | null }> {
+  if (typeof window !== "undefined") return { site: null };
+  try {
+    const { getRequestHost } = await import("@tanstack/react-start/server");
+    const host = getRequestHost();
+    if (!host) return { site: null };
+    const m = host.toLowerCase().match(/^([a-z0-9-]+)\.filro\.site$/);
+    if (!m) return { site: null };
+    const sub = m[1];
+    if (RESERVED_SUBDOMAINS.has(sub)) return { site: null };
+    const { getPublicSiteBySlug } = await import("@/lib/dev/generator.functions");
+    const res = await getPublicSiteBySlug({ data: { slug: sub } }).catch(() => ({ site: null }));
+    return { site: res.site ?? null };
+  } catch {
+    return { site: null };
+  }
+}
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: async () => detectSubdomainSite(),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -140,7 +162,23 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const loaderData = Route.useLoaderData();
+  const subdomainSite = (loaderData as { site?: any } | undefined)?.site ?? null;
   useEffect(() => { capturePartnerFromUrl(); }, []);
+
+  if (subdomainSite) {
+    // Renderiza site público diretamente (subdomínio {slug}.filro.site)
+    return (
+      <QueryClientProvider client={queryClient}>
+        <RenderedSite
+          content={subdomainSite.generated_content ?? {}}
+          businessName={subdomainSite.business_name ?? "Site"}
+        />
+        <Toaster />
+      </QueryClientProvider>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
