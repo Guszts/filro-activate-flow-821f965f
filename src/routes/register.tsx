@@ -6,6 +6,12 @@ import { z } from "zod";
 import { PhoneInput } from "@/components/PhoneInput";
 import { motion } from "framer-motion";
 
+function safeRedirect(raw: unknown, fallback = "/checkout") {
+  if (typeof raw !== "string") return fallback;
+  if (!raw.startsWith("/") || raw.startsWith("//")) return fallback;
+  return raw;
+}
+
 const schema = z.object({
   name: z.string().trim().min(2).max(100),
   email: z.string().trim().email().max(255),
@@ -17,7 +23,7 @@ const schema = z.object({
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
-  validateSearch: (s: Record<string, unknown>) => ({ redirect: (s.redirect as string) || "/checkout" }),
+  validateSearch: (s: Record<string, unknown>) => ({ redirect: safeRedirect(s.redirect) }),
   head: () => ({ meta: [
     { title: "Criar conta · Filro" },
     { name: "description", content: "Crie sua conta Filro e comece a ativação da sua página profissional em 24h." },
@@ -54,7 +60,7 @@ function RegisterPage() {
     setLoading(false);
     if (error) return toast.error(error.message);
     toast.success("Enviamos um código de 6 dígitos para seu e-mail");
-    navigate({ to: "/verify-email", search: { email: form.email, redirect } });
+    navigate({ to: "/verify-email", search: { email: form.email, redirect: safeRedirect(redirect) } });
   };
 
   return (
@@ -78,7 +84,7 @@ function RegisterPage() {
           </p>
         </form>
         <p className="mt-6 text-center text-sm text-ink-soft">
-          Já tem conta? <Link to="/login" search={{ redirect }} className="text-ink font-semibold">Entrar</Link>
+          Já tem conta? <Link to="/login" search={{ redirect: safeRedirect(redirect) }} className="text-ink font-semibold">Entrar</Link>
         </p>
       </motion.div>
     </main>

@@ -3,9 +3,15 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+function safeRedirect(raw: unknown, fallback = "/") {
+  if (typeof raw !== "string") return fallback;
+  if (!raw.startsWith("/") || raw.startsWith("//")) return fallback;
+  return raw;
+}
+
 export const Route = createFileRoute("/login")({
   component: LoginPage,
-  validateSearch: (s: Record<string, unknown>) => ({ redirect: (s.redirect as string) || "/" }),
+  validateSearch: (s: Record<string, unknown>) => ({ redirect: safeRedirect(s.redirect) }),
   head: () => ({ meta: [
     { title: "Entrar · Filro" },
     { name: "description", content: "Acesse sua conta Filro para gerenciar sua página, conteúdos e ativação." },
@@ -34,7 +40,7 @@ function LoginPage() {
       const isAdmin = roles?.some((r) => r.role === "admin");
       if (isAdmin) return navigate({ to: "/console" });
     }
-    navigate({ to: redirect });
+    navigate({ to: safeRedirect(redirect) });
   };
 
   return (
@@ -59,7 +65,7 @@ function LoginPage() {
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-ink-soft">
-          Não tem conta? <Link to="/register" search={{ redirect }} className="text-ink font-semibold underline-offset-4 hover:underline">Criar conta</Link>
+          Não tem conta? <Link to="/register" search={{ redirect: safeRedirect(redirect) }} className="text-ink font-semibold underline-offset-4 hover:underline">Criar conta</Link>
         </p>
       </div>
     </main>

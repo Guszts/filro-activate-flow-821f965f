@@ -186,6 +186,7 @@ async function resolveOrCreatePlanPrices(
 const ALLOWED_RETURN_HOSTS = new Set([
   "setup.filro.site",
   "filro.site",
+  "www.filro.site",
   "filro-activate-flow.lovable.app",
   "id-preview--dda9f651-8d6f-45c8-92a8-0cf8f17a35cf.lovable.app",
   "localhost",
@@ -423,7 +424,16 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
 
 export const createPortalSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { returnUrl: string; environment: StripeEnv }) => data)
+  .inputValidator((data: { returnUrl: string; environment: StripeEnv }) => {
+    if (data.environment !== "sandbox" && data.environment !== "live") throw new Error("Invalid environment");
+    let parsed: URL;
+    try { parsed = new URL(data.returnUrl); } catch { throw new Error("Invalid returnUrl"); }
+    if (parsed.protocol !== "https:" && parsed.hostname !== "localhost" && parsed.hostname !== "127.0.0.1") {
+      throw new Error("Invalid returnUrl protocol");
+    }
+    if (!ALLOWED_RETURN_HOSTS.has(parsed.hostname)) throw new Error("Disallowed returnUrl");
+    return { returnUrl: parsed.href, environment: data.environment };
+  })
   .handler(async ({ data, context }) => {
     const { userId } = context;
 

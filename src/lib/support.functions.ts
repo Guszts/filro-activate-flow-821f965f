@@ -5,6 +5,9 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { sendTransactionalEmailServer } from "@/lib/email/send.server";
 
 const PANEL_URL = "https://setup.filro.site/painel";
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const SUPPORT_STATUSES = new Set(["open", "in_progress", "waiting_client", "resolved", "closed"]);
+
 function formatBRL(cents: number) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
 }
@@ -175,8 +178,11 @@ export const createSupportTicket = createServerFn({ method: "POST" })
 export const replySupportTicket = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { ticketId: string; content: string; newStatus?: string }) => {
+    if (!UUID_RE.test(data.ticketId)) throw new Error("Ticket inválido");
     if (!data.content || data.content.length > 5000) throw new Error("Resposta inválida");
-    return data;
+    const newStatus = data.newStatus && SUPPORT_STATUSES.has(data.newStatus) ? data.newStatus : undefined;
+    if (data.newStatus && !newStatus) throw new Error("Status inválido");
+    return { ticketId: data.ticketId, content: data.content, newStatus };
   })
   .handler(async ({ data, context }) => {
     await assertAdmin(context.userId);

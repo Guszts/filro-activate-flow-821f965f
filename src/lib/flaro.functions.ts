@@ -30,10 +30,7 @@ async function checkRateLimit(identity: string): Promise<boolean> {
 function getIdentity(): string {
   try {
     const req = getRequest();
-    const ip = req.headers.get("cf-connecting-ip")
-      || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
-      || req.headers.get("x-real-ip")
-      || "unknown";
+    const ip = req.headers.get("cf-connecting-ip") || "unknown";
     return `ip:${ip}`;
   } catch {
     return "ip:unknown";
