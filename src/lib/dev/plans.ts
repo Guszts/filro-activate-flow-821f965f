@@ -1,11 +1,9 @@
 export type DevPlan = {
-  slug: "dev_start" | "dev_plus" | "dev_pro" | "dev_scale";
+  slug: "free" | "starter" | "pro" | "scale";
   name: string;
   tagline: string;
-  activationPrice: number; // BRL
   monthlyPrice: number; // BRL
-  monthlyChangeCredits: number;
-  maxSections: number;
+  monthlyCredits: number;
   features: string[];
   bestFor: string;
   highlight?: boolean;
@@ -13,93 +11,70 @@ export type DevPlan = {
 
 export const DEV_PLANS: DevPlan[] = [
   {
-    slug: "dev_start",
-    name: "Dev Start",
-    tagline: "Para começar com um site simples e direto.",
-    activationPrice: 197,
-    monthlyPrice: 97,
-    monthlyChangeCredits: 3,
-    maxSections: 5,
+    slug: "free",
+    name: "Grátis",
+    tagline: "Comece agora, sem cartão.",
+    monthlyPrice: 0,
+    monthlyCredits: 10,
     features: [
-      "1 site a partir de modelo",
-      "Até 5 seções",
-      "Personalização visual básica",
-      "Botão de WhatsApp",
-      "SEO básico",
-      "3 alterações por mês via chat",
-      "Subdomínio Filro",
-      "Suporte básico",
+      "10 créditos ao criar a conta",
+      "1 site publicado em {seu-slug}.filro.site",
+      "Editor manual ilimitado",
+      "Editor com IA (1 crédito por edição)",
     ],
-    bestFor: "Pequenos negócios locais que precisam de presença online.",
+    bestFor: "Quem quer testar e publicar um site simples na hora.",
   },
   {
-    slug: "dev_plus",
-    name: "Dev Plus",
-    tagline: "Para negócios que querem uma página comercial mais forte.",
-    activationPrice: 297,
-    monthlyPrice: 147,
-    monthlyChangeCredits: 8,
-    maxSections: 8,
+    slug: "starter",
+    name: "Starter",
+    tagline: "Para um site profissional pessoal ou de pequeno negócio.",
+    monthlyPrice: 47,
+    monthlyCredits: 50,
     features: [
-      "1 site a partir de modelo",
-      "Até 8 seções",
-      "Personalização visual avançada",
-      "Vitrine de produtos/serviços",
-      "WhatsApp + Google Maps",
-      "Estrutura analítica básica",
-      "8 alterações por mês via chat",
-      "Suporte a domínio próprio",
+      "50 créditos por mês",
+      "Sites ilimitados (5 créditos cada)",
+      "Editor IA + manual",
+      "Suporte por e-mail",
+    ],
+    bestFor: "Negócios começando que iteram conteúdo com regularidade.",
+  },
+  {
+    slug: "pro",
+    name: "Pro",
+    tagline: "Para quem mantém vários sites e campanhas ativas.",
+    monthlyPrice: 97,
+    monthlyCredits: 150,
+    features: [
+      "150 créditos por mês",
+      "Sites ilimitados",
+      "Editor IA + manual",
+      "Domínio próprio (em breve)",
       "Suporte prioritário",
     ],
-    bestFor: "Comércios e prestadores que querem mais conversão.",
+    bestFor: "Agências, freelancers e PMEs com várias páginas.",
     highlight: true,
   },
   {
-    slug: "dev_pro",
-    name: "Dev Pro",
-    tagline: "Para uma presença digital mais completa.",
-    activationPrice: 497,
+    slug: "scale",
+    name: "Scale",
+    tagline: "Volume para times e operações maiores.",
     monthlyPrice: 197,
-    monthlyChangeCredits: 15,
-    maxSections: 12,
+    monthlyCredits: 400,
     features: [
-      "1 site completo",
-      "Até 12 seções",
-      "Customização avançada de layout",
-      "Catálogo de produtos/serviços",
-      "Captura de leads",
-      "Estrutura SEO",
-      "Revisão de copy",
-      "15 alterações por mês via chat",
-      "Suporte a domínio próprio",
-      "Layout focado em conversão",
-      "Fila de produção prioritária",
+      "400 créditos por mês",
+      "Sites ilimitados",
+      "Editor IA + manual",
+      "Domínio próprio (em breve)",
+      "Suporte dedicado",
     ],
-    bestFor: "Negócios que querem um site comercial robusto.",
-  },
-  {
-    slug: "dev_scale",
-    name: "Dev Scale",
-    tagline: "Para múltiplas páginas, campanhas e operações maiores.",
-    activationPrice: 997,
-    monthlyPrice: 397,
-    monthlyChangeCredits: 30,
-    maxSections: 12,
-    features: [
-      "Até 3 sites ou landing pages",
-      "Personalização avançada",
-      "Múltiplos modelos",
-      "Páginas de campanha",
-      "Captura de leads",
-      "Estrutura de conversão",
-      "30 alterações por mês via chat",
-      "Suporte a domínio/subdomínio",
-      "Suporte prioritário",
-      "Ciclo mensal de melhorias",
-    ],
-    bestFor: "Agências, campanhas recorrentes e operações com múltiplas ofertas.",
+    bestFor: "Operações maiores e múltiplas campanhas.",
   },
 ];
+
+export const CREDIT_COSTS = {
+  generateSite: 5,
+  aiEdit: 1,
+} as const;
 
 export function getDevPlan(slug: string): DevPlan | undefined {
   return DEV_PLANS.find((p) => p.slug === slug);
