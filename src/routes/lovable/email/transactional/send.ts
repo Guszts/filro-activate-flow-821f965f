@@ -111,9 +111,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
           )
         }
         recipientEmail = userEmail
-        // Drop any caller-controlled templateData to prevent impersonation of
-        // platform messaging. Self-service templates render with defaults.
-        templateData = {}
+
 
         // 1. Look up template from registry (early — needed to resolve recipient)
         const template = TEMPLATES[templateName]
