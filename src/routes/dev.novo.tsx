@@ -1,108 +1,83 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { z } from "zod";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
-import { DEV_TEMPLATES, getDevTemplate } from "@/lib/dev/templates";
-import { DEV_PLANS, getDevPlan, formatBRL } from "@/lib/dev/plans";
-import { createDevProject, saveDevBriefing } from "@/lib/dev/dev.functions";
 import { useServerFn } from "@tanstack/react-start";
+import { DEV_TEMPLATES, getDevTemplate } from "@/lib/dev/templates";
+import { generateDevSite } from "@/lib/dev/generator.functions";
+import { getMyCredits } from "@/lib/credits/credits.functions";
+import { Zap, Loader2, ArrowRight } from "lucide-react";
 
-const SearchSchema = z.object({
-  template: z.string().optional(),
-  plan: z.string().optional(),
-});
+const SearchSchema = z.object({ template: z.string().optional() });
 
 export const Route = createFileRoute("/dev/novo")({
   validateSearch: SearchSchema,
   component: NovoProjeto,
   head: () => ({
     meta: [
-      { title: "Criar novo site · Flaro Dev" },
-      { name: "description", content: "Escolha um modelo, conte sobre o seu negócio e ative seu site Flaro Dev em poucos dias." },
+      { title: "Criar site automático · Flaro Dev" },
+      { name: "description", content: "Descreva seu negócio e receba um site profissional pronto em segundos." },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
 });
 
-type Step = "template" | "plan" | "briefing";
-
 function NovoProjeto() {
-  const { template: tplFromUrl, plan: planFromUrl } = Route.useSearch();
+  const { template: tplFromUrl } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-
-  const [step, setStep] = useState<Step>(tplFromUrl ? (planFromUrl ? "briefing" : "plan") : "template");
   const [templateSlug, setTemplateSlug] = useState<string | undefined>(tplFromUrl);
-  const [planSlug, setPlanSlug] = useState<string | undefined>(planFromUrl);
-  const [submitting, setSubmitting] = useState(false);
-
   const [businessName, setBusinessName] = useState("");
   const [businessSegment, setBusinessSegment] = useState("");
+  const [description, setDescription] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [city, setCity] = useState("");
-  const [colors, setColors] = useState("");
   const [tone, setTone] = useState("");
-  const [offer, setOffer] = useState("");
-  const [referenceUrls, setReferenceUrls] = useState("");
-  const [extra, setExtra] = useState("");
-
-  const template = useMemo(() => (templateSlug ? getDevTemplate(templateSlug) : undefined), [templateSlug]);
-  const plan = useMemo(() => (planSlug ? getDevPlan(planSlug) : undefined), [planSlug]);
-
-  const createProject = useServerFn(createDevProject);
-  const saveBriefing = useServerFn(saveDevBriefing);
+  const [preferredSlug, setPreferredSlug] = useState("");
+  const [balance, setBalance] = useState<number | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const generate = useServerFn(generateDevSite);
+  const fetchCredits = useServerFn(getMyCredits);
 
   useEffect(() => {
     if (loading) return;
     if (!user) {
       navigate({ to: "/login", search: { redirect: `/dev/novo${templateSlug ? `?template=${templateSlug}` : ""}` } });
+      return;
     }
-  }, [loading, user, navigate, templateSlug]);
+    fetchCredits().then((r) => setBalance(r.balance)).catch(() => {});
+  }, [loading, user, navigate, templateSlug, fetchCredits]);
 
-  useEffect(() => {
-    if (template && !planSlug) setPlanSlug(template.recommendedPlan);
-  }, [template, planSlug]);
+  const template = templateSlug ? getDevTemplate(templateSlug) : undefined;
+  const canSubmit = !!templateSlug && businessName.trim().length >= 2 && description.trim().length >= 10;
+  const enoughCredits = (balance ?? 0) >= 5;
 
-  async function handleContinue() {
-    if (!templateSlug || !planSlug) return;
-    if (!businessName.trim()) { toast.error("Diga o nome do seu negócio."); return; }
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!templateSlug) { toast.error("Escolha um modelo."); return; }
+    if (!enoughCredits) { toast.error("Você não tem créditos suficientes. Veja os planos."); return; }
     setSubmitting(true);
     try {
-      const createRes = await createProject({ data: { templateSlug, planSlug } });
-      if (createRes.error || !createRes.projectId) throw new Error(createRes.error ?? "Falha ao criar projeto");
-      const projectId = createRes.projectId;
-
-      const briefing = {
-        whatsapp: whatsapp.trim(),
-        city: city.trim(),
-        colors: colors.trim(),
-        tone: tone.trim(),
-        offer: offer.trim(),
-        referenceUrls: referenceUrls
-          .split(/[\s,]+/)
-          .map((s) => s.trim())
-          .filter(Boolean)
-          .slice(0, 10),
-        extra: extra.trim(),
-      };
-
-      const saveRes = await saveBriefing({
+      const res = await generate({
         data: {
-          projectId,
-          businessName: businessName.trim().slice(0, 200),
-          businessSegment: businessSegment.trim().slice(0, 200),
-          briefing,
+          templateSlug,
+          businessName: businessName.trim(),
+          businessSegment: businessSegment.trim(),
+          description: description.trim(),
+          whatsapp: whatsapp.trim(),
+          city: city.trim(),
+          tone: tone.trim(),
+          preferredSlug: preferredSlug.trim() || undefined,
         },
       });
-      if (!saveRes.ok) throw new Error(saveRes.error ?? "Falha ao salvar briefing");
-
-      navigate({ to: "/dev/checkout/$projectId", params: { projectId } });
+      if (!res.ok) throw new Error(res.error ?? "Falha ao gerar");
+      toast.success("Site gerado! Abrindo seu projeto…");
+      navigate({ to: "/dev/projeto/$projectId", params: { projectId: res.projectId! } });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Falha inesperada";
-      toast.error(msg);
+      toast.error(err instanceof Error ? err.message : "Falha inesperada");
     } finally {
       setSubmitting(false);
     }
@@ -111,186 +86,118 @@ function NovoProjeto() {
   return (
     <div className="min-h-screen flex flex-col bg-paper">
       <SiteHeader />
-      <main className="mx-auto max-w-[1100px] w-full px-5 md:px-10 py-12 md:py-16">
+      <main className="mx-auto max-w-[1100px] w-full px-5 md:px-10 py-10 md:py-14">
         <nav className="text-xs text-ink-soft mb-4">
-          <Link to="/dev" className="hover:text-ink">Flaro Dev</Link> <span className="mx-1">/</span> Novo site
+          <Link to="/dev" className="hover:text-ink">Flaro Dev</Link> <span className="mx-1">/</span> Criar site
         </nav>
 
-        <h1 className="editorial-headline text-4xl md:text-6xl text-ink">Criar novo site</h1>
-        <p className="mt-3 text-ink-soft max-w-2xl">
-          Em três passos: escolha um modelo, escolha um plano e nos conte o essencial do seu negócio. Depois disso, pagamento e produção começam.
-        </p>
-
-        {/* Stepper */}
-        <ol className="mt-8 flex items-center gap-3 text-xs tracking-wide text-ink-soft">
-          {(["template", "plan", "briefing"] as Step[]).map((s, i) => (
-            <li key={s} className="flex items-center gap-2">
-              <span className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${step === s || (i < (["template","plan","briefing"] as Step[]).indexOf(step)) ? "bg-ink text-paper" : "bg-muted text-ink-soft"}`}>{i + 1}</span>
-              <span className={step === s ? "text-ink" : ""}>
-                {s === "template" ? "Modelo" : s === "plan" ? "Plano" : "Negócio"}
-              </span>
-              {i < 2 && <span className="h-px w-6 bg-border mx-2" />}
-            </li>
-          ))}
-        </ol>
-
-        {/* Step 1 — Template */}
-        {step === "template" && (
-          <section className="mt-10">
-            <div className="grid md:grid-cols-2 gap-5">
-              {DEV_TEMPLATES.map((t) => {
-                const selected = templateSlug === t.slug;
-                return (
-                  <button
-                    key={t.slug}
-                    type="button"
-                    onClick={() => { setTemplateSlug(t.slug); setPlanSlug(t.recommendedPlan); }}
-                    className={`text-left rounded-3xl border p-6 transition-all ${selected ? "border-ink shadow-lg" : "border-border hover:border-ink/40"}`}
-                  >
-                    <div className="text-xs tracking-wide text-ink-soft">{t.segment}</div>
-                    <div className="mt-1 font-display font-black text-2xl text-ink">{t.name}</div>
-                    <p className="mt-2 text-sm text-ink-soft">{t.description}</p>
-                    <div className="mt-3 text-xs text-ink-soft">Inclui: {t.sections.slice(0, 4).join(", ")}…</div>
-                  </button>
-                );
-              })}
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="editorial-headline text-4xl md:text-6xl text-ink">Crie seu site em segundos</h1>
+            <p className="mt-3 text-ink-soft max-w-2xl">Descreva seu negócio. Nossa IA escreve o conteúdo, monta o site e publica num endereço próprio.</p>
+          </div>
+          {balance !== null && (
+            <div className="inline-flex items-center gap-2 px-3 h-10 rounded-full border border-border bg-paper text-sm">
+              <Zap className="h-4 w-4 text-flame" />
+              <span className="font-bold text-ink">{balance}</span>
+              <span className="text-ink-soft">créditos · gera por 5</span>
             </div>
-            <div className="mt-8 flex justify-end">
-              <button
-                type="button"
-                disabled={!templateSlug}
-                onClick={() => setStep("plan")}
-                className="inline-flex h-12 px-6 items-center rounded-2xl bg-ink text-paper font-semibold disabled:opacity-50"
-              >
-                Continuar
-              </button>
-            </div>
-          </section>
-        )}
+          )}
+        </div>
 
-        {/* Step 2 — Plan */}
-        {step === "plan" && (
-          <section className="mt-10">
-            {template && (
-              <div className="mb-6 text-sm text-ink-soft">
-                Modelo: <strong className="text-ink">{template.name}</strong> — recomendamos o plano <strong className="text-ink">{getDevPlan(template.recommendedPlan)?.name}</strong>.
+        <form onSubmit={handleSubmit} className="mt-10 grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <section>
+              <div className="text-xs uppercase tracking-widest text-ink-soft">1. Modelo</div>
+              <div className="mt-3 grid sm:grid-cols-2 gap-3">
+                {DEV_TEMPLATES.map((t) => {
+                  const selected = templateSlug === t.slug;
+                  return (
+                    <button
+                      key={t.slug}
+                      type="button"
+                      onClick={() => setTemplateSlug(t.slug)}
+                      className={`text-left rounded-2xl border p-4 transition ${selected ? "border-ink shadow-elegant" : "border-border hover:border-ink/40"}`}
+                    >
+                      <div className="text-[10px] uppercase tracking-wider text-ink-soft">{t.segment}</div>
+                      <div className="mt-1 font-semibold text-ink">{t.name}</div>
+                      <div className="mt-1 text-xs text-ink-soft line-clamp-2">{t.description}</div>
+                    </button>
+                  );
+                })}
               </div>
-            )}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {DEV_PLANS.map((p) => {
-                const selected = planSlug === p.slug;
-                return (
-                  <button
-                    key={p.slug}
-                    type="button"
-                    onClick={() => setPlanSlug(p.slug)}
-                    className={`text-left rounded-3xl border p-5 transition-all ${selected ? "border-ink shadow-lg" : "border-border hover:border-ink/40"}`}
-                  >
-                    <div className="font-display font-black text-xl text-ink">{p.name}</div>
-                    <p className="mt-1 text-xs text-ink-soft min-h-[36px]">{p.tagline}</p>
-                    <div className="mt-3 text-sm">
-                      <div className="font-semibold text-ink">{formatBRL(p.activationPrice)} <span className="text-xs font-normal text-ink-soft">ativação</span></div>
-                      <div className="text-ink-soft text-xs mt-1">+ {formatBRL(p.monthlyPrice)}/mês</div>
-                    </div>
-                    <div className="mt-3 text-[11px] text-ink-soft">{p.monthlyChangeCredits} alterações/mês</div>
-                  </button>
-                );
-              })}
-            </div>
-            <div className="mt-8 flex justify-between">
-              <button type="button" onClick={() => setStep("template")} className="text-sm text-ink-soft hover:text-ink">← Voltar</button>
-              <button
-                type="button"
-                disabled={!planSlug}
-                onClick={() => setStep("briefing")}
-                className="inline-flex h-12 px-6 items-center rounded-2xl bg-ink text-paper font-semibold disabled:opacity-50"
-              >
-                Continuar para briefing
-              </button>
-            </div>
-          </section>
-        )}
+            </section>
 
-        {/* Step 3 — Briefing */}
-        {step === "briefing" && (
-          <section className="mt-10 grid lg:grid-cols-3 gap-8">
-            <form
-              className="lg:col-span-2 space-y-5"
-              onSubmit={(e) => { e.preventDefault(); handleContinue(); }}
-            >
-              <Field label="Nome do negócio *">
-                <input value={businessName} onChange={(e) => setBusinessName(e.target.value)} required maxLength={200} className="input" placeholder="Ex: Clínica Vida Plena" />
-              </Field>
-              <Field label="Segmento">
-                <input value={businessSegment} onChange={(e) => setBusinessSegment(e.target.value)} maxLength={200} className="input" placeholder="Ex: Clínica de estética" />
-              </Field>
-              <div className="grid sm:grid-cols-2 gap-4">
+            <section>
+              <div className="text-xs uppercase tracking-widest text-ink-soft">2. Seu negócio</div>
+              <div className="mt-3 grid sm:grid-cols-2 gap-3">
+                <Field label="Nome do negócio *">
+                  <input value={businessName} onChange={(e) => setBusinessName(e.target.value)} required maxLength={120} className="input" placeholder="Ex: Padaria Bom Pão" />
+                </Field>
+                <Field label="Segmento">
+                  <input value={businessSegment} onChange={(e) => setBusinessSegment(e.target.value)} maxLength={120} className="input" placeholder="Padaria artesanal" />
+                </Field>
                 <Field label="WhatsApp">
-                  <input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} maxLength={40} className="input" placeholder="(11) 99999-9999" />
+                  <input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} maxLength={20} className="input" placeholder="(11) 99999-9999" />
                 </Field>
-                <Field label="Cidade / região">
-                  <input value={city} onChange={(e) => setCity(e.target.value)} maxLength={120} className="input" placeholder="São Paulo, SP" />
-                </Field>
-              </div>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <Field label="Paleta / cores preferidas">
-                  <input value={colors} onChange={(e) => setColors(e.target.value)} maxLength={200} className="input" placeholder="Verde escuro e branco" />
+                <Field label="Cidade">
+                  <input value={city} onChange={(e) => setCity(e.target.value)} maxLength={80} className="input" placeholder="São Paulo, SP" />
                 </Field>
                 <Field label="Tom da comunicação">
-                  <input value={tone} onChange={(e) => setTone(e.target.value)} maxLength={200} className="input" placeholder="Profissional e acolhedor" />
+                  <input value={tone} onChange={(e) => setTone(e.target.value)} maxLength={80} className="input" placeholder="Acolhedor e familiar" />
+                </Field>
+                <Field label="Endereço do site (opcional)">
+                  <div className="flex items-center gap-1">
+                    <input value={preferredSlug} onChange={(e) => setPreferredSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} maxLength={40} className="input flex-1" placeholder="padaria-bom-pao" />
+                  </div>
+                  <div className="mt-1 text-[11px] text-ink-soft">/s/{preferredSlug || "(gerado)"}</div>
                 </Field>
               </div>
-              <Field label="Oferta principal ou diferencial">
-                <textarea value={offer} onChange={(e) => setOffer(e.target.value)} maxLength={1500} rows={3} className="input" placeholder="Ex: Primeira avaliação grátis, atendimento no mesmo dia…" />
+              <Field label="Descreva o seu negócio em poucas linhas *" className="mt-3">
+                <textarea value={description} onChange={(e) => setDescription(e.target.value)} required minLength={10} maxLength={2000} rows={6} className="input" placeholder="Conte o que você faz, há quanto tempo, o que te diferencia, quem é seu cliente ideal…" />
+                <div className="mt-1 text-[11px] text-ink-soft">{description.length}/2000 · mínimo 10 caracteres</div>
               </Field>
-              <Field label="Sites de referência (URLs separadas por vírgula)">
-                <input value={referenceUrls} onChange={(e) => setReferenceUrls(e.target.value)} maxLength={1000} className="input" placeholder="https://..., https://..." />
-              </Field>
-              <Field label="Outras informações importantes">
-                <textarea value={extra} onChange={(e) => setExtra(e.target.value)} maxLength={3000} rows={4} className="input" placeholder="Horários, endereço, depoimentos, fotos…" />
-              </Field>
+            </section>
+          </div>
 
-              <div className="flex items-center justify-between pt-4">
-                <button type="button" onClick={() => setStep("plan")} className="text-sm text-ink-soft hover:text-ink">← Voltar</button>
-                <button
-                  type="submit"
-                  disabled={submitting || !templateSlug || !planSlug}
-                  className="inline-flex h-12 px-6 items-center rounded-2xl bg-ink text-paper font-semibold disabled:opacity-60"
-                >
-                  {submitting ? "Salvando…" : "Salvar e ir para pagamento"}
-                </button>
-              </div>
-            </form>
-
-            <aside className="space-y-4">
-              <div className="rounded-3xl border border-border bg-muted/30 p-6 sticky top-28">
-                <div className="text-xs tracking-wide text-ink-soft">Resumo</div>
-                <div className="mt-2 font-display font-black text-xl text-ink">{template?.name}</div>
-                <div className="text-sm text-ink-soft mt-1">Plano {plan?.name}</div>
-                {plan && (
-                  <div className="mt-4 text-sm space-y-1">
-                    <div className="flex justify-between"><span className="text-ink-soft">Ativação</span><span className="text-ink font-medium">{formatBRL(plan.activationPrice)}</span></div>
-                    <div className="flex justify-between"><span className="text-ink-soft">Mensalidade</span><span className="text-ink font-medium">{formatBRL(plan.monthlyPrice)}/mês</span></div>
-                    <div className="border-t border-border mt-3 pt-3 flex justify-between font-semibold">
-                      <span className="text-ink-soft">Total hoje</span>
-                      <span className="text-ink">{formatBRL(plan.activationPrice + plan.monthlyPrice)}</span>
-                    </div>
-                  </div>
+          <aside>
+            <div className="sticky top-28 rounded-3xl border border-border bg-muted/30 p-6">
+              <div className="text-xs uppercase tracking-widest text-ink-soft">Resumo</div>
+              <div className="mt-2 font-display font-black text-xl text-ink">{template?.name ?? "Escolha um modelo"}</div>
+              {template && <p className="mt-1 text-xs text-ink-soft">{template.segment}</p>}
+              <div className="mt-5 rounded-2xl bg-paper border border-border p-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-ink-soft">Custo de geração</span>
+                  <span className="inline-flex items-center gap-1 font-bold text-ink"><Zap className="h-3.5 w-3.5 text-flame" /> 5 créditos</span>
+                </div>
+                <div className="mt-2 flex justify-between text-sm">
+                  <span className="text-ink-soft">Seu saldo</span>
+                  <span className="font-bold text-ink">{balance ?? "…"}</span>
+                </div>
+                {!enoughCredits && balance !== null && (
+                  <Link to="/dev/precos" className="mt-3 block text-center text-xs underline text-flame">Ver planos para ganhar mais créditos</Link>
                 )}
-                <p className="mt-4 text-[11px] text-ink-soft">Você pode revisar tudo antes de pagar.</p>
               </div>
-            </aside>
-          </section>
-        )}
+              <button
+                type="submit"
+                disabled={!canSubmit || submitting || !enoughCredits}
+                className="mt-5 w-full inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-ink text-paper font-semibold disabled:opacity-50"
+              >
+                {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Gerando…</> : <>Gerar meu site <ArrowRight className="h-4 w-4" /></>}
+              </button>
+              <p className="mt-3 text-[11px] text-ink-soft text-center">Em até 30s seu site está pronto e publicado.</p>
+            </div>
+          </aside>
+        </form>
       </main>
       <SiteFooter />
     </div>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
   return (
-    <label className="block">
+    <label className={`block ${className ?? ""}`}>
       <span className="text-xs tracking-wide text-ink-soft">{label}</span>
       <div className="mt-1.5">{children}</div>
     </label>

@@ -65,6 +65,36 @@ export type Database = {
           },
         ]
       }
+      credit_transactions: {
+        Row: {
+          created_at: string
+          delta: number
+          id: string
+          metadata: Json
+          reason: string
+          ref_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          delta: number
+          id?: string
+          metadata?: Json
+          reason: string
+          ref_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          delta?: number
+          id?: string
+          metadata?: Json
+          reason?: string
+          ref_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       dev_change_requests: {
         Row: {
           admin_response: string
@@ -191,6 +221,7 @@ export type Database = {
           id: string
           max_pages: number
           max_revisions_month: number
+          monthly_credits: number
           monthly_price: number
           name: string
           slug: Database["public"]["Enums"]["dev_plan_slug"]
@@ -210,6 +241,7 @@ export type Database = {
           id?: string
           max_pages?: number
           max_revisions_month?: number
+          monthly_credits?: number
           monthly_price: number
           name: string
           slug: Database["public"]["Enums"]["dev_plan_slug"]
@@ -229,6 +261,7 @@ export type Database = {
           id?: string
           max_pages?: number
           max_revisions_month?: number
+          monthly_credits?: number
           monthly_price?: number
           name?: string
           slug?: Database["public"]["Enums"]["dev_plan_slug"]
@@ -285,13 +318,16 @@ export type Database = {
           business_name: string
           business_segment: string
           created_at: string
+          generated_content: Json
           id: string
+          is_public: boolean
           notes: string
           plan_id: string | null
           plan_slug: Database["public"]["Enums"]["dev_plan_slug"] | null
           preview_url: string | null
           published_at: string | null
           published_url: string | null
+          slug: string | null
           status: Database["public"]["Enums"]["dev_project_status"]
           template_id: string | null
           template_slug: string | null
@@ -305,13 +341,16 @@ export type Database = {
           business_name?: string
           business_segment?: string
           created_at?: string
+          generated_content?: Json
           id?: string
+          is_public?: boolean
           notes?: string
           plan_id?: string | null
           plan_slug?: Database["public"]["Enums"]["dev_plan_slug"] | null
           preview_url?: string | null
           published_at?: string | null
           published_url?: string | null
+          slug?: string | null
           status?: Database["public"]["Enums"]["dev_project_status"]
           template_id?: string | null
           template_slug?: string | null
@@ -325,13 +364,16 @@ export type Database = {
           business_name?: string
           business_segment?: string
           created_at?: string
+          generated_content?: Json
           id?: string
+          is_public?: boolean
           notes?: string
           plan_id?: string | null
           plan_slug?: Database["public"]["Enums"]["dev_plan_slug"] | null
           preview_url?: string | null
           published_at?: string | null
           published_url?: string | null
+          slug?: string | null
           status?: Database["public"]["Enums"]["dev_project_status"]
           template_id?: string | null
           template_slug?: string | null
@@ -1512,6 +1554,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_credits: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          lifetime_earned: number
+          lifetime_spent: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          lifetime_earned?: number
+          lifetime_spent?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          lifetime_earned?: number
+          lifetime_spent?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1565,6 +1637,16 @@ export type Database = {
       }
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
+        Returns: number
+      }
+      grant_credits: {
+        Args: {
+          _delta: number
+          _metadata?: Json
+          _reason: string
+          _ref_id?: string
+          _user_id: string
+        }
         Returns: number
       }
       has_role: {

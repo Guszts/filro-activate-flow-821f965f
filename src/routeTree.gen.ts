@@ -32,6 +32,7 @@ import { Route as BusinessInfoRouteImport } from './routes/business-info'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
 import { Route as DevIndexRouteImport } from './routes/dev.index'
+import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
@@ -42,7 +43,6 @@ import { Route as DevModelosIndexRouteImport } from './routes/dev.modelos.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as DevProjetoProjectIdRouteImport } from './routes/dev.projeto.$projectId'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
-import { Route as DevCheckoutProjectIdRouteImport } from './routes/dev.checkout.$projectId'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -166,6 +166,11 @@ const DevIndexRoute = DevIndexRouteImport.update({
   path: '/dev/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SSlugRoute = SSlugRouteImport.update({
+  id: '/s/$slug',
+  path: '/s/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjetoIdRoute = ProjetoIdRouteImport.update({
   id: '/projeto/$id',
   path: '/projeto/$id',
@@ -214,11 +219,6 @@ const DevProjetoProjectIdRoute = DevProjetoProjectIdRouteImport.update({
 const DevModelosSlugRoute = DevModelosSlugRouteImport.update({
   id: '/dev/modelos/$slug',
   path: '/dev/modelos/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevCheckoutProjectIdRoute = DevCheckoutProjectIdRouteImport.update({
-  id: '/dev/checkout/$projectId',
-  path: '/dev/checkout/$projectId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicNotifyAdminSignupRoute =
@@ -290,10 +290,10 @@ export interface FileRoutesByFullPath {
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
+  '/s/$slug': typeof SSlugRoute
   '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
-  '/dev/checkout/$projectId': typeof DevCheckoutProjectIdRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -333,10 +333,10 @@ export interface FileRoutesByTo {
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
+  '/s/$slug': typeof SSlugRoute
   '/dev': typeof DevIndexRoute
   '/planos': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
-  '/dev/checkout/$projectId': typeof DevCheckoutProjectIdRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -377,10 +377,10 @@ export interface FileRoutesById {
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
+  '/s/$slug': typeof SSlugRoute
   '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
-  '/dev/checkout/$projectId': typeof DevCheckoutProjectIdRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -422,10 +422,10 @@ export interface FileRouteTypes {
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
+    | '/s/$slug'
     | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
-    | '/dev/checkout/$projectId'
     | '/dev/modelos/$slug'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
@@ -465,10 +465,10 @@ export interface FileRouteTypes {
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
+    | '/s/$slug'
     | '/dev'
     | '/planos'
     | '/api/public/notify-admin-signup'
-    | '/dev/checkout/$projectId'
     | '/dev/modelos/$slug'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
@@ -508,10 +508,10 @@ export interface FileRouteTypes {
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
+    | '/s/$slug'
     | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
-    | '/dev/checkout/$projectId'
     | '/dev/modelos/$slug'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
@@ -552,10 +552,10 @@ export interface RootRouteChildren {
   LeadIdRoute: typeof LeadIdRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
   ProjetoIdRoute: typeof ProjetoIdRoute
+  SSlugRoute: typeof SSlugRoute
   DevIndexRoute: typeof DevIndexRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
-  DevCheckoutProjectIdRoute: typeof DevCheckoutProjectIdRoute
   DevModelosSlugRoute: typeof DevModelosSlugRoute
   DevProjetoProjectIdRoute: typeof DevProjetoProjectIdRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
@@ -731,6 +731,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/s/$slug': {
+      id: '/s/$slug'
+      path: '/s/$slug'
+      fullPath: '/s/$slug'
+      preLoaderRoute: typeof SSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projeto/$id': {
       id: '/projeto/$id'
       path: '/projeto/$id'
@@ -799,13 +806,6 @@ declare module '@tanstack/react-router' {
       path: '/dev/modelos/$slug'
       fullPath: '/dev/modelos/$slug'
       preLoaderRoute: typeof DevModelosSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/checkout/$projectId': {
-      id: '/dev/checkout/$projectId'
-      path: '/dev/checkout/$projectId'
-      fullPath: '/dev/checkout/$projectId'
-      preLoaderRoute: typeof DevCheckoutProjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/notify-admin-signup': {
@@ -888,10 +888,10 @@ const rootRouteChildren: RootRouteChildren = {
   LeadIdRoute: LeadIdRoute,
   PlanosSlugRoute: PlanosSlugRoute,
   ProjetoIdRoute: ProjetoIdRoute,
+  SSlugRoute: SSlugRoute,
   DevIndexRoute: DevIndexRoute,
   PlanosIndexRoute: PlanosIndexRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
-  DevCheckoutProjectIdRoute: DevCheckoutProjectIdRoute,
   DevModelosSlugRoute: DevModelosSlugRoute,
   DevProjetoProjectIdRoute: DevProjetoProjectIdRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,

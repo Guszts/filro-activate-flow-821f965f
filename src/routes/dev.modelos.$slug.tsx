@@ -124,8 +124,8 @@ function DevTemplateDetailPage() {
                   <p className="text-sm text-ink-soft mt-1">{plan.tagline}</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-ink">{formatBRL(plan.activationPrice)}<span className="text-sm font-normal text-ink-soft"> ativação</span></div>
-                  <div className="text-sm text-ink-soft">+ {formatBRL(plan.monthlyPrice)}/mês</div>
+                  <div className="text-2xl font-bold text-ink">{plan.monthlyPrice === 0 ? "Grátis" : `${formatBRL(plan.monthlyPrice)}/mês`}</div>
+                  <div className="text-sm text-ink-soft">{plan.monthlyCredits} créditos</div>
                 </div>
               </div>
             </div>
