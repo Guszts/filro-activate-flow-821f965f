@@ -10,7 +10,7 @@ import { SupportTab, ExtraChargesTab } from "@/components/console/SupportAndChar
 import { PartnerTab } from "@/components/console/PartnerTab";
 import { CouponsTab } from "@/components/console/CouponsTab";
 import { DashboardTab } from "@/components/console/DashboardTab";
-import { DevAdminTab } from "@/components/console/DevAdminTab";
+
 
 export const Route = createFileRoute("/console")({
   component: ConsolePage,
