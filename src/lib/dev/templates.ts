@@ -208,6 +208,50 @@ export const DEV_TEMPLATES: DevTemplate[] = [
     ],
     recommendedPlan: "dev_pro",
   },
+  {
+    slug: "viagem-wishes",
+    name: "Viagem & Turismo (Wishes)",
+    segment: "Agências, pacotes de viagem, turismo e experiências",
+    description:
+      "Landing premium estilo resort para agências de viagem, com busca de pacotes, destinos e reserva por WhatsApp.",
+    longDescription:
+      "Modelo editorial inspirado em plataformas de booking de luxo. Hero com imagem grande de praia, barra de busca flutuante (localização, data, hóspedes), sidebar com filtros de pacotes (Ofertas, Ásia, Europa, Oriente Médio, América) e grid de destinos com cards horizontais e verticais. Inclui páginas internas para Reservar, Pacotes e Lugares Populares, modal de reserva com nome e WhatsApp, animações suaves e responsividade total. Paleta clara (#EAF1EF / #FFFFFF) com tipografia rounded geométrica.",
+    sections: [
+      "Header com navegação",
+      "Hero com imagem de resort",
+      "Barra de busca flutuante",
+      "Sidebar de filtros de pacotes",
+      "Grid de destinos (cards mistos)",
+      "Página Reservar",
+      "Página Pacotes",
+      "Página Lugares Populares",
+      "Modal de reserva",
+      "Footer",
+    ],
+    bestFor: [
+      "Agências de viagem",
+      "Operadoras de turismo",
+      "Pacotes e experiências",
+      "Hospedagens e resorts",
+      "Guias e roteiros premium",
+    ],
+    customizable: [
+      "Nome da marca e logo",
+      "Destinos e pacotes",
+      "Categorias e filtros",
+      "Imagens dos destinos",
+      "Textos e CTAs em português",
+      "WhatsApp de reserva",
+    ],
+    requiredInfo: [
+      "Nome da agência",
+      "Lista de destinos com fotos",
+      "Categorias de pacotes",
+      "WhatsApp para reservas",
+      "Descrição da experiência",
+    ],
+    recommendedPlan: "dev_pro",
+  },
 ];
 
 export function getDevTemplate(slug: string): DevTemplate | undefined {
