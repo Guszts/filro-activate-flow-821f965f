@@ -143,7 +143,7 @@ export function RenderedSite({ content, businessName }: { content: Content; busi
             {c.contact?.hours && <div>{c.contact.hours}</div>}
           </div>
           <div className="text-xs">
-            Feito com <a href="/dev" className="underline">Flaro Dev</a>
+            © {new Date().getFullYear()}
           </div>
         </div>
       </footer>
