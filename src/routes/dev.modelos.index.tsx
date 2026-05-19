@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { DEV_TEMPLATES } from "@/lib/dev/templates";
+import { TemplateCover } from "@/components/dev/TemplateCover";
 import { getDevPlan } from "@/lib/dev/plans";
 import { ArrowRight } from "lucide-react";
 
