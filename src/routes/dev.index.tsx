@@ -7,12 +7,10 @@ import { DEV_PLANS, formatBRL, CREDIT_COSTS } from "@/lib/dev/plans";
 import {
   ArrowRight,
   Check,
-  Zap,
-  Wand2,
   Globe,
   MessageSquare,
   Pencil,
-  Sparkles,
+  FileText,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dev/")({
