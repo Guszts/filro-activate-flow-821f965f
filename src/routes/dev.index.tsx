@@ -23,6 +23,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { DEV_TEMPLATES } from "@/lib/dev/templates";
+import { TemplateCover } from "@/components/dev/TemplateCover";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/dev/")({
@@ -270,13 +271,8 @@ function DevDashboard() {
                 params={{ slug: t.slug }}
                 className="group rounded-2xl overflow-hidden border border-border bg-paper hover:border-ink/30 transition-colors"
               >
-                <div className="aspect-[16/10] overflow-hidden bg-muted/40">
-                  <img
-                    src={t.coverImage}
-                    alt={`Modelo ${t.name}`}
-                    loading="lazy"
-                    className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                  />
+                <div className="overflow-hidden bg-muted/40 group-hover:opacity-95 transition-opacity">
+                  <TemplateCover src={t.coverImage} name={t.name} previewRoute={t.previewRoute} />
                 </div>
                 <div className="p-4">
                   <div className="text-[10px] uppercase tracking-widest font-semibold text-flame">
