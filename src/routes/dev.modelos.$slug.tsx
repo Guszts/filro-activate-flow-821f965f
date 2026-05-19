@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { PreviewFrame } from "@/components/dev/PreviewFrame";
 import { getDevTemplate, DEV_TEMPLATES, type DevTemplate } from "@/lib/dev/templates";
 import { getDevPlan, formatBRL } from "@/lib/dev/plans";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
@@ -82,26 +83,14 @@ function DevTemplateDetailPage() {
         </section>
 
         <section className="mx-auto max-w-[1200px] px-5 md:px-10 pb-10">
-          <div className="rounded-3xl border border-border bg-paper overflow-hidden shadow-elegant">
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border text-xs text-ink-soft">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-                <span className="ml-3 font-semibold text-ink">Preview do modelo</span>
-              </div>
-              {t.previewRoute && (
-                <a href={t.previewRoute} target="_blank" rel="noreferrer" className="hover:text-ink">Abrir em tela cheia ↗</a>
-              )}
-            </div>
-            {t.previewRoute ? (
-              <iframe
-                src={t.previewRoute}
-                title={`Preview ${t.name}`}
-                className="w-full bg-paper"
-                style={{ height: "min(75vh, 760px)" }}
-              />
-            ) : (
+          {t.previewRoute ? (
+            <PreviewFrame
+              src={t.previewRoute}
+              title={`Preview ${t.name}`}
+              height="min(78vh, 820px)"
+            />
+          ) : (
+            <div className="rounded-3xl border border-border bg-paper overflow-hidden shadow-elegant">
               <img
                 src={t.coverImage}
                 alt={`Capa do modelo ${t.name}`}
@@ -109,8 +98,8 @@ function DevTemplateDetailPage() {
                 height={800}
                 className="w-full h-auto object-cover"
               />
-            )}
-          </div>
+            </div>
+          )}
         </section>
 
         <section className="mx-auto max-w-[1100px] px-5 md:px-10 pb-10 grid md:grid-cols-2 gap-5">
