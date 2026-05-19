@@ -1042,7 +1042,8 @@ function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
             key={h.name}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
             whileHover={{ y: -6 }}
-            style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden" }}
+            onClick={() => detail.open({ id: `hotel-${i}`, kind: "hotel", title: h.name, subtitle: h.local, image: h.image, priceLabel: h.preco, rating: h.rating, description: `Hospedagem premium em ${h.local} com vista privilegiada e atendimento dedicado.`, highlights: ["Wi-Fi grátis", "Café da manhã incluso", "Smart TV", "Spa & academia"] })}
+            style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden", cursor: "pointer" }}
           >
             <div style={{ height: 200, overflow: "hidden" }}>
               <img onError={imgFallback} src={h.image} alt={h.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
