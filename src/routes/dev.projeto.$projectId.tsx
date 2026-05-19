@@ -117,17 +117,18 @@ function ProjetoPage() {
             </div>
 
             <section className="mt-8 grid lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 rounded-3xl border border-border bg-paper overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-border text-xs text-ink-soft">
-                  <span>Pré-visualização</span>
-                  {publicUrl && (
-                    <a href={publicUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-ink">Abrir <ExternalLink className="h-3 w-3" /></a>
-                  )}
-                </div>
+              <div className="lg:col-span-2">
                 {publicUrl ? (
-                  <iframe src={`${publicUrl}?v=${reloadKey}`} title="Preview" className="w-full" style={{ height: "70vh" }} />
+                  <PreviewFrame
+                    src={publicUrl}
+                    title="Pré-visualização do site"
+                    reloadKey={reloadKey}
+                    height="min(76vh, 800px)"
+                  />
                 ) : (
-                  <div className="p-10 text-center text-ink-soft text-sm">Site não publicado ainda.</div>
+                  <div className="rounded-3xl border border-border bg-paper p-10 text-center text-ink-soft text-sm">
+                    Site não publicado ainda.
+                  </div>
                 )}
               </div>
 
