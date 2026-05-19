@@ -42,7 +42,7 @@ const STEPS = [
     desc: "Conta em poucas linhas o que você faz, para quem e o que te diferencia.",
   },
   {
-    icon: Wand2,
+    icon: FileText,
     title: "IA gera o conteúdo",
     desc: "Em segundos, escrevemos copy profissional sobre o modelo escolhido.",
   },
@@ -222,7 +222,7 @@ function DevLanding() {
             </div>
 
             <div className="mt-7 inline-flex items-center gap-2 text-sm text-ink-soft">
-              <Zap className="h-4 w-4 text-flame" /> 10 créditos grátis ao criar sua
+              10 créditos grátis ao criar sua
               conta · sem cartão
             </div>
           </motion.div>
@@ -325,7 +325,7 @@ function DevLanding() {
             <div className="grid lg:grid-cols-5">
               <div className="lg:col-span-2 p-10 md:p-14 flex flex-col justify-center">
                 <span className="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-lime/30 text-ink text-[10px] uppercase tracking-widest font-bold">
-                  <Sparkles className="h-3 w-3" /> Editor com IA · já incluso
+                  Editor com IA · já incluso
                 </span>
                 <h2 className="mt-5 editorial-headline text-4xl md:text-5xl text-ink">
                   Edite o seu site <em className="font-display italic">conversando</em>.
@@ -484,7 +484,7 @@ function DevLanding() {
                       p.highlight ? "text-lime" : "text-ink"
                     }`}
                   >
-                    <Zap className="h-4 w-4" /> {p.monthlyCredits} créditos
+                    {p.monthlyCredits} créditos
                   </div>
                 </div>
                 <ul
