@@ -52,6 +52,7 @@ export const DEV_TEMPLATES: DevTemplate[] = [
     requiredInfo: ["Cardápio organizado por categoria","Preços (opcional)","Fotos dos pratos","Endereço, horário, WhatsApp"],
     recommendedPlan: "dev_pro",
     coverImage: restauranteCover,
+    previewRoute: "/dev/preview/restaurante-cardapio",
   },
   {
     slug: "oficina-auto",
