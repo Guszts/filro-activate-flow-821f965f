@@ -255,7 +255,7 @@ function Header({ page, setPage }: { page: PageKey; setPage: (k: PageKey) => voi
 
 // ---------------- Home ----------------
 type HomeProps = {
-  searchRef: React.RefObject<HTMLDivElement>;
+  searchRef: React.RefObject<HTMLDivElement | null>;
   openDropdown: null | "esp" | "data" | "prof";
   setOpenDropdown: (v: null | "esp" | "data" | "prof") => void;
   esp: string; setEsp: (v: string) => void;
