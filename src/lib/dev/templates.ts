@@ -67,6 +67,7 @@ export const DEV_TEMPLATES: DevTemplate[] = [
     requiredInfo: ["Lista de serviços","Fotos antes/depois","Endereço e WhatsApp","Tempo de mercado"],
     recommendedPlan: "dev_plus",
     coverImage: oficinaCover,
+    previewRoute: "/dev/preview/oficina-auto",
   },
   {
     slug: "loja-local",
