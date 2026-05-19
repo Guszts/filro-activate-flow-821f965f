@@ -615,8 +615,14 @@ function RightGrid({ items, onReserve }: { items: Destination[]; onReserve: (d: 
 }
 
 function HorizontalCard({ d, onReserve }: { d: Destination; onReserve: () => void }) {
+  const detail = useDetail();
   return (
-    <motion.div whileHover={{ y: -4, boxShadow: "0 18px 40px rgba(22,27,28,0.12)" }} transition={{ duration: 0.25 }} className="wishes-card-horizontal group" style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 14, padding: 14, borderRadius: 18, border: `1px solid ${C.border}`, background: C.paper }}>
+    <motion.div
+      whileHover={{ y: -4, boxShadow: "0 18px 40px rgba(22,27,28,0.12)" }} transition={{ duration: 0.25 }}
+      onClick={() => detail.open(destinationToDetail(d))}
+      className="wishes-card-horizontal group"
+      style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 14, padding: 14, borderRadius: 18, border: `1px solid ${C.border}`, background: C.paper, cursor: "pointer" }}
+    >
       <div style={{ overflow: "hidden", borderRadius: 14, height: 120 }}>
         <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} className="group-hover:scale-105" />
       </div>
@@ -627,15 +633,21 @@ function HorizontalCard({ d, onReserve }: { d: Destination; onReserve: () => voi
             <MapPin size={12} /> {d.locationLabel}
           </div>
         </div>
-        <button onClick={onReserve} style={{ alignSelf: "flex-start", fontSize: 13, fontWeight: 600, color: C.ink, padding: "8px 12px", borderRadius: 10, background: C.pill }} className="hover:bg-[#DDF4FA] transition-colors">Reservar</button>
+        <button onClick={(e) => { e.stopPropagation(); onReserve(); }} style={{ alignSelf: "flex-start", fontSize: 13, fontWeight: 600, color: C.ink, padding: "8px 12px", borderRadius: 10, background: C.pill }} className="hover:bg-[#DDF4FA] transition-colors">Reservar</button>
       </div>
     </motion.div>
   );
 }
 
 function VerticalCard({ d, onReserve }: { d: Destination; onReserve: () => void }) {
+  const detail = useDetail();
   return (
-    <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.25 }} className="wishes-card-vertical group" style={{ position: "relative", height: 320, borderRadius: 28, overflow: "hidden", border: `1px solid ${C.border}` }}>
+    <motion.div
+      whileHover={{ y: -4 }} transition={{ duration: 0.25 }}
+      onClick={() => detail.open(destinationToDetail(d))}
+      className="wishes-card-vertical group"
+      style={{ position: "relative", height: 320, borderRadius: 28, overflow: "hidden", border: `1px solid ${C.border}`, cursor: "pointer" }}
+    >
       <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
       <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(6px)", padding: "6px 10px", borderRadius: 999, fontSize: 12, fontWeight: 600, color: C.ink, display: "inline-flex", alignItems: "center", gap: 4 }}>
         <MapPin size={11} /> {d.country}
@@ -644,7 +656,7 @@ function VerticalCard({ d, onReserve }: { d: Destination; onReserve: () => void 
         <div style={{ fontSize: 16, fontWeight: 700, color: C.ink }}>{d.title}</div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
           <div style={{ display: "flex", gap: 1 }}>{Array.from({ length: 5 }).map((_, i) => <Star key={i} size={11} fill="#FFB400" stroke="#FFB400" />)}</div>
-          <button onClick={onReserve} style={{ fontSize: 12, fontWeight: 600, color: "#fff", padding: "6px 12px", borderRadius: 999, background: C.btn }}>Reservar</button>
+          <button onClick={(e) => { e.stopPropagation(); onReserve(); }} style={{ fontSize: 12, fontWeight: 600, color: "#fff", padding: "6px 12px", borderRadius: 999, background: C.btn }}>Reservar</button>
         </div>
       </div>
     </motion.div>
