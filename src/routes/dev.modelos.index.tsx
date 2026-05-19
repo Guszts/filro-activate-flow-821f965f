@@ -47,15 +47,8 @@ function DevTemplatesPage() {
                   params={{ slug: t.slug }}
                   className="group rounded-2xl border border-border bg-paper overflow-hidden flex flex-col hover:border-ink/40 hover:shadow-elegant transition-all"
                 >
-                  <div className="aspect-[16/10] overflow-hidden bg-muted relative">
-                    <img
-                      src={t.coverImage}
-                      alt={`Capa do modelo ${t.name}`}
-                      loading="lazy"
-                      width={1280}
-                      height={800}
-                      className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                    />
+                  <div className="overflow-hidden bg-muted relative">
+                    <TemplateCover src={t.coverImage} name={t.name} previewRoute={t.previewRoute} />
                     {t.previewRoute && (
                       <span className="absolute top-3 right-3 text-[10px] uppercase tracking-wider px-2 py-1 rounded-md bg-ink/85 text-paper backdrop-blur-sm">
                         Preview ao vivo
