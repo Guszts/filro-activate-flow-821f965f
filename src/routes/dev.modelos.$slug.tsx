@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { PreviewFrame } from "@/components/dev/PreviewFrame";
 import { getDevTemplate, DEV_TEMPLATES, type DevTemplate } from "@/lib/dev/templates";
 import { getDevPlan, formatBRL } from "@/lib/dev/plans";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
