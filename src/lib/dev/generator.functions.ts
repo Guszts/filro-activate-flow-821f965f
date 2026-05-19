@@ -1,13 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { estimateEditCost } from "@/lib/dev/credit-cost";
 
 const SLUG_RE = /^[a-z0-9-]{3,40}$/;
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-2.5-flash";
 
 const CREDIT_COST_GENERATE = 5;
-const CREDIT_COST_AI_EDIT = 1;
 
 // ---------- helpers ----------
 function slugify(input: string): string {
@@ -268,10 +268,16 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
   })
   .handler(async ({ data, context }) => {
     const { userId } = context;
+
+    // Hybrid credit cost based on prompt length + complexity heuristic
+    const costBreakdown = estimateEditCost(data.instruction);
+    const cost = costBreakdown.cost;
+
     const { data: credits } = await supabaseAdmin
       .from("user_credits").select("balance").eq("user_id", userId).maybeSingle();
-    if ((credits?.balance ?? 0) < CREDIT_COST_AI_EDIT) {
-      return { ok: false as const, error: "Sem créditos suficientes para editar.", content: null };
+    const balance = credits?.balance ?? 0;
+    if (balance < cost) {
+      return { ok: false as const, error: `Esta edição custa ${cost} créditos (saldo: ${balance}).`, cost, breakdown: costBreakdown };
     }
 
     const { data: project } = await supabaseAdmin
@@ -279,8 +285,8 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
       .select("id, user_id, generated_content, business_name")
       .eq("id", data.projectId)
       .maybeSingle();
-    if (!project) return { ok: false as const, error: "Projeto não encontrado", content: null };
-    if (project.user_id !== userId) return { ok: false as const, error: "Sem permissão", content: null };
+    if (!project) return { ok: false as const, error: "Projeto não encontrado", cost, breakdown: costBreakdown };
+    if (project.user_id !== userId) return { ok: false as const, error: "Sem permissão", cost, breakdown: costBreakdown };
 
     const system = `Você edita o JSON de conteúdo de um site. Receba o JSON atual e a instrução do usuário. Devolva APENAS o JSON COMPLETO atualizado, no MESMO formato/chaves do recebido (não invente novas chaves, não remova chaves). Faça só a mudança pedida. Em PT-BR.`;
     const user = `INSTRUÇÃO: ${data.instruction}
@@ -296,7 +302,7 @@ ${JSON.stringify(project.generated_content, null, 2)}`;
       ]);
       updated = safeJSON<unknown>(raw, project.generated_content);
     } catch (err) {
-      return { ok: false as const, error: err instanceof Error ? err.message : "Falha na IA", content: null };
+      return { ok: false as const, error: err instanceof Error ? err.message : "Falha na IA", cost, breakdown: costBreakdown };
     }
 
     await supabaseAdmin
@@ -316,20 +322,20 @@ ${JSON.stringify(project.generated_content, null, 2)}`;
     await supabaseAdmin.from("dev_project_versions").insert({
       project_id: data.projectId,
       version_number: nextVersion,
-      notes: `Edição IA: ${data.instruction.slice(0, 120)}`,
+      notes: `Edição IA (${cost}cr): ${data.instruction.slice(0, 120)}`,
       generated_site: { content: updated } as never,
       created_by: userId,
     });
 
     await supabaseAdmin.rpc("grant_credits", {
       _user_id: userId,
-      _delta: -CREDIT_COST_AI_EDIT,
+      _delta: -cost,
       _reason: "ai_edit",
       _ref_id: data.projectId,
-      _metadata: { instruction: data.instruction.slice(0, 200) } as never,
+      _metadata: { instruction: data.instruction.slice(0, 200), cost, complexity: costBreakdown.complexity, band: costBreakdown.band } as never,
     } as never);
 
-    return { ok: true as const, error: null };
+    return { ok: true as const, error: null, cost, breakdown: costBreakdown };
   });
 
 // ---------- update manual ----------

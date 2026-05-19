@@ -41,43 +41,41 @@ function DevTemplatesPage() {
             {DEV_TEMPLATES.map((t) => {
               const plan = getDevPlan(t.recommendedPlan);
               return (
-                <div key={t.slug} className="rounded-2xl border border-border bg-paper p-6 flex flex-col">
-                  <div className="text-xs text-ink-soft">{t.segment}</div>
-                  <div className="mt-2 text-xl font-semibold text-ink">{t.name}</div>
-                  <p className="mt-2 text-sm text-ink-soft">{t.description}</p>
-
-                  <div className="mt-4">
-                    <div className="text-[10px] uppercase tracking-widest text-ink-soft mb-2">Seções incluídas</div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {t.sections.map((s) => (
-                        <span key={s} className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-md bg-muted text-ink-soft">{s}</span>
-                      ))}
+                <Link
+                  key={t.slug}
+                  to="/dev/modelos/$slug"
+                  params={{ slug: t.slug }}
+                  className="group rounded-2xl border border-border bg-paper overflow-hidden flex flex-col hover:border-ink/40 hover:shadow-elegant transition-all"
+                >
+                  <div className="aspect-[16/10] overflow-hidden bg-muted relative">
+                    <img
+                      src={t.coverImage}
+                      alt={`Capa do modelo ${t.name}`}
+                      loading="lazy"
+                      width={1280}
+                      height={800}
+                      className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                    />
+                    {t.previewRoute && (
+                      <span className="absolute top-3 right-3 text-[10px] uppercase tracking-wider px-2 py-1 rounded-md bg-ink/85 text-paper backdrop-blur-sm">
+                        Preview ao vivo
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-5 flex-1 flex flex-col">
+                    <div className="text-[11px] text-ink-soft">{t.segment}</div>
+                    <div className="mt-1 text-lg font-semibold text-ink">{t.name}</div>
+                    <p className="mt-2 text-sm text-ink-soft line-clamp-2">{t.description}</p>
+                    {plan && (
+                      <div className="mt-4 text-xs text-ink-soft">
+                        Plano recomendado: <span className="font-semibold text-ink">{plan.name}</span>
+                      </div>
+                    )}
+                    <div className="mt-4 inline-flex items-center text-sm font-semibold text-ink">
+                      Abrir modelo <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
-
-                  {plan && (
-                    <div className="mt-4 text-xs text-ink-soft">
-                      Plano recomendado: <span className="font-semibold text-ink">{plan.name}</span>
-                    </div>
-                  )}
-
-                  <div className="mt-6 flex gap-2 flex-1 items-end">
-                    <Link
-                      to="/dev/modelos/$slug"
-                      params={{ slug: t.slug }}
-                      className="flex-1 inline-flex items-center justify-center h-11 px-4 rounded-xl border border-border bg-paper text-ink text-sm font-semibold hover:bg-muted transition-colors"
-                    >
-                      Ver modelo
-                    </Link>
-                    <Link
-                      to="/dev/modelos/$slug"
-                      params={{ slug: t.slug }}
-                      className="flex-1 inline-flex items-center justify-center h-11 px-4 rounded-xl bg-ink text-paper text-sm font-semibold hover:scale-[1.02] transition-transform"
-                    >
-                      Usar este modelo
-                    </Link>
-                  </div>
-                </div>
+                </Link>
               );
             })}
           </div>
