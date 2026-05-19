@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type ComponentType, type ReactNode } from "react";
 import {
   Menu,
   Plus,
