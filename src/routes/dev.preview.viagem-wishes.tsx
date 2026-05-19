@@ -3,9 +3,9 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Search, ChevronDown, MapPin, Play, Star, Menu, X, Plane, ArrowRight, Check,
-  Sparkles as SparklesIcon, Mail, Phone,
-  Shield, Globe, Heart, Wifi, Coffee, Tv, Bath, ArrowLeftRight, CreditCard,
-  Quote, ChevronRight, Send, MapPinned, Clock, Briefcase,
+  Phone,
+  Shield, Heart, Wifi, Coffee, Tv, Bath, ArrowLeftRight, CreditCard,
+  Quote, ChevronRight, Send, MapPinned, Clock,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dev/preview/viagem-wishes")({
@@ -322,12 +322,20 @@ function ResponsiveStyles() {
       @media (max-width: 1024px) {
         .wishes-shell { padding: 28px !important; margin: 16px !important; max-width: calc(100% - 32px) !important; border-radius: 20px !important; }
         .wishes-content { grid-template-columns: 1fr !important; }
+        .wishes-bleed { margin-left: -28px !important; margin-right: -28px !important; }
+        .wishes-bleed > div[style*="padding"] { padding-left: 28px !important; padding-right: 28px !important; }
+      }
+      @media (max-width: 900px) {
+        .wishes-nav { gap: 6px !important; flex-wrap: wrap !important; justify-content: center; flex: 1 1 100%; order: 3; margin-top: 10px; padding-top: 10px; border-top: 1px solid ${C.divider}; }
+        .wishes-nav button { font-size: 12px !important; padding: 6px 10px; border-radius: 999px; background: ${C.pill}; }
+        .wishes-nav button[data-active="true"] { background: ${C.ink} !important; color: #fff !important; }
+        .wishes-nav span[style*="position: absolute"] { display: none !important; }
+        .wishes-header { flex-wrap: wrap !important; height: auto !important; padding-bottom: 8px; }
       }
       @media (max-width: 720px) {
         .wishes-shell { padding: 18px !important; margin: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
-        .wishes-nav { gap: 16px !important; overflow-x: auto; flex: 1; min-width: 0; padding: 4px 6px; scrollbar-width: none; -ms-overflow-style: none; max-width: 100%; }
-        .wishes-nav::-webkit-scrollbar { display: none; }
-        .wishes-nav button { flex: 0 0 auto; }
+        .wishes-bleed { margin-left: -18px !important; margin-right: -18px !important; }
+        .wishes-bleed > div[style*="padding"] { padding-left: 18px !important; padding-right: 18px !important; }
         .wishes-menu-btn { display: none !important; }
         .wishes-header-cta { display: none !important; }
         .wishes-hero { height: 360px !important; }
@@ -363,7 +371,7 @@ function Header({ page, setPage, menuOpen, setMenuOpen }: { page: PageKey; setPa
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       style={{ height: 64, position: "relative" }}
-      className="flex items-center justify-between"
+      className="wishes-header flex items-center justify-between"
     >
       <button onClick={() => setPage("inicio")} className="flex items-center gap-2">
         <motion.span
@@ -382,6 +390,7 @@ function Header({ page, setPage, menuOpen, setMenuOpen }: { page: PageKey; setPa
           return (
             <button
               key={n.key}
+              data-active={active}
               onClick={() => setPage(n.key)}
               style={{
                 fontSize: 13, fontWeight: active ? 600 : 500,
@@ -680,10 +689,10 @@ function SectionTitle({ kicker, title, sub }: { kicker?: string; title: string; 
 
 function Features() {
   const items = [
-    { icon: Shield, title: "Reserva segura", text: "Pagamento protegido e confirmação imediata." },
-    { icon: Globe, title: "Destinos globais", text: "Mais de 120 destinos em 5 continentes." },
-    { icon: Heart, title: "Atendimento humano", text: "Equipe dedicada antes, durante e depois da viagem." },
-    { icon: Briefcase, title: "Pacotes flexíveis", text: "Roteiros adaptados ao seu ritmo e orçamento." },
+    { title: "Reserva segura", text: "Pagamento protegido e confirmação imediata após aprovação do cartão." },
+    { title: "Destinos globais", text: "Mais de 120 destinos cuidadosamente selecionados em 5 continentes." },
+    { title: "Atendimento humano", text: "Equipe dedicada antes, durante e depois da sua viagem." },
+    { title: "Pacotes flexíveis", text: "Roteiros adaptados ao seu ritmo, orçamento e estilo de viagem." },
   ];
   return (
     <section style={{ marginTop: 80 }}>
@@ -694,13 +703,11 @@ function Features() {
             key={it.title}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
             whileHover={{ y: -6 }}
-            style={{ padding: 24, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}
+            style={{ padding: 28, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}
           >
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: C.blue, display: "inline-flex", alignItems: "center", justifyContent: "center", color: C.ink }}>
-              <it.icon size={20} />
-            </div>
-            <div style={{ marginTop: 14, fontSize: 16, fontWeight: 700, color: C.ink }}>{it.title}</div>
-            <div style={{ marginTop: 6, fontSize: 13, color: C.inkSoft, lineHeight: 1.5 }}>{it.text}</div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: C.inkSoft, letterSpacing: 1.4, textTransform: "uppercase" }}>0{i + 1}</div>
+            <div style={{ marginTop: 18, fontSize: 18, fontWeight: 700, color: C.ink, letterSpacing: -0.01 }}>{it.title}</div>
+            <div style={{ marginTop: 8, fontSize: 13, color: C.inkSoft, lineHeight: 1.6 }}>{it.text}</div>
           </motion.div>
         ))}
       </div>
@@ -716,11 +723,11 @@ function Stats() {
     { value: "24/7", label: "Atendimento" },
   ];
   return (
-    <section style={{ marginTop: 72 }}>
+    <section className="wishes-bleed" style={{ marginTop: 72, marginLeft: -56, marginRight: -56 }}>
       <motion.div
         initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
         className="wishes-4col"
-        style={{ background: C.ink, color: "#fff", borderRadius: 28, padding: "40px 32px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 }}
+        style={{ background: C.ink, color: "#fff", borderRadius: 0, padding: "56px 56px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 }}
       >
         {items.map((s, i) => (
           <motion.div
@@ -728,8 +735,8 @@ function Stats() {
             initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
             style={{ textAlign: "center" }}
           >
-            <div style={{ fontSize: 42, fontWeight: 700, letterSpacing: -0.02 }}>{s.value}</div>
-            <div style={{ marginTop: 4, fontSize: 13, opacity: 0.7 }}>{s.label}</div>
+            <div style={{ fontSize: 46, fontWeight: 700, letterSpacing: -0.02 }}>{s.value}</div>
+            <div style={{ marginTop: 6, fontSize: 13, opacity: 0.7, textTransform: "uppercase", letterSpacing: 1.2 }}>{s.label}</div>
           </motion.div>
         ))}
       </motion.div>
@@ -744,7 +751,7 @@ function Testimonials() {
     { name: "Camila P.", text: "Voltei encantada do Nepal. Recomendo demais.", role: "Aventura solo" },
   ];
   return (
-    <section style={{ marginTop: 72 }}>
+    <section className="wishes-bleed" style={{ marginTop: 72, marginLeft: -56, marginRight: -56, padding: "64px 56px", background: C.page }}>
       <SectionTitle kicker="Depoimentos" title="O que dizem nossos viajantes" />
       <div className="wishes-3col" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
         {items.map((t, i) => (
@@ -752,16 +759,13 @@ function Testimonials() {
             key={t.name}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}
             whileHover={{ y: -4 }}
-            style={{ padding: 24, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}
+            style={{ padding: 28, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}
           >
             <Quote size={22} color={C.inkSoft} />
-            <p style={{ marginTop: 12, fontSize: 14, color: C.ink, lineHeight: 1.6 }}>"{t.text}"</p>
-            <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 999, background: C.blue, display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: C.ink, fontSize: 13 }}>{t.name[0]}</div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: C.ink }}>{t.name}</div>
-                <div style={{ fontSize: 11, color: C.inkSoft }}>{t.role}</div>
-              </div>
+            <p style={{ marginTop: 14, fontSize: 14, color: C.ink, lineHeight: 1.65 }}>"{t.text}"</p>
+            <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.divider}` }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: C.ink }}>{t.name}</div>
+              <div style={{ marginTop: 2, fontSize: 11, color: C.inkSoft }}>{t.role}</div>
             </div>
           </motion.div>
         ))}
@@ -780,8 +784,8 @@ function NewsletterCTA({ goTo }: { goTo: (p: PageKey) => void }) {
         style={{ borderRadius: 32, overflow: "hidden", position: "relative", padding: "56px 32px", background: `linear-gradient(135deg, ${C.blue}, #fff)`, border: `1px solid ${C.border}` }}
       >
         <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
-          <SparklesIcon size={28} color={C.ink} style={{ margin: "0 auto" }} />
-          <h2 className="wishes-section-title" style={{ marginTop: 12, fontSize: 36, fontWeight: 700, letterSpacing: -0.02, color: C.ink }}>Ofertas exclusivas no seu e-mail</h2>
+          <div style={{ fontSize: 12, fontWeight: 600, color: C.inkSoft, letterSpacing: 1.4, textTransform: "uppercase" }}>Newsletter</div>
+          <h2 className="wishes-section-title" style={{ marginTop: 10, fontSize: 36, fontWeight: 700, letterSpacing: -0.02, color: C.ink }}>Ofertas exclusivas no seu e-mail</h2>
           <p style={{ marginTop: 8, color: C.inkSoft }}>Receba destinos selecionados e promoções antes de todos.</p>
           <form
             onSubmit={(e) => { e.preventDefault(); setSent(true); setTimeout(() => setSent(false), 2500); }}
@@ -1191,24 +1195,19 @@ function Contato() {
           style={{ display: "flex", flexDirection: "column", gap: 14 }}
         >
           {[
-            { i: Phone, l: "Telefone", v: "+55 (11) 4000-0000" },
-            { i: Mail, l: "E-mail", v: "ola@wishes.travel" },
-            { i: MapPin, l: "Endereço", v: "Av. Paulista, 1000 · São Paulo" },
-            { i: Clock, l: "Horário", v: "Seg–Sex · 9h às 19h" },
+            { l: "Telefone", v: "+55 (11) 4000-0000" },
+            { l: "E-mail", v: "ola@wishes.travel" },
+            { l: "Endereço", v: "Av. Paulista, 1000 · São Paulo" },
+            { l: "Horário", v: "Seg–Sex · 9h às 19h" },
           ].map((c, i) => (
             <motion.div
               key={c.l}
               initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: i * 0.08 }}
               whileHover={{ x: 4 }}
-              style={{ padding: 18, borderRadius: 18, background: C.paper, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 14 }}
+              style={{ padding: 20, borderRadius: 18, background: C.paper, border: `1px solid ${C.border}` }}
             >
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: C.blue, display: "inline-flex", alignItems: "center", justifyContent: "center", color: C.ink }}>
-                <c.i size={18} />
-              </div>
-              <div>
-                <div style={{ fontSize: 11, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1 }}>{c.l}</div>
-                <div style={{ marginTop: 2, fontSize: 14, fontWeight: 600, color: C.ink }}>{c.v}</div>
-              </div>
+              <div style={{ fontSize: 11, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2 }}>{c.l}</div>
+              <div style={{ marginTop: 6, fontSize: 15, fontWeight: 600, color: C.ink }}>{c.v}</div>
             </motion.div>
           ))}
           <div style={{ marginTop: 4, height: 160, borderRadius: 20, background: `linear-gradient(135deg, ${C.blue}, ${C.pill})`, border: `1px solid ${C.border}`, display: "inline-flex", alignItems: "center", justifyContent: "center", color: C.inkSoft, fontSize: 12 }}>
