@@ -9,7 +9,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { DEV_TEMPLATES, getDevTemplate } from "@/lib/dev/templates";
 import { generateDevSite } from "@/lib/dev/generator.functions";
 import { getMyCredits } from "@/lib/credits/credits.functions";
-import { Zap, Loader2, ArrowRight, ArrowLeft, Check, Sparkles } from "lucide-react";
+import { Loader2, ArrowRight, ArrowLeft, Check } from "lucide-react";
 
 const SearchSchema = z.object({ template: z.string().optional() });
 
@@ -131,7 +131,7 @@ function NovoProjeto() {
           </div>
           {balance !== null && (
             <div className="inline-flex items-center gap-2 px-3 h-10 rounded-full border border-border bg-paper text-sm">
-              <Zap className="h-4 w-4 text-flame" />
+              
               <span className="font-bold text-ink">{balance}</span>
               <span className="text-ink-soft">créditos · gera por 5</span>
             </div>
@@ -287,7 +287,7 @@ function NovoProjeto() {
                   disabled={submitting || !enoughCredits || !stepValid[4]}
                   className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-ink text-paper text-sm font-semibold disabled:opacity-50"
                 >
-                  {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Gerando…</> : <><Sparkles className="h-4 w-4" /> Gerar meu site</>}
+                  {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Gerando…</> : <>Gerar meu site</>}
                 </button>
               )}
             </div>
@@ -312,7 +312,7 @@ function NovoProjeto() {
               <div className="mt-5 rounded-2xl bg-paper border border-border p-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-ink-soft">Custo de geração</span>
-                  <span className="inline-flex items-center gap-1 font-bold text-ink"><Zap className="h-3.5 w-3.5 text-flame" /> 5 créditos</span>
+                  <span className="inline-flex items-center gap-1 font-bold text-ink">5 créditos</span>
                 </div>
                 <div className="mt-2 flex justify-between text-sm">
                   <span className="text-ink-soft">Seu saldo</span>

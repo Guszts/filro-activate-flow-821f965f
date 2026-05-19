@@ -11,7 +11,7 @@ import { getDevProject } from "@/lib/dev/dev.functions";
 import { editDevSiteWithAI } from "@/lib/dev/generator.functions";
 import { getMyCredits } from "@/lib/credits/credits.functions";
 import { estimateEditCost } from "@/lib/dev/credit-cost";
-import { Zap, Loader2, ExternalLink, Wand2 } from "lucide-react";
+import { Loader2, ExternalLink } from "lucide-react";
 
 const SearchSchema = z.object({ generated: z.string().optional() });
 
@@ -109,7 +109,7 @@ function ProjetoPage() {
               </div>
               {balance !== null && (
                 <div className="inline-flex items-center gap-2 px-3 h-10 rounded-full border border-border bg-paper text-sm">
-                  <Zap className="h-4 w-4 text-flame" />
+                  
                   <span className="font-bold text-ink">{balance}</span>
                   <span className="text-ink-soft">créditos</span>
                 </div>
@@ -134,7 +134,7 @@ function ProjetoPage() {
 
               <aside className="rounded-3xl border border-border bg-muted/30 p-6 flex flex-col gap-5">
                 <div>
-                  <div className="text-xs uppercase tracking-widest text-ink-soft inline-flex items-center gap-1.5"><Wand2 className="h-3.5 w-3.5" /> Editor com IA</div>
+                  <div className="text-xs uppercase tracking-widest text-ink-soft inline-flex items-center gap-1.5">Editor com IA</div>
                   <p className="mt-2 text-xs text-ink-soft">O custo varia conforme o tamanho e a complexidade do que você pedir.</p>
                   <textarea
                     value={instruction}
@@ -148,7 +148,7 @@ function ProjetoPage() {
                     <span>{instruction.length}/1500 caracteres</span>
                     {instruction.trim().length >= 5 && (
                       <span className="inline-flex items-center gap-1 font-semibold text-ink">
-                        <Zap className="h-3 w-3 text-flame" /> Custo estimado: {estCost} crédito{estCost > 1 ? "s" : ""}
+                        Custo estimado: {estCost} crédito{estCost > 1 ? "s" : ""}
                       </span>
                     )}
                   </div>
