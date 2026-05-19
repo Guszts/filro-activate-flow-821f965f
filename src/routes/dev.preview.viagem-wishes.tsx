@@ -778,8 +778,8 @@ function NewsletterCTA({ goTo }: { goTo: (p: PageKey) => void }) {
         style={{ borderRadius: 32, overflow: "hidden", position: "relative", padding: "56px 32px", background: `linear-gradient(135deg, ${C.blue}, #fff)`, border: `1px solid ${C.border}` }}
       >
         <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
-          <SparklesIcon size={28} color={C.ink} style={{ margin: "0 auto" }} />
-          <h2 className="wishes-section-title" style={{ marginTop: 12, fontSize: 36, fontWeight: 700, letterSpacing: -0.02, color: C.ink }}>Ofertas exclusivas no seu e-mail</h2>
+          <div style={{ fontSize: 12, fontWeight: 600, color: C.inkSoft, letterSpacing: 1.4, textTransform: "uppercase" }}>Newsletter</div>
+          <h2 className="wishes-section-title" style={{ marginTop: 10, fontSize: 36, fontWeight: 700, letterSpacing: -0.02, color: C.ink }}>Ofertas exclusivas no seu e-mail</h2>
           <p style={{ marginTop: 8, color: C.inkSoft }}>Receba destinos selecionados e promoções antes de todos.</p>
           <form
             onSubmit={(e) => { e.preventDefault(); setSent(true); setTimeout(() => setSent(false), 2500); }}
