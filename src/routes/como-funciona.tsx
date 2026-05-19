@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
-import { ArrowRight, Clock, ShieldCheck, MessageCircle} from "lucide-react";
+import { ArrowRight, Clock, ShieldCheck, MessageCircle, Users } from "lucide-react";
 
 export const Route = createFileRoute("/como-funciona")({
   component: ComoFuncionaPage,
