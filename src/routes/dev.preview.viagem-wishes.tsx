@@ -1195,10 +1195,10 @@ function Contato() {
           style={{ display: "flex", flexDirection: "column", gap: 14 }}
         >
           {[
-            { l: "Telefone", v: "+55 (11) 4000-0000" },
-            { l: "E-mail", v: "ola@wishes.travel" },
-            { l: "Endereço", v: "Av. Paulista, 1000 · São Paulo" },
-            { l: "Horário", v: "Seg–Sex · 9h às 19h" },
+            { l: "Telefone", v: "[seu telefone aqui]" },
+            { l: "E-mail", v: "[seu e-mail aqui]" },
+            { l: "Endereço", v: "[seu endereço aqui]" },
+            { l: "Horário", v: "[seu horário aqui]" },
           ].map((c, i) => (
             <motion.div
               key={c.l}
