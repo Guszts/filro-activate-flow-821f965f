@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { PreviewFrame } from "@/components/dev/PreviewFrame";
 import { useAuth } from "@/lib/auth";
 import { useServerFn } from "@tanstack/react-start";
 import { getDevProject } from "@/lib/dev/dev.functions";
