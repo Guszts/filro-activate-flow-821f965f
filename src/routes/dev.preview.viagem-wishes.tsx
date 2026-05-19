@@ -390,6 +390,7 @@ function Header({ page, setPage, menuOpen, setMenuOpen }: { page: PageKey; setPa
           return (
             <button
               key={n.key}
+              data-active={active}
               onClick={() => setPage(n.key)}
               style={{
                 fontSize: 13, fontWeight: active ? 600 : 500,
