@@ -25,6 +25,7 @@ import { Route as PainelRouteImport } from './routes/painel'
 import { Route as ModelosRouteImport } from './routes/modelos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GarantiaRouteImport } from './routes/garantia'
+import { Route as FornoRouteImport } from './routes/forno'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as ConsoleRouteImport } from './routes/console'
 import { Route as CompararRouteImport } from './routes/comparar'
@@ -45,6 +46,7 @@ import { Route as DevModelosIndexRouteImport } from './routes/dev.modelos.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as DevProjetoProjectIdRouteImport } from './routes/dev.projeto.$projectId'
 import { Route as DevPreviewViagemWishesRouteImport } from './routes/dev.preview.viagem-wishes'
+import { Route as DevPreviewRestauranteCardapioRouteImport } from './routes/dev.preview.restaurante-cardapio'
 import { Route as DevPreviewClinicaLocalRouteImport } from './routes/dev.preview.clinica-local'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
@@ -133,6 +135,11 @@ const LoginRoute = LoginRouteImport.update({
 const GarantiaRoute = GarantiaRouteImport.update({
   id: '/garantia',
   path: '/garantia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FornoRoute = FornoRouteImport.update({
+  id: '/forno',
+  path: '/forno',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocsRoute = DocsRouteImport.update({
@@ -235,6 +242,12 @@ const DevPreviewViagemWishesRoute = DevPreviewViagemWishesRouteImport.update({
   path: '/dev/preview/viagem-wishes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevPreviewRestauranteCardapioRoute =
+  DevPreviewRestauranteCardapioRouteImport.update({
+    id: '/dev/preview/restaurante-cardapio',
+    path: '/dev/preview/restaurante-cardapio',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DevPreviewClinicaLocalRoute = DevPreviewClinicaLocalRouteImport.update({
   id: '/dev/preview/clinica-local',
   path: '/dev/preview/clinica-local',
@@ -294,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
+  '/forno': typeof FornoRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
@@ -322,6 +336,7 @@ export interface FileRoutesByFullPath {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -341,6 +356,7 @@ export interface FileRoutesByTo {
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
+  '/forno': typeof FornoRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
@@ -369,6 +385,7 @@ export interface FileRoutesByTo {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -389,6 +406,7 @@ export interface FileRoutesById {
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
+  '/forno': typeof FornoRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
@@ -417,6 +435,7 @@ export interface FileRoutesById {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -438,6 +457,7 @@ export interface FileRouteTypes {
     | '/comparar'
     | '/console'
     | '/docs'
+    | '/forno'
     | '/garantia'
     | '/login'
     | '/modelos'
@@ -466,6 +486,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
@@ -485,6 +506,7 @@ export interface FileRouteTypes {
     | '/comparar'
     | '/console'
     | '/docs'
+    | '/forno'
     | '/garantia'
     | '/login'
     | '/modelos'
@@ -513,6 +535,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
@@ -532,6 +555,7 @@ export interface FileRouteTypes {
     | '/comparar'
     | '/console'
     | '/docs'
+    | '/forno'
     | '/garantia'
     | '/login'
     | '/modelos'
@@ -560,6 +584,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
@@ -580,6 +605,7 @@ export interface RootRouteChildren {
   CompararRoute: typeof CompararRoute
   ConsoleRoute: typeof ConsoleRoute
   DocsRoute: typeof DocsRoute
+  FornoRoute: typeof FornoRoute
   GarantiaRoute: typeof GarantiaRoute
   LoginRoute: typeof LoginRoute
   ModelosRoute: typeof ModelosRoute
@@ -608,6 +634,7 @@ export interface RootRouteChildren {
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   DevModelosSlugRoute: typeof DevModelosSlugRoute
   DevPreviewClinicaLocalRoute: typeof DevPreviewClinicaLocalRoute
+  DevPreviewRestauranteCardapioRoute: typeof DevPreviewRestauranteCardapioRoute
   DevPreviewViagemWishesRoute: typeof DevPreviewViagemWishesRoute
   DevProjetoProjectIdRoute: typeof DevProjetoProjectIdRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
@@ -732,6 +759,13 @@ declare module '@tanstack/react-router' {
       path: '/garantia'
       fullPath: '/garantia'
       preLoaderRoute: typeof GarantiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forno': {
+      id: '/forno'
+      path: '/forno'
+      fullPath: '/forno'
+      preLoaderRoute: typeof FornoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/docs': {
@@ -874,6 +908,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevPreviewViagemWishesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/preview/restaurante-cardapio': {
+      id: '/dev/preview/restaurante-cardapio'
+      path: '/dev/preview/restaurante-cardapio'
+      fullPath: '/dev/preview/restaurante-cardapio'
+      preLoaderRoute: typeof DevPreviewRestauranteCardapioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev/preview/clinica-local': {
       id: '/dev/preview/clinica-local'
       path: '/dev/preview/clinica-local'
@@ -948,6 +989,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompararRoute: CompararRoute,
   ConsoleRoute: ConsoleRoute,
   DocsRoute: DocsRoute,
+  FornoRoute: FornoRoute,
   GarantiaRoute: GarantiaRoute,
   LoginRoute: LoginRoute,
   ModelosRoute: ModelosRoute,
@@ -976,6 +1018,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   DevModelosSlugRoute: DevModelosSlugRoute,
   DevPreviewClinicaLocalRoute: DevPreviewClinicaLocalRoute,
+  DevPreviewRestauranteCardapioRoute: DevPreviewRestauranteCardapioRoute,
   DevPreviewViagemWishesRoute: DevPreviewViagemWishesRoute,
   DevProjetoProjectIdRoute: DevProjetoProjectIdRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
