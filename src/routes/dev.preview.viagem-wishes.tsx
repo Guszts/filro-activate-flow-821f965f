@@ -1295,7 +1295,8 @@ function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; s
               key={d.id} layout
               initial={{ opacity: 0, y: 16, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.32, delay: idx * 0.04 }}
               whileHover={{ y: -6, boxShadow: "0 18px 40px rgba(22,27,28,0.12)" }}
-              style={{ borderRadius: 24, overflow: "hidden", background: C.paper, border: `1px solid ${C.border}` }}
+              onClick={() => detail.open(destinationToDetail(d))}
+              style={{ borderRadius: 24, overflow: "hidden", background: C.paper, border: `1px solid ${C.border}`, cursor: "pointer" }}
             >
               <div style={{ height: 180, overflow: "hidden" }}>
                 <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
@@ -1307,7 +1308,7 @@ function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; s
                 </div>
                 <div style={{ marginTop: 4, fontSize: 12, color: C.inkSoft }}>{d.locationLabel}</div>
                 <div style={{ marginTop: 12, fontSize: 13, color: C.ink, fontWeight: 600 }}>{d.priceLabel}</div>
-                <motion.button whileHover={{ scale: 1.02 }} onClick={() => onReserve(d)} style={{ marginTop: 12, width: "100%", height: 42, borderRadius: 12, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 13 }}>Reservar</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} onClick={(e) => { e.stopPropagation(); onReserve(d); }} style={{ marginTop: 12, width: "100%", height: 42, borderRadius: 12, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 13 }}>Reservar</motion.button>
               </div>
             </motion.article>
           ))}
