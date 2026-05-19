@@ -1319,6 +1319,7 @@ function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; s
 }
 
 function Lugares({ onReserve }: { onReserve: (d: Destination) => void }) {
+  const detail = useDetail();
   return (
     <section style={{ marginTop: 32 }}>
       <SectionTitle kicker="Lugares" title="Lugares populares" sub="Destinos escolhidos por viajantes." />
