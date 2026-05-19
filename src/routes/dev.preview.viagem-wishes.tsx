@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Search, ChevronDown, MapPin, Play, Star, Menu, X, Plane, ArrowRight, Check,
-  Mail, Phone,
+  Phone,
   Shield, Heart, Wifi, Coffee, Tv, Bath, ArrowLeftRight, CreditCard,
   Quote, ChevronRight, Send, MapPinned, Clock,
 } from "lucide-react";
