@@ -72,7 +72,7 @@ const C = {
 };
 
 // ---------------- Root ----------------
-function WishesPreview() {
+export function WishesPreview() {
   const [page, setPage] = useState<PageKey>("inicio");
   const [menuOpen, setMenuOpen] = useState(false);
   const [filter, setFilter] = useState<FilterKey>("ofertas");
