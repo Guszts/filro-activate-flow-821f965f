@@ -24,7 +24,7 @@ export function CreditsBadge() {
       className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-border bg-paper text-xs font-semibold text-ink hover:bg-muted transition-colors"
       title="Seus créditos Flaro Dev"
     >
-      <Zap className="h-3.5 w-3.5 text-flame" />
+      
       <span>{balance}</span>
       <span className="text-ink-soft font-normal">créditos</span>
     </Link>
