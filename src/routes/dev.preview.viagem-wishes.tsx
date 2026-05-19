@@ -322,12 +322,20 @@ function ResponsiveStyles() {
       @media (max-width: 1024px) {
         .wishes-shell { padding: 28px !important; margin: 16px !important; max-width: calc(100% - 32px) !important; border-radius: 20px !important; }
         .wishes-content { grid-template-columns: 1fr !important; }
+        .wishes-bleed { margin-left: -28px !important; margin-right: -28px !important; }
+        .wishes-bleed > div[style*="padding"] { padding-left: 28px !important; padding-right: 28px !important; }
+      }
+      @media (max-width: 900px) {
+        .wishes-nav { gap: 6px !important; flex-wrap: wrap !important; justify-content: center; flex: 1 1 100%; order: 3; margin-top: 10px; padding-top: 10px; border-top: 1px solid ${C.divider}; }
+        .wishes-nav button { font-size: 12px !important; padding: 6px 10px; border-radius: 999px; background: ${C.pill}; }
+        .wishes-nav button[data-active="true"] { background: ${C.ink} !important; color: #fff !important; }
+        .wishes-nav span[style*="position: absolute"] { display: none !important; }
+        .wishes-header { flex-wrap: wrap !important; height: auto !important; padding-bottom: 8px; }
       }
       @media (max-width: 720px) {
         .wishes-shell { padding: 18px !important; margin: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
-        .wishes-nav { gap: 16px !important; overflow-x: auto; flex: 1; min-width: 0; padding: 4px 6px; scrollbar-width: none; -ms-overflow-style: none; max-width: 100%; }
-        .wishes-nav::-webkit-scrollbar { display: none; }
-        .wishes-nav button { flex: 0 0 auto; }
+        .wishes-bleed { margin-left: -18px !important; margin-right: -18px !important; }
+        .wishes-bleed > div[style*="padding"] { padding-left: 18px !important; padding-right: 18px !important; }
         .wishes-menu-btn { display: none !important; }
         .wishes-header-cta { display: none !important; }
         .wishes-hero { height: 360px !important; }
