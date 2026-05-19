@@ -40,7 +40,6 @@ export const DEV_TEMPLATES: DevTemplate[] = [
     previewRoute: "/dev/preview/clinica-local",
   },
   {
-    slug: "_clinica_placeholder_remove",
     slug: "restaurante-cardapio",
     name: "Restaurante e Cardápio",
     segment: "Restaurantes, lanchonetes, hamburguerias e pizzarias",
