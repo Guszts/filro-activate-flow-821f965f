@@ -1186,24 +1186,19 @@ function Contato() {
           style={{ display: "flex", flexDirection: "column", gap: 14 }}
         >
           {[
-            { i: Phone, l: "Telefone", v: "+55 (11) 4000-0000" },
-            { i: Mail, l: "E-mail", v: "ola@wishes.travel" },
-            { i: MapPin, l: "Endereço", v: "Av. Paulista, 1000 · São Paulo" },
-            { i: Clock, l: "Horário", v: "Seg–Sex · 9h às 19h" },
+            { l: "Telefone", v: "+55 (11) 4000-0000" },
+            { l: "E-mail", v: "ola@wishes.travel" },
+            { l: "Endereço", v: "Av. Paulista, 1000 · São Paulo" },
+            { l: "Horário", v: "Seg–Sex · 9h às 19h" },
           ].map((c, i) => (
             <motion.div
               key={c.l}
               initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: i * 0.08 }}
               whileHover={{ x: 4 }}
-              style={{ padding: 18, borderRadius: 18, background: C.paper, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 14 }}
+              style={{ padding: 20, borderRadius: 18, background: C.paper, border: `1px solid ${C.border}` }}
             >
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: C.blue, display: "inline-flex", alignItems: "center", justifyContent: "center", color: C.ink }}>
-                <c.i size={18} />
-              </div>
-              <div>
-                <div style={{ fontSize: 11, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1 }}>{c.l}</div>
-                <div style={{ marginTop: 2, fontSize: 14, fontWeight: 600, color: C.ink }}>{c.v}</div>
-              </div>
+              <div style={{ fontSize: 11, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2 }}>{c.l}</div>
+              <div style={{ marginTop: 6, fontSize: 15, fontWeight: 600, color: C.ink }}>{c.v}</div>
             </motion.div>
           ))}
           <div style={{ marginTop: 4, height: 160, borderRadius: 20, background: `linear-gradient(135deg, ${C.blue}, ${C.pill})`, border: `1px solid ${C.border}`, display: "inline-flex", alignItems: "center", justifyContent: "center", color: C.inkSoft, fontSize: 12 }}>
