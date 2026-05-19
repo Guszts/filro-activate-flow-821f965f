@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WishesRouteImport } from './routes/wishes'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TermosRouteImport } from './routes/termos'
@@ -52,6 +53,11 @@ import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/em
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
+const WishesRoute = WishesRouteImport.update({
+  id: '/wishes',
+  path: '/wishes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
   path: '/verify-email',
@@ -290,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/wishes': typeof WishesRoute
   '/dev/novo': typeof DevNovoRoute
   '/dev/precos': typeof DevPrecosRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -334,6 +341,7 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/wishes': typeof WishesRoute
   '/dev/novo': typeof DevNovoRoute
   '/dev/precos': typeof DevPrecosRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -379,6 +387,7 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/wishes': typeof WishesRoute
   '/dev/novo': typeof DevNovoRoute
   '/dev/precos': typeof DevPrecosRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -425,6 +434,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/wishes'
     | '/dev/novo'
     | '/dev/precos'
     | '/email/unsubscribe'
@@ -469,6 +479,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/wishes'
     | '/dev/novo'
     | '/dev/precos'
     | '/email/unsubscribe'
@@ -513,6 +524,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/wishes'
     | '/dev/novo'
     | '/dev/precos'
     | '/email/unsubscribe'
@@ -558,6 +570,7 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
+  WishesRoute: typeof WishesRoute
   DevNovoRoute: typeof DevNovoRoute
   DevPrecosRoute: typeof DevPrecosRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
@@ -583,6 +596,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wishes': {
+      id: '/wishes'
+      path: '/wishes'
+      fullPath: '/wishes'
+      preLoaderRoute: typeof WishesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/verify-email': {
       id: '/verify-email'
       path: '/verify-email'
@@ -902,6 +922,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VerifyEmailRoute: VerifyEmailRoute,
+  WishesRoute: WishesRoute,
   DevNovoRoute: DevNovoRoute,
   DevPrecosRoute: DevPrecosRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
