@@ -71,6 +71,28 @@ const C = {
   pill: "#EEF4F4", divider: "#E3E9E9",
 };
 
+// Robust image fallback (some Unsplash IDs occasionally 404)
+const imgFallback = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const img = e.currentTarget;
+  if (img.dataset.fb) return;
+  img.dataset.fb = "1";
+  const seed = encodeURIComponent(img.alt || "viagem");
+  img.src = `https://picsum.photos/seed/${seed}/1200/800`;
+};
+
+// Generic detail item used by the detail page
+type DetailItem = {
+  id: string;
+  kind: "destino" | "hotel" | "experiencia" | "post";
+  title: string;
+  subtitle?: string;
+  image: string;
+  priceLabel?: string;
+  rating?: number;
+  description: string;
+  highlights?: string[];
+};
+
 // ---------------- Root ----------------
 export function WishesPreview() {
   const [page, setPage] = useState<PageKey>("inicio");
