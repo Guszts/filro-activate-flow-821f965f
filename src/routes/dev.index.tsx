@@ -23,6 +23,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { DEV_TEMPLATES } from "@/lib/dev/templates";
+import { TemplateCover } from "@/components/dev/TemplateCover";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/dev/")({
