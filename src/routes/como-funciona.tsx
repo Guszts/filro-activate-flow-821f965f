@@ -33,7 +33,7 @@ const steps: Array<{ n: string; t: string; d: string; eta: string; accent: Accen
 const guarantees = [
   { icon: Clock, title: "Prazo claro", desc: "Estimativas por etapa. Sem 'em breve' eterno." },
   { icon: ShieldCheck, title: "Pagamento Stripe", desc: "Cartão e Pix com segurança padrão bancário." },
-  { icon: ShieldCheck, title: "Adaptação humana", desc: "Time real revisa cada entrega antes de você." },
+  { icon: Users, title: "Adaptação humana", desc: "Time real revisa cada entrega antes de você." },
   { icon: MessageCircle, title: "Suporte por WhatsApp", desc: "Resposta em horário comercial — gente, não bot." },
 ];
 
