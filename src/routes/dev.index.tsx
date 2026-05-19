@@ -97,8 +97,8 @@ function TemplateCard({
   const isDark = variant === "dark";
   return (
     <Link
-      to="/dev/novo"
-      search={{ template: t.slug }}
+      to="/dev/modelos/$slug"
+      params={{ slug: t.slug }}
       className={`group relative w-[320px] md:w-[380px] shrink-0 rounded-2xl overflow-hidden border transition-all ${
         isDark
           ? "border-white/10 bg-white/[0.04] hover:border-lime/40"
