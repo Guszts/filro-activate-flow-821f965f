@@ -82,6 +82,7 @@ export const DEV_TEMPLATES: DevTemplate[] = [
     requiredInfo: ["Produtos com fotos","Categorias","WhatsApp e endereço"],
     recommendedPlan: "dev_plus",
     coverImage: lojaCover,
+    previewRoute: "/dev/preview/loja-local",
   },
   {
     slug: "prestador-servico",

@@ -33,6 +33,7 @@ import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BusinessInfoRouteImport } from './routes/business-info'
+import { Route as AtelierRouteImport } from './routes/atelier'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
 import { Route as DevIndexRouteImport } from './routes/dev.index'
@@ -49,6 +50,7 @@ import { Route as DevProjetoProjectIdRouteImport } from './routes/dev.projeto.$p
 import { Route as DevPreviewViagemWishesRouteImport } from './routes/dev.preview.viagem-wishes'
 import { Route as DevPreviewRestauranteCardapioRouteImport } from './routes/dev.preview.restaurante-cardapio'
 import { Route as DevPreviewOficinaAutoRouteImport } from './routes/dev.preview.oficina-auto'
+import { Route as DevPreviewLojaLocalRouteImport } from './routes/dev.preview.loja-local'
 import { Route as DevPreviewClinicaLocalRouteImport } from './routes/dev.preview.clinica-local'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
@@ -179,6 +181,11 @@ const BusinessInfoRoute = BusinessInfoRouteImport.update({
   path: '/business-info',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AtelierRoute = AtelierRouteImport.update({
+  id: '/atelier',
+  path: '/atelier',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -260,6 +267,11 @@ const DevPreviewOficinaAutoRoute = DevPreviewOficinaAutoRouteImport.update({
   path: '/dev/preview/oficina-auto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevPreviewLojaLocalRoute = DevPreviewLojaLocalRouteImport.update({
+  id: '/dev/preview/loja-local',
+  path: '/dev/preview/loja-local',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevPreviewClinicaLocalRoute = DevPreviewClinicaLocalRouteImport.update({
   id: '/dev/preview/clinica-local',
   path: '/dev/preview/clinica-local',
@@ -313,6 +325,7 @@ const ApiPublicPaymentsWebhookRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/atelier': typeof AtelierRoute
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
@@ -349,6 +362,7 @@ export interface FileRoutesByFullPath {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
   '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
@@ -364,6 +378,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/atelier': typeof AtelierRoute
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
@@ -400,6 +415,7 @@ export interface FileRoutesByTo {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
   '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
@@ -416,6 +432,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/atelier': typeof AtelierRoute
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
@@ -452,6 +469,7 @@ export interface FileRoutesById {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
   '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
@@ -469,6 +487,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/atelier'
     | '/business-info'
     | '/checkout'
     | '/como-funciona'
@@ -505,6 +524,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/loja-local'
     | '/dev/preview/oficina-auto'
     | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
@@ -520,6 +540,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/atelier'
     | '/business-info'
     | '/checkout'
     | '/como-funciona'
@@ -556,6 +577,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/loja-local'
     | '/dev/preview/oficina-auto'
     | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
@@ -571,6 +593,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/atelier'
     | '/business-info'
     | '/checkout'
     | '/como-funciona'
@@ -607,6 +630,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/loja-local'
     | '/dev/preview/oficina-auto'
     | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
@@ -623,6 +647,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AtelierRoute: typeof AtelierRoute
   BusinessInfoRoute: typeof BusinessInfoRoute
   CheckoutRoute: typeof CheckoutRoute
   ComoFuncionaRoute: typeof ComoFuncionaRoute
@@ -659,6 +684,7 @@ export interface RootRouteChildren {
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   DevModelosSlugRoute: typeof DevModelosSlugRoute
   DevPreviewClinicaLocalRoute: typeof DevPreviewClinicaLocalRoute
+  DevPreviewLojaLocalRoute: typeof DevPreviewLojaLocalRoute
   DevPreviewOficinaAutoRoute: typeof DevPreviewOficinaAutoRoute
   DevPreviewRestauranteCardapioRoute: typeof DevPreviewRestauranteCardapioRoute
   DevPreviewViagemWishesRoute: typeof DevPreviewViagemWishesRoute
@@ -843,6 +869,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BusinessInfoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/atelier': {
+      id: '/atelier'
+      path: '/atelier'
+      fullPath: '/atelier'
+      preLoaderRoute: typeof AtelierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -955,6 +988,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevPreviewOficinaAutoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/preview/loja-local': {
+      id: '/dev/preview/loja-local'
+      path: '/dev/preview/loja-local'
+      fullPath: '/dev/preview/loja-local'
+      preLoaderRoute: typeof DevPreviewLojaLocalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev/preview/clinica-local': {
       id: '/dev/preview/clinica-local'
       path: '/dev/preview/clinica-local'
@@ -1023,6 +1063,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AtelierRoute: AtelierRoute,
   BusinessInfoRoute: BusinessInfoRoute,
   CheckoutRoute: CheckoutRoute,
   ComoFuncionaRoute: ComoFuncionaRoute,
@@ -1059,6 +1100,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   DevModelosSlugRoute: DevModelosSlugRoute,
   DevPreviewClinicaLocalRoute: DevPreviewClinicaLocalRoute,
+  DevPreviewLojaLocalRoute: DevPreviewLojaLocalRoute,
   DevPreviewOficinaAutoRoute: DevPreviewOficinaAutoRoute,
   DevPreviewRestauranteCardapioRoute: DevPreviewRestauranteCardapioRoute,
   DevPreviewViagemWishesRoute: DevPreviewViagemWishesRoute,
