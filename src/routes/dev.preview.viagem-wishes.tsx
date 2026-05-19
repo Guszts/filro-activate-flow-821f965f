@@ -1329,7 +1329,8 @@ function Lugares({ onReserve }: { onReserve: (d: Destination) => void }) {
             key={d.id}
             initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.32, delay: (idx % 3) * 0.08 }}
             whileHover={{ y: -6 }}
-            style={{ position: "relative", height: 320, borderRadius: 24, overflow: "hidden", border: `1px solid ${C.border}` }}
+            onClick={() => detail.open(destinationToDetail(d))}
+            style={{ position: "relative", height: 320, borderRadius: 24, overflow: "hidden", border: `1px solid ${C.border}`, cursor: "pointer" }}
             className="group"
           >
             <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
@@ -1338,7 +1339,7 @@ function Lugares({ onReserve }: { onReserve: (d: Destination) => void }) {
               <div style={{ fontSize: 16, fontWeight: 700, color: C.ink }}>{d.title}</div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: C.inkSoft }}><Star size={12} fill="#FFB400" stroke="#FFB400" /> {d.rating}</div>
-                <motion.button whileHover={{ scale: 1.05 }} onClick={() => onReserve(d)} style={{ fontSize: 12, fontWeight: 600, color: "#fff", padding: "6px 12px", borderRadius: 999, background: C.btn }}>Reservar</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} onClick={(e) => { e.stopPropagation(); onReserve(d); }} style={{ fontSize: 12, fontWeight: 600, color: "#fff", padding: "6px 12px", borderRadius: 999, background: C.btn }}>Reservar</motion.button>
               </div>
             </div>
           </motion.article>
