@@ -156,8 +156,11 @@ function ResponsiveStyles() {
       }
       @media (max-width: 720px) {
         .wishes-shell { padding: 18px !important; margin: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
-        .wishes-nav { display: none !important; }
-        .wishes-menu-btn { display: inline-flex !important; }
+        .wishes-nav { gap: 16px !important; overflow-x: auto; flex: 1; min-width: 0; padding: 4px 6px; scrollbar-width: none; -ms-overflow-style: none; max-width: 100%; }
+        .wishes-nav::-webkit-scrollbar { display: none; }
+        .wishes-nav button { flex: 0 0 auto; }
+        .wishes-menu-btn { display: none !important; }
+        .wishes-header-cta { display: none !important; }
         .wishes-hero { height: 360px !important; }
         .wishes-hero-title { font-size: 36px !important; }
         .wishes-hero-sub { font-size: 18px !important; }
