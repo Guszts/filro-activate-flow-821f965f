@@ -3,9 +3,9 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Search, ChevronDown, MapPin, Play, Star, Menu, X, Plane, ArrowRight, Check,
-  Sparkles as SparklesIcon, Mail, Phone,
-  Shield, Globe, Heart, Wifi, Coffee, Tv, Bath, ArrowLeftRight, CreditCard,
-  Quote, ChevronRight, Send, MapPinned, Clock, Briefcase,
+  Mail, Phone,
+  Shield, Heart, Wifi, Coffee, Tv, Bath, ArrowLeftRight, CreditCard,
+  Quote, ChevronRight, Send, MapPinned, Clock,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dev/preview/viagem-wishes")({
