@@ -1023,6 +1023,7 @@ function Passagens() {
 
 // ---------------- HOTÉIS ----------------
 function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
+  const detail = useDetail();
   const hoteis = [
     { name: "Resort Costa Verde", local: "Algarve, Portugal", preco: "R$ 890/noite", rating: 4.9, image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80" },
     { name: "Hotel Burj Vista", local: "Dubai, EAU", preco: "R$ 1.450/noite", rating: 5, image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80" },
