@@ -93,6 +93,27 @@ type DetailItem = {
   highlights?: string[];
 };
 
+// ---------------- Detail Context ----------------
+type DetailCtx = {
+  open: (item: DetailItem) => void;
+  reserve: (d: Destination) => void;
+};
+const DetailContext = createContext<DetailCtx | null>(null);
+function useDetail() {
+  const ctx = useContext(DetailContext);
+  if (!ctx) throw new Error("DetailContext missing");
+  return ctx;
+}
+
+// Convert any source object into a DetailItem
+function destinationToDetail(d: Destination): DetailItem {
+  return {
+    id: `dest-${d.id}`, kind: "destino", title: d.title, subtitle: d.locationLabel,
+    image: d.image, priceLabel: d.priceLabel, rating: d.rating, description: d.description,
+    highlights: ["Hospedagem selecionada", "Traslado incluído", "Guia em português", "Seguro viagem"],
+  };
+}
+
 // ---------------- Root ----------------
 export function WishesPreview() {
   const [page, setPage] = useState<PageKey>("inicio");
@@ -103,6 +124,7 @@ export function WishesPreview() {
   const [date, setDate] = useState("Escolha a data");
   const [guests, setGuests] = useState("Adicionar");
   const [bookingFor, setBookingFor] = useState<Destination | null>(null);
+  const [detail, setDetail] = useState<DetailItem | null>(null);
 
   const searchRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -115,10 +137,18 @@ export function WishesPreview() {
 
   const filtered = useMemo(() => filter === "ofertas" ? DESTINATIONS : DESTINATIONS.filter(d => d.category === filter), [filter]);
 
-  // close mobile menu on page change
-  useEffect(() => { setMenuOpen(false); }, [page]);
+  // close mobile menu and detail on page change
+  useEffect(() => { setMenuOpen(false); setDetail(null); }, [page]);
+  // scroll to top when detail opens/closes
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [detail]);
+
+  const ctxValue: DetailCtx = {
+    open: (item) => setDetail(item),
+    reserve: (d) => setBookingFor(d),
+  };
 
   return (
+    <DetailContext.Provider value={ctxValue}>
     <div style={{ background: C.page, color: C.ink, fontFamily: "Inter, Manrope, ui-sans-serif, system-ui" }} className="min-h-screen w-full">
       <ResponsiveStyles />
       <div
@@ -132,6 +162,18 @@ export function WishesPreview() {
         <Header page={page} setPage={setPage} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
         <AnimatePresence mode="wait">
+          {detail ? (
+            <motion.div
+              key={`detail-${detail.id}`}
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <DetailView item={detail} onBack={() => setDetail(null)} onReserve={() => {
+                const d = DESTINATIONS.find(x => `dest-${x.id}` === detail.id) ?? DESTINATIONS[0];
+                setBookingFor(d);
+              }} />
+            </motion.div>
+          ) : (
           <motion.div
             key={page}
             initial={{ opacity: 0, y: 16 }}
@@ -156,6 +198,7 @@ export function WishesPreview() {
             {page === "blog" && <Blog />}
             {page === "contato" && <Contato />}
           </motion.div>
+          )}
         </AnimatePresence>
 
         <Footer goTo={setPage} />
@@ -165,8 +208,112 @@ export function WishesPreview() {
         {bookingFor && <BookingModal destination={bookingFor} onClose={() => setBookingFor(null)} />}
       </AnimatePresence>
     </div>
+    </DetailContext.Provider>
   );
 }
+
+// ---------------- Detail View ----------------
+function DetailView({ item, onBack, onReserve }: { item: DetailItem; onBack: () => void; onReserve: () => void }) {
+  const kindLabel = { destino: "Destino", hotel: "Hotel", experiencia: "Experiência", post: "Artigo" }[item.kind];
+  return (
+    <article style={{ marginTop: 24 }}>
+      <motion.button
+        whileHover={{ x: -4 }} onClick={onBack}
+        style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: C.ink, marginBottom: 18, padding: "8px 14px", borderRadius: 999, background: C.pill }}
+      >
+        ← Voltar
+      </motion.button>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}
+        style={{ position: "relative", height: 420, borderRadius: 28, overflow: "hidden" }}
+        className="wishes-hero"
+      >
+        <motion.img
+          src={item.image} alt={item.title} onError={imgFallback}
+          initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 1.4, ease: "easeOut" }}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.55))" }} />
+        <div style={{ position: "absolute", left: 28, right: 28, bottom: 28, color: "#fff" }}>
+          <div style={{ display: "inline-block", padding: "4px 12px", borderRadius: 999, background: "rgba(255,255,255,0.18)", backdropFilter: "blur(8px)", fontSize: 11, fontWeight: 600, letterSpacing: 1.2, textTransform: "uppercase" }}>{kindLabel}</div>
+          <h1 className="wishes-hero-title" style={{ marginTop: 10, fontSize: 48, fontWeight: 700, letterSpacing: -0.02, lineHeight: 1.05 }}>{item.title}</h1>
+          {item.subtitle && <div style={{ marginTop: 6, fontSize: 16, opacity: 0.9, display: "inline-flex", alignItems: "center", gap: 6 }}><MapPin size={14} /> {item.subtitle}</div>}
+        </div>
+      </motion.div>
+
+      <div className="wishes-content" style={{ marginTop: 32, display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 28 }}>
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: C.ink }}>Sobre essa experiência</h2>
+          <p style={{ marginTop: 10, fontSize: 15, lineHeight: 1.7, color: C.inkSoft }}>{item.description} Roteiro pensado para quem busca conforto e autenticidade, com hospedagem cuidadosamente avaliada e atividades guiadas em português.</p>
+
+          {item.highlights && (
+            <div style={{ marginTop: 24 }}>
+              <h3 style={{ fontSize: 17, fontWeight: 700, color: C.ink, marginBottom: 12 }}>O que está incluso</h3>
+              <div className="wishes-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {item.highlights.map((h, i) => (
+                  <motion.div
+                    key={h}
+                    initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 + i * 0.06 }}
+                    style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 14px", borderRadius: 14, background: C.pill }}
+                  >
+                    <span style={{ width: 26, height: 26, borderRadius: 999, background: C.blue, display: "inline-flex", alignItems: "center", justifyContent: "center" }}><Check size={13} /></span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: C.ink }}>{h}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div style={{ marginTop: 28 }}>
+            <h3 style={{ fontSize: 17, fontWeight: 700, color: C.ink, marginBottom: 12 }}>Roteiro sugerido</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {["Chegada e check-in com recepção dedicada", "City tour guiado pelos principais pontos", "Experiência gastronômica local", "Tempo livre e retorno"].map((s, i) => (
+                <motion.div
+                  key={s}
+                  initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                  style={{ display: "flex", gap: 14, alignItems: "start", padding: 16, borderRadius: 16, border: `1px solid ${C.border}` }}
+                >
+                  <div style={{ width: 30, height: 30, borderRadius: 999, background: C.ink, color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
+                  <div style={{ fontSize: 14, color: C.ink, lineHeight: 1.55 }}>{s}</div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.aside
+          initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, padding: 24, alignSelf: "start", position: "sticky", top: 20 }}
+        >
+          {item.priceLabel && (
+            <>
+              <div style={{ fontSize: 12, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2 }}>A partir de</div>
+              <div style={{ marginTop: 4, fontSize: 28, fontWeight: 700, color: C.ink, letterSpacing: -0.02 }}>{item.priceLabel.replace("A partir de ", "")}</div>
+            </>
+          )}
+          {item.rating && (
+            <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: C.inkSoft }}>
+              <Star size={13} fill="#FFB400" stroke="#FFB400" /> {item.rating} · {Math.round(item.rating * 28)} avaliações
+            </div>
+          )}
+          <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+            <motion.button whileHover={{ scale: 1.02 }} onClick={onReserve} style={{ height: 50, borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 14 }}>Reservar agora</motion.button>
+            <button style={{ height: 46, borderRadius: 14, background: C.pill, color: C.ink, fontWeight: 600, fontSize: 13 }}>Adicionar à lista de desejos</button>
+          </div>
+          <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.divider}`, display: "flex", flexDirection: "column", gap: 10 }}>
+            {[{ i: Shield, l: "Reserva 100% protegida" }, { i: Heart, l: "Cancelamento flexível" }, { i: Phone, l: "Suporte 24/7" }].map((b) => (
+              <div key={b.l} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: C.inkSoft }}>
+                <b.i size={14} /> {b.l}
+              </div>
+            ))}
+          </div>
+        </motion.aside>
+      </div>
+    </article>
+  );
+}
+
 
 // ---------------- Responsive ----------------
 function ResponsiveStyles() {
