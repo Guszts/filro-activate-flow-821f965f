@@ -414,6 +414,7 @@ function Header({ page, setPage, menuOpen, setMenuOpen }: { page: PageKey; setPa
         <motion.button
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
+          className="wishes-header-cta"
           style={{ background: C.pill, color: C.ink, height: 38, padding: "0 16px", borderRadius: 999, fontSize: 13, fontWeight: 600 }}
         >
           Entrar
