@@ -11,7 +11,7 @@ import { generateDevSite } from "@/lib/dev/generator.functions";
 import { getMyCredits } from "@/lib/credits/credits.functions";
 import { Loader2, ArrowRight, ArrowLeft, Check } from "lucide-react";
 
-const SearchSchema = z.object({ template: z.string().optional() });
+const SearchSchema = z.object({ template: z.string().optional(), prompt: z.string().optional() });
 
 export const Route = createFileRoute("/dev/novo")({
   validateSearch: SearchSchema,
