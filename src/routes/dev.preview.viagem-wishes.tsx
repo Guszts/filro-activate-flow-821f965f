@@ -1124,6 +1124,7 @@ function Experiencias() {
 
 // ---------------- BLOG ----------------
 function Blog() {
+  const detail = useDetail();
   const posts = [
     { title: "10 destinos imperdíveis em 2026", cat: "Guia", date: "12 mai", image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=900&q=80" },
     { title: "Como economizar em viagens internacionais", cat: "Dicas", date: "08 mai", image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=80" },
