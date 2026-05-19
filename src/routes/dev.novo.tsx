@@ -35,7 +35,7 @@ const STEPS: { id: StepId; title: string; subtitle: string }[] = [
 ];
 
 function NovoProjeto() {
-  const { template: tplFromUrl } = Route.useSearch();
+  const { template: tplFromUrl, prompt: promptFromUrl } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
@@ -43,7 +43,7 @@ function NovoProjeto() {
   const [templateSlug, setTemplateSlug] = useState<string | undefined>(tplFromUrl);
   const [businessName, setBusinessName] = useState("");
   const [businessSegment, setBusinessSegment] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(promptFromUrl ?? "");
   const [whatsapp, setWhatsapp] = useState("");
   const [city, setCity] = useState("");
   const [tone, setTone] = useState("");
