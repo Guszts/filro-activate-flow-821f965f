@@ -371,7 +371,7 @@ function Header({ page, setPage, menuOpen, setMenuOpen }: { page: PageKey; setPa
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       style={{ height: 64, position: "relative" }}
-      className="flex items-center justify-between"
+      className="wishes-header flex items-center justify-between"
     >
       <button onClick={() => setPage("inicio")} className="flex items-center gap-2">
         <motion.span
