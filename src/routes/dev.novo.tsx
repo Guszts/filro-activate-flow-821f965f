@@ -299,8 +299,8 @@ function NovoProjeto() {
               <div className="text-xs uppercase tracking-widest text-ink-soft">Resumo</div>
               {template ? (
                 <>
-                  <div className="mt-3 aspect-[16/10] rounded-xl overflow-hidden bg-paper border border-border">
-                    <img src={template.coverImage} alt={`Capa ${template.name}`} className="w-full h-full object-cover" loading="lazy" />
+                  <div className="mt-3 rounded-xl overflow-hidden bg-paper border border-border">
+                    <TemplateCover src={template.coverImage} name={template.name} previewRoute={template.previewRoute} />
                   </div>
                   <div className="mt-3 font-display font-black text-xl text-ink">{template.name}</div>
                   <p className="mt-1 text-xs text-ink-soft">{template.segment}</p>
