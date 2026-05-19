@@ -714,11 +714,11 @@ function Stats() {
     { value: "24/7", label: "Atendimento" },
   ];
   return (
-    <section style={{ marginTop: 72 }}>
+    <section className="wishes-bleed" style={{ marginTop: 72, marginLeft: -56, marginRight: -56 }}>
       <motion.div
         initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
         className="wishes-4col"
-        style={{ background: C.ink, color: "#fff", borderRadius: 28, padding: "40px 32px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 }}
+        style={{ background: C.ink, color: "#fff", borderRadius: 0, padding: "56px 56px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 }}
       >
         {items.map((s, i) => (
           <motion.div
@@ -726,8 +726,8 @@ function Stats() {
             initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
             style={{ textAlign: "center" }}
           >
-            <div style={{ fontSize: 42, fontWeight: 700, letterSpacing: -0.02 }}>{s.value}</div>
-            <div style={{ marginTop: 4, fontSize: 13, opacity: 0.7 }}>{s.label}</div>
+            <div style={{ fontSize: 46, fontWeight: 700, letterSpacing: -0.02 }}>{s.value}</div>
+            <div style={{ marginTop: 6, fontSize: 13, opacity: 0.7, textTransform: "uppercase", letterSpacing: 1.2 }}>{s.label}</div>
           </motion.div>
         ))}
       </motion.div>
