@@ -680,10 +680,10 @@ function SectionTitle({ kicker, title, sub }: { kicker?: string; title: string; 
 
 function Features() {
   const items = [
-    { icon: Shield, title: "Reserva segura", text: "Pagamento protegido e confirmação imediata." },
-    { icon: Globe, title: "Destinos globais", text: "Mais de 120 destinos em 5 continentes." },
-    { icon: Heart, title: "Atendimento humano", text: "Equipe dedicada antes, durante e depois da viagem." },
-    { icon: Briefcase, title: "Pacotes flexíveis", text: "Roteiros adaptados ao seu ritmo e orçamento." },
+    { title: "Reserva segura", text: "Pagamento protegido e confirmação imediata após aprovação do cartão." },
+    { title: "Destinos globais", text: "Mais de 120 destinos cuidadosamente selecionados em 5 continentes." },
+    { title: "Atendimento humano", text: "Equipe dedicada antes, durante e depois da sua viagem." },
+    { title: "Pacotes flexíveis", text: "Roteiros adaptados ao seu ritmo, orçamento e estilo de viagem." },
   ];
   return (
     <section style={{ marginTop: 80 }}>
@@ -694,13 +694,11 @@ function Features() {
             key={it.title}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
             whileHover={{ y: -6 }}
-            style={{ padding: 24, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}
+            style={{ padding: 28, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}
           >
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: C.blue, display: "inline-flex", alignItems: "center", justifyContent: "center", color: C.ink }}>
-              <it.icon size={20} />
-            </div>
-            <div style={{ marginTop: 14, fontSize: 16, fontWeight: 700, color: C.ink }}>{it.title}</div>
-            <div style={{ marginTop: 6, fontSize: 13, color: C.inkSoft, lineHeight: 1.5 }}>{it.text}</div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: C.inkSoft, letterSpacing: 1.4, textTransform: "uppercase" }}>0{i + 1}</div>
+            <div style={{ marginTop: 18, fontSize: 18, fontWeight: 700, color: C.ink, letterSpacing: -0.01 }}>{it.title}</div>
+            <div style={{ marginTop: 8, fontSize: 13, color: C.inkSoft, lineHeight: 1.6 }}>{it.text}</div>
           </motion.div>
         ))}
       </div>
