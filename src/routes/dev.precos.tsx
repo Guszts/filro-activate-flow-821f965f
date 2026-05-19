@@ -82,7 +82,7 @@ function DevPrecos() {
             Crie sites, edite por IA e publique em segundos. Assine para receber créditos todo mês ou compre pacotes avulsos quando precisar.
           </p>
           <div className="mt-6 inline-flex items-center gap-2 text-sm text-ink-soft bg-muted/50 px-4 h-11 rounded-full">
-            <Zap className="h-4 w-4 text-flame" />
+            
             Gerar site: <strong className="text-ink">{CREDIT_COSTS.generateSite} créditos</strong> · Editar com IA: <strong className="text-ink">{CREDIT_COSTS.aiEdit} crédito</strong>
           </div>
         </section>
@@ -97,7 +97,7 @@ function DevPrecos() {
               <div className="mt-5">
                 <div className="text-3xl font-bold text-ink">R$0</div>
                 <div className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
-                  <Zap className="h-4 w-4 text-flame" /> {FREE_SIGNUP_CREDITS} créditos ao se cadastrar
+                  {FREE_SIGNUP_CREDITS} créditos ao se cadastrar
                 </div>
               </div>
               <ul className="mt-5 space-y-2 text-sm text-ink flex-1">
@@ -120,7 +120,7 @@ function DevPrecos() {
                 <div className="mt-5">
                   <div className="text-3xl font-bold text-ink">{formatBRL(p.monthlyPrice)}<span className="text-sm font-normal text-ink-soft">/mês</span></div>
                   <div className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
-                    <Zap className="h-4 w-4 text-flame" /> {p.monthlyCredits} créditos/mês
+                    {p.monthlyCredits} créditos/mês
                   </div>
                 </div>
                 <ul className="mt-5 space-y-2 text-sm text-ink flex-1">
@@ -153,7 +153,7 @@ function DevPrecos() {
                   <div className="text-lg font-semibold text-ink">{pack.name}</div>
                   <div className="mt-3 text-3xl font-bold text-ink">{formatBRL(pack.price)}</div>
                   <div className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
-                    <Zap className="h-4 w-4 text-flame" /> {pack.credits} créditos
+                    {pack.credits} créditos
                   </div>
                   <button
                     type="button"
