@@ -316,8 +316,8 @@ function DrawerLink({
   onSelect,
 }: {
   to: string;
-  icon: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
+  icon: ComponentType<{ className?: string }>;
+  children: ReactNode;
   onSelect?: () => void;
 }) {
   return (
