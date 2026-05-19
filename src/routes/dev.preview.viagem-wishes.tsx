@@ -3,8 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Search, ChevronDown, MapPin, Play, Star, Menu, X, Plane, ArrowRight, Check,
-  Hotel, Sparkles as SparklesIcon, Compass, Mail, Phone, Calendar as CalendarIcon,
-  Users, Shield, Globe, Heart, Wifi, Coffee, Tv, Bath, ArrowLeftRight, CreditCard,
+  Sparkles as SparklesIcon, Mail, Phone,
+  Shield, Globe, Heart, Wifi, Coffee, Tv, Bath, ArrowLeftRight, CreditCard,
   Quote, ChevronRight, Send, MapPinned, Clock, Briefcase,
 } from "lucide-react";
 
