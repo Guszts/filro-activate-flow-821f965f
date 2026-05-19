@@ -1276,6 +1276,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; setFilter: (f: FilterKey) => void; items: Destination[]; onReserve: (d: Destination) => void }) {
+  const detail = useDetail();
   return (
     <section style={{ marginTop: 32 }}>
       <SectionTitle kicker="Pacotes" title="Pacotes selecionados" sub="Viagens organizadas com hospedagem e experiência." />
