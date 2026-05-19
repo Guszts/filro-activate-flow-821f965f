@@ -5,10 +5,10 @@ export const Route = createFileRoute("/vivara")({
   component: ClinicaPreview,
   head: () => ({
     meta: [
-      { title: "Vivara Clínica · Saúde com acolhimento" },
-      { name: "description", content: "Vivara Clínica — especialidades médicas, equipe humanizada e agendamento online em poucos cliques." },
-      { property: "og:title", content: "Vivara Clínica · Saúde com acolhimento" },
-      { property: "og:description", content: "Especialidades, planos, convênios e agendamento direto pelo WhatsApp." },
+      { title: "eye surgeons · Saving Eyes, Changing Lives" },
+      { name: "description", content: "Premium ophthalmology care — cataract, corneal and laser vision treatments delivered by fellowship-trained surgeons." },
+      { property: "og:title", content: "eye surgeons · Saving Eyes, Changing Lives" },
+      { property: "og:description", content: "Specialist eye surgery, advanced diagnostics, and personalised treatment from consultation to recovery." },
     ],
   }),
 });
