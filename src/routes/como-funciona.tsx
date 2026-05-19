@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
-import { ArrowRight, Clock, ShieldCheck, MessageCircle, Wand2 } from "lucide-react";
+import { ArrowRight, Clock, ShieldCheck, MessageCircle, Users } from "lucide-react";
 
 export const Route = createFileRoute("/como-funciona")({
   component: ComoFuncionaPage,
@@ -33,7 +33,7 @@ const steps: Array<{ n: string; t: string; d: string; eta: string; accent: Accen
 const guarantees = [
   { icon: Clock, title: "Prazo claro", desc: "Estimativas por etapa. Sem 'em breve' eterno." },
   { icon: ShieldCheck, title: "Pagamento Stripe", desc: "Cartão e Pix com segurança padrão bancário." },
-  { icon: Wand2, title: "Adaptação humana", desc: "Time real revisa cada entrega antes de você." },
+  { icon: Users, title: "Adaptação humana", desc: "Time real revisa cada entrega antes de você." },
   { icon: MessageCircle, title: "Suporte por WhatsApp", desc: "Resposta em horário comercial — gente, não bot." },
 ];
 
