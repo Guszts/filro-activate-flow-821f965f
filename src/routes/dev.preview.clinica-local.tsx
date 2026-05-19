@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import clinicEyeHero from "@/assets/clinic-eye-hero.jpg";
 
 export const Route = createFileRoute("/dev/preview/clinica-local")({
   component: ClinicaPreview,
