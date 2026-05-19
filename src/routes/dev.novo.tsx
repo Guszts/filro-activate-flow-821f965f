@@ -11,7 +11,7 @@ import { generateDevSite } from "@/lib/dev/generator.functions";
 import { getMyCredits } from "@/lib/credits/credits.functions";
 import { Loader2, ArrowRight, ArrowLeft, Check } from "lucide-react";
 
-const SearchSchema = z.object({ template: z.string().optional() });
+const SearchSchema = z.object({ template: z.string().optional(), prompt: z.string().optional() });
 
 export const Route = createFileRoute("/dev/novo")({
   validateSearch: SearchSchema,
@@ -35,7 +35,7 @@ const STEPS: { id: StepId; title: string; subtitle: string }[] = [
 ];
 
 function NovoProjeto() {
-  const { template: tplFromUrl } = Route.useSearch();
+  const { template: tplFromUrl, prompt: promptFromUrl } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
@@ -43,7 +43,7 @@ function NovoProjeto() {
   const [templateSlug, setTemplateSlug] = useState<string | undefined>(tplFromUrl);
   const [businessName, setBusinessName] = useState("");
   const [businessSegment, setBusinessSegment] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(promptFromUrl ?? "");
   const [whatsapp, setWhatsapp] = useState("");
   const [city, setCity] = useState("");
   const [tone, setTone] = useState("");
