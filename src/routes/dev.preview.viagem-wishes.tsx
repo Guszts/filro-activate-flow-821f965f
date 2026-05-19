@@ -1079,6 +1079,7 @@ function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
 
 // ---------------- EXPERIÊNCIAS ----------------
 function Experiencias() {
+  const detail = useDetail();
   const exps = [
     { title: "Safari no Deserto", local: "Dubai", duracao: "6h", preco: "R$ 590", image: "https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=900&q=80" },
     { title: "Trekking no Himalaia", local: "Nepal", duracao: "3 dias", preco: "R$ 2.290", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" },
