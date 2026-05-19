@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/lib/auth";
 import { useServerFn } from "@tanstack/react-start";
 import { DEV_TEMPLATES, getDevTemplate } from "@/lib/dev/templates";
+import { TemplateCover } from "@/components/dev/TemplateCover";
 import { generateDevSite } from "@/lib/dev/generator.functions";
 import { getMyCredits } from "@/lib/credits/credits.functions";
 import { Loader2, ArrowRight, ArrowLeft, Check } from "lucide-react";
