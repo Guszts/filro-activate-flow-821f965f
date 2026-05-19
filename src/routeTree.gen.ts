@@ -22,6 +22,7 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PaymentSuccessRouteImport } from './routes/payment-success'
 import { Route as PaymentFailedRouteImport } from './routes/payment-failed'
 import { Route as PainelRouteImport } from './routes/painel'
+import { Route as MotorproRouteImport } from './routes/motorpro'
 import { Route as ModelosRouteImport } from './routes/modelos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GarantiaRouteImport } from './routes/garantia'
@@ -47,6 +48,7 @@ import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/em
 import { Route as DevProjetoProjectIdRouteImport } from './routes/dev.projeto.$projectId'
 import { Route as DevPreviewViagemWishesRouteImport } from './routes/dev.preview.viagem-wishes'
 import { Route as DevPreviewRestauranteCardapioRouteImport } from './routes/dev.preview.restaurante-cardapio'
+import { Route as DevPreviewOficinaAutoRouteImport } from './routes/dev.preview.oficina-auto'
 import { Route as DevPreviewClinicaLocalRouteImport } from './routes/dev.preview.clinica-local'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
@@ -120,6 +122,11 @@ const PaymentFailedRoute = PaymentFailedRouteImport.update({
 const PainelRoute = PainelRouteImport.update({
   id: '/painel',
   path: '/painel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MotorproRoute = MotorproRouteImport.update({
+  id: '/motorpro',
+  path: '/motorpro',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModelosRoute = ModelosRouteImport.update({
@@ -248,6 +255,11 @@ const DevPreviewRestauranteCardapioRoute =
     path: '/dev/preview/restaurante-cardapio',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DevPreviewOficinaAutoRoute = DevPreviewOficinaAutoRouteImport.update({
+  id: '/dev/preview/oficina-auto',
+  path: '/dev/preview/oficina-auto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevPreviewClinicaLocalRoute = DevPreviewClinicaLocalRouteImport.update({
   id: '/dev/preview/clinica-local',
   path: '/dev/preview/clinica-local',
@@ -311,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
+  '/motorpro': typeof MotorproRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -336,6 +349,7 @@ export interface FileRoutesByFullPath {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
@@ -360,6 +374,7 @@ export interface FileRoutesByTo {
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
+  '/motorpro': typeof MotorproRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -385,6 +400,7 @@ export interface FileRoutesByTo {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
@@ -410,6 +426,7 @@ export interface FileRoutesById {
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
+  '/motorpro': typeof MotorproRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -435,6 +452,7 @@ export interface FileRoutesById {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
@@ -461,6 +479,7 @@ export interface FileRouteTypes {
     | '/garantia'
     | '/login'
     | '/modelos'
+    | '/motorpro'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
@@ -486,6 +505,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/oficina-auto'
     | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
@@ -510,6 +530,7 @@ export interface FileRouteTypes {
     | '/garantia'
     | '/login'
     | '/modelos'
+    | '/motorpro'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
@@ -535,6 +556,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/oficina-auto'
     | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
@@ -559,6 +581,7 @@ export interface FileRouteTypes {
     | '/garantia'
     | '/login'
     | '/modelos'
+    | '/motorpro'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
@@ -584,6 +607,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/oficina-auto'
     | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
@@ -609,6 +633,7 @@ export interface RootRouteChildren {
   GarantiaRoute: typeof GarantiaRoute
   LoginRoute: typeof LoginRoute
   ModelosRoute: typeof ModelosRoute
+  MotorproRoute: typeof MotorproRoute
   PainelRoute: typeof PainelRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
@@ -634,6 +659,7 @@ export interface RootRouteChildren {
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   DevModelosSlugRoute: typeof DevModelosSlugRoute
   DevPreviewClinicaLocalRoute: typeof DevPreviewClinicaLocalRoute
+  DevPreviewOficinaAutoRoute: typeof DevPreviewOficinaAutoRoute
   DevPreviewRestauranteCardapioRoute: typeof DevPreviewRestauranteCardapioRoute
   DevPreviewViagemWishesRoute: typeof DevPreviewViagemWishesRoute
   DevProjetoProjectIdRoute: typeof DevProjetoProjectIdRoute
@@ -738,6 +764,13 @@ declare module '@tanstack/react-router' {
       path: '/painel'
       fullPath: '/painel'
       preLoaderRoute: typeof PainelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/motorpro': {
+      id: '/motorpro'
+      path: '/motorpro'
+      fullPath: '/motorpro'
+      preLoaderRoute: typeof MotorproRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/modelos': {
@@ -915,6 +948,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevPreviewRestauranteCardapioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/preview/oficina-auto': {
+      id: '/dev/preview/oficina-auto'
+      path: '/dev/preview/oficina-auto'
+      fullPath: '/dev/preview/oficina-auto'
+      preLoaderRoute: typeof DevPreviewOficinaAutoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev/preview/clinica-local': {
       id: '/dev/preview/clinica-local'
       path: '/dev/preview/clinica-local'
@@ -993,6 +1033,7 @@ const rootRouteChildren: RootRouteChildren = {
   GarantiaRoute: GarantiaRoute,
   LoginRoute: LoginRoute,
   ModelosRoute: ModelosRoute,
+  MotorproRoute: MotorproRoute,
   PainelRoute: PainelRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
@@ -1018,6 +1059,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   DevModelosSlugRoute: DevModelosSlugRoute,
   DevPreviewClinicaLocalRoute: DevPreviewClinicaLocalRoute,
+  DevPreviewOficinaAutoRoute: DevPreviewOficinaAutoRoute,
   DevPreviewRestauranteCardapioRoute: DevPreviewRestauranteCardapioRoute,
   DevPreviewViagemWishesRoute: DevPreviewViagemWishesRoute,
   DevProjetoProjectIdRoute: DevProjetoProjectIdRoute,
@@ -1033,13 +1075,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
