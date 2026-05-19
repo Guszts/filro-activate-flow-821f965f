@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import clinicEyeHero from "@/assets/clinic-eye-hero.jpg";
 
 export const Route = createFileRoute("/dev/preview/clinica-local")({
   component: ClinicaPreview,
@@ -27,8 +28,8 @@ const C = {
 };
 
 // ---------------- Assets (with fallbacks) ----------------
-const HERO_EYE = "https://images.unsplash.com/photo-1583195764036-6dc248ac07d9?auto=format&fit=crop&w=2000&q=85";
-const HERO_EYE_FB = "https://images.unsplash.com/photo-1559076351-92ee2cd14f97?auto=format&fit=crop&w=2000&q=85";
+const HERO_EYE = clinicEyeHero;
+const HERO_EYE_FB = clinicEyeHero;
 
 const SURGEONS = [
   {
