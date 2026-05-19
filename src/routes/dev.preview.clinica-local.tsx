@@ -803,10 +803,10 @@ function Contato() {
       <div className="clin-2col" style={{ marginTop: 28, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
         <div className="clin-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
           {[
-            { t: "Telefone", v: "(11) 4002-8922" },
-            { t: "WhatsApp", v: "(11) 99999-0000" },
-            { t: "Endereço", v: "Av. das Acácias, 320 · São Paulo" },
-            { t: "Horário", v: "Seg a sáb · 7h às 21h" },
+            { t: "Telefone", v: "[seu telefone aqui]" },
+            { t: "WhatsApp", v: "[seu WhatsApp aqui]" },
+            { t: "Endereço", v: "[seu endereço aqui]" },
+            { t: "Horário", v: "[seu horário aqui]" },
           ].map((it) => (
             <motion.div key={it.t} whileHover={{ y: -3 }}
               style={{ padding: 22, borderRadius: 18, background: C.pill }}>
