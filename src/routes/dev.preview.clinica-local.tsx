@@ -1005,9 +1005,9 @@ function Footer({ goTo }: { goTo: (p: PageKey) => void }) {
         <div>
           <div style={{ fontSize: 12, fontWeight: 700, color: C.ink, textTransform: "uppercase", letterSpacing: 1.2 }}>Contato</div>
           <ul style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: C.inkSoft }}>
-            <li>(11) 4002-8922</li>
-            <li>Av. das Acácias, 320</li>
-            <li>São Paulo · SP</li>
+            <li>[seu telefone aqui]</li>
+            <li>[seu endereço aqui]</li>
+            <li>[sua cidade aqui]</li>
           </ul>
         </div>
       </div>
