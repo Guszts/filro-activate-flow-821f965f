@@ -1067,7 +1067,7 @@ function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
               </div>
               <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ fontSize: 16, fontWeight: 700, color: C.ink }}>{h.preco}</div>
-                <motion.button whileHover={{ scale: 1.05 }} onClick={() => onReserve(DESTINATIONS[i % DESTINATIONS.length])} style={{ padding: "10px 18px", borderRadius: 12, background: C.btn, color: "#fff", fontSize: 13, fontWeight: 600 }}>Reservar</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} onClick={(e) => { e.stopPropagation(); onReserve(DESTINATIONS[i % DESTINATIONS.length]); }} style={{ padding: "10px 18px", borderRadius: 12, background: C.btn, color: "#fff", fontSize: 13, fontWeight: 600 }}>Reservar</motion.button>
               </div>
             </div>
           </motion.article>
