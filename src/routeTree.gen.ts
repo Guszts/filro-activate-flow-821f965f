@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WishesRouteImport } from './routes/wishes'
+import { Route as VivaraRouteImport } from './routes/vivara'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TermosRouteImport } from './routes/termos'
@@ -44,6 +45,7 @@ import { Route as DevModelosIndexRouteImport } from './routes/dev.modelos.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as DevProjetoProjectIdRouteImport } from './routes/dev.projeto.$projectId'
 import { Route as DevPreviewViagemWishesRouteImport } from './routes/dev.preview.viagem-wishes'
+import { Route as DevPreviewClinicaLocalRouteImport } from './routes/dev.preview.clinica-local'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -56,6 +58,11 @@ import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/publi
 const WishesRoute = WishesRouteImport.update({
   id: '/wishes',
   path: '/wishes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VivaraRoute = VivaraRouteImport.update({
+  id: '/vivara',
+  path: '/vivara',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
@@ -228,6 +235,11 @@ const DevPreviewViagemWishesRoute = DevPreviewViagemWishesRouteImport.update({
   path: '/dev/preview/viagem-wishes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevPreviewClinicaLocalRoute = DevPreviewClinicaLocalRouteImport.update({
+  id: '/dev/preview/clinica-local',
+  path: '/dev/preview/clinica-local',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevModelosSlugRoute = DevModelosSlugRouteImport.update({
   id: '/dev/modelos/$slug',
   path: '/dev/modelos/$slug',
@@ -296,6 +308,7 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/vivara': typeof VivaraRoute
   '/wishes': typeof WishesRoute
   '/dev/novo': typeof DevNovoRoute
   '/dev/precos': typeof DevPrecosRoute
@@ -308,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
+  '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -341,6 +355,7 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/vivara': typeof VivaraRoute
   '/wishes': typeof WishesRoute
   '/dev/novo': typeof DevNovoRoute
   '/dev/precos': typeof DevPrecosRoute
@@ -353,6 +368,7 @@ export interface FileRoutesByTo {
   '/planos': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
+  '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -387,6 +403,7 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/vivara': typeof VivaraRoute
   '/wishes': typeof WishesRoute
   '/dev/novo': typeof DevNovoRoute
   '/dev/precos': typeof DevPrecosRoute
@@ -399,6 +416,7 @@ export interface FileRoutesById {
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
+  '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -434,6 +452,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/vivara'
     | '/wishes'
     | '/dev/novo'
     | '/dev/precos'
@@ -446,6 +465,7 @@ export interface FileRouteTypes {
     | '/planos/'
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
+    | '/dev/preview/clinica-local'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
@@ -479,6 +499,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/vivara'
     | '/wishes'
     | '/dev/novo'
     | '/dev/precos'
@@ -491,6 +512,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
+    | '/dev/preview/clinica-local'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
@@ -524,6 +546,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/vivara'
     | '/wishes'
     | '/dev/novo'
     | '/dev/precos'
@@ -536,6 +559,7 @@ export interface FileRouteTypes {
     | '/planos/'
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
+    | '/dev/preview/clinica-local'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
@@ -570,6 +594,7 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
+  VivaraRoute: typeof VivaraRoute
   WishesRoute: typeof WishesRoute
   DevNovoRoute: typeof DevNovoRoute
   DevPrecosRoute: typeof DevPrecosRoute
@@ -582,6 +607,7 @@ export interface RootRouteChildren {
   PlanosIndexRoute: typeof PlanosIndexRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   DevModelosSlugRoute: typeof DevModelosSlugRoute
+  DevPreviewClinicaLocalRoute: typeof DevPreviewClinicaLocalRoute
   DevPreviewViagemWishesRoute: typeof DevPreviewViagemWishesRoute
   DevProjetoProjectIdRoute: typeof DevProjetoProjectIdRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
@@ -601,6 +627,13 @@ declare module '@tanstack/react-router' {
       path: '/wishes'
       fullPath: '/wishes'
       preLoaderRoute: typeof WishesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vivara': {
+      id: '/vivara'
+      path: '/vivara'
+      fullPath: '/vivara'
+      preLoaderRoute: typeof VivaraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/verify-email': {
@@ -841,6 +874,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevPreviewViagemWishesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/preview/clinica-local': {
+      id: '/dev/preview/clinica-local'
+      path: '/dev/preview/clinica-local'
+      fullPath: '/dev/preview/clinica-local'
+      preLoaderRoute: typeof DevPreviewClinicaLocalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev/modelos/$slug': {
       id: '/dev/modelos/$slug'
       path: '/dev/modelos/$slug'
@@ -922,6 +962,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VerifyEmailRoute: VerifyEmailRoute,
+  VivaraRoute: VivaraRoute,
   WishesRoute: WishesRoute,
   DevNovoRoute: DevNovoRoute,
   DevPrecosRoute: DevPrecosRoute,
@@ -934,6 +975,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosIndexRoute: PlanosIndexRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   DevModelosSlugRoute: DevModelosSlugRoute,
+  DevPreviewClinicaLocalRoute: DevPreviewClinicaLocalRoute,
   DevPreviewViagemWishesRoute: DevPreviewViagemWishesRoute,
   DevProjetoProjectIdRoute: DevProjetoProjectIdRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
