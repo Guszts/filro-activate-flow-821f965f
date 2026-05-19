@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Route as PreviewRoute } from "./dev.preview.viagem-wishes";
+import { WishesPreview } from "./dev.preview.viagem-wishes";
 
 export const Route = createFileRoute("/wishes")({
-  component: PreviewRoute.options.component!,
+  component: WishesPreview,
   head: () => ({
     meta: [
       { title: "Wishes · Experiência de Viagem" },
