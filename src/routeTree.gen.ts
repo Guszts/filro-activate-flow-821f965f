@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WishesRouteImport } from './routes/wishes'
+import { Route as VivaraRouteImport } from './routes/vivara'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TermosRouteImport } from './routes/termos'
@@ -57,6 +58,11 @@ import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/publi
 const WishesRoute = WishesRouteImport.update({
   id: '/wishes',
   path: '/wishes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VivaraRoute = VivaraRouteImport.update({
+  id: '/vivara',
+  path: '/vivara',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
@@ -302,6 +308,7 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/vivara': typeof VivaraRoute
   '/wishes': typeof WishesRoute
   '/dev/novo': typeof DevNovoRoute
   '/dev/precos': typeof DevPrecosRoute
@@ -348,6 +355,7 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/vivara': typeof VivaraRoute
   '/wishes': typeof WishesRoute
   '/dev/novo': typeof DevNovoRoute
   '/dev/precos': typeof DevPrecosRoute
@@ -395,6 +403,7 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/vivara': typeof VivaraRoute
   '/wishes': typeof WishesRoute
   '/dev/novo': typeof DevNovoRoute
   '/dev/precos': typeof DevPrecosRoute
@@ -443,6 +452,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/vivara'
     | '/wishes'
     | '/dev/novo'
     | '/dev/precos'
@@ -489,6 +499,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/vivara'
     | '/wishes'
     | '/dev/novo'
     | '/dev/precos'
@@ -535,6 +546,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/vivara'
     | '/wishes'
     | '/dev/novo'
     | '/dev/precos'
@@ -582,6 +594,7 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
+  VivaraRoute: typeof VivaraRoute
   WishesRoute: typeof WishesRoute
   DevNovoRoute: typeof DevNovoRoute
   DevPrecosRoute: typeof DevPrecosRoute
@@ -614,6 +627,13 @@ declare module '@tanstack/react-router' {
       path: '/wishes'
       fullPath: '/wishes'
       preLoaderRoute: typeof WishesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vivara': {
+      id: '/vivara'
+      path: '/vivara'
+      fullPath: '/vivara'
+      preLoaderRoute: typeof VivaraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/verify-email': {
@@ -942,6 +962,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VerifyEmailRoute: VerifyEmailRoute,
+  VivaraRoute: VivaraRoute,
   WishesRoute: WishesRoute,
   DevNovoRoute: DevNovoRoute,
   DevPrecosRoute: DevPrecosRoute,
@@ -969,3 +990,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

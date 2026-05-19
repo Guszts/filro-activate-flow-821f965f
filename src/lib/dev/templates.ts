@@ -37,8 +37,10 @@ export const DEV_TEMPLATES: DevTemplate[] = [
     requiredInfo: ["Nome da clínica e segmento","Lista de serviços","Endereço completo","WhatsApp e horário","Fotos do espaço (opcional)"],
     recommendedPlan: "dev_plus",
     coverImage: clinicaCover,
+    previewRoute: "/dev/preview/clinica-local",
   },
   {
+    slug: "_clinica_placeholder_remove",
     slug: "restaurante-cardapio",
     name: "Restaurante e Cardápio",
     segment: "Restaurantes, lanchonetes, hamburguerias e pizzarias",
