@@ -742,7 +742,7 @@ function Testimonials() {
     { name: "Camila P.", text: "Voltei encantada do Nepal. Recomendo demais.", role: "Aventura solo" },
   ];
   return (
-    <section style={{ marginTop: 72 }}>
+    <section className="wishes-bleed" style={{ marginTop: 72, marginLeft: -56, marginRight: -56, padding: "64px 56px", background: C.page }}>
       <SectionTitle kicker="Depoimentos" title="O que dizem nossos viajantes" />
       <div className="wishes-3col" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
         {items.map((t, i) => (
@@ -750,16 +750,13 @@ function Testimonials() {
             key={t.name}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}
             whileHover={{ y: -4 }}
-            style={{ padding: 24, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}
+            style={{ padding: 28, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}
           >
             <Quote size={22} color={C.inkSoft} />
-            <p style={{ marginTop: 12, fontSize: 14, color: C.ink, lineHeight: 1.6 }}>"{t.text}"</p>
-            <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 999, background: C.blue, display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: C.ink, fontSize: 13 }}>{t.name[0]}</div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: C.ink }}>{t.name}</div>
-                <div style={{ fontSize: 11, color: C.inkSoft }}>{t.role}</div>
-              </div>
+            <p style={{ marginTop: 14, fontSize: 14, color: C.ink, lineHeight: 1.65 }}>"{t.text}"</p>
+            <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.divider}` }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: C.ink }}>{t.name}</div>
+              <div style={{ marginTop: 2, fontSize: 11, color: C.inkSoft }}>{t.role}</div>
             </div>
           </motion.div>
         ))}
