@@ -1097,6 +1097,7 @@ function Experiencias() {
             key={e.title}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
             whileHover={{ y: -6 }}
+            onClick={() => detail.open({ id: `exp-${i}`, kind: "experiencia", title: e.title, subtitle: `${e.local} · ${e.duracao}`, image: e.image, priceLabel: e.preco, rating: 4.8, description: `Experiência guiada em ${e.local} com duração de ${e.duracao}. Ideal para quem busca vivência autêntica e momentos memoráveis.`, highlights: ["Guia em português", "Equipamentos inclusos", "Grupo reduzido", "Traslado opcional"] })}
             style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden", cursor: "pointer" }}
             className="group"
           >
