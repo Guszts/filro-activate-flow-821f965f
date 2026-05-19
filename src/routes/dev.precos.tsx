@@ -8,7 +8,7 @@ import { DEV_PLANS, formatBRL, CREDIT_COSTS, FREE_SIGNUP_CREDITS } from "@/lib/d
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createDevPlanCheckout, createDevPackCheckout, listDevCreditPacks } from "@/lib/dev/billing.functions";
 import { useAuth } from "@/lib/auth";
-import { ArrowRight, Check, Zap, X } from "lucide-react";
+import { ArrowRight, Check, X } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dev/precos")({
