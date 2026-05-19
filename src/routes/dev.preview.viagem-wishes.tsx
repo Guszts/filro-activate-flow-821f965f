@@ -1140,6 +1140,7 @@ function Blog() {
             key={p.title}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
             whileHover={{ y: -4 }}
+            onClick={() => detail.open({ id: `post-${i}`, kind: "post", title: p.title, subtitle: `${p.cat} · ${p.date}`, image: p.image, description: `Leitura recomendada da editoria ${p.cat}. Histórias, dicas práticas e roteiros testados pela equipe Wishes.`, highlights: ["Dicas testadas", "Atualizado em 2026", "Leitura de 6 min", "Por editores Wishes"] })}
             style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden", display: "grid", gridTemplateColumns: "180px 1fr", cursor: "pointer" }}
             className="wishes-card-horizontal group"
           >
