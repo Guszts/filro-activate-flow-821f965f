@@ -61,7 +61,7 @@ function DevTemplateDetailPage() {
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
       <main className="flex-1">
-        <section className="mx-auto max-w-[1100px] px-5 md:px-10 pt-10 md:pt-16 pb-10">
+        <section className="mx-auto max-w-[1200px] px-5 md:px-10 pt-10 md:pt-16 pb-8">
           <Link to="/dev/modelos" className="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink transition-colors">
             <ArrowLeft className="h-4 w-4" /> Todos os modelos
           </Link>
@@ -73,9 +73,43 @@ function DevTemplateDetailPage() {
             <Link to="/dev/novo" search={{ template: t.slug }} className="inline-flex items-center h-14 px-8 rounded-2xl bg-ink text-paper font-semibold hover:scale-[1.02] transition-transform">
               Usar este modelo <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
-            <Link to="/dev/modelos" className="inline-flex items-center h-14 px-8 rounded-2xl border border-border bg-paper text-ink font-semibold hover:bg-muted transition-colors">
-              Ver outros modelos
-            </Link>
+            {t.previewRoute && (
+              <a href={t.previewRoute} target="_blank" rel="noreferrer" className="inline-flex items-center h-14 px-8 rounded-2xl border border-border bg-paper text-ink font-semibold hover:bg-muted transition-colors">
+                Abrir preview em nova aba
+              </a>
+            )}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-[1200px] px-5 md:px-10 pb-10">
+          <div className="rounded-3xl border border-border bg-paper overflow-hidden shadow-elegant">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border text-xs text-ink-soft">
+              <div className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+                <span className="ml-3 font-semibold text-ink">Preview do modelo</span>
+              </div>
+              {t.previewRoute && (
+                <a href={t.previewRoute} target="_blank" rel="noreferrer" className="hover:text-ink">Abrir em tela cheia ↗</a>
+              )}
+            </div>
+            {t.previewRoute ? (
+              <iframe
+                src={t.previewRoute}
+                title={`Preview ${t.name}`}
+                className="w-full bg-paper"
+                style={{ height: "min(75vh, 760px)" }}
+              />
+            ) : (
+              <img
+                src={t.coverImage}
+                alt={`Capa do modelo ${t.name}`}
+                width={1280}
+                height={800}
+                className="w-full h-auto object-cover"
+              />
+            )}
           </div>
         </section>
 
