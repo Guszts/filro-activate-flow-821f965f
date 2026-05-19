@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Search, ChevronDown, MapPin, Play, Star, Menu, X, Plane, ArrowRight, Check,
@@ -71,6 +71,49 @@ const C = {
   pill: "#EEF4F4", divider: "#E3E9E9",
 };
 
+// Robust image fallback (some Unsplash IDs occasionally 404)
+const imgFallback = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const img = e.currentTarget;
+  if (img.dataset.fb) return;
+  img.dataset.fb = "1";
+  const seed = encodeURIComponent(img.alt || "viagem");
+  img.src = `https://picsum.photos/seed/${seed}/1200/800`;
+};
+
+// Generic detail item used by the detail page
+type DetailItem = {
+  id: string;
+  kind: "destino" | "hotel" | "experiencia" | "post";
+  title: string;
+  subtitle?: string;
+  image: string;
+  priceLabel?: string;
+  rating?: number;
+  description: string;
+  highlights?: string[];
+};
+
+// ---------------- Detail Context ----------------
+type DetailCtx = {
+  open: (item: DetailItem) => void;
+  reserve: (d: Destination) => void;
+};
+const DetailContext = createContext<DetailCtx | null>(null);
+function useDetail() {
+  const ctx = useContext(DetailContext);
+  if (!ctx) throw new Error("DetailContext missing");
+  return ctx;
+}
+
+// Convert any source object into a DetailItem
+function destinationToDetail(d: Destination): DetailItem {
+  return {
+    id: `dest-${d.id}`, kind: "destino", title: d.title, subtitle: d.locationLabel,
+    image: d.image, priceLabel: d.priceLabel, rating: d.rating, description: d.description,
+    highlights: ["Hospedagem selecionada", "Traslado incluído", "Guia em português", "Seguro viagem"],
+  };
+}
+
 // ---------------- Root ----------------
 export function WishesPreview() {
   const [page, setPage] = useState<PageKey>("inicio");
@@ -81,6 +124,7 @@ export function WishesPreview() {
   const [date, setDate] = useState("Escolha a data");
   const [guests, setGuests] = useState("Adicionar");
   const [bookingFor, setBookingFor] = useState<Destination | null>(null);
+  const [detail, setDetail] = useState<DetailItem | null>(null);
 
   const searchRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -93,10 +137,18 @@ export function WishesPreview() {
 
   const filtered = useMemo(() => filter === "ofertas" ? DESTINATIONS : DESTINATIONS.filter(d => d.category === filter), [filter]);
 
-  // close mobile menu on page change
-  useEffect(() => { setMenuOpen(false); }, [page]);
+  // close mobile menu and detail on page change
+  useEffect(() => { setMenuOpen(false); setDetail(null); }, [page]);
+  // scroll to top when detail opens/closes
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [detail]);
+
+  const ctxValue: DetailCtx = {
+    open: (item) => setDetail(item),
+    reserve: (d) => setBookingFor(d),
+  };
 
   return (
+    <DetailContext.Provider value={ctxValue}>
     <div style={{ background: C.page, color: C.ink, fontFamily: "Inter, Manrope, ui-sans-serif, system-ui" }} className="min-h-screen w-full">
       <ResponsiveStyles />
       <div
@@ -110,6 +162,18 @@ export function WishesPreview() {
         <Header page={page} setPage={setPage} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
         <AnimatePresence mode="wait">
+          {detail ? (
+            <motion.div
+              key={`detail-${detail.id}`}
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <DetailView item={detail} onBack={() => setDetail(null)} onReserve={() => {
+                const d = DESTINATIONS.find(x => `dest-${x.id}` === detail.id) ?? DESTINATIONS[0];
+                setBookingFor(d);
+              }} />
+            </motion.div>
+          ) : (
           <motion.div
             key={page}
             initial={{ opacity: 0, y: 16 }}
@@ -134,6 +198,7 @@ export function WishesPreview() {
             {page === "blog" && <Blog />}
             {page === "contato" && <Contato />}
           </motion.div>
+          )}
         </AnimatePresence>
 
         <Footer goTo={setPage} />
@@ -143,8 +208,112 @@ export function WishesPreview() {
         {bookingFor && <BookingModal destination={bookingFor} onClose={() => setBookingFor(null)} />}
       </AnimatePresence>
     </div>
+    </DetailContext.Provider>
   );
 }
+
+// ---------------- Detail View ----------------
+function DetailView({ item, onBack, onReserve }: { item: DetailItem; onBack: () => void; onReserve: () => void }) {
+  const kindLabel = { destino: "Destino", hotel: "Hotel", experiencia: "Experiência", post: "Artigo" }[item.kind];
+  return (
+    <article style={{ marginTop: 24 }}>
+      <motion.button
+        whileHover={{ x: -4 }} onClick={onBack}
+        style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: C.ink, marginBottom: 18, padding: "8px 14px", borderRadius: 999, background: C.pill }}
+      >
+        ← Voltar
+      </motion.button>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}
+        style={{ position: "relative", height: 420, borderRadius: 28, overflow: "hidden" }}
+        className="wishes-hero"
+      >
+        <motion.img
+          src={item.image} alt={item.title} onError={imgFallback}
+          initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 1.4, ease: "easeOut" }}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.55))" }} />
+        <div style={{ position: "absolute", left: 28, right: 28, bottom: 28, color: "#fff" }}>
+          <div style={{ display: "inline-block", padding: "4px 12px", borderRadius: 999, background: "rgba(255,255,255,0.18)", backdropFilter: "blur(8px)", fontSize: 11, fontWeight: 600, letterSpacing: 1.2, textTransform: "uppercase" }}>{kindLabel}</div>
+          <h1 className="wishes-hero-title" style={{ marginTop: 10, fontSize: 48, fontWeight: 700, letterSpacing: -0.02, lineHeight: 1.05 }}>{item.title}</h1>
+          {item.subtitle && <div style={{ marginTop: 6, fontSize: 16, opacity: 0.9, display: "inline-flex", alignItems: "center", gap: 6 }}><MapPin size={14} /> {item.subtitle}</div>}
+        </div>
+      </motion.div>
+
+      <div className="wishes-content" style={{ marginTop: 32, display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 28 }}>
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: C.ink }}>Sobre essa experiência</h2>
+          <p style={{ marginTop: 10, fontSize: 15, lineHeight: 1.7, color: C.inkSoft }}>{item.description} Roteiro pensado para quem busca conforto e autenticidade, com hospedagem cuidadosamente avaliada e atividades guiadas em português.</p>
+
+          {item.highlights && (
+            <div style={{ marginTop: 24 }}>
+              <h3 style={{ fontSize: 17, fontWeight: 700, color: C.ink, marginBottom: 12 }}>O que está incluso</h3>
+              <div className="wishes-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {item.highlights.map((h, i) => (
+                  <motion.div
+                    key={h}
+                    initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 + i * 0.06 }}
+                    style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 14px", borderRadius: 14, background: C.pill }}
+                  >
+                    <span style={{ width: 26, height: 26, borderRadius: 999, background: C.blue, display: "inline-flex", alignItems: "center", justifyContent: "center" }}><Check size={13} /></span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: C.ink }}>{h}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div style={{ marginTop: 28 }}>
+            <h3 style={{ fontSize: 17, fontWeight: 700, color: C.ink, marginBottom: 12 }}>Roteiro sugerido</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {["Chegada e check-in com recepção dedicada", "City tour guiado pelos principais pontos", "Experiência gastronômica local", "Tempo livre e retorno"].map((s, i) => (
+                <motion.div
+                  key={s}
+                  initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                  style={{ display: "flex", gap: 14, alignItems: "start", padding: 16, borderRadius: 16, border: `1px solid ${C.border}` }}
+                >
+                  <div style={{ width: 30, height: 30, borderRadius: 999, background: C.ink, color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
+                  <div style={{ fontSize: 14, color: C.ink, lineHeight: 1.55 }}>{s}</div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.aside
+          initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, padding: 24, alignSelf: "start", position: "sticky", top: 20 }}
+        >
+          {item.priceLabel && (
+            <>
+              <div style={{ fontSize: 12, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2 }}>A partir de</div>
+              <div style={{ marginTop: 4, fontSize: 28, fontWeight: 700, color: C.ink, letterSpacing: -0.02 }}>{item.priceLabel.replace("A partir de ", "")}</div>
+            </>
+          )}
+          {item.rating && (
+            <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: C.inkSoft }}>
+              <Star size={13} fill="#FFB400" stroke="#FFB400" /> {item.rating} · {Math.round(item.rating * 28)} avaliações
+            </div>
+          )}
+          <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+            <motion.button whileHover={{ scale: 1.02 }} onClick={onReserve} style={{ height: 50, borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 14 }}>Reservar agora</motion.button>
+            <button style={{ height: 46, borderRadius: 14, background: C.pill, color: C.ink, fontWeight: 600, fontSize: 13 }}>Adicionar à lista de desejos</button>
+          </div>
+          <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.divider}`, display: "flex", flexDirection: "column", gap: 10 }}>
+            {[{ i: Shield, l: "Reserva 100% protegida" }, { i: Heart, l: "Cancelamento flexível" }, { i: Phone, l: "Suporte 24/7" }].map((b) => (
+              <div key={b.l} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: C.inkSoft }}>
+                <b.i size={14} /> {b.l}
+              </div>
+            ))}
+          </div>
+        </motion.aside>
+      </div>
+    </article>
+  );
+}
+
 
 // ---------------- Responsive ----------------
 function ResponsiveStyles() {
@@ -156,8 +325,11 @@ function ResponsiveStyles() {
       }
       @media (max-width: 720px) {
         .wishes-shell { padding: 18px !important; margin: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
-        .wishes-nav { display: none !important; }
-        .wishes-menu-btn { display: inline-flex !important; }
+        .wishes-nav { gap: 16px !important; overflow-x: auto; flex: 1; min-width: 0; padding: 4px 6px; scrollbar-width: none; -ms-overflow-style: none; max-width: 100%; }
+        .wishes-nav::-webkit-scrollbar { display: none; }
+        .wishes-nav button { flex: 0 0 auto; }
+        .wishes-menu-btn { display: none !important; }
+        .wishes-header-cta { display: none !important; }
         .wishes-hero { height: 360px !important; }
         .wishes-hero-title { font-size: 36px !important; }
         .wishes-hero-sub { font-size: 18px !important; }
@@ -242,6 +414,7 @@ function Header({ page, setPage, menuOpen, setMenuOpen }: { page: PageKey; setPa
         <motion.button
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
+          className="wishes-header-cta"
           style={{ background: C.pill, color: C.ink, height: 38, padding: "0 16px", borderRadius: 999, fontSize: 13, fontWeight: 600 }}
         >
           Entrar
@@ -293,7 +466,7 @@ function Home(props: {
         style={{ marginTop: 24, height: 460, borderRadius: 28, overflow: "hidden", position: "relative" }}
       >
         <motion.img
-          src={HERO_IMAGE} alt="Resort à beira-mar"
+          src={HERO_IMAGE} alt="Resort à beira-mar" onError={imgFallback}
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 1.5, ease: "easeOut" }}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -443,10 +616,16 @@ function RightGrid({ items, onReserve }: { items: Destination[]; onReserve: (d: 
 }
 
 function HorizontalCard({ d, onReserve }: { d: Destination; onReserve: () => void }) {
+  const detail = useDetail();
   return (
-    <motion.div whileHover={{ y: -4, boxShadow: "0 18px 40px rgba(22,27,28,0.12)" }} transition={{ duration: 0.25 }} className="wishes-card-horizontal group" style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 14, padding: 14, borderRadius: 18, border: `1px solid ${C.border}`, background: C.paper }}>
+    <motion.div
+      whileHover={{ y: -4, boxShadow: "0 18px 40px rgba(22,27,28,0.12)" }} transition={{ duration: 0.25 }}
+      onClick={() => detail.open(destinationToDetail(d))}
+      className="wishes-card-horizontal group"
+      style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 14, padding: 14, borderRadius: 18, border: `1px solid ${C.border}`, background: C.paper, cursor: "pointer" }}
+    >
       <div style={{ overflow: "hidden", borderRadius: 14, height: 120 }}>
-        <img src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} className="group-hover:scale-105" />
+        <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} className="group-hover:scale-105" />
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "4px 4px 4px 0" }}>
         <div>
@@ -455,16 +634,22 @@ function HorizontalCard({ d, onReserve }: { d: Destination; onReserve: () => voi
             <MapPin size={12} /> {d.locationLabel}
           </div>
         </div>
-        <button onClick={onReserve} style={{ alignSelf: "flex-start", fontSize: 13, fontWeight: 600, color: C.ink, padding: "8px 12px", borderRadius: 10, background: C.pill }} className="hover:bg-[#DDF4FA] transition-colors">Reservar</button>
+        <button onClick={(e) => { e.stopPropagation(); onReserve(); }} style={{ alignSelf: "flex-start", fontSize: 13, fontWeight: 600, color: C.ink, padding: "8px 12px", borderRadius: 10, background: C.pill }} className="hover:bg-[#DDF4FA] transition-colors">Reservar</button>
       </div>
     </motion.div>
   );
 }
 
 function VerticalCard({ d, onReserve }: { d: Destination; onReserve: () => void }) {
+  const detail = useDetail();
   return (
-    <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.25 }} className="wishes-card-vertical group" style={{ position: "relative", height: 320, borderRadius: 28, overflow: "hidden", border: `1px solid ${C.border}` }}>
-      <img src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
+    <motion.div
+      whileHover={{ y: -4 }} transition={{ duration: 0.25 }}
+      onClick={() => detail.open(destinationToDetail(d))}
+      className="wishes-card-vertical group"
+      style={{ position: "relative", height: 320, borderRadius: 28, overflow: "hidden", border: `1px solid ${C.border}`, cursor: "pointer" }}
+    >
+      <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
       <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(6px)", padding: "6px 10px", borderRadius: 999, fontSize: 12, fontWeight: 600, color: C.ink, display: "inline-flex", alignItems: "center", gap: 4 }}>
         <MapPin size={11} /> {d.country}
       </div>
@@ -472,7 +657,7 @@ function VerticalCard({ d, onReserve }: { d: Destination; onReserve: () => void 
         <div style={{ fontSize: 16, fontWeight: 700, color: C.ink }}>{d.title}</div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
           <div style={{ display: "flex", gap: 1 }}>{Array.from({ length: 5 }).map((_, i) => <Star key={i} size={11} fill="#FFB400" stroke="#FFB400" />)}</div>
-          <button onClick={onReserve} style={{ fontSize: 12, fontWeight: 600, color: "#fff", padding: "6px 12px", borderRadius: 999, background: C.btn }}>Reservar</button>
+          <button onClick={(e) => { e.stopPropagation(); onReserve(); }} style={{ fontSize: 12, fontWeight: 600, color: "#fff", padding: "6px 12px", borderRadius: 999, background: C.btn }}>Reservar</button>
         </div>
       </div>
     </motion.div>
@@ -839,6 +1024,7 @@ function Passagens() {
 
 // ---------------- HOTÉIS ----------------
 function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
+  const detail = useDetail();
   const hoteis = [
     { name: "Resort Costa Verde", local: "Algarve, Portugal", preco: "R$ 890/noite", rating: 4.9, image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80" },
     { name: "Hotel Burj Vista", local: "Dubai, EAU", preco: "R$ 1.450/noite", rating: 5, image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80" },
@@ -857,10 +1043,11 @@ function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
             key={h.name}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
             whileHover={{ y: -6 }}
-            style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden" }}
+            onClick={() => detail.open({ id: `hotel-${i}`, kind: "hotel", title: h.name, subtitle: h.local, image: h.image, priceLabel: h.preco, rating: h.rating, description: `Hospedagem premium em ${h.local} com vista privilegiada e atendimento dedicado.`, highlights: ["Wi-Fi grátis", "Café da manhã incluso", "Smart TV", "Spa & academia"] })}
+            style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden", cursor: "pointer" }}
           >
             <div style={{ height: 200, overflow: "hidden" }}>
-              <img src={h.image} alt={h.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
+              <img onError={imgFallback} src={h.image} alt={h.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
             </div>
             <div style={{ padding: 20 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 10 }}>
@@ -881,7 +1068,7 @@ function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
               </div>
               <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ fontSize: 16, fontWeight: 700, color: C.ink }}>{h.preco}</div>
-                <motion.button whileHover={{ scale: 1.05 }} onClick={() => onReserve(DESTINATIONS[i % DESTINATIONS.length])} style={{ padding: "10px 18px", borderRadius: 12, background: C.btn, color: "#fff", fontSize: 13, fontWeight: 600 }}>Reservar</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} onClick={(e) => { e.stopPropagation(); onReserve(DESTINATIONS[i % DESTINATIONS.length]); }} style={{ padding: "10px 18px", borderRadius: 12, background: C.btn, color: "#fff", fontSize: 13, fontWeight: 600 }}>Reservar</motion.button>
               </div>
             </div>
           </motion.article>
@@ -893,6 +1080,7 @@ function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
 
 // ---------------- EXPERIÊNCIAS ----------------
 function Experiencias() {
+  const detail = useDetail();
   const exps = [
     { title: "Safari no Deserto", local: "Dubai", duracao: "6h", preco: "R$ 590", image: "https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=900&q=80" },
     { title: "Trekking no Himalaia", local: "Nepal", duracao: "3 dias", preco: "R$ 2.290", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" },
@@ -910,11 +1098,12 @@ function Experiencias() {
             key={e.title}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
             whileHover={{ y: -6 }}
+            onClick={() => detail.open({ id: `exp-${i}`, kind: "experiencia", title: e.title, subtitle: `${e.local} · ${e.duracao}`, image: e.image, priceLabel: e.preco, rating: 4.8, description: `Experiência guiada em ${e.local} com duração de ${e.duracao}. Ideal para quem busca vivência autêntica e momentos memoráveis.`, highlights: ["Guia em português", "Equipamentos inclusos", "Grupo reduzido", "Traslado opcional"] })}
             style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden", cursor: "pointer" }}
             className="group"
           >
             <div style={{ height: 200, overflow: "hidden", position: "relative" }}>
-              <img src={e.image} alt={e.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s" }} className="group-hover:scale-110" />
+              <img onError={imgFallback} src={e.image} alt={e.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s" }} className="group-hover:scale-110" />
               <div style={{ position: "absolute", top: 12, left: 12, padding: "4px 10px", borderRadius: 999, background: "rgba(255,255,255,0.9)", fontSize: 11, fontWeight: 600, color: C.ink, display: "inline-flex", alignItems: "center", gap: 4 }}>
                 <Clock size={10} /> {e.duracao}
               </div>
@@ -936,6 +1125,7 @@ function Experiencias() {
 
 // ---------------- BLOG ----------------
 function Blog() {
+  const detail = useDetail();
   const posts = [
     { title: "10 destinos imperdíveis em 2026", cat: "Guia", date: "12 mai", image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=900&q=80" },
     { title: "Como economizar em viagens internacionais", cat: "Dicas", date: "08 mai", image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=80" },
@@ -951,11 +1141,12 @@ function Blog() {
             key={p.title}
             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
             whileHover={{ y: -4 }}
+            onClick={() => detail.open({ id: `post-${i}`, kind: "post", title: p.title, subtitle: `${p.cat} · ${p.date}`, image: p.image, description: `Leitura recomendada da editoria ${p.cat}. Histórias, dicas práticas e roteiros testados pela equipe Wishes.`, highlights: ["Dicas testadas", "Atualizado em 2026", "Leitura de 6 min", "Por editores Wishes"] })}
             style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden", display: "grid", gridTemplateColumns: "180px 1fr", cursor: "pointer" }}
             className="wishes-card-horizontal group"
           >
             <div style={{ overflow: "hidden" }}>
-              <img src={p.image} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-105" />
+              <img onError={imgFallback} src={p.image} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-105" />
             </div>
             <div style={{ padding: 18 }}>
               <div style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 11, color: C.inkSoft }}>
@@ -1058,7 +1249,7 @@ function Reservar({ onConfirm }: { onConfirm: (d: Destination) => void }) {
           </motion.button>
         </motion.form>
         <motion.aside initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden" }}>
-          <img src={sel.image} alt={sel.title} style={{ width: "100%", height: 200, objectFit: "cover" }} />
+          <img onError={imgFallback} src={sel.image} alt={sel.title} style={{ width: "100%", height: 200, objectFit: "cover" }} />
           <div style={{ padding: 20 }}>
             <div style={{ fontSize: 12, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2 }}>Destino escolhido</div>
             <div style={{ marginTop: 6, fontSize: 22, fontWeight: 700, color: C.ink }}>{sel.title}</div>
@@ -1086,6 +1277,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; setFilter: (f: FilterKey) => void; items: Destination[]; onReserve: (d: Destination) => void }) {
+  const detail = useDetail();
   return (
     <section style={{ marginTop: 32 }}>
       <SectionTitle kicker="Pacotes" title="Pacotes selecionados" sub="Viagens organizadas com hospedagem e experiência." />
@@ -1104,10 +1296,11 @@ function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; s
               key={d.id} layout
               initial={{ opacity: 0, y: 16, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.32, delay: idx * 0.04 }}
               whileHover={{ y: -6, boxShadow: "0 18px 40px rgba(22,27,28,0.12)" }}
-              style={{ borderRadius: 24, overflow: "hidden", background: C.paper, border: `1px solid ${C.border}` }}
+              onClick={() => detail.open(destinationToDetail(d))}
+              style={{ borderRadius: 24, overflow: "hidden", background: C.paper, border: `1px solid ${C.border}`, cursor: "pointer" }}
             >
               <div style={{ height: 180, overflow: "hidden" }}>
-                <img src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
+                <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
               </div>
               <div style={{ padding: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1116,7 +1309,7 @@ function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; s
                 </div>
                 <div style={{ marginTop: 4, fontSize: 12, color: C.inkSoft }}>{d.locationLabel}</div>
                 <div style={{ marginTop: 12, fontSize: 13, color: C.ink, fontWeight: 600 }}>{d.priceLabel}</div>
-                <motion.button whileHover={{ scale: 1.02 }} onClick={() => onReserve(d)} style={{ marginTop: 12, width: "100%", height: 42, borderRadius: 12, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 13 }}>Reservar</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} onClick={(e) => { e.stopPropagation(); onReserve(d); }} style={{ marginTop: 12, width: "100%", height: 42, borderRadius: 12, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 13 }}>Reservar</motion.button>
               </div>
             </motion.article>
           ))}
@@ -1127,6 +1320,7 @@ function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; s
 }
 
 function Lugares({ onReserve }: { onReserve: (d: Destination) => void }) {
+  const detail = useDetail();
   return (
     <section style={{ marginTop: 32 }}>
       <SectionTitle kicker="Lugares" title="Lugares populares" sub="Destinos escolhidos por viajantes." />
@@ -1136,16 +1330,17 @@ function Lugares({ onReserve }: { onReserve: (d: Destination) => void }) {
             key={d.id}
             initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.32, delay: (idx % 3) * 0.08 }}
             whileHover={{ y: -6 }}
-            style={{ position: "relative", height: 320, borderRadius: 24, overflow: "hidden", border: `1px solid ${C.border}` }}
+            onClick={() => detail.open(destinationToDetail(d))}
+            style={{ position: "relative", height: 320, borderRadius: 24, overflow: "hidden", border: `1px solid ${C.border}`, cursor: "pointer" }}
             className="group"
           >
-            <img src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
+            <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
             <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(255,255,255,0.9)", padding: "6px 10px", borderRadius: 999, fontSize: 12, fontWeight: 600 }}>{d.country}</div>
             <div style={{ position: "absolute", left: 10, right: 10, bottom: 10, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(10px)", borderRadius: 16, padding: 12 }}>
               <div style={{ fontSize: 16, fontWeight: 700, color: C.ink }}>{d.title}</div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 6 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: C.inkSoft }}><Star size={12} fill="#FFB400" stroke="#FFB400" /> {d.rating}</div>
-                <motion.button whileHover={{ scale: 1.05 }} onClick={() => onReserve(d)} style={{ fontSize: 12, fontWeight: 600, color: "#fff", padding: "6px 12px", borderRadius: 999, background: C.btn }}>Reservar</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} onClick={(e) => { e.stopPropagation(); onReserve(d); }} style={{ fontSize: 12, fontWeight: 600, color: "#fff", padding: "6px 12px", borderRadius: 999, background: C.btn }}>Reservar</motion.button>
               </div>
             </div>
           </motion.article>
