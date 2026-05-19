@@ -183,8 +183,8 @@ function NovoProjeto() {
                         onClick={() => setTemplateSlug(t.slug)}
                         className={`text-left rounded-2xl border overflow-hidden transition ${selected ? "border-ink shadow-elegant ring-1 ring-ink/10" : "border-border hover:border-ink/40"}`}
                       >
-                        <div className="aspect-[16/10] bg-muted/40 overflow-hidden">
-                          <img src={t.coverImage} alt={`Capa ${t.name}`} className="w-full h-full object-cover" loading="lazy" />
+                        <div className="overflow-hidden">
+                          <TemplateCover src={t.coverImage} name={t.name} previewRoute={t.previewRoute} />
                         </div>
                         <div className="p-4">
                           <div className="text-[10px] uppercase tracking-wider text-ink-soft">{t.segment}</div>
