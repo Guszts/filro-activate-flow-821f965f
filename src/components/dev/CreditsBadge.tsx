@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { getMyCredits } from "@/lib/credits/credits.functions";
-import { Zap } from "lucide-react";
+
 import { useAuth } from "@/lib/auth";
 
 export function CreditsBadge() {
