@@ -227,10 +227,10 @@ function DevLanding() {
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.45, delay: i * 0.04 }}
             >
-              <Link
-                to="/dev/modelos/$slug"
-                params={{ slug: t.slug }}
-                className="group block rounded-3xl border border-border bg-paper overflow-hidden hover:shadow-[0_28px_60px_-30px_rgba(0,0,0,0.35)] transition"
+              <button
+                type="button"
+                onClick={() => setModalTpl(t)}
+                className="group w-full text-left block rounded-3xl border border-border bg-paper overflow-hidden hover:shadow-[0_28px_60px_-30px_rgba(0,0,0,0.35)] transition"
               >
                 <div className="relative overflow-hidden">
                   <TemplateCover src={t.coverImage} name={t.name} previewRoute={t.previewRoute} />
@@ -244,7 +244,7 @@ function DevLanding() {
                     Usar este modelo <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition" />
                   </div>
                 </div>
-              </Link>
+              </button>
             </motion.div>
           ))}
         </div>
