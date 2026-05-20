@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.grant_credits(uuid, integer, text, text, jsonb) FROM PUBLIC, anon, authenticated;
