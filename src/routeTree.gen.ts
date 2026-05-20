@@ -50,6 +50,7 @@ import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/em
 import { Route as DevProjetoProjectIdRouteImport } from './routes/dev.projeto.$projectId'
 import { Route as DevPreviewViagemWishesRouteImport } from './routes/dev.preview.viagem-wishes'
 import { Route as DevPreviewRestauranteCardapioRouteImport } from './routes/dev.preview.restaurante-cardapio'
+import { Route as DevPreviewOficinaAutoRouteImport } from './routes/dev.preview.oficina-auto'
 import { Route as DevPreviewLojaLocalRouteImport } from './routes/dev.preview.loja-local'
 import { Route as DevPreviewClinicaLocalRouteImport } from './routes/dev.preview.clinica-local'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
@@ -267,6 +268,11 @@ const DevPreviewRestauranteCardapioRoute =
     path: '/dev/preview/restaurante-cardapio',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DevPreviewOficinaAutoRoute = DevPreviewOficinaAutoRouteImport.update({
+  id: '/dev/preview/oficina-auto',
+  path: '/dev/preview/oficina-auto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevPreviewLojaLocalRoute = DevPreviewLojaLocalRouteImport.update({
   id: '/dev/preview/loja-local',
   path: '/dev/preview/loja-local',
@@ -364,6 +370,7 @@ export interface FileRoutesByFullPath {
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
   '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
+  '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
@@ -417,6 +424,7 @@ export interface FileRoutesByTo {
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
   '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
+  '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
@@ -471,6 +479,7 @@ export interface FileRoutesById {
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
   '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
+  '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
   '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
   '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
@@ -526,6 +535,7 @@ export interface FileRouteTypes {
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
     | '/dev/preview/loja-local'
+    | '/dev/preview/oficina-auto'
     | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
@@ -579,6 +589,7 @@ export interface FileRouteTypes {
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
     | '/dev/preview/loja-local'
+    | '/dev/preview/oficina-auto'
     | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
@@ -632,6 +643,7 @@ export interface FileRouteTypes {
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
     | '/dev/preview/loja-local'
+    | '/dev/preview/oficina-auto'
     | '/dev/preview/restaurante-cardapio'
     | '/dev/preview/viagem-wishes'
     | '/dev/projeto/$projectId'
@@ -686,6 +698,7 @@ export interface RootRouteChildren {
   DevModelosSlugRoute: typeof DevModelosSlugRoute
   DevPreviewClinicaLocalRoute: typeof DevPreviewClinicaLocalRoute
   DevPreviewLojaLocalRoute: typeof DevPreviewLojaLocalRoute
+  DevPreviewOficinaAutoRoute: typeof DevPreviewOficinaAutoRoute
   DevPreviewRestauranteCardapioRoute: typeof DevPreviewRestauranteCardapioRoute
   DevPreviewViagemWishesRoute: typeof DevPreviewViagemWishesRoute
   DevProjetoProjectIdRoute: typeof DevProjetoProjectIdRoute
@@ -988,6 +1001,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevPreviewRestauranteCardapioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/preview/oficina-auto': {
+      id: '/dev/preview/oficina-auto'
+      path: '/dev/preview/oficina-auto'
+      fullPath: '/dev/preview/oficina-auto'
+      preLoaderRoute: typeof DevPreviewOficinaAutoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev/preview/loja-local': {
       id: '/dev/preview/loja-local'
       path: '/dev/preview/loja-local'
@@ -1102,6 +1122,7 @@ const rootRouteChildren: RootRouteChildren = {
   DevModelosSlugRoute: DevModelosSlugRoute,
   DevPreviewClinicaLocalRoute: DevPreviewClinicaLocalRoute,
   DevPreviewLojaLocalRoute: DevPreviewLojaLocalRoute,
+  DevPreviewOficinaAutoRoute: DevPreviewOficinaAutoRoute,
   DevPreviewRestauranteCardapioRoute: DevPreviewRestauranteCardapioRoute,
   DevPreviewViagemWishesRoute: DevPreviewViagemWishesRoute,
   DevProjetoProjectIdRoute: DevProjetoProjectIdRoute,
