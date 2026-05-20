@@ -9,6 +9,8 @@ interface PlanCardProps {
   highlight?: boolean;
   onSelect?: () => void;
   index?: number;
+  disabled?: boolean;
+  disabledLabel?: string;
 }
 
 export function PlanCard({
@@ -19,7 +21,10 @@ export function PlanCard({
   highlight = false,
   onSelect,
   index = 0,
+  disabled = false,
+  disabledLabel,
 }: PlanCardProps) {
+
   // Highlight (Plus) — keep exactly as-is.
   if (highlight) {
     return (
