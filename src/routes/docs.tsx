@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
-import { Clock, ShieldCheck, ChevronDown, Workflow, Globe, Wrench, MessageCircle, FileQuestion, Rocket, Palette, CreditCard, RefreshCw, BarChart3, Lightbulb } from "lucide-react";
+import { Clock, ShieldCheck, ChevronDown, Workflow, Globe, Wrench, MessageCircle, FileQuestion, Rocket, Palette, CreditCard, RefreshCw, BarChart3, Lightbulb, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/docs")({
   component: DocsPage,
@@ -42,6 +42,7 @@ const sections = [
   { id: "dominio", label: "Domínio e hospedagem", icon: Globe },
   { id: "manutencao", label: "Manutenção e edições", icon: RefreshCw },
   { id: "metricas", label: "Métricas e SEO", icon: BarChart3 },
+  { id: "flaro-dev", label: "Flaro Dev (IA)", icon: Sparkles },
   { id: "faq", label: "FAQ", icon: FileQuestion },
   { id: "suporte", label: "Suporte", icon: MessageCircle },
 ] as const;
@@ -230,8 +231,38 @@ function DocsPage() {
               </ul>
             </Section>
 
+            <Section id="flaro-dev" title="Flaro Dev (IA)" icon={Sparkles}>
+              <p>O <strong>Flaro Dev</strong> é o nosso construtor de sites por IA. Você descreve a ideia, escolhe um modelo opcional e a IA monta uma estrutura profissional completa em segundos. Depois, você edita por chat — em linguagem natural.</p>
+
+              <h3>Como funciona</h3>
+              <ol>
+                <li><strong>Descreva o site</strong> ou escolha um modelo. A IA gera um projeto completo (hero, seções, FAQ, depoimentos).</li>
+                <li><strong>Edite por chat</strong> dentro do projeto: texto, cores, novas seções, animações — qualquer mudança.</li>
+                <li><strong>Publique</strong> em um subdomínio <code>seu-nome.filro.site</code> com um clique.</li>
+              </ol>
+
+              <h3>Créditos</h3>
+              <ul>
+                <li>Cada edição por IA consome créditos com base no tamanho e na complexidade do pedido (entre 1 e 15 créditos).</li>
+                <li>Você vê o custo estimado antes de enviar e o saldo restante no topo do projeto.</li>
+                <li>Os planos do Flaro Dev incluem uma cota mensal de créditos — veja em <Link to="/dev/precos" className="text-ink underline">Planos Flaro Dev</Link>.</li>
+              </ul>
+
+              <h3>Política de risco — Aplicado · Alternativa segura · Recusado</h3>
+              <p>Para proteger o seu site, toda edição por IA passa por uma avaliação de risco. O resultado aparece como uma <strong>etiqueta colorida</strong> na resposta do chat:</p>
+              <ul>
+                <li><strong>Aplicado</strong> (verde): a edição foi feita normalmente. Créditos são debitados.</li>
+                <li><strong>Alternativa segura</strong> (laranja): o pedido tinha risco de quebrar o site, então a IA aplicou uma versão equivalente porém segura. O motivo é explicado no chat. Créditos são debitados.</li>
+                <li><strong>Recusado · sem custo</strong> (vermelho): o pedido tinha ≥80% de chance de quebrar o site, conteúdo ilegal ou perda total de informações. <strong>Nenhum crédito é consumido</strong> e o motivo é explicado no chat para você reformular.</li>
+              </ul>
+              <Card><ShieldCheck className="h-5 w-5 text-flame" /><div><strong>Garantia:</strong> se a IA recusar uma alteração, você nunca paga por isso. Reformule o pedido e tente de novo.</div></Card>
+
+              <h3>Conteúdo gerado</h3>
+              <p>Textos, imagens placeholder e estrutura são gerados por modelos de IA e podem precisar de revisão humana. Revise antes de publicar — você é responsável pelo conteúdo final do seu site.</p>
+            </Section>
+
             <Section id="faq" title="Perguntas frequentes" icon={FileQuestion}>
-              <Q q="Posso editar depois?">Sim. Você acessa o painel a qualquer hora e atualiza informações, fotos, preços e promoções sem cobrança extra.</Q>
+              <Q q="Tenho controle sobre o que a IA do Flaro Dev altera?">Sim. Cada resposta no chat traz uma etiqueta clara: <strong>Aplicado</strong>, <strong>Alternativa segura</strong> ou <strong>Recusado · sem custo</strong>. Quando há risco alto de quebrar o site, a IA recusa sem cobrar créditos.</Q>
               <Q q="Quanto tempo até estar no ar?">Até 24 horas após o envio das informações. Geralmente entregamos em menos de 18h.</Q>
               <Q q="Preciso entender de tecnologia?">Não. Você só envia as informações; nosso time monta tudo. O painel também é desenhado para uso por leigos.</Q>
               <Q q="E se eu não gostar do resultado?">Incluímos 1 rodada de revisão visual nos primeiros 7 dias. Ajustes simples dentro do escopo são feitos sem custo nesse período.</Q>

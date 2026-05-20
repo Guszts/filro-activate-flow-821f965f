@@ -24,7 +24,7 @@ function TermsPage() {
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
       <main className="mx-auto max-w-3xl w-full px-5 md:px-10 py-12 md:py-20 flex-1">
-        <span className="text-xs tracking-wide text-ink-soft">Atualizado em 13 de maio de 2026 · Versão 2.0</span>
+        <span className="text-xs tracking-wide text-ink-soft">Atualizado em 20 de maio de 2026 · Versão 2.1</span>
         <h1 className="mt-4 editorial-headline text-5xl md:text-6xl text-ink">Termos de Uso</h1>
         <p className="mt-4 text-ink-soft">Estes Termos regulam o uso da plataforma Filro e a contratação dos seus serviços. Ao criar conta ou contratar um plano, você declara que leu, entendeu e aceita integralmente todas as cláusulas abaixo.</p>
 
@@ -93,6 +93,26 @@ function TermsPage() {
 
           <h2>11. Suporte</h2>
           <p>O suporte é prestado via WhatsApp (+55 92 99356-1754) e e-mail (<a href="mailto:filro.site@gmail.com" className="text-ink underline">filro.site@gmail.com</a>) em horário comercial (segunda a sexta, 9h às 18h, horário de Brasília). SLA de resposta: até 4h úteis para dúvidas; até 1h para incidentes críticos.</p>
+
+          <h2>11.A. Flaro Dev — Geração e edição por IA</h2>
+          <p>O Flaro Dev é um construtor de sites baseado em Inteligência Artificial. Ao usá-lo, o Cliente reconhece e aceita as condições específicas abaixo, além das demais cláusulas destes Termos.</p>
+          <h3>11.A.1 Créditos</h3>
+          <ul>
+            <li>Cada geração ou edição por IA consome <strong>créditos</strong>, de acordo com o tamanho e a complexidade do pedido (de 1 a 15 créditos por interação).</li>
+            <li>Créditos são <strong>não reembolsáveis</strong> após o consumo e não acumulam indefinidamente entre ciclos, salvo regra específica do plano contratado.</li>
+            <li>O saldo e o custo estimado de cada ação são exibidos antes do envio.</li>
+          </ul>
+          <h3>11.A.2 Política de risco — Aplicado · Alternativa segura · Recusado</h3>
+          <p>Para proteger a integridade do site, toda interação com a IA passa por uma avaliação automática de risco e recebe uma etiqueta visível no chat:</p>
+          <ul>
+            <li><strong>Aplicado:</strong> a edição foi executada conforme o pedido. Créditos são debitados normalmente.</li>
+            <li><strong>Alternativa segura:</strong> o pedido tinha risco relevante de quebrar o site; a IA aplicou uma versão equivalente porém segura, explicando o motivo no chat. Créditos são debitados.</li>
+            <li><strong>Recusado · sem custo:</strong> o pedido tinha probabilidade ≥80% de quebrar o site, gerar conteúdo ilegal ou causar perda total de informações. <strong>Nenhum crédito é consumido</strong> e o motivo é apresentado no chat para que o Cliente reformule.</li>
+          </ul>
+          <h3>11.A.3 Conteúdo gerado por IA</h3>
+          <p>Os textos, imagens placeholder e estruturas produzidos pela IA são fornecidos "como estão" (<em>as is</em>) e podem conter imprecisões. O Cliente é integralmente responsável por revisar, corrigir e validar o conteúdo antes da publicação, bem como por garantir conformidade com a legislação aplicável (LGPD, CDC, propriedade intelectual de terceiros, publicidade e demais normas).</p>
+          <h3>11.A.4 Uso aceitável</h3>
+          <p>É vedado utilizar a IA para gerar conteúdo ilícito, ofensivo, enganoso, que viole direitos de terceiros ou que tente burlar limites técnicos da plataforma. Violações sujeitam o Cliente às sanções da cláusula 8.</p>
 
           <h2>12. Alterações destes Termos</h2>
           <p>Podemos atualizar estes Termos a qualquer tempo. Alterações relevantes serão comunicadas por e-mail e WhatsApp com <strong>30 dias de antecedência</strong>. O uso continuado após a vigência implica aceitação tácita.</p>
