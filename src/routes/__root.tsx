@@ -64,10 +64,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-import { detectSubdomainSite } from "@/lib/dev/subdomain.functions";
-
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  loader: () => detectSubdomainSite(),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
