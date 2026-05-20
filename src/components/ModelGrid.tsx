@@ -25,31 +25,14 @@ type Cover = (props: { className?: string }) => ReactElement;
 
 const COVER_SIZES = "(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw";
 
-// Cache-buster: bump when cover assets are regenerated to force browsers
-// to refetch the new images instead of serving stale cached versions.
-const COVER_VERSION = "20260520b";
-
-const withVersion = (url: string) =>
-  url + (url.includes("?") ? "&" : "?") + "v=" + COVER_VERSION;
-
-const withVersionSrcSet = (srcSet: string) =>
-  srcSet
-    .split(",")
-    .map((entry) => {
-      const trimmed = entry.trim();
-      const spaceIdx = trimmed.lastIndexOf(" ");
-      if (spaceIdx === -1) return withVersion(trimmed);
-      return withVersion(trimmed.slice(0, spaceIdx)) + trimmed.slice(spaceIdx);
-    })
-    .join(", ");
-
 const photoCover =
   (src: string, srcSet: string | undefined, alt: string): Cover =>
   ({ className }) => (
     <div className={`relative overflow-hidden bg-paper ${className ?? ""}`}>
       <img
-        src={withVersion(src)}
-        srcSet={srcSet ? withVersionSrcSet(srcSet) : undefined}
+        src={src}
+        srcSet={srcSet}
+
         sizes={COVER_SIZES}
         alt={alt}
         loading="lazy"
