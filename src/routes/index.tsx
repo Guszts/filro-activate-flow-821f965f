@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -154,7 +154,15 @@ function HomePage() {
             Selecione uma base e adapte com o nome do seu negócio, cores, fotos, serviços, produtos e WhatsApp.
           </p>
         </div>
-        <ModelGrid />
+        <ModelGrid featuredOnly />
+        <div className="mt-12 flex justify-center">
+          <Link
+            to="/modelos"
+            className="inline-flex items-center h-14 px-8 rounded-2xl border border-ink text-ink font-semibold tracking-wide hover:bg-ink hover:text-paper transition-colors"
+          >
+            Ver todos os modelos
+          </Link>
+        </div>
       </section>
 
       {/* HOW IT WORKS */}

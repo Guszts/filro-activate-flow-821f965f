@@ -33,6 +33,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
 import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
+import { Route as ModelosViagemWishesRouteImport } from './routes/modelos.viagem-wishes'
+import { Route as ModelosRestauranteCardapioRouteImport } from './routes/modelos.restaurante-cardapio'
+import { Route as ModelosPrestadorServicoRouteImport } from './routes/modelos.prestador-servico'
+import { Route as ModelosOficinaAutoRouteImport } from './routes/modelos.oficina-auto'
+import { Route as ModelosLojaLocalRouteImport } from './routes/modelos.loja-local'
+import { Route as ModelosLandingVendasRouteImport } from './routes/modelos.landing-vendas'
+import { Route as ModelosClinicaLocalRouteImport } from './routes/modelos.clinica-local'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
@@ -164,6 +171,42 @@ const PlanosSlugRoute = PlanosSlugRouteImport.update({
   path: '/planos/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModelosViagemWishesRoute = ModelosViagemWishesRouteImport.update({
+  id: '/viagem-wishes',
+  path: '/viagem-wishes',
+  getParentRoute: () => ModelosRoute,
+} as any)
+const ModelosRestauranteCardapioRoute =
+  ModelosRestauranteCardapioRouteImport.update({
+    id: '/restaurante-cardapio',
+    path: '/restaurante-cardapio',
+    getParentRoute: () => ModelosRoute,
+  } as any)
+const ModelosPrestadorServicoRoute = ModelosPrestadorServicoRouteImport.update({
+  id: '/prestador-servico',
+  path: '/prestador-servico',
+  getParentRoute: () => ModelosRoute,
+} as any)
+const ModelosOficinaAutoRoute = ModelosOficinaAutoRouteImport.update({
+  id: '/oficina-auto',
+  path: '/oficina-auto',
+  getParentRoute: () => ModelosRoute,
+} as any)
+const ModelosLojaLocalRoute = ModelosLojaLocalRouteImport.update({
+  id: '/loja-local',
+  path: '/loja-local',
+  getParentRoute: () => ModelosRoute,
+} as any)
+const ModelosLandingVendasRoute = ModelosLandingVendasRouteImport.update({
+  id: '/landing-vendas',
+  path: '/landing-vendas',
+  getParentRoute: () => ModelosRoute,
+} as any)
+const ModelosClinicaLocalRoute = ModelosClinicaLocalRouteImport.update({
+  id: '/clinica-local',
+  path: '/clinica-local',
+  getParentRoute: () => ModelosRoute,
+} as any)
 const LeadIdRoute = LeadIdRouteImport.update({
   id: '/lead/$id',
   path: '/lead/$id',
@@ -230,7 +273,7 @@ export interface FileRoutesByFullPath {
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
-  '/modelos': typeof ModelosRoute
+  '/modelos': typeof ModelosRouteWithChildren
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -244,6 +287,13 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof VerifyEmailRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
+  '/modelos/clinica-local': typeof ModelosClinicaLocalRoute
+  '/modelos/landing-vendas': typeof ModelosLandingVendasRoute
+  '/modelos/loja-local': typeof ModelosLojaLocalRoute
+  '/modelos/oficina-auto': typeof ModelosOficinaAutoRoute
+  '/modelos/prestador-servico': typeof ModelosPrestadorServicoRoute
+  '/modelos/restaurante-cardapio': typeof ModelosRestauranteCardapioRoute
+  '/modelos/viagem-wishes': typeof ModelosViagemWishesRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
@@ -266,7 +316,7 @@ export interface FileRoutesByTo {
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
-  '/modelos': typeof ModelosRoute
+  '/modelos': typeof ModelosRouteWithChildren
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -280,6 +330,13 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
+  '/modelos/clinica-local': typeof ModelosClinicaLocalRoute
+  '/modelos/landing-vendas': typeof ModelosLandingVendasRoute
+  '/modelos/loja-local': typeof ModelosLojaLocalRoute
+  '/modelos/oficina-auto': typeof ModelosOficinaAutoRoute
+  '/modelos/prestador-servico': typeof ModelosPrestadorServicoRoute
+  '/modelos/restaurante-cardapio': typeof ModelosRestauranteCardapioRoute
+  '/modelos/viagem-wishes': typeof ModelosViagemWishesRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos': typeof PlanosIndexRoute
@@ -303,7 +360,7 @@ export interface FileRoutesById {
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
-  '/modelos': typeof ModelosRoute
+  '/modelos': typeof ModelosRouteWithChildren
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -317,6 +374,13 @@ export interface FileRoutesById {
   '/verify-email': typeof VerifyEmailRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
+  '/modelos/clinica-local': typeof ModelosClinicaLocalRoute
+  '/modelos/landing-vendas': typeof ModelosLandingVendasRoute
+  '/modelos/loja-local': typeof ModelosLojaLocalRoute
+  '/modelos/oficina-auto': typeof ModelosOficinaAutoRoute
+  '/modelos/prestador-servico': typeof ModelosPrestadorServicoRoute
+  '/modelos/restaurante-cardapio': typeof ModelosRestauranteCardapioRoute
+  '/modelos/viagem-wishes': typeof ModelosViagemWishesRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
@@ -355,6 +419,13 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/email/unsubscribe'
     | '/lead/$id'
+    | '/modelos/clinica-local'
+    | '/modelos/landing-vendas'
+    | '/modelos/loja-local'
+    | '/modelos/oficina-auto'
+    | '/modelos/prestador-servico'
+    | '/modelos/restaurante-cardapio'
+    | '/modelos/viagem-wishes'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
@@ -391,6 +462,13 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/email/unsubscribe'
     | '/lead/$id'
+    | '/modelos/clinica-local'
+    | '/modelos/landing-vendas'
+    | '/modelos/loja-local'
+    | '/modelos/oficina-auto'
+    | '/modelos/prestador-servico'
+    | '/modelos/restaurante-cardapio'
+    | '/modelos/viagem-wishes'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos'
@@ -427,6 +505,13 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/email/unsubscribe'
     | '/lead/$id'
+    | '/modelos/clinica-local'
+    | '/modelos/landing-vendas'
+    | '/modelos/loja-local'
+    | '/modelos/oficina-auto'
+    | '/modelos/prestador-servico'
+    | '/modelos/restaurante-cardapio'
+    | '/modelos/viagem-wishes'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
@@ -450,7 +535,7 @@ export interface RootRouteChildren {
   DocsRoute: typeof DocsRoute
   GarantiaRoute: typeof GarantiaRoute
   LoginRoute: typeof LoginRoute
-  ModelosRoute: typeof ModelosRoute
+  ModelosRoute: typeof ModelosRouteWithChildren
   PainelRoute: typeof PainelRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
@@ -647,6 +732,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/modelos/viagem-wishes': {
+      id: '/modelos/viagem-wishes'
+      path: '/viagem-wishes'
+      fullPath: '/modelos/viagem-wishes'
+      preLoaderRoute: typeof ModelosViagemWishesRouteImport
+      parentRoute: typeof ModelosRoute
+    }
+    '/modelos/restaurante-cardapio': {
+      id: '/modelos/restaurante-cardapio'
+      path: '/restaurante-cardapio'
+      fullPath: '/modelos/restaurante-cardapio'
+      preLoaderRoute: typeof ModelosRestauranteCardapioRouteImport
+      parentRoute: typeof ModelosRoute
+    }
+    '/modelos/prestador-servico': {
+      id: '/modelos/prestador-servico'
+      path: '/prestador-servico'
+      fullPath: '/modelos/prestador-servico'
+      preLoaderRoute: typeof ModelosPrestadorServicoRouteImport
+      parentRoute: typeof ModelosRoute
+    }
+    '/modelos/oficina-auto': {
+      id: '/modelos/oficina-auto'
+      path: '/oficina-auto'
+      fullPath: '/modelos/oficina-auto'
+      preLoaderRoute: typeof ModelosOficinaAutoRouteImport
+      parentRoute: typeof ModelosRoute
+    }
+    '/modelos/loja-local': {
+      id: '/modelos/loja-local'
+      path: '/loja-local'
+      fullPath: '/modelos/loja-local'
+      preLoaderRoute: typeof ModelosLojaLocalRouteImport
+      parentRoute: typeof ModelosRoute
+    }
+    '/modelos/landing-vendas': {
+      id: '/modelos/landing-vendas'
+      path: '/landing-vendas'
+      fullPath: '/modelos/landing-vendas'
+      preLoaderRoute: typeof ModelosLandingVendasRouteImport
+      parentRoute: typeof ModelosRoute
+    }
+    '/modelos/clinica-local': {
+      id: '/modelos/clinica-local'
+      path: '/clinica-local'
+      fullPath: '/modelos/clinica-local'
+      preLoaderRoute: typeof ModelosClinicaLocalRouteImport
+      parentRoute: typeof ModelosRoute
+    }
     '/lead/$id': {
       id: '/lead/$id'
       path: '/lead/$id'
@@ -720,6 +854,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ModelosRouteChildren {
+  ModelosClinicaLocalRoute: typeof ModelosClinicaLocalRoute
+  ModelosLandingVendasRoute: typeof ModelosLandingVendasRoute
+  ModelosLojaLocalRoute: typeof ModelosLojaLocalRoute
+  ModelosOficinaAutoRoute: typeof ModelosOficinaAutoRoute
+  ModelosPrestadorServicoRoute: typeof ModelosPrestadorServicoRoute
+  ModelosRestauranteCardapioRoute: typeof ModelosRestauranteCardapioRoute
+  ModelosViagemWishesRoute: typeof ModelosViagemWishesRoute
+}
+
+const ModelosRouteChildren: ModelosRouteChildren = {
+  ModelosClinicaLocalRoute: ModelosClinicaLocalRoute,
+  ModelosLandingVendasRoute: ModelosLandingVendasRoute,
+  ModelosLojaLocalRoute: ModelosLojaLocalRoute,
+  ModelosOficinaAutoRoute: ModelosOficinaAutoRoute,
+  ModelosPrestadorServicoRoute: ModelosPrestadorServicoRoute,
+  ModelosRestauranteCardapioRoute: ModelosRestauranteCardapioRoute,
+  ModelosViagemWishesRoute: ModelosViagemWishesRoute,
+}
+
+const ModelosRouteWithChildren =
+  ModelosRoute._addFileChildren(ModelosRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BusinessInfoRoute: BusinessInfoRoute,
@@ -730,7 +887,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocsRoute: DocsRoute,
   GarantiaRoute: GarantiaRoute,
   LoginRoute: LoginRoute,
-  ModelosRoute: ModelosRoute,
+  ModelosRoute: ModelosRouteWithChildren,
   PainelRoute: PainelRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
