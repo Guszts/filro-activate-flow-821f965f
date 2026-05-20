@@ -146,7 +146,7 @@ function DevLanding() {
                 className="group block rounded-3xl border border-border bg-paper overflow-hidden hover:shadow-[0_28px_60px_-30px_rgba(0,0,0,0.35)] transition"
               >
                 <div className="relative overflow-hidden">
-                  <TemplateCover template={t} />
+                  <TemplateCover src={t.coverImage} name={t.name} previewRoute={t.previewRoute} />
                   <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition" />
                 </div>
                 <div className="p-5">
