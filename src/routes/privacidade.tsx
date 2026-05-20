@@ -24,7 +24,7 @@ function PrivacyPage() {
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
       <main className="mx-auto max-w-3xl w-full px-5 md:px-10 py-12 md:py-20 flex-1">
-        <span className="text-xs tracking-wide text-ink-soft">Atualizado em 13 de maio de 2026 · Versão 2.0 · Conforme LGPD</span>
+        <span className="text-xs tracking-wide text-ink-soft">Atualizado em 20 de maio de 2026 · Versão 2.1 · Conforme LGPD</span>
         <h1 className="mt-4 editorial-headline text-5xl md:text-6xl text-ink">Política de Privacidade</h1>
         <p className="mt-4 text-ink-soft">Sua privacidade importa. Esta Política descreve, de forma transparente, quais dados coletamos, por que coletamos, como armazenamos e quais são seus direitos. Está em conformidade integral com a Lei Geral de Proteção de Dados (Lei 13.709/18).</p>
 
