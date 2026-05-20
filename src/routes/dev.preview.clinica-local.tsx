@@ -281,15 +281,15 @@ export function ClinicaPreview() {
               </div>
 
               {/* Center brand */}
-              <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
+              <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
-                <span className="text-white text-[15px] sm:text-[16px] tracking-tight lowercase" style={{ fontWeight: 600 }}>eye surgeons</span>
+                <span className="text-white text-[14px] sm:text-[16px] tracking-tight lowercase whitespace-nowrap" style={{ fontWeight: 600 }}>eye surgeons</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
               </div>
 
               {/* Right */}
               <div className="flex items-center gap-2">
-                <button aria-label="Call" className="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center">
+                <button aria-label="Call" className="hidden sm:flex w-9 h-9 rounded-full bg-white text-black items-center justify-center">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92Z"/></svg>
                 </button>
                 <div className="hidden lg:flex flex-col leading-tight text-white">
@@ -298,9 +298,17 @@ export function ClinicaPreview() {
                 </div>
                 <button
                   onClick={() => scrollTo("contact")}
-                  className="inline-flex items-center gap-2 pl-3.5 pr-1 h-9 rounded-full bg-white text-black text-[13px] font-medium hover:-translate-y-0.5 transition"
+                  aria-label="Contact Us"
+                  className="hidden sm:inline-flex items-center gap-2 pl-3.5 pr-1 h-9 rounded-full bg-white text-black text-[13px] font-medium hover:-translate-y-0.5 transition"
                 >
                   Contact Us
+                  <ArrowCircle size={28} />
+                </button>
+                <button
+                  onClick={() => scrollTo("contact")}
+                  aria-label="Contact Us"
+                  className="sm:hidden w-9 h-9 rounded-full bg-white text-black flex items-center justify-center"
+                >
                   <ArrowCircle size={28} />
                 </button>
               </div>
@@ -453,12 +461,12 @@ export function ClinicaPreview() {
               className="w-full h-[420px] object-cover"
               style={{ borderRadius: 32 }}
             />
-            <div className="absolute -bottom-5 -left-4 bg-white px-5 py-3 rounded-2xl shadow-lg">
-              <div className="text-[22px] font-bold" style={{ color: C.ink }}>10,000+</div>
+            <div className="absolute -bottom-3 left-3 sm:-bottom-5 sm:-left-4 bg-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl shadow-lg">
+              <div className="text-[20px] sm:text-[22px] font-bold" style={{ color: C.ink }}>10,000+</div>
               <div className="text-xs" style={{ color: C.muted }}>Procedures</div>
             </div>
-            <div className="absolute top-5 -right-3 bg-white px-5 py-3 rounded-2xl shadow-lg">
-              <div className="text-[22px] font-bold" style={{ color: C.ink }}>20+</div>
+            <div className="absolute top-3 right-3 sm:top-5 sm:-right-3 bg-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl shadow-lg">
+              <div className="text-[20px] sm:text-[22px] font-bold" style={{ color: C.ink }}>20+</div>
               <div className="text-xs" style={{ color: C.muted }}>Years Experience</div>
             </div>
           </div>
