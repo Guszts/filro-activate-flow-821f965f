@@ -85,47 +85,76 @@ async function generateContent(input: {
   templateName: string;
   sections: string[];
 }): Promise<GeneratedContent> {
-  const system = `Você é um copywriter sênior brasileiro especialista em landing pages que convertem. Sua tarefa é gerar o conteúdo de um site para um negócio real, em PT-BR, com tom profissional e direto. Responda APENAS um objeto JSON válido (sem markdown, sem comentários) seguindo EXATAMENTE este schema:
+  const system = `Você é um diretor criativo e copywriter sênior brasileiro, especialista em landing pages premium que convertem (referência: melhores cases do Awwwards/SiteInspire em PT-BR). Sua missão é gerar o conteúdo de um site COMPLETO e PROFISSIONAL para um negócio real, em PT-BR, com tom profissional, editorial e direto — mesmo quando a descrição enviada pelo dono for curta, vaga ou mal escrita.
+
+REGRAS DE QUALIDADE (não negociáveis):
+- O resultado SEMPRE deve parecer um site premium de verdade — nunca um rascunho. Headlines fortes, copy persuasiva, CTAs claros, prova social plausível, garantias, FAQ útil.
+- Reúna os melhores pontos dos templates conhecidos (clínica, restaurante, oficina, loja, prestador, landing de vendas, viagem): hero impactante, serviços/ofertas bem descritos, diferenciais, depoimentos, FAQ, CTA forte, contato.
+- Se a descrição do usuário for fraca/curta, INFIRA um posicionamento profissional plausível para o segmento e siga em frente. Não diga "informação insuficiente". Não use placeholders genéricos do tipo "Lorem".
+- NÃO invente fatos verificáveis específicos (CNPJ, anos, prêmios, nomes reais). Use frases plausíveis e neutras quando faltar dado.
+- Sem emojis. Sem markdown. Sem comentários. Responda APENAS um objeto JSON válido.
+
+SCHEMA EXATO:
 {
-  "hero": { "eyebrow": "string curta (3-6 palavras)", "title": "string até 90 chars, direto", "subtitle": "string até 180 chars", "ctaPrimary": "Falar no WhatsApp ou similar", "ctaSecondary": "string opcional curta" },
-  "about": { "title": "string", "body": "1 parágrafo até 400 chars" },
-  "services": { "title": "string", "items": [ { "name": "string", "description": "string curta até 140 chars" } ] (4 a 6 itens) },
-  "highlights": ["string curta", ...] (3 a 5 itens),
-  "testimonial": { "quote": "string até 220 chars", "author": "Nome — papel" },
-  "cta": { "title": "string", "body": "string até 200 chars", "buttonLabel": "string curta" },
-  "contact": { "whatsapp": "echo do whatsapp recebido", "address": "string ou vazia", "hours": "string ou vazia" },
-  "colors": { "primary": "#HEX", "accent": "#HEX", "background": "#HEX claro", "ink": "#HEX escuro" }
-}
-NUNCA invente fatos sobre o negócio que o usuário não passou. Use frases genéricas mas profissionais quando faltar detalhe.`;
+  "hero": { "eyebrow": "3-6 palavras", "title": "até 90 chars, direto e marcante", "subtitle": "até 200 chars, claro e persuasivo", "ctaPrimary": "ação clara (ex: Falar no WhatsApp)", "ctaSecondary": "opcional, curta" },
+  "about": { "title": "string", "body": "1 parágrafo até 480 chars, com posicionamento e diferenciação" },
+  "services": { "title": "string", "items": [ { "name": "string", "description": "até 160 chars" } ] (sempre 4 a 6 itens) },
+  "highlights": ["string curta de diferencial", ...] (sempre 4 a 6 itens, sem emojis),
+  "testimonial": { "quote": "até 240 chars, soa real", "author": "Nome — cargo/cidade" },
+  "faq": [ { "q": "pergunta real do cliente", "a": "resposta clara até 240 chars" } ] (sempre 4 a 6 itens),
+  "cta": { "title": "string forte", "body": "até 220 chars", "buttonLabel": "ação curta" },
+  "contact": { "whatsapp": "echo do recebido ou vazio", "address": "string ou vazia", "hours": "string ou vazia" },
+  "colors": { "primary": "#HEX coerente com o segmento", "accent": "#HEX complementar", "background": "#HEX claro/paper", "ink": "#HEX escuro de texto" }
+}`;
 
   const user = `Modelo escolhido: ${input.templateName}
-Seções esperadas: ${input.sections.join(", ")}
+Seções recomendadas do modelo: ${input.sections.join(", ")}
 Nome do negócio: ${input.businessName}
-Segmento: ${input.segment || "—"}
+Segmento: ${input.segment || "(não informado — infira do modelo)"}
 Cidade/região: ${input.city || "—"}
 WhatsApp: ${input.whatsapp || "—"}
-Tom desejado: ${input.tone || "profissional e acolhedor"}
-Descrição do negócio (escrita pelo dono):
+Tom desejado: ${input.tone || "profissional, editorial e acolhedor"}
+Descrição enviada pelo dono (pode ser curta/vaga — você deve elevar para nível profissional):
 """
-${input.description}
+${input.description || "(sem descrição — gere conteúdo profissional plausível para o segmento e o modelo)"}
 """
 
-Gere o JSON agora.`;
+Gere o JSON completo agora, com TODAS as chaves do schema, mesmo que precise inferir conteúdo profissional plausível.`;
 
   const raw = await callAI([
     { role: "system", content: system },
     { role: "user", content: user },
   ]);
   const fallback: GeneratedContent = {
-    hero: { eyebrow: input.segment || "Bem-vindo", title: input.businessName, subtitle: input.description.slice(0, 160), ctaPrimary: "Falar no WhatsApp" },
-    about: { title: `Sobre ${input.businessName}`, body: input.description.slice(0, 380) },
-    services: { title: "O que oferecemos", items: [{ name: "Atendimento personalizado", description: "Soluções pensadas para o seu caso." }] },
+    hero: { eyebrow: input.segment || "Bem-vindo", title: input.businessName, subtitle: input.description.slice(0, 160) || `Soluções profissionais em ${input.segment || "seu segmento"}.`, ctaPrimary: "Falar no WhatsApp" },
+    about: { title: `Sobre ${input.businessName}`, body: input.description.slice(0, 380) || `${input.businessName} entrega um atendimento profissional, com foco em qualidade e resultado para cada cliente.` },
+    services: { title: "O que oferecemos", items: [
+      { name: "Atendimento personalizado", description: "Soluções pensadas para o seu caso." },
+      { name: "Qualidade comprovada", description: "Processo cuidadoso do início ao fim." },
+      { name: "Suporte ágil", description: "Resposta rápida pelo WhatsApp." },
+      { name: "Compromisso com prazo", description: "Entregamos quando combinamos." },
+    ] },
     cta: { title: "Vamos conversar?", body: "Fale com a gente agora pelo WhatsApp.", buttonLabel: "Falar agora" },
     contact: { whatsapp: input.whatsapp, address: "", hours: "" },
     colors: FALLBACK_COLORS,
   };
   return safeJSON<GeneratedContent>(raw, fallback);
 }
+
+// ---------- check slug availability ----------
+export const checkDevSlugAvailable = createServerFn({ method: "POST" })
+  .inputValidator((data: { slug: string }) => {
+    const s = slugify(data.slug || "");
+    return { slug: s };
+  })
+  .handler(async ({ data }) => {
+    if (!SLUG_RE.test(data.slug)) {
+      return { ok: false as const, slug: data.slug, available: false, reason: "Use 3 a 40 letras minúsculas, números e hífen." };
+    }
+    const { data: row } = await supabaseAdmin
+      .from("dev_projects").select("id").eq("slug", data.slug).maybeSingle();
+    return { ok: true as const, slug: data.slug, available: !row, reason: row ? "Endereço já em uso." : "" };
+  });
 
 // ---------- public: ler site pelo slug ----------
 export const getPublicSiteBySlug = createServerFn({ method: "POST" })
@@ -162,7 +191,7 @@ export const generateDevSite = createServerFn({ method: "POST" })
     const name = (data.businessName || "").trim();
     if (name.length < 2 || name.length > 120) throw new Error("Nome do negócio inválido");
     const desc = (data.description || "").trim();
-    if (desc.length < 10 || desc.length > 2000) throw new Error("Descreva seu negócio em ao menos 10 caracteres (máx. 2000)");
+    if (desc.length > 2000) throw new Error("Descrição muito longa (máx. 2000)");
     return { ...data, businessName: name, description: desc };
   })
   .handler(async ({ data, context }) => {
@@ -288,7 +317,15 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
     if (!project) return { ok: false as const, error: "Projeto não encontrado", cost, breakdown: costBreakdown };
     if (project.user_id !== userId) return { ok: false as const, error: "Sem permissão", cost, breakdown: costBreakdown };
 
-    const system = `Você edita o JSON de conteúdo de um site. Receba o JSON atual e a instrução do usuário. Devolva APENAS o JSON COMPLETO atualizado, no MESMO formato/chaves do recebido (não invente novas chaves, não remova chaves). Faça só a mudança pedida. Em PT-BR.`;
+    const system = `Você é o editor de IA de um site profissional. Receba o JSON atual e a instrução do dono e devolva APENAS o JSON COMPLETO atualizado em PT-BR.
+
+REGRAS:
+- Atenda QUALQUER pedido do usuário, mesmo que seja vago ("melhore", "mais bonito", "deixe profissional", "mais animado") — interprete com bom gosto editorial e entregue sempre a melhor versão possível.
+- Pode ADICIONAR novas chaves/seções (ex: "faq", "stats", "gallery", "pricing", "process", "team", "animations" com objetos descritivos) quando o pedido pedir mais conteúdo, mais seções, mais animações, etc.
+- Pode REMOVER seções quando o usuário pedir explicitamente.
+- Preserve tudo que não foi pedido para mudar.
+- Nunca devolva placeholders, "lorem ipsum" ou texto vazio: sempre conteúdo profissional plausível.
+- Sem emojis. Sem markdown. Sem comentários. Apenas o JSON final completo.`;
     const user = `INSTRUÇÃO: ${data.instruction}
 
 JSON ATUAL:

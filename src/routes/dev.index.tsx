@@ -6,9 +6,10 @@ import { motion } from "framer-motion";
 import { ArrowRight, ArrowUp, Check, Plus, ExternalLink } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { DEV_TEMPLATES } from "@/lib/dev/templates";
+import { DEV_TEMPLATES, type DevTemplate } from "@/lib/dev/templates";
 import { DEV_PLANS, formatBRL } from "@/lib/dev/plans";
 import { TemplateCover } from "@/components/dev/TemplateCover";
+import { TemplateStartModal } from "@/components/dev/TemplateStartModal";
 import { useAuth } from "@/lib/auth";
 import { listMyDevProjects } from "@/lib/dev/dev.functions";
 
@@ -33,6 +34,7 @@ function DevLanding() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [prompt, setPrompt] = useState("");
+  const [modalTpl, setModalTpl] = useState<DevTemplate | null>(null);
 
   const fetchProjects = useServerFn(listMyDevProjects);
   const projectsQuery = useQuery({
@@ -225,10 +227,10 @@ function DevLanding() {
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.45, delay: i * 0.04 }}
             >
-              <Link
-                to="/dev/modelos/$slug"
-                params={{ slug: t.slug }}
-                className="group block rounded-3xl border border-border bg-paper overflow-hidden hover:shadow-[0_28px_60px_-30px_rgba(0,0,0,0.35)] transition"
+              <button
+                type="button"
+                onClick={() => setModalTpl(t)}
+                className="group w-full text-left block rounded-3xl border border-border bg-paper overflow-hidden hover:shadow-[0_28px_60px_-30px_rgba(0,0,0,0.35)] transition"
               >
                 <div className="relative overflow-hidden">
                   <TemplateCover src={t.coverImage} name={t.name} previewRoute={t.previewRoute} />
@@ -242,7 +244,7 @@ function DevLanding() {
                     Usar este modelo <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition" />
                   </div>
                 </div>
-              </Link>
+              </button>
             </motion.div>
           ))}
         </div>
@@ -378,6 +380,8 @@ function DevLanding() {
       </section>
 
       <SiteFooter />
+
+      <TemplateStartModal template={modalTpl} open={!!modalTpl} onClose={() => setModalTpl(null)} />
     </div>
   );
 }
