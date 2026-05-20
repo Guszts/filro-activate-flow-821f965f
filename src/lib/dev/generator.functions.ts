@@ -191,7 +191,7 @@ export const generateDevSite = createServerFn({ method: "POST" })
     const name = (data.businessName || "").trim();
     if (name.length < 2 || name.length > 120) throw new Error("Nome do negócio inválido");
     const desc = (data.description || "").trim();
-    if (desc.length < 10 || desc.length > 2000) throw new Error("Descreva seu negócio em ao menos 10 caracteres (máx. 2000)");
+    if (desc.length > 2000) throw new Error("Descrição muito longa (máx. 2000)");
     return { ...data, businessName: name, description: desc };
   })
   .handler(async ({ data, context }) => {
