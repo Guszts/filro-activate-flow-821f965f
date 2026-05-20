@@ -9,12 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WishesRouteImport } from './routes/wishes'
-import { Route as VivaraRouteImport } from './routes/vivara'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TermosRouteImport } from './routes/termos'
-import { Route as SushixtiRouteImport } from './routes/sushixti'
 import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -23,39 +20,22 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PaymentSuccessRouteImport } from './routes/payment-success'
 import { Route as PaymentFailedRouteImport } from './routes/payment-failed'
 import { Route as PainelRouteImport } from './routes/painel'
-import { Route as MotorproRouteImport } from './routes/motorpro'
 import { Route as ModelosRouteImport } from './routes/modelos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GarantiaRouteImport } from './routes/garantia'
-import { Route as FornoRouteImport } from './routes/forno'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as ConsoleRouteImport } from './routes/console'
 import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BusinessInfoRouteImport } from './routes/business-info'
-import { Route as AtelierRouteImport } from './routes/atelier'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
-import { Route as DevIndexRouteImport } from './routes/dev.index'
-import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
-import { Route as DevPrecosRouteImport } from './routes/dev.precos'
-import { Route as DevNovoRouteImport } from './routes/dev.novo'
-import { Route as DevModelosIndexRouteImport } from './routes/dev.modelos.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
-import { Route as DevProjetoProjectIdRouteImport } from './routes/dev.projeto.$projectId'
-import { Route as DevPreviewViagemWishesRouteImport } from './routes/dev.preview.viagem-wishes'
-import { Route as DevPreviewRestauranteCardapioRouteImport } from './routes/dev.preview.restaurante-cardapio'
-import { Route as DevPreviewPrestadorServicoRouteImport } from './routes/dev.preview.prestador-servico'
-import { Route as DevPreviewOficinaAutoRouteImport } from './routes/dev.preview.oficina-auto'
-import { Route as DevPreviewLojaLocalRouteImport } from './routes/dev.preview.loja-local'
-import { Route as DevPreviewLandingVendasRouteImport } from './routes/dev.preview.landing-vendas'
-import { Route as DevPreviewClinicaLocalRouteImport } from './routes/dev.preview.clinica-local'
-import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -64,16 +44,6 @@ import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/em
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
-const WishesRoute = WishesRouteImport.update({
-  id: '/wishes',
-  path: '/wishes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const VivaraRoute = VivaraRouteImport.update({
-  id: '/vivara',
-  path: '/vivara',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
   path: '/verify-email',
@@ -87,11 +57,6 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
   path: '/termos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SushixtiRoute = SushixtiRouteImport.update({
-  id: '/sushixti',
-  path: '/sushixti',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SuporteRoute = SuporteRouteImport.update({
@@ -134,11 +99,6 @@ const PainelRoute = PainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MotorproRoute = MotorproRouteImport.update({
-  id: '/motorpro',
-  path: '/motorpro',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ModelosRoute = ModelosRouteImport.update({
   id: '/modelos',
   path: '/modelos',
@@ -152,11 +112,6 @@ const LoginRoute = LoginRouteImport.update({
 const GarantiaRoute = GarantiaRouteImport.update({
   id: '/garantia',
   path: '/garantia',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FornoRoute = FornoRouteImport.update({
-  id: '/forno',
-  path: '/forno',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocsRoute = DocsRouteImport.update({
@@ -189,11 +144,6 @@ const BusinessInfoRoute = BusinessInfoRouteImport.update({
   path: '/business-info',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AtelierRoute = AtelierRouteImport.update({
-  id: '/atelier',
-  path: '/atelier',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -202,16 +152,6 @@ const IndexRoute = IndexRouteImport.update({
 const PlanosIndexRoute = PlanosIndexRouteImport.update({
   id: '/planos/',
   path: '/planos/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevIndexRoute = DevIndexRouteImport.update({
-  id: '/dev/',
-  path: '/dev/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SSlugRoute = SSlugRouteImport.update({
-  id: '/s/$slug',
-  path: '/s/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjetoIdRoute = ProjetoIdRouteImport.update({
@@ -234,71 +174,9 @@ const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   path: '/email/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DevPrecosRoute = DevPrecosRouteImport.update({
-  id: '/dev/precos',
-  path: '/dev/precos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevNovoRoute = DevNovoRouteImport.update({
-  id: '/dev/novo',
-  path: '/dev/novo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevModelosIndexRoute = DevModelosIndexRouteImport.update({
-  id: '/dev/modelos/',
-  path: '/dev/modelos/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   id: '/lovable/email/suppression',
   path: '/lovable/email/suppression',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevProjetoProjectIdRoute = DevProjetoProjectIdRouteImport.update({
-  id: '/dev/projeto/$projectId',
-  path: '/dev/projeto/$projectId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevPreviewViagemWishesRoute = DevPreviewViagemWishesRouteImport.update({
-  id: '/dev/preview/viagem-wishes',
-  path: '/dev/preview/viagem-wishes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevPreviewRestauranteCardapioRoute =
-  DevPreviewRestauranteCardapioRouteImport.update({
-    id: '/dev/preview/restaurante-cardapio',
-    path: '/dev/preview/restaurante-cardapio',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DevPreviewPrestadorServicoRoute =
-  DevPreviewPrestadorServicoRouteImport.update({
-    id: '/dev/preview/prestador-servico',
-    path: '/dev/preview/prestador-servico',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DevPreviewOficinaAutoRoute = DevPreviewOficinaAutoRouteImport.update({
-  id: '/dev/preview/oficina-auto',
-  path: '/dev/preview/oficina-auto',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevPreviewLojaLocalRoute = DevPreviewLojaLocalRouteImport.update({
-  id: '/dev/preview/loja-local',
-  path: '/dev/preview/loja-local',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevPreviewLandingVendasRoute = DevPreviewLandingVendasRouteImport.update({
-  id: '/dev/preview/landing-vendas',
-  path: '/dev/preview/landing-vendas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevPreviewClinicaLocalRoute = DevPreviewClinicaLocalRouteImport.update({
-  id: '/dev/preview/clinica-local',
-  path: '/dev/preview/clinica-local',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DevModelosSlugRoute = DevModelosSlugRouteImport.update({
-  id: '/dev/modelos/$slug',
-  path: '/dev/modelos/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicNotifyAdminSignupRoute =
@@ -344,18 +222,15 @@ const ApiPublicPaymentsWebhookRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/atelier': typeof AtelierRoute
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
-  '/forno': typeof FornoRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
-  '/motorpro': typeof MotorproRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -364,33 +239,16 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suporte': typeof SuporteRoute
-  '/sushixti': typeof SushixtiRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
-  '/vivara': typeof VivaraRoute
-  '/wishes': typeof WishesRoute
-  '/dev/novo': typeof DevNovoRoute
-  '/dev/precos': typeof DevPrecosRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
-  '/s/$slug': typeof SSlugRoute
-  '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
-  '/dev/modelos/$slug': typeof DevModelosSlugRoute
-  '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
-  '/dev/preview/landing-vendas': typeof DevPreviewLandingVendasRoute
-  '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
-  '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
-  '/dev/preview/prestador-servico': typeof DevPreviewPrestadorServicoRoute
-  '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
-  '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
-  '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
-  '/dev/modelos/': typeof DevModelosIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -400,18 +258,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/atelier': typeof AtelierRoute
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
-  '/forno': typeof FornoRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
-  '/motorpro': typeof MotorproRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -420,33 +275,16 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suporte': typeof SuporteRoute
-  '/sushixti': typeof SushixtiRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
-  '/vivara': typeof VivaraRoute
-  '/wishes': typeof WishesRoute
-  '/dev/novo': typeof DevNovoRoute
-  '/dev/precos': typeof DevPrecosRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
-  '/s/$slug': typeof SSlugRoute
-  '/dev': typeof DevIndexRoute
   '/planos': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
-  '/dev/modelos/$slug': typeof DevModelosSlugRoute
-  '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
-  '/dev/preview/landing-vendas': typeof DevPreviewLandingVendasRoute
-  '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
-  '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
-  '/dev/preview/prestador-servico': typeof DevPreviewPrestadorServicoRoute
-  '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
-  '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
-  '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
-  '/dev/modelos': typeof DevModelosIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -457,18 +295,15 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/atelier': typeof AtelierRoute
   '/business-info': typeof BusinessInfoRoute
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
-  '/forno': typeof FornoRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRoute
-  '/motorpro': typeof MotorproRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
@@ -477,33 +312,16 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suporte': typeof SuporteRoute
-  '/sushixti': typeof SushixtiRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
-  '/vivara': typeof VivaraRoute
-  '/wishes': typeof WishesRoute
-  '/dev/novo': typeof DevNovoRoute
-  '/dev/precos': typeof DevPrecosRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
-  '/s/$slug': typeof SSlugRoute
-  '/dev/': typeof DevIndexRoute
   '/planos/': typeof PlanosIndexRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
-  '/dev/modelos/$slug': typeof DevModelosSlugRoute
-  '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
-  '/dev/preview/landing-vendas': typeof DevPreviewLandingVendasRoute
-  '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
-  '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
-  '/dev/preview/prestador-servico': typeof DevPreviewPrestadorServicoRoute
-  '/dev/preview/restaurante-cardapio': typeof DevPreviewRestauranteCardapioRoute
-  '/dev/preview/viagem-wishes': typeof DevPreviewViagemWishesRoute
-  '/dev/projeto/$projectId': typeof DevProjetoProjectIdRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
-  '/dev/modelos/': typeof DevModelosIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -515,18 +333,15 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/atelier'
     | '/business-info'
     | '/checkout'
     | '/como-funciona'
     | '/comparar'
     | '/console'
     | '/docs'
-    | '/forno'
     | '/garantia'
     | '/login'
     | '/modelos'
-    | '/motorpro'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
@@ -535,33 +350,16 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/suporte'
-    | '/sushixti'
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
-    | '/vivara'
-    | '/wishes'
-    | '/dev/novo'
-    | '/dev/precos'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
-    | '/s/$slug'
-    | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
-    | '/dev/modelos/$slug'
-    | '/dev/preview/clinica-local'
-    | '/dev/preview/landing-vendas'
-    | '/dev/preview/loja-local'
-    | '/dev/preview/oficina-auto'
-    | '/dev/preview/prestador-servico'
-    | '/dev/preview/restaurante-cardapio'
-    | '/dev/preview/viagem-wishes'
-    | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
-    | '/dev/modelos/'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -571,18 +369,15 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/atelier'
     | '/business-info'
     | '/checkout'
     | '/como-funciona'
     | '/comparar'
     | '/console'
     | '/docs'
-    | '/forno'
     | '/garantia'
     | '/login'
     | '/modelos'
-    | '/motorpro'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
@@ -591,33 +386,16 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/suporte'
-    | '/sushixti'
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
-    | '/vivara'
-    | '/wishes'
-    | '/dev/novo'
-    | '/dev/precos'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
-    | '/s/$slug'
-    | '/dev'
     | '/planos'
     | '/api/public/notify-admin-signup'
-    | '/dev/modelos/$slug'
-    | '/dev/preview/clinica-local'
-    | '/dev/preview/landing-vendas'
-    | '/dev/preview/loja-local'
-    | '/dev/preview/oficina-auto'
-    | '/dev/preview/prestador-servico'
-    | '/dev/preview/restaurante-cardapio'
-    | '/dev/preview/viagem-wishes'
-    | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
-    | '/dev/modelos'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -627,18 +405,15 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/atelier'
     | '/business-info'
     | '/checkout'
     | '/como-funciona'
     | '/comparar'
     | '/console'
     | '/docs'
-    | '/forno'
     | '/garantia'
     | '/login'
     | '/modelos'
-    | '/motorpro'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
@@ -647,33 +422,16 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/suporte'
-    | '/sushixti'
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
-    | '/vivara'
-    | '/wishes'
-    | '/dev/novo'
-    | '/dev/precos'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/planos/$slug'
     | '/projeto/$id'
-    | '/s/$slug'
-    | '/dev/'
     | '/planos/'
     | '/api/public/notify-admin-signup'
-    | '/dev/modelos/$slug'
-    | '/dev/preview/clinica-local'
-    | '/dev/preview/landing-vendas'
-    | '/dev/preview/loja-local'
-    | '/dev/preview/oficina-auto'
-    | '/dev/preview/prestador-servico'
-    | '/dev/preview/restaurante-cardapio'
-    | '/dev/preview/viagem-wishes'
-    | '/dev/projeto/$projectId'
     | '/lovable/email/suppression'
-    | '/dev/modelos/'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -684,18 +442,15 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AtelierRoute: typeof AtelierRoute
   BusinessInfoRoute: typeof BusinessInfoRoute
   CheckoutRoute: typeof CheckoutRoute
   ComoFuncionaRoute: typeof ComoFuncionaRoute
   CompararRoute: typeof CompararRoute
   ConsoleRoute: typeof ConsoleRoute
   DocsRoute: typeof DocsRoute
-  FornoRoute: typeof FornoRoute
   GarantiaRoute: typeof GarantiaRoute
   LoginRoute: typeof LoginRoute
   ModelosRoute: typeof ModelosRoute
-  MotorproRoute: typeof MotorproRoute
   PainelRoute: typeof PainelRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
@@ -704,33 +459,16 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SuporteRoute: typeof SuporteRoute
-  SushixtiRoute: typeof SushixtiRoute
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
-  VivaraRoute: typeof VivaraRoute
-  WishesRoute: typeof WishesRoute
-  DevNovoRoute: typeof DevNovoRoute
-  DevPrecosRoute: typeof DevPrecosRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LeadIdRoute: typeof LeadIdRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
   ProjetoIdRoute: typeof ProjetoIdRoute
-  SSlugRoute: typeof SSlugRoute
-  DevIndexRoute: typeof DevIndexRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
-  DevModelosSlugRoute: typeof DevModelosSlugRoute
-  DevPreviewClinicaLocalRoute: typeof DevPreviewClinicaLocalRoute
-  DevPreviewLandingVendasRoute: typeof DevPreviewLandingVendasRoute
-  DevPreviewLojaLocalRoute: typeof DevPreviewLojaLocalRoute
-  DevPreviewOficinaAutoRoute: typeof DevPreviewOficinaAutoRoute
-  DevPreviewPrestadorServicoRoute: typeof DevPreviewPrestadorServicoRoute
-  DevPreviewRestauranteCardapioRoute: typeof DevPreviewRestauranteCardapioRoute
-  DevPreviewViagemWishesRoute: typeof DevPreviewViagemWishesRoute
-  DevProjetoProjectIdRoute: typeof DevProjetoProjectIdRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
-  DevModelosIndexRoute: typeof DevModelosIndexRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -741,20 +479,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/wishes': {
-      id: '/wishes'
-      path: '/wishes'
-      fullPath: '/wishes'
-      preLoaderRoute: typeof WishesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/vivara': {
-      id: '/vivara'
-      path: '/vivara'
-      fullPath: '/vivara'
-      preLoaderRoute: typeof VivaraRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/verify-email': {
       id: '/verify-email'
       path: '/verify-email'
@@ -774,13 +498,6 @@ declare module '@tanstack/react-router' {
       path: '/termos'
       fullPath: '/termos'
       preLoaderRoute: typeof TermosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sushixti': {
-      id: '/sushixti'
-      path: '/sushixti'
-      fullPath: '/sushixti'
-      preLoaderRoute: typeof SushixtiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/suporte': {
@@ -839,13 +556,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PainelRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/motorpro': {
-      id: '/motorpro'
-      path: '/motorpro'
-      fullPath: '/motorpro'
-      preLoaderRoute: typeof MotorproRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/modelos': {
       id: '/modelos'
       path: '/modelos'
@@ -865,13 +575,6 @@ declare module '@tanstack/react-router' {
       path: '/garantia'
       fullPath: '/garantia'
       preLoaderRoute: typeof GarantiaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forno': {
-      id: '/forno'
-      path: '/forno'
-      fullPath: '/forno'
-      preLoaderRoute: typeof FornoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/docs': {
@@ -916,13 +619,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BusinessInfoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/atelier': {
-      id: '/atelier'
-      path: '/atelier'
-      fullPath: '/atelier'
-      preLoaderRoute: typeof AtelierRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -935,20 +631,6 @@ declare module '@tanstack/react-router' {
       path: '/planos'
       fullPath: '/planos/'
       preLoaderRoute: typeof PlanosIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/': {
-      id: '/dev/'
-      path: '/dev'
-      fullPath: '/dev/'
-      preLoaderRoute: typeof DevIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/$slug': {
-      id: '/s/$slug'
-      path: '/s/$slug'
-      fullPath: '/s/$slug'
-      preLoaderRoute: typeof SSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projeto/$id': {
@@ -979,95 +661,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dev/precos': {
-      id: '/dev/precos'
-      path: '/dev/precos'
-      fullPath: '/dev/precos'
-      preLoaderRoute: typeof DevPrecosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/novo': {
-      id: '/dev/novo'
-      path: '/dev/novo'
-      fullPath: '/dev/novo'
-      preLoaderRoute: typeof DevNovoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/modelos/': {
-      id: '/dev/modelos/'
-      path: '/dev/modelos'
-      fullPath: '/dev/modelos/'
-      preLoaderRoute: typeof DevModelosIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/lovable/email/suppression': {
       id: '/lovable/email/suppression'
       path: '/lovable/email/suppression'
       fullPath: '/lovable/email/suppression'
       preLoaderRoute: typeof LovableEmailSuppressionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/projeto/$projectId': {
-      id: '/dev/projeto/$projectId'
-      path: '/dev/projeto/$projectId'
-      fullPath: '/dev/projeto/$projectId'
-      preLoaderRoute: typeof DevProjetoProjectIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/preview/viagem-wishes': {
-      id: '/dev/preview/viagem-wishes'
-      path: '/dev/preview/viagem-wishes'
-      fullPath: '/dev/preview/viagem-wishes'
-      preLoaderRoute: typeof DevPreviewViagemWishesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/preview/restaurante-cardapio': {
-      id: '/dev/preview/restaurante-cardapio'
-      path: '/dev/preview/restaurante-cardapio'
-      fullPath: '/dev/preview/restaurante-cardapio'
-      preLoaderRoute: typeof DevPreviewRestauranteCardapioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/preview/prestador-servico': {
-      id: '/dev/preview/prestador-servico'
-      path: '/dev/preview/prestador-servico'
-      fullPath: '/dev/preview/prestador-servico'
-      preLoaderRoute: typeof DevPreviewPrestadorServicoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/preview/oficina-auto': {
-      id: '/dev/preview/oficina-auto'
-      path: '/dev/preview/oficina-auto'
-      fullPath: '/dev/preview/oficina-auto'
-      preLoaderRoute: typeof DevPreviewOficinaAutoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/preview/loja-local': {
-      id: '/dev/preview/loja-local'
-      path: '/dev/preview/loja-local'
-      fullPath: '/dev/preview/loja-local'
-      preLoaderRoute: typeof DevPreviewLojaLocalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/preview/landing-vendas': {
-      id: '/dev/preview/landing-vendas'
-      path: '/dev/preview/landing-vendas'
-      fullPath: '/dev/preview/landing-vendas'
-      preLoaderRoute: typeof DevPreviewLandingVendasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/preview/clinica-local': {
-      id: '/dev/preview/clinica-local'
-      path: '/dev/preview/clinica-local'
-      fullPath: '/dev/preview/clinica-local'
-      preLoaderRoute: typeof DevPreviewClinicaLocalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dev/modelos/$slug': {
-      id: '/dev/modelos/$slug'
-      path: '/dev/modelos/$slug'
-      fullPath: '/dev/modelos/$slug'
-      preLoaderRoute: typeof DevModelosSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/notify-admin-signup': {
@@ -1124,18 +722,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AtelierRoute: AtelierRoute,
   BusinessInfoRoute: BusinessInfoRoute,
   CheckoutRoute: CheckoutRoute,
   ComoFuncionaRoute: ComoFuncionaRoute,
   CompararRoute: CompararRoute,
   ConsoleRoute: ConsoleRoute,
   DocsRoute: DocsRoute,
-  FornoRoute: FornoRoute,
   GarantiaRoute: GarantiaRoute,
   LoginRoute: LoginRoute,
   ModelosRoute: ModelosRoute,
-  MotorproRoute: MotorproRoute,
   PainelRoute: PainelRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
@@ -1144,33 +739,16 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SuporteRoute: SuporteRoute,
-  SushixtiRoute: SushixtiRoute,
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VerifyEmailRoute: VerifyEmailRoute,
-  VivaraRoute: VivaraRoute,
-  WishesRoute: WishesRoute,
-  DevNovoRoute: DevNovoRoute,
-  DevPrecosRoute: DevPrecosRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LeadIdRoute: LeadIdRoute,
   PlanosSlugRoute: PlanosSlugRoute,
   ProjetoIdRoute: ProjetoIdRoute,
-  SSlugRoute: SSlugRoute,
-  DevIndexRoute: DevIndexRoute,
   PlanosIndexRoute: PlanosIndexRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
-  DevModelosSlugRoute: DevModelosSlugRoute,
-  DevPreviewClinicaLocalRoute: DevPreviewClinicaLocalRoute,
-  DevPreviewLandingVendasRoute: DevPreviewLandingVendasRoute,
-  DevPreviewLojaLocalRoute: DevPreviewLojaLocalRoute,
-  DevPreviewOficinaAutoRoute: DevPreviewOficinaAutoRoute,
-  DevPreviewPrestadorServicoRoute: DevPreviewPrestadorServicoRoute,
-  DevPreviewRestauranteCardapioRoute: DevPreviewRestauranteCardapioRoute,
-  DevPreviewViagemWishesRoute: DevPreviewViagemWishesRoute,
-  DevProjetoProjectIdRoute: DevProjetoProjectIdRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
-  DevModelosIndexRoute: DevModelosIndexRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
