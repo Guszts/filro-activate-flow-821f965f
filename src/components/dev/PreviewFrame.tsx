@@ -48,11 +48,12 @@ export function PreviewFrame({ src, title, externalUrl, height = "min(75vh, 760p
 
   const isDesktop = device === "desktop";
   const frameWidth = DEVICE_WIDTHS[device];
+  const fill = height === "100%";
 
   return (
-    <div className="rounded-3xl border border-border bg-paper overflow-hidden shadow-elegant">
+    <div className={`rounded-3xl border border-border bg-paper overflow-hidden shadow-elegant flex flex-col ${fill ? "h-full" : ""}`}>
       {/* Toolbar */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-border bg-muted/40">
+      <div className="shrink-0 flex items-center gap-2 px-3 py-2 border-b border-border bg-muted/40">
         <div className="flex items-center gap-1.5 pr-1">
           <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
           <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
@@ -117,8 +118,8 @@ export function PreviewFrame({ src, title, externalUrl, height = "min(75vh, 760p
 
       {/* Viewport */}
       <div
-        className={`relative bg-[#0f1115] flex justify-center ${isDesktop ? "p-0" : "p-4 md:p-8"}`}
-        style={{ height }}
+        className={`relative bg-[#0f1115] flex justify-center ${isDesktop ? "p-0" : "p-4 md:p-8"} ${fill ? "flex-1 min-h-0" : ""}`}
+        style={fill ? undefined : { height }}
       >
         <div
           className={`relative bg-paper overflow-hidden ${isDesktop ? "w-full h-full" : "h-full rounded-[28px] shadow-2xl ring-1 ring-black/40"}`}
