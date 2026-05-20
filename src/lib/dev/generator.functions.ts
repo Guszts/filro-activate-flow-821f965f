@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { estimateEditCost } from "@/lib/dev/credit-cost";
+import { getTemplateSeed } from "@/lib/dev/template-seeds";
 
 const SLUG_RE = /^[a-z0-9-]{3,40}$/;
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
@@ -214,15 +215,17 @@ export const generateDevSite = createServerFn({ method: "POST" })
     const base = slugify(data.preferredSlug || data.businessName);
     const slug = await uniqueSlug(base);
 
-    // 4. Gera conteúdo via IA — apenas se o usuário escreveu um briefing.
-    // Quando o site começa a partir de um template, renderizamos o template
-    // bespoke (registry) exatamente como na pré-visualização — sem remodelar
-    // pelo nome do negócio. O conteúdo gerado fica vazio até o usuário pedir
-    // edições no chat.
-    let content: GeneratedContent | Record<string, never> = {};
+    // 4. Conteúdo inicial.
+    // - Se o usuário escreveu um briefing real (>=10 chars): gera via IA.
+    // - Caso contrário: usa o snapshot rico do template (template-seeds) para
+    //   que o site já comece com o conteúdo do modelo escolhido. Sem isso, o
+    //   projeto começava como `{}` e a primeira edição da IA (ex: "traduza
+    //   pro português") gerava um site genérico e fraco, perdendo a essência
+    //   do template.
+    let content: Record<string, unknown> = (getTemplateSeed(tpl.slug, data.businessName, data.whatsapp) ?? {}) as unknown as Record<string, unknown>;
     if (data.description && data.description.length >= 10) {
       try {
-        content = await generateContent({
+        content = (await generateContent({
           businessName: data.businessName,
           segment: data.businessSegment,
           description: data.description,
@@ -231,7 +234,7 @@ export const generateDevSite = createServerFn({ method: "POST" })
           tone: data.tone,
           templateName: tpl.name,
           sections: (tpl.sections as unknown as string[]) || [],
-        });
+        })) as unknown as Record<string, unknown>;
       } catch (err) {
         return { ok: false as const, error: err instanceof Error ? err.message : "Falha na geração com IA", projectId: null, slug: null, publishedUrl: null };
       }
@@ -323,33 +326,16 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
     if (!project) return { ok: false as const, error: "Projeto não encontrado", cost, breakdown: costBreakdown };
     if (project.user_id !== userId) return { ok: false as const, error: "Sem permissão", cost, breakdown: costBreakdown };
 
-    // Se o projeto ainda usa o template bespoke (generated_content vazio),
-    // semeia um JSON inicial a partir do template + briefing + instrução do
-    // usuário. Sem isso, a IA editava `{}` e o site público continuava
-    // mostrando o template estático — dando a falsa impressão de que nada
-    // mudou no chat.
+    // Garante que a edição parta de um JSON rico. Em projetos antigos sem
+    // generated_content, semeia com o snapshot do template antes de chamar
+    // a IA — assim a edição preserva a estrutura do modelo escolhido.
     const currentContent = (project.generated_content ?? {}) as Record<string, unknown>;
     const hasContent = currentContent && typeof currentContent === "object" && "hero" in currentContent;
     let workingContent: Record<string, unknown> = currentContent;
     if (!hasContent) {
-      const { data: tpl } = await supabaseAdmin
-        .from("dev_templates").select("name, sections").eq("slug", project.template_slug ?? "").maybeSingle();
-      const briefing = (project.briefing ?? {}) as { description?: string; whatsapp?: string; city?: string; tone?: string };
-      try {
-        const seeded = await generateContent({
-          businessName: project.business_name ?? "Meu negócio",
-          segment: project.business_segment ?? "",
-          description: `${briefing.description ?? ""}\n\nPedido atual do dono: ${data.instruction}`.trim(),
-          whatsapp: briefing.whatsapp,
-          city: briefing.city,
-          tone: briefing.tone,
-          templateName: tpl?.name ?? "Site profissional",
-          sections: (tpl?.sections as unknown as string[]) ?? [],
-        });
-        workingContent = seeded as unknown as Record<string, unknown>;
-      } catch (err) {
-        return { ok: false as const, error: err instanceof Error ? err.message : "Falha ao iniciar edição", cost, breakdown: costBreakdown };
-      }
+      const briefing = (project.briefing ?? {}) as { whatsapp?: string };
+      const seed = getTemplateSeed(project.template_slug ?? "", project.business_name ?? "Meu negócio", briefing.whatsapp);
+      if (seed) workingContent = seed as unknown as Record<string, unknown>;
     }
 
     const system = `Você é o editor de IA de um site profissional. Receba o JSON atual e a instrução do dono e devolva APENAS um JSON envelope em PT-BR no formato exato:
