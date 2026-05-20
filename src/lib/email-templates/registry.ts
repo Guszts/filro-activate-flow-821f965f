@@ -19,9 +19,6 @@ import { template as orderConfirmation } from './order-confirmation'
 import { template as sitePublished } from './site-published'
 import { template as supportReply } from './support-reply'
 import { template as extraChargeIssued } from './extra-charge-issued'
-import { template as devProjectPaid } from './dev-project-paid'
-import { template as devVersionPublished } from './dev-version-published'
-import { template as devChangeAnswered } from './dev-change-answered'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'welcome-purchase': welcomePurchase,
