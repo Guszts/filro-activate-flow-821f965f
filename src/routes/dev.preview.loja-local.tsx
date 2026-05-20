@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+export { MornaMarket as LojaPreview };
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
