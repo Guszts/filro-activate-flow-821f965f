@@ -31,7 +31,4 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'site-published': sitePublished,
   'support-reply': supportReply,
   'extra-charge-issued': extraChargeIssued,
-  'dev-project-paid': devProjectPaid,
-  'dev-version-published': devVersionPublished,
-  'dev-change-answered': devChangeAnswered,
 }
