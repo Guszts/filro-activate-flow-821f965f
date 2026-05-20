@@ -102,32 +102,6 @@ async function upsertSubscription(sub: Stripe.Subscription, env: StripeEnv) {
   const periodEnd = (item as { current_period_end?: number } | undefined)?.current_period_end
     ?? (sub as unknown as { current_period_end?: number }).current_period_end;
 
-  // Flaro Dev — grava em dev_subscriptions e ignora subscriptions legado.
-  if (kind === "dev" || kind === "dev_plan") {
-    const devProjectId = sub.metadata?.devProjectId ?? null;
-    const { data: devPlan } = planSlug
-      ? await supabaseAdmin.from("dev_plans").select("id").eq("slug", planSlug as "dev_start" | "dev_plus" | "dev_pro" | "dev_scale").maybeSingle()
-      : { data: null as { id: string } | null };
-    await supabaseAdmin.from("dev_subscriptions").upsert(
-      {
-        user_id: userId,
-        project_id: devProjectId,
-        plan_id: devPlan?.id ?? null,
-        stripe_subscription_id: sub.id,
-        stripe_customer_id: typeof sub.customer === "string" ? sub.customer : sub.customer.id,
-        price_id: priceId,
-        status: sub.status,
-        current_period_start: tsToISO(periodStart),
-        current_period_end: tsToISO(periodEnd),
-        cancel_at_period_end: sub.cancel_at_period_end ?? false,
-        canceled_at: tsToISO(sub.canceled_at),
-        environment: env,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "stripe_subscription_id" },
-    );
-    return;
-  }
 
   const plan = await getPlanBySlug(planSlug);
   await supabaseAdmin.from("subscriptions").upsert(
