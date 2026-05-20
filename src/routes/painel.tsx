@@ -49,13 +49,11 @@ function PainelPage() {
   const [project, setProject] = useState<ProjectRow | null>(null);
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [plans, setPlans] = useState<Record<string, PlanRow>>({});
-  const [devProjects, setDevProjects] = useState<Array<{ id: string; business_name: string | null; status: string; template_slug: string | null; plan_slug: string | null; updated_at: string }>>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [subInfo, setSubInfo] = useState<{ cancel_at_period_end: boolean; current_period_end: string | null } | null>(null);
   const [openingPortal, setOpeningPortal] = useState(false);
   const openPortal = useServerFn(createPortalSession);
-  const fetchDev = useServerFn(listMyDevProjects);
 
   async function handleManageSubscription() {
     setOpeningPortal(true);
