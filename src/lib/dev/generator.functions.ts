@@ -326,33 +326,16 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
     if (!project) return { ok: false as const, error: "Projeto não encontrado", cost, breakdown: costBreakdown };
     if (project.user_id !== userId) return { ok: false as const, error: "Sem permissão", cost, breakdown: costBreakdown };
 
-    // Se o projeto ainda usa o template bespoke (generated_content vazio),
-    // semeia um JSON inicial a partir do template + briefing + instrução do
-    // usuário. Sem isso, a IA editava `{}` e o site público continuava
-    // mostrando o template estático — dando a falsa impressão de que nada
-    // mudou no chat.
+    // Garante que a edição parta de um JSON rico. Em projetos antigos sem
+    // generated_content, semeia com o snapshot do template antes de chamar
+    // a IA — assim a edição preserva a estrutura do modelo escolhido.
     const currentContent = (project.generated_content ?? {}) as Record<string, unknown>;
     const hasContent = currentContent && typeof currentContent === "object" && "hero" in currentContent;
     let workingContent: Record<string, unknown> = currentContent;
     if (!hasContent) {
-      const { data: tpl } = await supabaseAdmin
-        .from("dev_templates").select("name, sections").eq("slug", project.template_slug ?? "").maybeSingle();
-      const briefing = (project.briefing ?? {}) as { description?: string; whatsapp?: string; city?: string; tone?: string };
-      try {
-        const seeded = await generateContent({
-          businessName: project.business_name ?? "Meu negócio",
-          segment: project.business_segment ?? "",
-          description: `${briefing.description ?? ""}\n\nPedido atual do dono: ${data.instruction}`.trim(),
-          whatsapp: briefing.whatsapp,
-          city: briefing.city,
-          tone: briefing.tone,
-          templateName: tpl?.name ?? "Site profissional",
-          sections: (tpl?.sections as unknown as string[]) ?? [],
-        });
-        workingContent = seeded as unknown as Record<string, unknown>;
-      } catch (err) {
-        return { ok: false as const, error: err instanceof Error ? err.message : "Falha ao iniciar edição", cost, breakdown: costBreakdown };
-      }
+      const briefing = (project.briefing ?? {}) as { whatsapp?: string };
+      const seed = getTemplateSeed(project.template_slug ?? "", project.business_name ?? "Meu negócio", briefing.whatsapp);
+      if (seed) workingContent = seed as unknown as Record<string, unknown>;
     }
 
     const system = `Você é o editor de IA de um site profissional. Receba o JSON atual e a instrução do dono e devolva APENAS um JSON envelope em PT-BR no formato exato:
