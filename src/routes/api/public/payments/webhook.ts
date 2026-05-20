@@ -132,7 +132,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       const planSlug = session.metadata?.planSlug;
       const kind = session.metadata?.kind;
       const extraChargeId = session.metadata?.extraChargeId;
-      const devProjectId = session.metadata?.devProjectId;
+      
 
       // Cobrança extra (upsell via payment link)
       if (kind === "extra_charge" && extraChargeId) {
