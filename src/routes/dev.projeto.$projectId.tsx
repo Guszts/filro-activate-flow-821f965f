@@ -31,8 +31,9 @@ type Project = {
   template_slug: string | null;
 };
 
+type RiskAction = "applied" | "safe_alternative" | "refused";
 type ChatMsg =
-  | { role: "assistant"; text: string; ts: number }
+  | { role: "assistant"; text: string; ts: number; action?: RiskAction; notice?: string }
   | { role: "user"; text: string; ts: number }
   | { role: "system"; text: string; ts: number };
 
