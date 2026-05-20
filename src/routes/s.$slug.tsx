@@ -41,11 +41,15 @@ export const Route = createFileRoute("/s/$slug")({
 
 function PublicSitePage() {
   const { site } = Route.useLoaderData();
-  const TemplateComp = getTemplateComponent(site.template_slug);
-  // If this project was created from a bespoke template, render the exact
-  // template the user picked — same pixels as /dev/preview/{slug}.
-  if (TemplateComp) return <TemplateComp />;
   const content = (site.generated_content ?? {}) as Record<string, unknown>;
+  // Once the user has any AI-generated/edited content (hero present), render
+  // that JSON so chat edits actually show up. Only fall back to the bespoke
+  // template component while the project is still untouched.
+  const hasEdits = content && typeof content === "object" && "hero" in content;
+  if (!hasEdits) {
+    const TemplateComp = getTemplateComponent(site.template_slug);
+    if (TemplateComp) return <TemplateComp />;
+  }
   return <RenderedSite content={content} businessName={site.business_name ?? "Site"} />;
 }
 
