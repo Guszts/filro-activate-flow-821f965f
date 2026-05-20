@@ -42,7 +42,7 @@ const sections = [
   { id: "dominio", label: "Domínio e hospedagem", icon: Globe },
   { id: "manutencao", label: "Manutenção e edições", icon: RefreshCw },
   { id: "metricas", label: "Métricas e SEO", icon: BarChart3 },
-  { id: "flaro-dev", label: "Flaro Dev (IA)", icon: Sparkles },
+  
   { id: "faq", label: "FAQ", icon: FileQuestion },
   { id: "suporte", label: "Suporte", icon: MessageCircle },
 ] as const;
