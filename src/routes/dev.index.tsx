@@ -6,9 +6,10 @@ import { motion } from "framer-motion";
 import { ArrowRight, ArrowUp, Check, Plus, ExternalLink } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { DEV_TEMPLATES } from "@/lib/dev/templates";
+import { DEV_TEMPLATES, type DevTemplate } from "@/lib/dev/templates";
 import { DEV_PLANS, formatBRL } from "@/lib/dev/plans";
 import { TemplateCover } from "@/components/dev/TemplateCover";
+import { TemplateStartModal } from "@/components/dev/TemplateStartModal";
 import { useAuth } from "@/lib/auth";
 import { listMyDevProjects } from "@/lib/dev/dev.functions";
 
