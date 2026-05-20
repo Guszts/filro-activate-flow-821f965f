@@ -9,8 +9,10 @@ import { PlanCard } from "@/components/PlanCard";
 import { FAQ } from "@/components/FAQ";
 
 import { useAuth } from "@/lib/auth";
+import { useCurrentPlan } from "@/hooks/useCurrentPlan";
 import { listPublicPlans } from "@/lib/plans.functions";
 import { formatBRL } from "@/lib/format";
+
 import heroImg from "@/assets/hero-flaro.jpg?w=1088&format=webp";
 import { ArrowRight } from "lucide-react";
 
@@ -70,6 +72,8 @@ function HomePage() {
   const scaleImg = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
 
   const plans = Route.useLoaderData();
+  const { plan: currentPlan } = useCurrentPlan();
+
 
   const handleSelect = (slug: string) => {
     sessionStorage.setItem("filro:selectedPlan", slug);
