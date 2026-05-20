@@ -33,9 +33,10 @@ export function PlanCard({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-        className="relative flex flex-col p-7 md:p-9 rounded-3xl overflow-hidden bg-paper text-ink border border-ink/10 lg:scale-[1.03] lg:z-10"
+        className={`relative flex flex-col p-7 md:p-9 rounded-3xl overflow-hidden bg-paper text-ink border border-ink/10 lg:scale-[1.03] lg:z-10 ${disabled ? "opacity-60 grayscale" : ""}`}
         style={{ boxShadow: "var(--shadow-pop)" }}
       >
+
         <motion.div
           aria-hidden
           initial={{ opacity: 0, x: -20, rotate: 0 }}
@@ -85,11 +86,13 @@ export function PlanCard({
           ))}
         </ul>
         <button
-          onClick={onSelect}
-          className="relative z-10 mt-10 inline-flex items-center justify-center h-13 py-4 px-6 rounded-2xl text-sm font-semibold tracking-wide transition-transform hover:scale-[1.02] active:scale-[0.98] bg-ink text-paper"
+          onClick={disabled ? undefined : onSelect}
+          disabled={disabled}
+          className="relative z-10 mt-10 inline-flex items-center justify-center h-13 py-4 px-6 rounded-2xl text-sm font-semibold tracking-wide transition-transform bg-ink text-paper disabled:cursor-not-allowed disabled:bg-muted disabled:text-ink-soft enabled:hover:scale-[1.02] enabled:active:scale-[0.98]"
         >
-          Selecionar plano
+          {disabled ? (disabledLabel ?? "Indisponível") : "Selecionar plano"}
         </button>
+
       </motion.div>
     );
   }
@@ -101,10 +104,11 @@ export function PlanCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -6, transition: { duration: 0.3, ease: "easeOut" } }}
-      className="group relative flex flex-col p-7 md:p-9 rounded-3xl overflow-hidden bg-paper text-ink border border-border transition-shadow"
+      whileHover={disabled ? undefined : { y: -6, transition: { duration: 0.3, ease: "easeOut" } }}
+      className={`group relative flex flex-col p-7 md:p-9 rounded-3xl overflow-hidden bg-paper text-ink border border-border transition-shadow ${disabled ? "opacity-60 grayscale" : ""}`}
       style={{ boxShadow: "var(--shadow-card)" }}
     >
+
       {/* subtle accent stripe top */}
       <div aria-hidden className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-ink/15 to-transparent" />
       {/* corner accent dot that grows on hover */}
@@ -140,11 +144,13 @@ export function PlanCard({
       </ul>
 
       <button
-        onClick={onSelect}
-        className="relative z-10 mt-10 inline-flex items-center justify-center h-13 py-4 px-6 rounded-2xl text-sm font-semibold tracking-wide transition-all border border-ink/20 text-ink bg-paper hover:bg-ink hover:text-paper hover:border-ink"
+        onClick={disabled ? undefined : onSelect}
+        disabled={disabled}
+        className="relative z-10 mt-10 inline-flex items-center justify-center h-13 py-4 px-6 rounded-2xl text-sm font-semibold tracking-wide transition-all border border-ink/20 text-ink bg-paper enabled:hover:bg-ink enabled:hover:text-paper enabled:hover:border-ink disabled:cursor-not-allowed disabled:bg-muted disabled:text-ink-soft disabled:border-transparent"
       >
-        Selecionar plano
+        {disabled ? (disabledLabel ?? "Indisponível") : "Selecionar plano"}
       </button>
+
     </motion.div>
   );
 }
