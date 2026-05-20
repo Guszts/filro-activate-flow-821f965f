@@ -161,7 +161,7 @@ export function ModelGrid({ featuredOnly = false }: ModelGridProps) {
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {visible.map((m, i) => {
         const Cover = m.Cover;
-        const isExternal = m.previewPath.startsWith("http");
+
         return (
           <motion.article
             key={m.name}
@@ -187,25 +187,14 @@ export function ModelGrid({ featuredOnly = false }: ModelGridProps) {
               <h3 className="font-display text-2xl font-black tracking-tight">{m.name}</h3>
               <p className="mt-2 text-sm text-ink-soft flex-1">{m.desc}</p>
               <div className="mt-6 flex gap-2">
-                {isExternal ? (
-                  <a
-                    href={m.previewPath}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 h-10 grid place-items-center rounded-2xl border border-border text-xs font-semibold tracking-wider hover:bg-ink hover:text-paper transition-colors"
-                  >
-                    Ver exemplo
-                  </a>
-                ) : (
-                  <a
-                    href={m.previewPath}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 h-10 grid place-items-center rounded-2xl border border-border text-xs font-semibold tracking-wider hover:bg-ink hover:text-paper transition-colors"
-                  >
-                    Ver exemplo
-                  </a>
-                )}
+                <a
+                  href={m.previewPath}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 h-10 grid place-items-center rounded-2xl border border-border text-xs font-semibold tracking-wider hover:bg-ink hover:text-paper transition-colors"
+                >
+                  Ver exemplo
+                </a>
                 <Link
                   to="/"
                   hash="ativacao"
@@ -214,6 +203,7 @@ export function ModelGrid({ featuredOnly = false }: ModelGridProps) {
                   Usar este
                 </Link>
               </div>
+
             </div>
           </motion.article>
         );
