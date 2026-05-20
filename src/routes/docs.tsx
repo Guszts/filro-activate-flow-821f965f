@@ -233,7 +233,7 @@ function DocsPage() {
 
 
             <Section id="faq" title="Perguntas frequentes" icon={FileQuestion}>
-              <Q q="Tenho controle sobre o que a IA do Flaro Dev altera?">Sim. Cada resposta no chat traz uma etiqueta clara: <strong>Aplicado</strong>, <strong>Alternativa segura</strong> ou <strong>Recusado · sem custo</strong>. Quando há risco alto de quebrar o site, a IA recusa sem cobrar créditos.</Q>
+              
               <Q q="Quanto tempo até estar no ar?">Até 24 horas após o envio das informações. Geralmente entregamos em menos de 18h.</Q>
               <Q q="Preciso entender de tecnologia?">Não. Você só envia as informações; nosso time monta tudo. O painel também é desenhado para uso por leigos.</Q>
               <Q q="E se eu não gostar do resultado?">Incluímos 1 rodada de revisão visual nos primeiros 7 dias. Ajustes simples dentro do escopo são feitos sem custo nesse período.</Q>
