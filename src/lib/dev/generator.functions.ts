@@ -317,7 +317,15 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
     if (!project) return { ok: false as const, error: "Projeto não encontrado", cost, breakdown: costBreakdown };
     if (project.user_id !== userId) return { ok: false as const, error: "Sem permissão", cost, breakdown: costBreakdown };
 
-    const system = `Você edita o JSON de conteúdo de um site. Receba o JSON atual e a instrução do usuário. Devolva APENAS o JSON COMPLETO atualizado, no MESMO formato/chaves do recebido (não invente novas chaves, não remova chaves). Faça só a mudança pedida. Em PT-BR.`;
+    const system = `Você é o editor de IA de um site profissional. Receba o JSON atual e a instrução do dono e devolva APENAS o JSON COMPLETO atualizado em PT-BR.
+
+REGRAS:
+- Atenda QUALQUER pedido do usuário, mesmo que seja vago ("melhore", "mais bonito", "deixe profissional", "mais animado") — interprete com bom gosto editorial e entregue sempre a melhor versão possível.
+- Pode ADICIONAR novas chaves/seções (ex: "faq", "stats", "gallery", "pricing", "process", "team", "animations" com objetos descritivos) quando o pedido pedir mais conteúdo, mais seções, mais animações, etc.
+- Pode REMOVER seções quando o usuário pedir explicitamente.
+- Preserve tudo que não foi pedido para mudar.
+- Nunca devolva placeholders, "lorem ipsum" ou texto vazio: sempre conteúdo profissional plausível.
+- Sem emojis. Sem markdown. Sem comentários. Apenas o JSON final completo.`;
     const user = `INSTRUÇÃO: ${data.instruction}
 
 JSON ATUAL:
