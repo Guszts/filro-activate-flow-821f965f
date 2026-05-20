@@ -366,7 +366,7 @@ REGRAS:
     const user = `INSTRUÇÃO: ${data.instruction}
 
 JSON ATUAL DO SITE:
-${JSON.stringify(project.generated_content, null, 2)}`;
+${JSON.stringify(workingContent, null, 2)}`;
 
     let envelope: { action?: string; notice?: string; site?: unknown } = {};
     try {
