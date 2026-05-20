@@ -13,13 +13,13 @@ import hamburguerSrc from "@/assets/cover-hamburguer.jpg?w=896&format=webp";
 import hamburguerSet from "@/assets/cover-hamburguer.jpg?w=480;768;896&format=webp&as=srcset";
 import modaSrc from "@/assets/cover-moda.jpg?w=896&format=webp";
 import modaSet from "@/assets/cover-moda.jpg?w=480;768;896&format=webp&as=srcset";
-import clinicaLocalCover from "@/assets/dev-templates/clinica-local.jpg";
-import restauranteCardapioCover from "@/assets/dev-templates/restaurante-cardapio.jpg";
-import oficinaCover from "@/assets/dev-templates/oficina-auto.jpg";
-import lojaCover from "@/assets/dev-templates/loja-local.jpg";
-import prestadorCover from "@/assets/dev-templates/prestador-servico.jpg";
-import landingCover from "@/assets/dev-templates/landing-vendas.jpg";
-import viagemCover from "@/assets/dev-templates/viagem-wishes.jpg";
+import clinicaLocalCover from "@/assets/dev-templates/clinica-local.jpg?w=896&format=webp";
+import restauranteCardapioCover from "@/assets/dev-templates/restaurante-cardapio.jpg?w=896&format=webp";
+import oficinaCover from "@/assets/dev-templates/oficina-auto.jpg?w=896&format=webp";
+import lojaCover from "@/assets/dev-templates/loja-local.jpg?w=896&format=webp";
+import prestadorCover from "@/assets/dev-templates/prestador-servico.jpg?w=896&format=webp";
+import landingCover from "@/assets/dev-templates/landing-vendas.jpg?w=896&format=webp";
+import viagemCover from "@/assets/dev-templates/viagem-wishes.jpg?w=896&format=webp";
 
 type Cover = (props: { className?: string }) => ReactElement;
 
