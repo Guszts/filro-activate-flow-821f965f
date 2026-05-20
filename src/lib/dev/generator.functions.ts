@@ -317,29 +317,40 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
     if (!project) return { ok: false as const, error: "Projeto não encontrado", cost, breakdown: costBreakdown };
     if (project.user_id !== userId) return { ok: false as const, error: "Sem permissão", cost, breakdown: costBreakdown };
 
-    const system = `Você é o editor de IA de um site profissional. Receba o JSON atual e a instrução do dono e devolva APENAS o JSON COMPLETO atualizado em PT-BR.
+    const system = `Você é o editor de IA de um site profissional. Receba o JSON atual e a instrução do dono e devolva APENAS um JSON envelope em PT-BR no formato exato:
+{"action":"applied"|"safe_alternative"|"refused","notice":"<curto, PT-BR>","site":<JSON COMPLETO do site>}
 
 REGRAS:
-- Atenda QUALQUER pedido do usuário, mesmo que seja vago ("melhore", "mais bonito", "deixe profissional", "mais animado") — interprete com bom gosto editorial e entregue sempre a melhor versão possível.
-- Pode ADICIONAR novas chaves/seções (ex: "faq", "stats", "gallery", "pricing", "process", "team", "animations" com objetos descritivos) quando o pedido pedir mais conteúdo, mais seções, mais animações, etc.
-- Pode REMOVER seções quando o usuário pedir explicitamente.
+- Atenda QUALQUER pedido razoável, mesmo vago ("melhore", "mais bonito", "mais animado", "corrija todos os erros") — interprete com bom gosto editorial e entregue a melhor versão possível.
+- Se o usuário pedir para CORRIGIR ERROS / BUGS / INCONSISTÊNCIAS: revise TODO o site, conserte textos quebrados, links vazios, listas incompletas, contradições, tipografia, hierarquia, faltas óbvias, e devolva action="applied" com notice descrevendo o que foi corrigido.
+- Pode ADICIONAR/REMOVER seções (faq, stats, gallery, pricing, process, team, animations…) quando fizer sentido.
 - Preserve tudo que não foi pedido para mudar.
-- Nunca devolva placeholders, "lorem ipsum" ou texto vazio: sempre conteúdo profissional plausível.
-- Sem emojis. Sem markdown. Sem comentários. Apenas o JSON final completo.`;
+- AVALIAÇÃO DE RISCO: estime a chance do pedido QUEBRAR o site (estrutura inválida, perda total de conteúdo, layout inutilizável, conteúdo ilegal/ofensivo). Se ≥80% de risco: NÃO aplique. Em vez disso, faça a ALTERNATIVA SEGURA mais próxima do que o usuário queria e devolva action="safe_alternative" + notice claro explicando o que você fez no lugar e por quê. Se nem alternativa segura existir, devolva action="refused", notice explicando o motivo, e site = JSON atual inalterado.
+- Nunca devolva placeholders, "lorem ipsum" nem texto vazio.
+- Sem emojis. Sem markdown. Sem comentários fora do JSON. Apenas o envelope JSON.`;
     const user = `INSTRUÇÃO: ${data.instruction}
 
-JSON ATUAL:
+JSON ATUAL DO SITE:
 ${JSON.stringify(project.generated_content, null, 2)}`;
 
-    let updated: unknown;
+    let envelope: { action?: string; notice?: string; site?: unknown } = {};
     try {
       const raw = await callAI([
         { role: "system", content: system },
         { role: "user", content: user },
       ]);
-      updated = safeJSON<unknown>(raw, project.generated_content);
+      envelope = safeJSON<{ action?: string; notice?: string; site?: unknown }>(raw, {});
     } catch (err) {
       return { ok: false as const, error: err instanceof Error ? err.message : "Falha na IA", cost, breakdown: costBreakdown };
+    }
+
+    const action = envelope.action === "refused" || envelope.action === "safe_alternative" ? envelope.action : "applied";
+    const notice = typeof envelope.notice === "string" ? envelope.notice : "";
+    const updated = envelope.site && typeof envelope.site === "object" ? envelope.site : project.generated_content;
+
+    if (action === "refused") {
+      // não consome créditos por uma recusa
+      return { ok: true as const, error: null, cost: 0, breakdown: costBreakdown, action, notice: notice || "Não apliquei esta alteração por risco alto de quebrar o site." };
     }
 
     await supabaseAdmin
@@ -372,7 +383,7 @@ ${JSON.stringify(project.generated_content, null, 2)}`;
       _metadata: { instruction: data.instruction.slice(0, 200), cost, complexity: costBreakdown.complexity, band: costBreakdown.band } as never,
     } as never);
 
-    return { ok: true as const, error: null, cost, breakdown: costBreakdown };
+    return { ok: true as const, error: null, cost, breakdown: costBreakdown, action, notice };
   });
 
 // ---------- update manual ----------

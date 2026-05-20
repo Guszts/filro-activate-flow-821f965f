@@ -85,13 +85,24 @@ function ProjetoPage() {
     try {
       const res = await editAI({ data: { projectId, instruction: text } });
       if (!res.ok) throw new Error(res.error ?? "Falha na edição");
+      const action = (res as { action?: string }).action ?? "applied";
+      const notice = (res as { notice?: string }).notice ?? "";
+      let reply: string;
+      if (action === "refused") {
+        reply = `Não apliquei esta alteração. ${notice || "Risco alto de quebrar o site."} Nenhum crédito foi consumido.`;
+      } else if (action === "safe_alternative") {
+        reply = `Apliquei uma alternativa mais segura (${res.cost} crédito${res.cost > 1 ? "s" : ""}). ${notice} Veja na prévia ao lado.`;
+      } else {
+        reply = `Pronto. Apliquei a edição (${res.cost} crédito${res.cost > 1 ? "s" : ""}).${notice ? ` ${notice}` : ""} Veja na prévia ao lado.`;
+      }
       setMessages((m) => [
         ...m.filter((x) => x.role !== "system"),
-        { role: "assistant", text: `Pronto. Apliquei a edição (${res.cost} crédito${res.cost > 1 ? "s" : ""}). Veja na prévia ao lado.`, ts: Date.now() },
+        { role: "assistant", text: reply, ts: Date.now() },
       ]);
-      setReloadKey((k) => k + 1);
-      // No mobile, abre a prévia automaticamente
-      if (typeof window !== "undefined" && window.innerWidth < 1024) setTab("preview");
+      if (action !== "refused") {
+        setReloadKey((k) => k + 1);
+        if (typeof window !== "undefined" && window.innerWidth < 1024) setTab("preview");
+      }
       fetchCredits().then((r) => setBalance((r as { balance: number }).balance)).catch(() => {});
     } catch (err) {
       setMessages((m) => [
