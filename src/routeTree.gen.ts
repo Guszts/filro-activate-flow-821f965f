@@ -39,6 +39,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
 import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
+import { Route as ModelosLojaLocalRouteImport } from './routes/modelos.loja-local'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
@@ -200,6 +201,11 @@ const PlanosSlugRoute = PlanosSlugRouteImport.update({
   path: '/planos/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModelosLojaLocalRoute = ModelosLojaLocalRouteImport.update({
+  id: '/loja-local',
+  path: '/loja-local',
+  getParentRoute: () => ModelosRoute,
+} as any)
 const LeadIdRoute = LeadIdRouteImport.update({
   id: '/lead/$id',
   path: '/lead/$id',
@@ -268,7 +274,7 @@ export interface FileRoutesByFullPath {
   '/forno': typeof FornoRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
-  '/modelos': typeof ModelosRoute
+  '/modelos': typeof ModelosRouteWithChildren
   '/motorpro': typeof MotorproRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
@@ -286,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/wishes': typeof WishesRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
+  '/modelos/loja-local': typeof ModelosLojaLocalRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
@@ -310,7 +317,7 @@ export interface FileRoutesByTo {
   '/forno': typeof FornoRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
-  '/modelos': typeof ModelosRoute
+  '/modelos': typeof ModelosRouteWithChildren
   '/motorpro': typeof MotorproRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
@@ -328,6 +335,7 @@ export interface FileRoutesByTo {
   '/wishes': typeof WishesRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
+  '/modelos/loja-local': typeof ModelosLojaLocalRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos': typeof PlanosIndexRoute
@@ -353,7 +361,7 @@ export interface FileRoutesById {
   '/forno': typeof FornoRoute
   '/garantia': typeof GarantiaRoute
   '/login': typeof LoginRoute
-  '/modelos': typeof ModelosRoute
+  '/modelos': typeof ModelosRouteWithChildren
   '/motorpro': typeof MotorproRoute
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
@@ -371,6 +379,7 @@ export interface FileRoutesById {
   '/wishes': typeof WishesRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
+  '/modelos/loja-local': typeof ModelosLojaLocalRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
@@ -415,6 +424,7 @@ export interface FileRouteTypes {
     | '/wishes'
     | '/email/unsubscribe'
     | '/lead/$id'
+    | '/modelos/loja-local'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
@@ -457,6 +467,7 @@ export interface FileRouteTypes {
     | '/wishes'
     | '/email/unsubscribe'
     | '/lead/$id'
+    | '/modelos/loja-local'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos'
@@ -499,6 +510,7 @@ export interface FileRouteTypes {
     | '/wishes'
     | '/email/unsubscribe'
     | '/lead/$id'
+    | '/modelos/loja-local'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
@@ -524,7 +536,7 @@ export interface RootRouteChildren {
   FornoRoute: typeof FornoRoute
   GarantiaRoute: typeof GarantiaRoute
   LoginRoute: typeof LoginRoute
-  ModelosRoute: typeof ModelosRoute
+  ModelosRoute: typeof ModelosRouteWithChildren
   MotorproRoute: typeof MotorproRoute
   PainelRoute: typeof PainelRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
@@ -767,6 +779,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/modelos/loja-local': {
+      id: '/modelos/loja-local'
+      path: '/loja-local'
+      fullPath: '/modelos/loja-local'
+      preLoaderRoute: typeof ModelosLojaLocalRouteImport
+      parentRoute: typeof ModelosRoute
+    }
     '/lead/$id': {
       id: '/lead/$id'
       path: '/lead/$id'
@@ -840,6 +859,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ModelosRouteChildren {
+  ModelosLojaLocalRoute: typeof ModelosLojaLocalRoute
+}
+
+const ModelosRouteChildren: ModelosRouteChildren = {
+  ModelosLojaLocalRoute: ModelosLojaLocalRoute,
+}
+
+const ModelosRouteWithChildren =
+  ModelosRoute._addFileChildren(ModelosRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AtelierRoute: AtelierRoute,
@@ -852,7 +882,7 @@ const rootRouteChildren: RootRouteChildren = {
   FornoRoute: FornoRoute,
   GarantiaRoute: GarantiaRoute,
   LoginRoute: LoginRoute,
-  ModelosRoute: ModelosRoute,
+  ModelosRoute: ModelosRouteWithChildren,
   MotorproRoute: MotorproRoute,
   PainelRoute: PainelRoute,
   PaymentFailedRoute: PaymentFailedRoute,
@@ -885,3 +915,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
