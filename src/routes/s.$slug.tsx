@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { getPublicSiteBySlug } from "@/lib/dev/generator.functions";
 import { RenderedSite } from "@/components/dev-site/RenderedSite";
+import { getTemplateComponent } from "@/lib/dev/template-registry";
 
 export const Route = createFileRoute("/s/$slug")({
   loader: async ({ params }) => {
@@ -40,6 +41,11 @@ export const Route = createFileRoute("/s/$slug")({
 
 function PublicSitePage() {
   const { site } = Route.useLoaderData();
+  const TemplateComp = getTemplateComponent(site.template_slug);
+  // If this project was created from a bespoke template, render the exact
+  // template the user picked — same pixels as /dev/preview/{slug}.
+  if (TemplateComp) return <TemplateComp />;
   const content = (site.generated_content ?? {}) as Record<string, unknown>;
   return <RenderedSite content={content} businessName={site.business_name ?? "Site"} />;
 }
+

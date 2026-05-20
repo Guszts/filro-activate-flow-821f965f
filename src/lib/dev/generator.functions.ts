@@ -214,21 +214,27 @@ export const generateDevSite = createServerFn({ method: "POST" })
     const base = slugify(data.preferredSlug || data.businessName);
     const slug = await uniqueSlug(base);
 
-    // 4. Gera conteúdo via IA
-    let content: GeneratedContent;
-    try {
-      content = await generateContent({
-        businessName: data.businessName,
-        segment: data.businessSegment,
-        description: data.description,
-        whatsapp: data.whatsapp,
-        city: data.city,
-        tone: data.tone,
-        templateName: tpl.name,
-        sections: (tpl.sections as unknown as string[]) || [],
-      });
-    } catch (err) {
-      return { ok: false as const, error: err instanceof Error ? err.message : "Falha na geração com IA", projectId: null, slug: null, publishedUrl: null };
+    // 4. Gera conteúdo via IA — apenas se o usuário escreveu um briefing.
+    // Quando o site começa a partir de um template, renderizamos o template
+    // bespoke (registry) exatamente como na pré-visualização — sem remodelar
+    // pelo nome do negócio. O conteúdo gerado fica vazio até o usuário pedir
+    // edições no chat.
+    let content: GeneratedContent | Record<string, never> = {};
+    if (data.description && data.description.length >= 10) {
+      try {
+        content = await generateContent({
+          businessName: data.businessName,
+          segment: data.businessSegment,
+          description: data.description,
+          whatsapp: data.whatsapp,
+          city: data.city,
+          tone: data.tone,
+          templateName: tpl.name,
+          sections: (tpl.sections as unknown as string[]) || [],
+        });
+      } catch (err) {
+        return { ok: false as const, error: err instanceof Error ? err.message : "Falha na geração com IA", projectId: null, slug: null, publishedUrl: null };
+      }
     }
 
     const publishedUrl = `/s/${slug}`;

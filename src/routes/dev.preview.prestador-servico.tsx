@@ -104,7 +104,7 @@ function Logo({ dark = false }: { dark?: boolean }) {
   );
 }
 
-function RoofProSite() {
+export function RoofProSite() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(0);
