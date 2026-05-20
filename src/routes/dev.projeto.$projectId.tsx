@@ -86,19 +86,19 @@ function ProjetoPage() {
     try {
       const res = await editAI({ data: { projectId, instruction: text } });
       if (!res.ok) throw new Error(res.error ?? "Falha na edição");
-      const action = (res as { action?: string }).action ?? "applied";
+      const action = ((res as { action?: string }).action ?? "applied") as RiskAction;
       const notice = (res as { notice?: string }).notice ?? "";
       let reply: string;
       if (action === "refused") {
-        reply = `Não apliquei esta alteração. ${notice || "Risco alto de quebrar o site."} Nenhum crédito foi consumido.`;
+        reply = notice || "Esse comando tem alto risco de quebrar o site, então não apliquei. Nenhum crédito foi consumido — tente reformular.";
       } else if (action === "safe_alternative") {
-        reply = `Apliquei uma alternativa mais segura (${res.cost} crédito${res.cost > 1 ? "s" : ""}). ${notice} Veja na prévia ao lado.`;
+        reply = `${notice || "Apliquei uma versão mais segura do que você pediu para evitar quebrar o site."} (${res.cost} crédito${res.cost > 1 ? "s" : ""}) Veja na prévia ao lado.`;
       } else {
         reply = `Pronto. Apliquei a edição (${res.cost} crédito${res.cost > 1 ? "s" : ""}).${notice ? ` ${notice}` : ""} Veja na prévia ao lado.`;
       }
       setMessages((m) => [
         ...m.filter((x) => x.role !== "system"),
-        { role: "assistant", text: reply, ts: Date.now() },
+        { role: "assistant", text: reply, ts: Date.now(), action, notice },
       ]);
       if (action !== "refused") {
         setReloadKey((k) => k + 1);
