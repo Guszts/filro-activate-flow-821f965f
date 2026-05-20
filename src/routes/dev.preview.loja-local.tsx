@@ -577,6 +577,78 @@ export function MornaMarket() {
         </div>
       </section>
 
+      {/* GALLERY */}
+      <section className="py-20 lg:py-28" style={{ background: C.white }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3" style={{ color: C.orange }}>Our Shop</div>
+            <h2 className="heading text-[36px] sm:text-[48px] font-black">Fresh Aisles, Friendly Faces</h2>
+            <p className="mt-3 text-[15px]" style={{ color: C.muted }}>A peek inside Morna Market — from the produce stand to the bakery counter.</p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+            {[
+              { src: about1, t: "Daily Produce", c: "Fresh" },
+              { src: about2, t: "Bakery Counter", c: "Warm" },
+              { src: about3, t: "Grocery Bags", c: "Ready" },
+              { src: about1, t: "Local Picks", c: "Curated" },
+              { src: about2, t: "Coffee Bar", c: "Cozy" },
+              { src: about3, t: "Weekly Deals", c: "Save" },
+            ].map((g, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                className="group relative rounded-[28px] overflow-hidden aspect-[4/3]">
+                <img src={g.src} alt={g.t} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5 text-white flex items-end justify-between">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider opacity-90">{g.c}</div>
+                    <div className="font-black heading text-lg mt-0.5">{g.t}</div>
+                  </div>
+                  <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur flex items-center justify-center group-hover:bg-[color:var(--o)] transition-colors" style={{ ["--o" as any]: C.orange }}>
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA BANNER */}
+      <section className="py-12 lg:py-20" style={{ background: C.off }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="relative rounded-[40px] overflow-hidden p-10 lg:p-16 grid lg:grid-cols-[1.4fr_1fr] gap-10 items-center" style={{ background: C.orange, color: "white" }}>
+            <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full bg-white/15 blur-3xl" />
+            <div className="absolute -bottom-16 -left-16 w-72 h-72 rounded-full bg-black/15 blur-3xl" />
+            <div className="relative">
+              <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3 opacity-90">Weekly Savings</div>
+              <h2 className="heading font-black leading-[1.05]" style={{ fontSize: "clamp(32px, 4.4vw, 52px)" }}>
+                Save 40% on your first grocery pickup
+              </h2>
+              <p className="mt-4 opacity-95 text-[15px] max-w-lg">Order online, pick up in 30 minutes, or get free local delivery on orders over $30.</p>
+              <div className="mt-7 flex flex-col sm:flex-row gap-3">
+                <a href="#contact" className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full font-bold text-[14px]" style={{ background: C.white, color: C.ink }}>
+                  Shop Now <ArrowRight className="w-4 h-4" />
+                </a>
+                <a href="#contact" className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full font-bold text-[14px] border-2 border-white/60 text-white hover:bg-white/15 transition-colors">
+                  See Deals
+                </a>
+              </div>
+            </div>
+            <div className="relative hidden lg:block">
+              <div className="rounded-[28px] overflow-hidden aspect-[4/5] shadow-2xl">
+                <img src={about1} alt="Grocery basket" className="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <div className="absolute -top-4 -left-4 w-20 h-20 rounded-2xl bg-white text-[color:var(--o)] flex flex-col items-center justify-center font-black shadow-lg" style={{ ["--o" as any]: C.orange }}>
+                <div className="text-3xl heading">40%</div>
+                <div className="text-[10px] uppercase tracking-wider">OFF</div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+
       {/* TESTIMONIALS */}
       <section className="py-20 lg:py-28" style={{ background: C.white }}>
         <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
