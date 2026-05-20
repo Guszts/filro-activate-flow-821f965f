@@ -29,7 +29,7 @@ function PrivacyPage() {
         <p className="mt-4 text-ink-soft">Sua privacidade importa. Esta Política descreve, de forma transparente, quais dados coletamos, por que coletamos, como armazenamos e quais são seus direitos. Está em conformidade integral com a Lei Geral de Proteção de Dados (Lei 13.709/18).</p>
 
         <article className="mt-10 space-y-6 text-ink-soft leading-relaxed [&_h2]:text-ink [&_h2]:font-display [&_h2]:font-black [&_h2]:text-2xl [&_h2]:mt-10 [&_h2]:mb-3 [&_h3]:text-ink [&_h3]:font-semibold [&_h3]:text-lg [&_h3]:mt-6 [&_h3]:mb-2 [&_strong]:text-ink [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1">
-          <p className="!mt-0 rounded-2xl border border-border bg-muted/40 p-4 text-sm"><strong>Flaro Dev:</strong> ao usar o construtor por IA, o seu prompt e o conteúdo atual do projeto são enviados a provedores de modelos de linguagem para gerar a resposta. Esses dados não são usados para treinar modelos públicos. As decisões automatizadas (Aplicado / Alternativa segura / Recusado) são exibidas com etiqueta clara no chat e podem ser revisadas mediante solicitação ao DPO (LGPD art. 20).</p>
+          
 
           <h2>1. Quem somos (Controlador)</h2>
           <p>A Filro é a controladora dos dados pessoais coletados nesta plataforma. Nosso encarregado pelo tratamento de dados (DPO) pode ser contatado em <a href="mailto:filro.site@gmail.com" className="text-ink underline">filro.site@gmail.com</a>.</p>
@@ -82,7 +82,7 @@ function PrivacyPage() {
             <li><strong>Cloudflare</strong> (EUA) — hospedagem edge e proteção DDoS.</li>
             <li><strong>Supabase</strong> (EUA/UE) — banco de dados e autenticação.</li>
             <li><strong>Google</strong> (caso autenticação social seja usada) — apenas e-mail e nome do perfil.</li>
-            <li><strong>Provedores de IA</strong> (EUA/UE) — quando você usa o Flaro Dev, o prompt enviado no chat e o conteúdo atual do site são processados por provedores de modelos de linguagem (Google e/ou OpenAI) via gateway agregado. Os dados não são usados para treinar modelos públicos.</li>
+            
             <li><strong>Autoridades públicas</strong> — somente mediante ordem judicial ou requisição legal formal.</li>
           </ul>
           <p>Todas as transferências internacionais respeitam o art. 33 da LGPD (cláusulas contratuais padrão e garantias adequadas).</p>

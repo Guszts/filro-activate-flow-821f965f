@@ -102,32 +102,6 @@ async function upsertSubscription(sub: Stripe.Subscription, env: StripeEnv) {
   const periodEnd = (item as { current_period_end?: number } | undefined)?.current_period_end
     ?? (sub as unknown as { current_period_end?: number }).current_period_end;
 
-  // Flaro Dev — grava em dev_subscriptions e ignora subscriptions legado.
-  if (kind === "dev" || kind === "dev_plan") {
-    const devProjectId = sub.metadata?.devProjectId ?? null;
-    const { data: devPlan } = planSlug
-      ? await supabaseAdmin.from("dev_plans").select("id").eq("slug", planSlug as "dev_start" | "dev_plus" | "dev_pro" | "dev_scale").maybeSingle()
-      : { data: null as { id: string } | null };
-    await supabaseAdmin.from("dev_subscriptions").upsert(
-      {
-        user_id: userId,
-        project_id: devProjectId,
-        plan_id: devPlan?.id ?? null,
-        stripe_subscription_id: sub.id,
-        stripe_customer_id: typeof sub.customer === "string" ? sub.customer : sub.customer.id,
-        price_id: priceId,
-        status: sub.status,
-        current_period_start: tsToISO(periodStart),
-        current_period_end: tsToISO(periodEnd),
-        cancel_at_period_end: sub.cancel_at_period_end ?? false,
-        canceled_at: tsToISO(sub.canceled_at),
-        environment: env,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "stripe_subscription_id" },
-    );
-    return;
-  }
 
   const plan = await getPlanBySlug(planSlug);
   await supabaseAdmin.from("subscriptions").upsert(
@@ -158,7 +132,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
       const planSlug = session.metadata?.planSlug;
       const kind = session.metadata?.kind;
       const extraChargeId = session.metadata?.extraChargeId;
-      const devProjectId = session.metadata?.devProjectId;
+      
 
       // Cobrança extra (upsell via payment link)
       if (kind === "extra_charge" && extraChargeId) {
@@ -172,101 +146,6 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
           })
           .eq("id", extraChargeId);
         await logEvent("extra_charge.paid", userId ?? null, { extraChargeId, sessionId: session.id });
-        break;
-      }
-
-      // Filro Dev — pacote avulso de créditos (one-time)
-      if (kind === "dev_pack" && userId) {
-        const credits = Number(session.metadata?.credits || 0);
-        const packSlug = session.metadata?.packSlug || null;
-        if (credits > 0) {
-          await supabaseAdmin.rpc("grant_credits", {
-            _user_id: userId,
-            _delta: credits,
-            _reason: "credit_pack_purchase",
-            _ref_id: null,
-            _metadata: { packSlug, sessionId: session.id, environment: env } as never,
-          } as never);
-        }
-        await logEvent("dev.pack.purchased", userId, { packSlug, credits, sessionId: session.id });
-        break;
-      }
-
-      // Filro Dev — assinatura mensal de plano (crédito inicial)
-      if (kind === "dev_plan" && userId) {
-        const credits = Number(session.metadata?.monthlyCredits || 0);
-        const planSlugMeta = session.metadata?.planSlug || null;
-        if (credits > 0) {
-          await supabaseAdmin.rpc("grant_credits", {
-            _user_id: userId,
-            _delta: credits,
-            _reason: "plan_subscription_start",
-            _ref_id: null,
-            _metadata: { planSlug: planSlugMeta, sessionId: session.id, environment: env } as never,
-          } as never);
-        }
-        await logEvent("dev.plan.subscribed", userId, { planSlug: planSlugMeta, credits, sessionId: session.id });
-        break;
-      }
-
-      // Flaro Dev — fluxo independente dos planos legados
-      if (kind === "dev" && userId && devProjectId) {
-        await supabaseAdmin
-          .from("dev_payments")
-          .update({
-            status: "paid",
-            paid_at: new Date().toISOString(),
-            stripe_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : null,
-            stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
-          })
-          .eq("stripe_checkout_session_id", session.id);
-
-        await supabaseAdmin
-          .from("dev_projects")
-          .update({ status: "queued", activation_paid_at: new Date().toISOString() })
-          .eq("id", devProjectId)
-          .eq("user_id", userId);
-
-        const { data: devProj } = await supabaseAdmin
-          .from("dev_projects")
-          .select("business_name, template_slug, plan_slug")
-          .eq("id", devProjectId)
-          .maybeSingle();
-
-        const { data: profile } = await supabaseAdmin
-          .from("profiles").select("name, email, whatsapp").eq("user_id", userId).maybeSingle();
-
-        await supabaseAdmin.from("admin_tasks").insert({
-          user_id: userId,
-          title: `Flaro Dev — Novo projeto pago — ${devProj?.business_name || profile?.email || userId}`,
-          description: [
-            `Cliente: ${profile?.name || "—"} (${profile?.email || "—"})`,
-            `WhatsApp: ${profile?.whatsapp || "—"}`,
-            `Negócio: ${devProj?.business_name || "—"}`,
-            `Modelo: ${devProj?.template_slug || "—"}`,
-            `Plano: ${devProj?.plan_slug || "—"}`,
-            `Stripe session: ${session.id}`,
-          ].join("\n"),
-        });
-
-        if (profile?.email) {
-          const planLabel = devProj?.plan_slug
-            ? devProj.plan_slug.replace(/^dev_/, "Dev ").replace(/^./, (c) => c.toUpperCase())
-            : undefined;
-          await sendTransactionalEmailServer({
-            templateName: "dev-project-paid",
-            recipientEmail: profile.email,
-            idempotencyKey: `dev-paid-${session.id}`,
-            templateData: {
-              name: profile.name || undefined,
-              businessName: devProj?.business_name || undefined,
-              planName: planLabel,
-              projectUrl: `https://setup.filro.site/dev/projeto/${devProjectId}`,
-            },
-          }).catch((e) => console.error("[email] dev-project-paid failed", e));
-        }
-
-        await logEvent("dev.checkout.completed", userId, { devProjectId, sessionId: session.id });
         break;
       }
 
@@ -620,32 +499,6 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         ? invoice.subscription
         : invoice.subscription?.id;
 
-      // Filro Dev — renovação mensal: credita nova quantidade
-      if (subId && invoice.billing_reason !== "subscription_create") {
-        try {
-          const stripeSub = await stripe.subscriptions.retrieve(subId);
-          if (stripeSub.metadata?.kind === "dev_plan" && stripeSub.metadata?.userId) {
-            const credits = Number(stripeSub.metadata?.monthlyCredits || 0);
-            if (credits > 0) {
-              await supabaseAdmin.rpc("grant_credits", {
-                _user_id: stripeSub.metadata.userId,
-                _delta: credits,
-                _reason: "plan_subscription_renewal",
-                _ref_id: null,
-                _metadata: { planSlug: stripeSub.metadata.planSlug ?? null, invoiceId: invoice.id, environment: env } as never,
-              } as never);
-            }
-            await logEvent("dev.plan.renewed", stripeSub.metadata.userId, {
-              planSlug: stripeSub.metadata.planSlug ?? null,
-              credits,
-              invoiceId: invoice.id,
-            });
-            break;
-          }
-        } catch (e) {
-          console.error("[webhook] dev plan renewal lookup failed", e);
-        }
-      }
 
       // Evita duplicação: a fatura inicial (subscription_create) já foi
       // registrada em checkout.session.completed.

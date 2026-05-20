@@ -31,14 +31,11 @@ function ConditionalFlaroChat() {
     "/unsubscribe",
     "/suporte",
     "/wishes",
-    "/s",
-    "/dev/preview",
   ];
   if (hiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + "/"))) return null;
   return <FlaroChat />;
 }
 import { capturePartnerFromUrl } from "@/lib/partner";
-import { RenderedSite } from "@/components/dev-site/RenderedSite";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -67,10 +64,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-import { detectSubdomainSite } from "@/lib/dev/subdomain.functions";
-
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  loader: () => detectSubdomainSite(),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -147,22 +141,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const loaderData = Route.useLoaderData();
-  const subdomainSite = (loaderData as { site?: any } | undefined)?.site ?? null;
   useEffect(() => { capturePartnerFromUrl(); }, []);
 
-  if (subdomainSite) {
-    // Renderiza site público diretamente (subdomínio {slug}.filro.site)
-    return (
-      <QueryClientProvider client={queryClient}>
-        <RenderedSite
-          content={subdomainSite.generated_content ?? {}}
-          businessName={subdomainSite.business_name ?? "Site"}
-        />
-        <Toaster />
-      </QueryClientProvider>
-    );
-  }
 
   return (
     <QueryClientProvider client={queryClient}>

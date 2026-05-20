@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Menu, X, ChevronDown, LayoutDashboard, Briefcase, Shield, Layers, PlayCircle, Rocket, Settings as SettingsIcon, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CreditsBadge } from "@/components/dev/CreditsBadge";
+
 
 const navLinks = [
   { to: "/" as const, label: "Início", icon: Home },
@@ -56,7 +56,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {isAuthenticated && <CreditsBadge />}
+          {null}
           {isAuthenticated ? (
             <div className="hidden md:block relative" onMouseEnter={() => setMenu("user")} onMouseLeave={() => setMenu(null)}>
               <button onClick={() => navigate({ to: "/settings" })} className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-border bg-paper hover:bg-muted transition-colors text-sm font-medium text-ink">
