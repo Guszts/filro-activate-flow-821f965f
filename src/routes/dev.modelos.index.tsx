@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { DEV_TEMPLATES } from "@/lib/dev/templates";
+import { DEV_TEMPLATES, type DevTemplate } from "@/lib/dev/templates";
 import { TemplateCover } from "@/components/dev/TemplateCover";
+import { TemplateStartModal } from "@/components/dev/TemplateStartModal";
 import { getDevPlan } from "@/lib/dev/plans";
 import { ArrowRight } from "lucide-react";
 
@@ -21,6 +23,8 @@ export const Route = createFileRoute("/dev/modelos/")({
 });
 
 function DevTemplatesPage() {
+  const [modalTpl, setModalTpl] = useState<DevTemplate | null>(null);
+
   return (
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
@@ -33,7 +37,7 @@ function DevTemplatesPage() {
             Comece a partir de um <span className="lime-mark">modelo pronto</span>
           </h1>
           <p className="mt-6 max-w-2xl text-ink-soft text-pretty">
-            Cada modelo é uma estrutura profissional adaptada ao seu segmento. Escolha um para começar o briefing — você ainda pode ajustar tudo pelo chat do projeto.
+            Cada modelo é uma estrutura profissional adaptada ao seu segmento. Escolha um, confirme o endereço do seu site e abrimos o chat para você editar tudo.
           </p>
         </section>
 
@@ -42,11 +46,11 @@ function DevTemplatesPage() {
             {DEV_TEMPLATES.map((t) => {
               const plan = getDevPlan(t.recommendedPlan);
               return (
-                <Link
+                <button
                   key={t.slug}
-                  to="/dev/modelos/$slug"
-                  params={{ slug: t.slug }}
-                  className="group rounded-2xl border border-border bg-paper overflow-hidden flex flex-col hover:border-ink/40 hover:shadow-elegant transition-all"
+                  type="button"
+                  onClick={() => setModalTpl(t)}
+                  className="group text-left w-full rounded-2xl border border-border bg-paper overflow-hidden flex flex-col hover:border-ink/40 hover:shadow-elegant transition-all"
                 >
                   <div className="overflow-hidden bg-muted relative">
                     <TemplateCover src={t.coverImage} name={t.name} previewRoute={t.previewRoute} />
@@ -66,10 +70,10 @@ function DevTemplatesPage() {
                       </div>
                     )}
                     <div className="mt-4 inline-flex items-center text-sm font-semibold text-ink">
-                      Abrir modelo <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                      Usar este modelo <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
-                </Link>
+                </button>
               );
             })}
           </div>
@@ -80,16 +84,18 @@ function DevTemplatesPage() {
             <div>
               <span className="text-xs uppercase tracking-widest text-ink-soft">Próximo passo</span>
               <h2 className="mt-4 editorial-headline text-3xl md:text-5xl text-ink max-w-2xl">
-                Escolha um plano para começar o briefing
+                Escolha um plano para criar à vontade
               </h2>
             </div>
-            <Link to="/dev" hash="planos" className="inline-flex items-center h-14 px-8 rounded-2xl bg-ink text-paper font-semibold tracking-wide hover:scale-[1.02] transition-transform self-start md:self-end">
+            <Link to="/dev/precos" className="inline-flex items-center h-14 px-8 rounded-2xl bg-ink text-paper font-semibold tracking-wide hover:scale-[1.02] transition-transform self-start md:self-end">
               Ver planos <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
         </section>
       </main>
       <SiteFooter />
+
+      <TemplateStartModal template={modalTpl} open={!!modalTpl} onClose={() => setModalTpl(null)} />
     </div>
   );
 }
