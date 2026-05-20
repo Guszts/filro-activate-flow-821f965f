@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ModelGrid } from "@/components/ModelGrid";
 import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/modelos")({
-  component: ModelosPage,
+  component: ModelosLayout,
   head: () => ({
     meta: [
       { title: "Modelos · Filro" },
@@ -17,6 +17,15 @@ export const Route = createFileRoute("/modelos")({
     links: [{ rel: "canonical", href: "https://setup.filro.site/modelos" }],
   }),
 });
+
+function ModelosLayout() {
+  const matches = useMatches();
+  const isChild = matches.some((m) => m.routeId !== "/modelos" && m.routeId.startsWith("/modelos/"));
+  if (isChild) return <Outlet />;
+  return <ModelosPage />;
+}
+
+
 
 function ModelosPage() {
   return (
