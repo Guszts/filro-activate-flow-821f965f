@@ -380,6 +380,8 @@ function DevLanding() {
       </section>
 
       <SiteFooter />
+
+      <TemplateStartModal template={modalTpl} open={!!modalTpl} onClose={() => setModalTpl(null)} />
     </div>
   );
 }
