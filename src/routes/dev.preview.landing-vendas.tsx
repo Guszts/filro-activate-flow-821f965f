@@ -601,6 +601,146 @@ function Footer() {
   );
 }
 
+function WhyChoose() {
+  const items = [
+    { I: Heart, t: "Certified Teachers", d: "Senior instructors with 500+ hours of training and ongoing study." },
+    { I: Wind, t: "Calm Studio Space", d: "Quiet rooms with natural light, soft lighting and aromatic touches." },
+    { I: Activity, t: "All Levels Welcome", d: "Adaptive classes for beginners, advanced students and recovery." },
+    { I: Users, t: "Small Class Sizes", d: "Personal guidance with a max of 14 students per session." },
+  ];
+  const stats = [{ v: "10+", l: "Years teaching" }, { v: "1.8K", l: "Active students" }, { v: "97%", l: "Recommend us" }, { v: "12", l: "Weekly classes" }];
+  return (
+    <section className="py-24 px-4 md:px-8 bg-white">
+      <div className="mx-auto max-w-[1280px] grid lg:grid-cols-2 gap-12 items-center">
+        <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative rounded-[32px] overflow-hidden" style={{ background: C.lavender, aspectRatio: "4 / 5" }}>
+          <img src={card1} alt="Yoga studio" className="absolute inset-0 w-full h-full object-cover" />
+        </motion.div>
+        <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
+          <span className="inline-block px-4 py-1.5 rounded-full text-[12px] font-medium" style={{ background: C.lavender, color: C.ink }}>Why Serenity</span>
+          <h2 className="mt-4 font-bold text-[#15151A]" style={{ fontSize: "clamp(30px, 4vw, 44px)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+            A practice space built around your wellbeing
+          </h2>
+          <p className="mt-4 text-[15px]" style={{ color: C.mute, lineHeight: 1.7 }}>
+            From mindful sequencing to a welcoming studio, every detail is designed to help you breathe deeper, move better and feel calmer.
+          </p>
+          <div className="mt-7 grid sm:grid-cols-2 gap-4">
+            {items.map((f) => (
+              <div key={f.t} className="flex gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: C.lavender }}>
+                  <f.I className="w-5 h-5" style={{ color: C.purple }} />
+                </div>
+                <div>
+                  <div className="font-bold text-[15px]" style={{ color: C.ink }}>{f.t}</div>
+                  <div className="text-[13px] mt-0.5" style={{ color: C.mute }}>{f.d}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 grid grid-cols-4 gap-4 pt-6 border-t" style={{ borderColor: "rgba(21,21,26,0.08)" }}>
+            {stats.map((m) => (
+              <div key={m.l}>
+                <div className="font-bold text-2xl lg:text-3xl" style={{ color: C.purple }}>{m.v}</div>
+                <div className="text-[11px] mt-1" style={{ color: C.mute }}>{m.l}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function Process() {
+  const steps = [
+    { n: "01", t: "Book a Class", d: "Pick the class and time that fits your routine through our simple booking flow." },
+    { n: "02", t: "Arrive & Settle", d: "Come 10 minutes early. We'll greet you, show the space and help you get ready." },
+    { n: "03", t: "Practice & Breathe", d: "Move at your own pace with a teacher guiding alignment and breath." },
+    { n: "04", t: "Rest & Reflect", d: "End in stillness, hydrate, and feel the calm extend into your day." },
+  ];
+  return (
+    <section className="py-24 px-4 md:px-8" style={{ background: C.soft }}>
+      <div className="mx-auto max-w-[1280px]">
+        <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center max-w-2xl mx-auto mb-14">
+          <span className="inline-block px-4 py-1.5 rounded-full text-[12px] font-medium bg-white" style={{ color: C.ink }}>Your Journey</span>
+          <h2 className="mt-4 font-bold text-[#15151A]" style={{ fontSize: "clamp(30px, 4vw, 44px)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+            A simple flow from booking to bliss
+          </h2>
+        </motion.div>
+        <div className="relative grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="hidden lg:block absolute top-10 left-[12%] right-[12%] h-px border-t border-dashed" style={{ borderColor: "rgba(21,21,26,0.15)" }} />
+          {steps.map((s, i) => (
+            <motion.div key={s.n} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+              className="relative bg-white rounded-3xl p-7 border" style={{ borderColor: "rgba(21,21,26,0.08)" }}>
+              <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-sm mb-5 relative z-10" style={{ background: C.purple }}>{s.n}</div>
+              <h3 className="font-bold text-[18px] mb-2" style={{ color: C.ink }}>{s.t}</h3>
+              <p className="text-[14px] leading-[1.6]" style={{ color: C.mute }}>{s.d}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Gallery() {
+  const shots = [
+    { src: card1, t: "Morning flow" }, { src: card2, t: "Hatha basics" }, { src: card3, t: "Breathwork" },
+    { src: testimonialImg, t: "Restorative" }, { src: card1, t: "Studio space" }, { src: card2, t: "Meditation" },
+  ];
+  return (
+    <section className="py-24 px-4 md:px-8 bg-white">
+      <div className="mx-auto max-w-[1280px]">
+        <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp} className="text-center max-w-2xl mx-auto mb-12">
+          <span className="inline-block px-4 py-1.5 rounded-full text-[12px] font-medium" style={{ background: C.lavender, color: C.ink }}>Gallery</span>
+          <h2 className="mt-4 font-bold text-[#15151A]" style={{ fontSize: "clamp(30px, 4vw, 44px)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+            Moments from the studio
+          </h2>
+        </motion.div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {shots.map((g, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+              className="relative rounded-3xl overflow-hidden group aspect-[4/3]">
+              <img src={g.src} alt={g.t} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute bottom-0 left-0 right-0 p-5 text-white translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all">
+                <div className="font-bold text-[16px]">{g.t}</div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CTABanner() {
+  return (
+    <section className="py-12 lg:py-20 px-4 md:px-8 bg-white">
+      <div className="mx-auto max-w-[1280px]">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          className="relative rounded-[40px] overflow-hidden p-10 lg:p-16 text-center" style={{ background: C.charcoal }}>
+          <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full" style={{ background: C.purple, filter: "blur(80px)", opacity: 0.4 }} />
+          <div className="absolute -bottom-20 -right-20 w-72 h-72 rounded-full" style={{ background: C.peach, filter: "blur(80px)", opacity: 0.4 }} />
+          <div className="relative text-white max-w-2xl mx-auto">
+            <h2 className="font-bold leading-[1.1]" style={{ fontSize: "clamp(28px, 4vw, 44px)", letterSpacing: "-0.03em" }}>
+              Your first class is on us
+            </h2>
+            <p className="mt-4 opacity-90 text-[15px]">Step onto the mat with confidence. Book a free intro class and feel the difference.</p>
+            <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+              <a href="#contact" className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full font-semibold text-[14px]" style={{ background: C.peach, color: C.ink }}>
+                Book Free Class <ArrowUpRight className="w-4 h-4" />
+              </a>
+              <a href="#contact" className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full font-semibold text-[14px] border border-white/30 text-white hover:bg-white/10 transition-colors">
+                See Schedule
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 function SerenityYoga() {
   return (
     <div className="bg-white min-h-screen" style={{ fontFamily: "'Manrope', 'Inter', system-ui, sans-serif", color: C.ink }}>
@@ -609,10 +749,14 @@ function SerenityYoga() {
       <main>
         <Hero />
         <FeatureCards />
+        <WhyChoose />
+        <Process />
         <Testimonials />
         <Classes />
         <Services />
+        <Gallery />
         <Pricing />
+        <CTABanner />
         <FAQ />
         <Contact />
       </main>
@@ -620,3 +764,4 @@ function SerenityYoga() {
     </div>
   );
 }
+
