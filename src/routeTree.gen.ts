@@ -14,6 +14,7 @@ import { Route as VivaraRouteImport } from './routes/vivara'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as SushixtiRouteImport } from './routes/sushixti'
 import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -84,6 +85,11 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
   path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SushixtiRoute = SushixtiRouteImport.update({
+  id: '/sushixti',
+  path: '/sushixti',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SuporteRoute = SuporteRouteImport.update({
@@ -345,6 +351,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suporte': typeof SuporteRoute
+  '/sushixti': typeof SushixtiRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
@@ -398,6 +405,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suporte': typeof SuporteRoute
+  '/sushixti': typeof SushixtiRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
@@ -452,6 +460,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suporte': typeof SuporteRoute
+  '/sushixti': typeof SushixtiRoute
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
@@ -507,6 +516,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/suporte'
+    | '/sushixti'
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
@@ -560,6 +570,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/suporte'
+    | '/sushixti'
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
@@ -613,6 +624,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/suporte'
+    | '/sushixti'
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
@@ -667,6 +679,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SuporteRoute: typeof SuporteRoute
+  SushixtiRoute: typeof SushixtiRoute
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
@@ -734,6 +747,13 @@ declare module '@tanstack/react-router' {
       path: '/termos'
       fullPath: '/termos'
       preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sushixti': {
+      id: '/sushixti'
+      path: '/sushixti'
+      fullPath: '/sushixti'
+      preLoaderRoute: typeof SushixtiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/suporte': {
@@ -1083,6 +1103,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SuporteRoute: SuporteRoute,
+  SushixtiRoute: SushixtiRoute,
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VerifyEmailRoute: VerifyEmailRoute,
