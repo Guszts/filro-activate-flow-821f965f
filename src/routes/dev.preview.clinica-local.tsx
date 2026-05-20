@@ -461,12 +461,12 @@ export function ClinicaPreview() {
               className="w-full h-[420px] object-cover"
               style={{ borderRadius: 32 }}
             />
-            <div className="absolute -bottom-5 -left-4 bg-white px-5 py-3 rounded-2xl shadow-lg">
-              <div className="text-[22px] font-bold" style={{ color: C.ink }}>10,000+</div>
+            <div className="absolute -bottom-3 left-3 sm:-bottom-5 sm:-left-4 bg-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl shadow-lg">
+              <div className="text-[20px] sm:text-[22px] font-bold" style={{ color: C.ink }}>10,000+</div>
               <div className="text-xs" style={{ color: C.muted }}>Procedures</div>
             </div>
-            <div className="absolute top-5 -right-3 bg-white px-5 py-3 rounded-2xl shadow-lg">
-              <div className="text-[22px] font-bold" style={{ color: C.ink }}>20+</div>
+            <div className="absolute top-3 right-3 sm:top-5 sm:-right-3 bg-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl shadow-lg">
+              <div className="text-[20px] sm:text-[22px] font-bold" style={{ color: C.ink }}>20+</div>
               <div className="text-xs" style={{ color: C.muted }}>Years Experience</div>
             </div>
           </div>
