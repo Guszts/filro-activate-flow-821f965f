@@ -1208,6 +1208,16 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      grant_credits: {
+        Args: {
+          _amount: number
+          _meta?: Json
+          _reason: string
+          _ref?: string
+          _user_id: string
+        }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
