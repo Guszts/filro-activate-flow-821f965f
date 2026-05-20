@@ -97,6 +97,7 @@ export const DEV_TEMPLATES: DevTemplate[] = [
     requiredInfo: ["Serviços e descrição","Cidades/bairros atendidos","WhatsApp"],
     recommendedPlan: "dev_start",
     coverImage: prestadorCover,
+    previewRoute: "/dev/preview/prestador-servico",
   },
   {
     slug: "landing-vendas",
