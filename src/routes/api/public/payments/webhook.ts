@@ -499,32 +499,6 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
         ? invoice.subscription
         : invoice.subscription?.id;
 
-      // Filro Dev — renovação mensal: credita nova quantidade
-      if (subId && invoice.billing_reason !== "subscription_create") {
-        try {
-          const stripeSub = await stripe.subscriptions.retrieve(subId);
-          if (stripeSub.metadata?.kind === "dev_plan" && stripeSub.metadata?.userId) {
-            const credits = Number(stripeSub.metadata?.monthlyCredits || 0);
-            if (credits > 0) {
-              await supabaseAdmin.rpc("grant_credits", {
-                _user_id: stripeSub.metadata.userId,
-                _delta: credits,
-                _reason: "plan_subscription_renewal",
-                _ref_id: null,
-                _metadata: { planSlug: stripeSub.metadata.planSlug ?? null, invoiceId: invoice.id, environment: env } as never,
-              } as never);
-            }
-            await logEvent("dev.plan.renewed", stripeSub.metadata.userId, {
-              planSlug: stripeSub.metadata.planSlug ?? null,
-              credits,
-              invoiceId: invoice.id,
-            });
-            break;
-          }
-        } catch (e) {
-          console.error("[webhook] dev plan renewal lookup failed", e);
-        }
-      }
 
       // Evita duplicação: a fatura inicial (subscription_create) já foi
       // registrada em checkout.session.completed.
