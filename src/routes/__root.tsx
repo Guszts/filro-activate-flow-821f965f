@@ -141,22 +141,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const loaderData = Route.useLoaderData();
-  const subdomainSite = (loaderData as { site?: any } | undefined)?.site ?? null;
   useEffect(() => { capturePartnerFromUrl(); }, []);
 
-  if (subdomainSite) {
-    // Renderiza site público diretamente (subdomínio {slug}.filro.site)
-    return (
-      <QueryClientProvider client={queryClient}>
-        <RenderedSite
-          content={subdomainSite.generated_content ?? {}}
-          businessName={subdomainSite.business_name ?? "Site"}
-        />
-        <Toaster />
-      </QueryClientProvider>
-    );
-  }
 
   return (
     <QueryClientProvider client={queryClient}>
