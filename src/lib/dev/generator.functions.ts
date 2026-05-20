@@ -381,7 +381,7 @@ ${JSON.stringify(workingContent, null, 2)}`;
 
     const action = envelope.action === "refused" || envelope.action === "safe_alternative" ? envelope.action : "applied";
     const notice = typeof envelope.notice === "string" ? envelope.notice : "";
-    const updated = envelope.site && typeof envelope.site === "object" ? envelope.site : project.generated_content;
+    const updated = envelope.site && typeof envelope.site === "object" ? envelope.site : workingContent;
 
     if (action === "refused") {
       // não consome créditos por uma recusa
