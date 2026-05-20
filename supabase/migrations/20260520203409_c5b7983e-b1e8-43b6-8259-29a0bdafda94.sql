@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS public.dev_change_requests CASCADE;
+DROP TABLE IF EXISTS public.dev_project_versions CASCADE;
+DROP TABLE IF EXISTS public.dev_payments CASCADE;
+DROP TABLE IF EXISTS public.dev_subscriptions CASCADE;
+DROP TABLE IF EXISTS public.dev_projects CASCADE;
+DROP TABLE IF EXISTS public.dev_plans CASCADE;
+DROP TABLE IF EXISTS public.dev_credit_packs CASCADE;
+DROP TABLE IF EXISTS public.credit_transactions CASCADE;
+DROP TABLE IF EXISTS public.user_credits CASCADE;
+DROP FUNCTION IF EXISTS public.grant_credits(uuid, integer, text, uuid, jsonb) CASCADE;
