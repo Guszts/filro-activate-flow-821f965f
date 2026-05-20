@@ -223,6 +223,7 @@ export function ClinicaPreview() {
             borderRadius: 28,
             minHeight: 520,
             boxShadow: "0 60px 120px rgba(0,0,0,0.55), 0 0 80px rgba(90,52,36,0.25)",
+            background: "radial-gradient(120% 90% at 50% 45%, #5a2d18 0%, #2a1208 55%, #0a0504 100%)",
           }}
         >
           {/* Background eye image */}
