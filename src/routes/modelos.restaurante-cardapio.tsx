@@ -5,7 +5,7 @@ import heroImg from "@/assets/sushi-hero.jpg";
 import chefImg from "@/assets/sushi-chef.jpg";
 import aboutImg from "@/assets/sushi-about.jpg";
 
-export const Route = createFileRoute("/sushixti")({
+export const Route = createFileRoute("/modelos/restaurante-cardapio")({
   component: SushiXTI,
   head: () => ({
     meta: [
