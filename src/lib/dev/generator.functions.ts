@@ -317,11 +317,40 @@ export const editDevSiteWithAI = createServerFn({ method: "POST" })
 
     const { data: project } = await supabaseAdmin
       .from("dev_projects")
-      .select("id, user_id, generated_content, business_name")
+      .select("id, user_id, generated_content, business_name, business_segment, template_slug, briefing")
       .eq("id", data.projectId)
       .maybeSingle();
     if (!project) return { ok: false as const, error: "Projeto não encontrado", cost, breakdown: costBreakdown };
     if (project.user_id !== userId) return { ok: false as const, error: "Sem permissão", cost, breakdown: costBreakdown };
+
+    // Se o projeto ainda usa o template bespoke (generated_content vazio),
+    // semeia um JSON inicial a partir do template + briefing + instrução do
+    // usuário. Sem isso, a IA editava `{}` e o site público continuava
+    // mostrando o template estático — dando a falsa impressão de que nada
+    // mudou no chat.
+    const currentContent = (project.generated_content ?? {}) as Record<string, unknown>;
+    const hasContent = currentContent && typeof currentContent === "object" && "hero" in currentContent;
+    let workingContent: Record<string, unknown> = currentContent;
+    if (!hasContent) {
+      const { data: tpl } = await supabaseAdmin
+        .from("dev_templates").select("name, sections").eq("slug", project.template_slug ?? "").maybeSingle();
+      const briefing = (project.briefing ?? {}) as { description?: string; whatsapp?: string; city?: string; tone?: string };
+      try {
+        const seeded = await generateContent({
+          businessName: project.business_name ?? "Meu negócio",
+          segment: project.business_segment ?? "",
+          description: `${briefing.description ?? ""}\n\nPedido atual do dono: ${data.instruction}`.trim(),
+          whatsapp: briefing.whatsapp,
+          city: briefing.city,
+          tone: briefing.tone,
+          templateName: tpl?.name ?? "Site profissional",
+          sections: (tpl?.sections as unknown as string[]) ?? [],
+        });
+        workingContent = seeded as unknown as Record<string, unknown>;
+      } catch (err) {
+        return { ok: false as const, error: err instanceof Error ? err.message : "Falha ao iniciar edição", cost, breakdown: costBreakdown };
+      }
+    }
 
     const system = `Você é o editor de IA de um site profissional. Receba o JSON atual e a instrução do dono e devolva APENAS um JSON envelope em PT-BR no formato exato:
 {"action":"applied"|"safe_alternative"|"refused","notice":"<curto, PT-BR>","site":<JSON COMPLETO do site>}
@@ -337,7 +366,7 @@ REGRAS:
     const user = `INSTRUÇÃO: ${data.instruction}
 
 JSON ATUAL DO SITE:
-${JSON.stringify(project.generated_content, null, 2)}`;
+${JSON.stringify(workingContent, null, 2)}`;
 
     let envelope: { action?: string; notice?: string; site?: unknown } = {};
     try {
@@ -352,7 +381,7 @@ ${JSON.stringify(project.generated_content, null, 2)}`;
 
     const action = envelope.action === "refused" || envelope.action === "safe_alternative" ? envelope.action : "applied";
     const notice = typeof envelope.notice === "string" ? envelope.notice : "";
-    const updated = envelope.site && typeof envelope.site === "object" ? envelope.site : project.generated_content;
+    const updated = envelope.site && typeof envelope.site === "object" ? envelope.site : workingContent;
 
     if (action === "refused") {
       // não consome créditos por uma recusa
