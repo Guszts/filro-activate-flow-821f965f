@@ -112,6 +112,7 @@ export const DEV_TEMPLATES: DevTemplate[] = [
     requiredInfo: ["Produto/oferta","Preço e garantia","Bônus (opcional)","Link de checkout"],
     recommendedPlan: "dev_pro",
     coverImage: landingCover,
+    previewRoute: "/dev/preview/landing-vendas",
   },
   {
     slug: "viagem-wishes",
