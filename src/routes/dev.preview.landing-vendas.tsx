@@ -605,8 +605,6 @@ function SerenityYoga() {
   return (
     <div className="bg-white min-h-screen" style={{ fontFamily: "'Manrope', 'Inter', system-ui, sans-serif", color: C.ink }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');`}</style>
-      <Logo />
-      <div style={{ display: "none" }}><Logo /></div>
       <Header />
       <main>
         <Hero />
