@@ -34,6 +34,7 @@ function DevLanding() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [prompt, setPrompt] = useState("");
+  const [modalTpl, setModalTpl] = useState<DevTemplate | null>(null);
 
   const fetchProjects = useServerFn(listMyDevProjects);
   const projectsQuery = useQuery({
