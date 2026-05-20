@@ -1,708 +1,737 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+export { MornaMarket as LojaPreview };
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import {
+  ShoppingCart, Search, User, Heart, Menu, X, Phone, Mail,
+  Facebook, Instagram, Youtube, Twitter, Linkedin, ChevronDown,
+  MapPin, Truck, Clock, Leaf, Package, Star, Plus, Minus, ArrowRight,
+  Apple, Croissant, Milk, Coffee, Cookie, Sparkles as Spark, Home, Tag,
+} from "lucide-react";
+import heroImg from "@/assets/morna-hero.jpg";
+import about1 from "@/assets/morna-about-1.jpg";
+import about2 from "@/assets/morna-about-2.jpg";
+import about3 from "@/assets/morna-about-3.jpg";
 
 export const Route = createFileRoute("/dev/preview/loja-local")({
-  component: LojaPreview,
+  component: MornaMarket,
   head: () => ({
     meta: [
-      { title: "Atelier Norte · Loja Local" },
-      { name: "description", content: "Atelier Norte — moda, acessórios e curadoria local com atendimento por WhatsApp." },
+      { title: "Morna Market · Fresh local essentials" },
+      { name: "description", content: "Morna Market — your neighborhood store for fresh groceries, bakery, snacks, drinks and daily essentials. Pickup and local delivery." },
     ],
   }),
 });
 
-// ---------------- Theme ----------------
+// ------------ Theme ------------
 const C = {
-  page: "#F4F1EC", paper: "#FFFFFF", ink: "#1B1A18", inkSoft: "#5E5852",
-  muted: "#9A938B", border: "#E7E1D7", pill: "#EFEAE0", divider: "#E3DCCF",
-  brand: "#2F4A3A", brandDark: "#1B2F23", accent: "#C68A52",
+  blue: "#EFF8FC", white: "#FFFFFF", off: "#FBFAF6",
+  ink: "#1D1D1F", inkSoft: "#2A2A2A", muted: "#7B7F86",
+  orange: "#F47A2A", orangeDeep: "#DE5F16", orangeLight: "#FFE2C8",
+  green: "#7CB342", yellow: "#F7C948", teal: "#7ACBC4", peach: "#FFF0E3",
+  border: "#E9EEF1",
 };
 
-// ---------------- Data ----------------
-type Product = {
-  id: string; name: string; category: "novidades" | "moda" | "acessorios" | "calcados" | "casa" | "presentes";
-  image: string; price: string; description: string; tag?: string;
-};
-const PRODUCTS: Product[] = [
-  { id: "vestido-linho", name: "Vestido midi de linho", category: "moda", image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1200&q=80", price: "R$ 389", description: "Linho leve com modelagem solta. Disponível em areia, verde-musgo e off-white.", tag: "Novo" },
-  { id: "camisa-poplin", name: "Camisa poplin oversized", category: "moda", image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1200&q=80", price: "R$ 259", description: "Algodão poplin macio, modelagem ampla e punho ajustável." },
-  { id: "alfaiataria", name: "Calça alfaiataria fluida", category: "moda", image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1200&q=80", price: "R$ 349", description: "Cintura alta, caimento impecável, prega frontal e tecido com leve elasticidade.", tag: "Top" },
-  { id: "tricot", name: "Tricot canelado bege", category: "moda", image: "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?auto=format&fit=crop&w=1200&q=80", price: "R$ 299", description: "Tricot ponto canelado, gola V, perfeito para sobreposição." },
-  { id: "bolsa-couro", name: "Bolsa estruturada de couro", category: "acessorios", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1200&q=80", price: "R$ 549", description: "Couro legítimo curtido, alça regulável e bolso interno organizador.", tag: "Best-seller" },
-  { id: "oculos", name: "Óculos acetato vintage", category: "acessorios", image: "https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&w=1200&q=80", price: "R$ 219", description: "Armação em acetato italiano com proteção UV400." },
-  { id: "cinto", name: "Cinto trançado caramelo", category: "acessorios", image: "https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=1200&q=80", price: "R$ 149", description: "Couro trançado à mão, fivela em latão envelhecido." },
-  { id: "tenis", name: "Tênis minimalista branco", category: "calcados", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80", price: "R$ 429", description: "Cabedal em couro, palmilha anatômica e solado emborrachado.", tag: "Top" },
-  { id: "mule", name: "Mule de couro caramelo", category: "calcados", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=1200&q=80", price: "R$ 359", description: "Salto baixo, design clean e forro acolchoado." },
-  { id: "cesto", name: "Cesto trançado de palha", category: "casa", image: "https://images.unsplash.com/photo-1583845112203-29329902332e?auto=format&fit=crop&w=1200&q=80", price: "R$ 189", description: "Trabalho artesanal de cooperativas locais. Várias utilidades.", tag: "Artesanal" },
-  { id: "manta", name: "Manta de algodão cru", category: "casa", image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=1200&q=80", price: "R$ 239", description: "Tecido natural, franjas e ponto crochê nas bordas." },
-  { id: "kit-presente", name: "Kit presente edição limitada", category: "presentes", image: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=1200&q=80", price: "R$ 269", description: "Combinação de acessórios selecionada pela curadora da loja.", tag: "Edição limitada" },
+// ------------ Data ------------
+const NAV = [
+  { label: "Home", href: "#home" },
+  { label: "Shop", href: "#categories" },
+  { label: "Deals", href: "#deals" },
+  { label: "About", href: "#about" },
+  { label: "Pickup", href: "#delivery" },
+  { label: "Blog", href: "#why" },
+  { label: "Contact", href: "#contact" },
 ];
 
-const COLLECTIONS = [
-  { id: "outono", name: "Coleção Outono", image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80", description: "Tons quentes, alfaiataria fluida e tricôs canelados." },
-  { id: "essenciais", name: "Essenciais atemporais", image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80", description: "Peças que ficam no guarda-roupa por anos. Linho, algodão e couro." },
-  { id: "artesanal", name: "Cápsula artesanal", image: "https://images.unsplash.com/photo-1528826007177-f38517ce9a14?auto=format&fit=crop&w=1200&q=80", description: "Curadoria de artesãs locais: cestos, mantas e cerâmicas." },
+const CATEGORIES = [
+  { name: "Fresh Produce", count: 42, bg: "#E8F5E0", icon: Apple },
+  { name: "Bakery", count: 24, bg: "#FFE2C8", icon: Croissant },
+  { name: "Dairy & Eggs", count: 18, bg: "#EFF8FC", icon: Milk },
+  { name: "Snacks", count: 36, bg: "#FFF0E3", icon: Cookie },
+  { name: "Drinks", count: 28, bg: "#E7F5F3", icon: Coffee },
+  { name: "Pantry Basics", count: 52, bg: "#FBF3D4", icon: Package },
+  { name: "Household", count: 31, bg: "#F1ECFB", icon: Home },
+  { name: "Local Favorites", count: 19, bg: "#FFE2C8", icon: Spark },
 ];
 
-const HERO_IMAGE = "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1800&q=80";
+const PRODUCTS = [
+  { id: 1, name: "Fresh Baguette", cat: "Bakery", price: 4.5, img: "https://images.unsplash.com/photo-1568471173242-461f0a730452?auto=format&fit=crop&w=600&q=80", badge: null, bg: "#FFE2C8" },
+  { id: 2, name: "Organic Bananas", cat: "Produce", price: 2.9, img: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80", badge: "-20%", bg: "#FBF3D4" },
+  { id: 3, name: "Local Eggs", cat: "Dairy", price: 6.2, img: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=600&q=80", badge: null, bg: "#EFF8FC" },
+  { id: 4, name: "Orange Juice", cat: "Drinks", price: 5.8, img: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=600&q=80", badge: "Fresh", bg: "#FFE2C8" },
+  { id: 5, name: "Mixed Greens", cat: "Produce", price: 4.2, img: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80", badge: null, bg: "#E8F5E0" },
+  { id: 6, name: "Roasted Coffee", cat: "Pantry", price: 12, img: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80", badge: "Top", bg: "#FFF0E3" },
+  { id: 7, name: "Family Snack Box", cat: "Snacks", price: 9.5, img: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=600&q=80", badge: "-15%", bg: "#FBF3D4" },
+  { id: 8, name: "Cleaning Essentials", cat: "Household", price: 7.9, img: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80", badge: null, bg: "#F1ECFB" },
+];
 
-const FILTERS = [
-  { key: "novidades", label: "Novidades" },
-  { key: "moda", label: "Moda" },
-  { key: "acessorios", label: "Acessórios" },
-  { key: "calcados", label: "Calçados" },
-  { key: "casa", label: "Casa" },
-  { key: "presentes", label: "Presentes" },
-] as const;
-type FilterKey = (typeof FILTERS)[number]["key"];
+const FAQS = [
+  { q: "Do you offer local delivery?", a: "Yes. Local delivery is available in selected nearby areas, with free delivery over $30." },
+  { q: "Can I order online and pick up in store?", a: "Yes. Choose pickup at checkout and we will prepare your order for collection." },
+  { q: "Are products updated daily?", a: "Fresh produce, bakery items, and selected local goods are updated regularly based on availability." },
+  { q: "Do you sell household essentials?", a: "Yes. The store includes pantry basics, cleaning items, personal care, and daily household products." },
+  { q: "Can I request a product?", a: "Yes. Use the contact form to ask about specific items or local products." },
+  { q: "Do you have weekly discounts?", a: "Yes. Weekly deals are shown on the homepage and updated regularly." },
+];
 
-const NAV_ITEMS = [
-  { key: "inicio", label: "Início" },
-  { key: "vitrine", label: "Vitrine" },
-  { key: "colecoes", label: "Coleções" },
-  { key: "promocoes", label: "Promoções" },
-  { key: "lookbook", label: "Lookbook" },
-  { key: "sobre", label: "Sobre" },
-  { key: "blog", label: "Diário" },
-  { key: "loja", label: "Visite" },
-  { key: "contato", label: "Contato" },
-] as const;
-type PageKey = (typeof NAV_ITEMS)[number]["key"];
+const TESTIMONIALS = [
+  { name: "Amanda R.", text: "Fresh products, quick pickup, and fair prices. It feels like shopping from a real neighborhood store." },
+  { name: "Marcus T.", text: "The weekly deals are useful, and the delivery is faster than expected." },
+  { name: "Helen M.", text: "Clean website, easy ordering, and the bakery items are always fresh." },
+];
 
-const imgFallback = (e: React.SyntheticEvent<HTMLImageElement>) => {
-  const img = e.currentTarget;
-  if (img.dataset.fb) return;
-  img.dataset.fb = "1";
-  img.src = `https://picsum.photos/seed/${encodeURIComponent(img.alt || "loja")}/1200/800`;
-};
+// ------------ Bits ------------
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
+} as const;
 
-// ---------------- Detail context ----------------
-type DetailItem = {
-  id: string; kind: "produto" | "colecao" | "post"; title: string; subtitle?: string;
-  image: string; price?: string; description: string; highlights?: string[];
-};
-type DetailCtx = { open: (item: DetailItem) => void; ask: (s: { name: string; price?: string }) => void };
-const DetailContext = createContext<DetailCtx | null>(null);
-function useDetail() {
-  const ctx = useContext(DetailContext);
-  if (!ctx) throw new Error("Missing DetailContext");
-  return ctx;
-}
-function productToDetail(p: Product): DetailItem {
-  return {
-    id: `prod-${p.id}`, kind: "produto", title: p.name, subtitle: p.tag,
-    image: p.image, price: p.price, description: p.description,
-    highlights: ["Curadoria autoral", "Tecidos naturais", "Atendimento personalizado", "Retirada na loja ou entrega"],
-  };
-}
-
-// ---------------- Root ----------------
-export function LojaPreview() {
-  const [page, setPage] = useState<PageKey>("inicio");
-  const [filter, setFilter] = useState<FilterKey>("novidades");
-  const [askFor, setAskFor] = useState<{ name: string; price?: string } | null>(null);
-  const [detail, setDetail] = useState<DetailItem | null>(null);
-
-  const filtered = useMemo(() => {
-    if (filter === "novidades") return PRODUCTS.slice(0, 8);
-    return PRODUCTS.filter((p) => p.category === filter);
-  }, [filter]);
-
-  useEffect(() => { setDetail(null); }, [page]);
-  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [detail, page]);
-
-  const ctxValue: DetailCtx = { open: setDetail, ask: setAskFor };
-
+function Logo({ dark = false }: { dark?: boolean }) {
   return (
-    <DetailContext.Provider value={ctxValue}>
-      <div style={{ background: C.page, color: C.ink, fontFamily: "Inter, Manrope, ui-sans-serif, system-ui" }} className="min-h-screen w-full">
-        <ResponsiveStyles />
-        <div className="loja-shell mx-auto" style={{
-          background: C.paper, maxWidth: 1250, margin: "40px auto",
-          borderRadius: 24, padding: "32px 56px 56px",
-          boxShadow: "0 30px 80px rgba(27,26,24,0.10)",
-        }}>
-          <Header page={page} setPage={setPage} />
-
-          <AnimatePresence mode="wait">
-            {detail ? (
-              <motion.div key={`detail-${detail.id}`}
-                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}>
-                <DetailView item={detail} onBack={() => setDetail(null)}
-                  onAsk={() => setAskFor({ name: detail.title, price: detail.price })} />
-              </motion.div>
-            ) : (
-              <motion.div key={page}
-                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}>
-                {page === "inicio" && <Home filter={filter} setFilter={setFilter} items={filtered} goTo={setPage} />}
-                {page === "vitrine" && <Vitrine filter={filter} setFilter={setFilter} items={filtered} />}
-                {page === "colecoes" && <Colecoes />}
-                {page === "promocoes" && <Promocoes />}
-                {page === "lookbook" && <Lookbook />}
-                {page === "sobre" && <Sobre />}
-                {page === "blog" && <Blog />}
-                {page === "loja" && <Visite />}
-                {page === "contato" && <Contato />}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <Footer goTo={setPage} />
-        </div>
-
-        <AnimatePresence>
-          {askFor && <AskModal item={askFor} onClose={() => setAskFor(null)} />}
-        </AnimatePresence>
+    <a href="#home" className="flex items-center gap-2 group">
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: C.orange }}>
+        <ShoppingCart className="w-5 h-5 text-white" strokeWidth={2.5} />
       </div>
-    </DetailContext.Provider>
-  );
-}
-
-// ---------------- Responsive ----------------
-function ResponsiveStyles() {
-  return (
-    <style>{`
-      @media (max-width: 1024px) {
-        .loja-shell { padding: 28px !important; margin: 16px !important; max-width: calc(100% - 32px) !important; border-radius: 20px !important; }
-        .loja-bleed { margin-left: -28px !important; margin-right: -28px !important; }
-      }
-      @media (max-width: 900px) {
-        .loja-nav { gap: 6px !important; flex-wrap: wrap !important; justify-content: center; flex: 1 1 100%; order: 3; margin-top: 10px; padding-top: 10px; border-top: 1px solid ${C.divider}; }
-        .loja-nav button { font-size: 12px !important; padding: 6px 10px; border-radius: 999px; background: ${C.pill}; }
-        .loja-nav button[data-active="true"] { background: ${C.brand} !important; color: #fff !important; }
-        .loja-header { flex-wrap: wrap !important; height: auto !important; padding-bottom: 8px; }
-      }
-      @media (max-width: 720px) {
-        .loja-shell { padding: 18px !important; margin: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
-        .loja-bleed { margin-left: -18px !important; margin-right: -18px !important; }
-        .loja-header-cta { display: none !important; }
-        .loja-hero { height: 380px !important; }
-        .loja-hero-title { font-size: 36px !important; }
-        .loja-2col { grid-template-columns: 1fr !important; }
-        .loja-3col { grid-template-columns: 1fr 1fr !important; }
-        .loja-4col { grid-template-columns: 1fr 1fr !important; }
-        .loja-section-title { font-size: 28px !important; }
-      }
-      @media (max-width: 480px) { .loja-3col, .loja-4col { grid-template-columns: 1fr !important; } }
-    `}</style>
-  );
-}
-
-// ---------------- Header ----------------
-function Header({ page, setPage }: { page: PageKey; setPage: (k: PageKey) => void }) {
-  return (
-    <motion.header initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-      style={{ height: 64 }} className="loja-header flex items-center justify-between">
-      <button onClick={() => setPage("inicio")} className="flex items-center gap-2">
-        <motion.span whileHover={{ rotate: -8, scale: 1.05 }}
-          style={{ background: C.brand, color: "#fff", width: 32, height: 32, borderRadius: 10, fontWeight: 800, fontSize: 14 }}
-          className="inline-flex items-center justify-center">A</motion.span>
-        <span style={{ fontWeight: 800, fontSize: 16, letterSpacing: -0.3 }}>Atelier Norte</span>
-      </button>
-
-      <nav className="loja-nav flex items-center gap-6">
-        {NAV_ITEMS.map((n) => {
-          const active = page === n.key;
-          return (
-            <button key={n.key} data-active={active} onClick={() => setPage(n.key)}
-              style={{ fontSize: 13, fontWeight: active ? 600 : 500, color: active ? C.ink : C.inkSoft, position: "relative", transition: "color 0.2s" }}>
-              {n.label}
-              {active && <motion.span layoutId="lojanavline" style={{ position: "absolute", left: 0, right: 0, bottom: -8, height: 2, background: C.accent, borderRadius: 2 }} />}
-            </button>
-          );
-        })}
-      </nav>
-
-      <motion.button whileHover={{ scale: 1.04 }} onClick={() => setPage("contato")}
-        className="loja-header-cta"
-        style={{ background: C.brand, color: "#fff", padding: "10px 18px", borderRadius: 999, fontSize: 13, fontWeight: 600 }}>
-        Falar por WhatsApp
-      </motion.button>
-    </motion.header>
-  );
-}
-
-// ---------------- Home ----------------
-function Home({ filter, setFilter, items, goTo }: { filter: FilterKey; setFilter: (f: FilterKey) => void; items: Product[]; goTo: (p: PageKey) => void }) {
-  return (
-    <div style={{ marginTop: 24 }}>
-      <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}
-        className="loja-hero" style={{ position: "relative", height: 500, borderRadius: 28, overflow: "hidden" }}>
-        <motion.img src={HERO_IMAGE} alt="Loja vitrine" onError={imgFallback}
-          initial={{ scale: 1.12 }} animate={{ scale: 1 }} transition={{ duration: 1.6, ease: "easeOut" }}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(27,26,24,0.10), rgba(27,26,24,0.65))" }} />
-        <div style={{ position: "absolute", left: 32, right: 32, bottom: 40, color: "#fff" }}>
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            style={{ display: "inline-block", padding: "5px 14px", borderRadius: 999, background: "rgba(255,255,255,0.18)", backdropFilter: "blur(8px)", fontSize: 11, fontWeight: 600, letterSpacing: 1.4, textTransform: "uppercase" }}>
-            Curadoria autoral · Loja local
-          </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-            className="loja-hero-title" style={{ marginTop: 16, fontSize: 56, fontWeight: 700, letterSpacing: -0.04, lineHeight: 1.05, maxWidth: 720 }}>
-            Peças que contam histórias
-          </motion.h1>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-            style={{ marginTop: 14, fontSize: 16, maxWidth: 520, opacity: 0.92 }}>
-            Moda, acessórios e curadoria local. Atendimento humano por WhatsApp e retirada na loja.
-          </motion.p>
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-            style={{ marginTop: 22, display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <button onClick={() => goTo("vitrine")} style={{ background: "#fff", color: C.ink, padding: "12px 22px", borderRadius: 999, fontWeight: 600, fontSize: 14 }}>Ver vitrine</button>
-            <button onClick={() => goTo("colecoes")} style={{ background: "transparent", color: "#fff", padding: "12px 22px", borderRadius: 999, fontWeight: 600, fontSize: 14, border: "1px solid rgba(255,255,255,0.5)" }}>Coleções</button>
-          </motion.div>
-        </div>
-      </motion.div>
-
-      {/* Benefits edge-to-edge */}
-      <section className="loja-bleed" style={{ marginTop: 48, padding: "44px 56px", background: C.brand, color: "#fff" }}>
-        <div className="loja-4col" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 24 }}>
-          {[
-            { n: "Entrega", l: "Para todo o Brasil" },
-            { n: "Retirada", l: "Na loja sem custo" },
-            { n: "Troca", l: "Em até 30 dias" },
-            { n: "Pix", l: "10% off à vista" },
-          ].map((s, i) => (
-            <motion.div key={s.l} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}>
-              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: -0.02 }}>{s.n}</div>
-              <div style={{ marginTop: 4, fontSize: 13, opacity: 0.85 }}>{s.l}</div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Vitrine destaque */}
-      <section style={{ marginTop: 56 }}>
-        <div className="flex items-end justify-between" style={{ flexWrap: "wrap", gap: 12 }}>
-          <div>
-            <div style={{ fontSize: 11, color: C.accent, textTransform: "uppercase", letterSpacing: 1.4, fontWeight: 700 }}>Vitrine</div>
-            <h2 className="loja-section-title" style={{ marginTop: 6, fontSize: 40, fontWeight: 700, letterSpacing: -0.03 }}>Peças em destaque</h2>
-          </div>
-          <button onClick={() => goTo("vitrine")} style={{ fontSize: 13, color: C.brand, fontWeight: 600 }}>Ver tudo →</button>
-        </div>
-
-        <div style={{ marginTop: 20, display: "flex", gap: 8, flexWrap: "wrap" }}>
-          {FILTERS.map((f) => {
-            const active = filter === f.key;
-            return (
-              <motion.button key={f.key} whileTap={{ scale: 0.96 }} onClick={() => setFilter(f.key)}
-                style={{ padding: "8px 16px", borderRadius: 999, fontSize: 13, fontWeight: 600, background: active ? C.brand : C.pill, color: active ? "#fff" : C.ink, border: "none", transition: "all 0.2s" }}>
-                {f.label}
-              </motion.button>
-            );
-          })}
-        </div>
-
-        <ProductGrid items={items.slice(0, 8)} />
-      </section>
-
-      <FeaturedCollections goTo={goTo} />
-      <Testimonials />
-      <NewsletterStrip />
-    </div>
-  );
-}
-
-// ---------------- Product grid ----------------
-function ProductGrid({ items }: { items: Product[] }) {
-  const { open, ask } = useDetail();
-  return (
-    <div className="loja-4col" style={{ marginTop: 28, display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16 }}>
-      {items.map((p, i) => (
-        <motion.div key={p.id}
-          initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          transition={{ duration: 0.35, delay: i * 0.05 }}
-          whileHover={{ y: -4 }}
-          onClick={() => open(productToDetail(p))}
-          style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 18, overflow: "hidden", cursor: "pointer" }}>
-          <div style={{ position: "relative", height: 240, overflow: "hidden", background: C.pill }}>
-            <motion.img src={p.image} alt={p.name} onError={imgFallback}
-              whileHover={{ scale: 1.06 }} transition={{ duration: 0.6 }}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            {p.tag && <span style={{ position: "absolute", top: 12, left: 12, background: C.accent, color: "#fff", padding: "4px 10px", borderRadius: 999, fontSize: 11, fontWeight: 700 }}>{p.tag}</span>}
-          </div>
-          <div style={{ padding: 16 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.35 }}>{p.name}</div>
-            <div style={{ marginTop: 6, fontSize: 15, fontWeight: 800, color: C.brand }}>{p.price}</div>
-            <button onClick={(e) => { e.stopPropagation(); ask({ name: p.name, price: p.price }); }}
-              style={{ marginTop: 12, width: "100%", padding: "10px 12px", borderRadius: 10, background: C.ink, color: "#fff", fontSize: 12, fontWeight: 600 }}>
-              Comprar no WhatsApp
-            </button>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  );
-}
-
-// ---------------- Pages ----------------
-function Vitrine({ filter, setFilter, items }: { filter: FilterKey; setFilter: (f: FilterKey) => void; items: Product[] }) {
-  return (
-    <section style={{ marginTop: 24 }}>
-      <h1 className="loja-section-title" style={{ fontSize: 44, fontWeight: 700, letterSpacing: -0.03 }}>Vitrine completa</h1>
-      <p style={{ marginTop: 8, fontSize: 14, color: C.inkSoft, maxWidth: 600 }}>Filtre por categoria e abra um produto para ver detalhes e comprar pelo WhatsApp.</p>
-      <div style={{ marginTop: 24, display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {FILTERS.map((f) => {
-          const active = filter === f.key;
-          return (
-            <button key={f.key} onClick={() => setFilter(f.key)}
-              style={{ padding: "8px 16px", borderRadius: 999, fontSize: 13, fontWeight: 600, background: active ? C.brand : C.pill, color: active ? "#fff" : C.ink, border: "none" }}>
-              {f.label}
-            </button>
-          );
-        })}
+      <div className="leading-none">
+        <div className="text-[20px] font-black tracking-tight" style={{ color: dark ? C.white : C.ink, fontFamily: "'Baloo 2', 'Nunito', system-ui" }}>MORNA</div>
+        <div className="text-[10px] uppercase tracking-[0.22em]" style={{ color: dark ? "#888" : C.muted }}>market</div>
       </div>
-      <ProductGrid items={items} />
-    </section>
+    </a>
   );
 }
 
-function FeaturedCollections({ goTo }: { goTo: (p: PageKey) => void }) {
-  const { open } = useDetail();
+function Doodle({ className = "", children }: { className?: string; children: React.ReactNode }) {
+  return <div className={`absolute pointer-events-none opacity-40 ${className}`}>{children}</div>;
+}
+
+// ------------ Main ------------
+export function MornaMarket() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cart, setCart] = useState<{ id: number; qty: number }[]>([
+    { id: 1, qty: 1 }, { id: 4, qty: 2 },
+  ]);
+  const [wishlist, setWishlist] = useState<number[]>([]);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [formSent, setFormSent] = useState(false);
+
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 20);
+    on();
+    window.addEventListener("scroll", on);
+    return () => window.removeEventListener("scroll", on);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen || searchOpen || cartOpen ? "hidden" : "";
+  }, [menuOpen, searchOpen, cartOpen]);
+
+  const cartCount = cart.reduce((s, i) => s + i.qty, 0);
+  const addToCart = (id: number) => setCart((c) => {
+    const ex = c.find((i) => i.id === id);
+    return ex ? c.map((i) => i.id === id ? { ...i, qty: i.qty + 1 } : i) : [...c, { id, qty: 1 }];
+  });
+  const toggleWish = (id: number) => setWishlist((w) => w.includes(id) ? w.filter((x) => x !== id) : [...w, id]);
+
   return (
-    <section style={{ marginTop: 64 }}>
-      <div className="flex items-end justify-between" style={{ flexWrap: "wrap", gap: 12 }}>
-        <div>
-          <div style={{ fontSize: 11, color: C.accent, textTransform: "uppercase", letterSpacing: 1.4, fontWeight: 700 }}>Coleções</div>
-          <h2 className="loja-section-title" style={{ marginTop: 6, fontSize: 40, fontWeight: 700, letterSpacing: -0.03 }}>Curadoria da temporada</h2>
+    <div id="home" className="min-h-screen w-full overflow-x-hidden" style={{ background: C.white, color: C.ink, fontFamily: "'Nunito Sans', 'Inter', system-ui" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap');
+        .heading{font-family:'Baloo 2','Nunito',system-ui;letter-spacing:-0.03em;line-height:1.02;}
+      `}</style>
+
+      {/* Top announcement */}
+      <div className="text-white text-[12px]" style={{ background: "#5E7F8D" }}>
+        <div className="max-w-[1280px] mx-auto px-4 h-[36px] flex items-center justify-between gap-4">
+          <div className="hidden md:flex items-center gap-3 opacity-80">
+            {[Facebook, Instagram, Youtube, Twitter, Linkedin].map((I, i) => (
+              <a key={i} href="#" aria-label="social" className="hover:opacity-100"><I className="w-3.5 h-3.5" /></a>
+            ))}
+          </div>
+          <div className="flex-1 text-center font-medium">
+            <span className="hidden sm:inline">Summer Deal · 35% off fresh picks </span>
+            <span className="opacity-60 hidden sm:inline">|</span>
+            <span> Free delivery over $30</span>
+          </div>
+          <div className="hidden lg:flex items-center gap-4 opacity-90">
+            <a href="tel:+12144819074" className="flex items-center gap-1.5 hover:opacity-100"><Phone className="w-3 h-3" />+1 214-481-9074</a>
+            <a href="mailto:hello@mornamarket.com" className="flex items-center gap-1.5 hover:opacity-100"><Mail className="w-3 h-3" />hello@mornamarket.com</a>
+          </div>
         </div>
-        <button onClick={() => goTo("colecoes")} style={{ fontSize: 13, color: C.brand, fontWeight: 600 }}>Ver coleções →</button>
       </div>
-      <div className="loja-3col" style={{ marginTop: 24, display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18 }}>
-        {COLLECTIONS.map((c, i) => (
-          <motion.div key={c.id} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.35, delay: i * 0.08 }} whileHover={{ y: -4 }}
-            onClick={() => open({ id: `col-${c.id}`, kind: "colecao", title: c.name, image: c.image, description: c.description, highlights: ["Curadoria autoral", "Peças selecionadas", "Edição limitada", "Disponível na loja"] })}
-            style={{ position: "relative", height: 360, borderRadius: 20, overflow: "hidden", cursor: "pointer" }}>
-            <motion.img src={c.image} alt={c.name} onError={imgFallback}
-              whileHover={{ scale: 1.05 }} transition={{ duration: 0.6 }}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(27,26,24,0.0), rgba(27,26,24,0.65))" }} />
-            <div style={{ position: "absolute", left: 22, right: 22, bottom: 20, color: "#fff" }}>
-              <div style={{ fontSize: 20, fontWeight: 700 }}>{c.name}</div>
-              <div style={{ marginTop: 6, fontSize: 13, opacity: 0.9 }}>{c.description}</div>
+
+      {/* Header */}
+      <header className={`sticky top-0 z-40 transition-all ${scrolled ? "shadow-sm" : ""}`} style={{ background: C.white }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6 h-[78px] lg:h-[90px] flex items-center justify-between gap-4">
+          <Logo />
+          <nav className="hidden lg:flex items-center gap-7 text-[14px] font-semibold" style={{ color: C.inkSoft }}>
+            {NAV.map((n) => (
+              <a key={n.label} href={n.href} className="hover:text-[color:var(--o)] transition-colors relative group" style={{ ["--o" as any]: C.orange }}>
+                {n.label}
+                <span className="absolute -bottom-1 left-0 h-0.5 w-0 group-hover:w-full transition-all" style={{ background: C.orange }} />
+              </a>
+            ))}
+          </nav>
+          <div className="flex items-center gap-2 lg:gap-3">
+            <div className="hidden xl:flex items-center gap-3 text-[13px]" style={{ color: C.muted }}>
+              <button className="flex items-center gap-1 hover:text-[color:var(--i)]" style={{ ["--i" as any]: C.ink }}>USD <ChevronDown className="w-3 h-3" /></button>
+              <span className="text-gray-300">|</span>
+              <button className="flex items-center gap-1 hover:text-[color:var(--i)]" style={{ ["--i" as any]: C.ink }}>English <ChevronDown className="w-3 h-3" /></button>
             </div>
+            <button onClick={() => setSearchOpen(true)} aria-label="Search" className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100"><Search className="w-[18px] h-[18px]" /></button>
+            <button aria-label="Account" className="hidden sm:flex w-10 h-10 rounded-full items-center justify-center hover:bg-gray-100"><User className="w-[18px] h-[18px]" /></button>
+            <button aria-label="Wishlist" className="hidden sm:flex relative w-10 h-10 rounded-full items-center justify-center hover:bg-gray-100">
+              <Heart className="w-[18px] h-[18px]" />
+              {wishlist.length > 0 && <span className="absolute top-1 right-1 text-[10px] font-bold text-white rounded-full w-4 h-4 flex items-center justify-center" style={{ background: C.orange }}>{wishlist.length}</span>}
+            </button>
+            <button onClick={() => setCartOpen(true)} aria-label="Cart" className="relative w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100">
+              <ShoppingCart className="w-[18px] h-[18px]" />
+              {cartCount > 0 && <span className="absolute top-1 right-1 text-[10px] font-bold text-white rounded-full w-4 h-4 flex items-center justify-center" style={{ background: C.orange }}>{cartCount}</span>}
+            </button>
+            <button onClick={() => setMenuOpen(true)} aria-label="Menu" className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100"><Menu className="w-5 h-5" /></button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "tween" }} className="fixed inset-0 z-50 bg-white p-6 lg:hidden">
+            <div className="flex justify-between items-center mb-8"><Logo /><button onClick={() => setMenuOpen(false)} aria-label="Close"><X className="w-6 h-6" /></button></div>
+            <nav className="flex flex-col gap-4 text-2xl font-bold heading">
+              {NAV.map((n) => <a key={n.label} href={n.href} onClick={() => setMenuOpen(false)}>{n.label}</a>)}
+            </nav>
+            <a href="#contact" onClick={() => setMenuOpen(false)} className="mt-8 inline-flex h-12 px-6 rounded-full items-center justify-center font-semibold text-white" style={{ background: C.orange }}>Contact us</a>
           </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
+        )}
+      </AnimatePresence>
 
-function Colecoes() {
-  return <div style={{ marginTop: 24 }}><h1 className="loja-section-title" style={{ fontSize: 44, fontWeight: 700, letterSpacing: -0.03 }}>Coleções</h1><p style={{ marginTop: 8, fontSize: 14, color: C.inkSoft, maxWidth: 600 }}>Explore nossa curadoria por temporada.</p><FeaturedCollections goTo={() => {}} /></div>;
-}
-
-function Promocoes() {
-  const promos = PRODUCTS.slice(0, 4).map((p) => ({ ...p, oldPrice: p.price, price: "R$ " + Math.round(parseInt(p.price.replace(/\D/g, "")) * 0.7) }));
-  const { open, ask } = useDetail();
-  return (
-    <section style={{ marginTop: 24 }}>
-      <h1 className="loja-section-title" style={{ fontSize: 44, fontWeight: 700, letterSpacing: -0.03 }}>Promoções da semana</h1>
-      <p style={{ marginTop: 8, fontSize: 14, color: C.inkSoft, maxWidth: 600 }}>Peças selecionadas com até 30% off. Estoque limitado.</p>
-      <div className="loja-4col" style={{ marginTop: 28, display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16 }}>
-        {promos.map((p, i) => (
-          <motion.div key={p.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.35, delay: i * 0.06 }} whileHover={{ y: -4 }}
-            onClick={() => open(productToDetail(p as Product))}
-            style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 18, overflow: "hidden", cursor: "pointer" }}>
-            <div style={{ position: "relative", height: 240, overflow: "hidden", background: C.pill }}>
-              <img src={p.image} alt={p.name} onError={imgFallback} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              <span style={{ position: "absolute", top: 12, left: 12, background: C.accent, color: "#fff", padding: "4px 10px", borderRadius: 999, fontSize: 11, fontWeight: 700 }}>-30%</span>
-            </div>
-            <div style={{ padding: 16 }}>
-              <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.35 }}>{p.name}</div>
-              <div style={{ marginTop: 6, display: "flex", gap: 8, alignItems: "baseline" }}>
-                <span style={{ fontSize: 12, color: C.muted, textDecoration: "line-through" }}>{p.oldPrice}</span>
-                <span style={{ fontSize: 15, fontWeight: 800, color: C.brand }}>{p.price}</span>
+      {/* Search overlay */}
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={() => setSearchOpen(false)}>
+            <motion.div initial={{ y: -40 }} animate={{ y: 0 }} className="bg-white p-6 max-w-2xl mx-auto mt-20 rounded-2xl" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center gap-3 border-b pb-3">
+                <Search className="w-5 h-5 text-gray-400" />
+                <input autoFocus placeholder="Search groceries, bakery, drinks..." className="flex-1 outline-none text-lg" />
+                <button onClick={() => setSearchOpen(false)}><X className="w-5 h-5" /></button>
               </div>
-              <button onClick={(e) => { e.stopPropagation(); ask({ name: p.name, price: p.price }); }}
-                style={{ marginTop: 12, width: "100%", padding: "10px 12px", borderRadius: 10, background: C.accent, color: "#fff", fontSize: 12, fontWeight: 600 }}>
-                Quero esta peça
-              </button>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Lookbook() {
-  const looks = [
-    { id: "l1", img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80", t: "Look 01 · Linho ao vento" },
-    { id: "l2", img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80", t: "Look 02 · Camadas neutras" },
-    { id: "l3", img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1200&q=80", t: "Look 03 · Couro e alfaiataria" },
-    { id: "l4", img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=80", t: "Look 04 · Tons terrosos" },
-  ];
-  return (
-    <section style={{ marginTop: 24 }}>
-      <h1 className="loja-section-title" style={{ fontSize: 44, fontWeight: 700, letterSpacing: -0.03 }}>Lookbook</h1>
-      <div className="loja-2col" style={{ marginTop: 28, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
-        {looks.map((l, i) => (
-          <motion.div key={l.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
-            style={{ position: "relative", height: 460, borderRadius: 22, overflow: "hidden" }}>
-            <img src={l.img} alt={l.t} onError={imgFallback} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(27,26,24,0), rgba(27,26,24,0.55))" }} />
-            <div style={{ position: "absolute", left: 22, bottom: 20, color: "#fff", fontSize: 18, fontWeight: 700 }}>{l.t}</div>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Sobre() {
-  return (
-    <section style={{ marginTop: 24 }}>
-      <h1 className="loja-section-title" style={{ fontSize: 44, fontWeight: 700, letterSpacing: -0.03 }}>Sobre a Atelier Norte</h1>
-      <div className="loja-2col" style={{ marginTop: 28, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
-        <p style={{ fontSize: 15, color: C.inkSoft, lineHeight: 1.7 }}>
-          Somos uma loja de bairro com curadoria autoral em moda, acessórios e objetos para casa. Trabalhamos com marcas independentes e cooperativas locais, priorizando tecidos naturais e produção responsável.
-          <br /><br />
-          Acreditamos que peças bem feitas duram mais e contam histórias. Cada coleção é selecionada à mão, pensando em quem busca atemporalidade e identidade.
-        </p>
-        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80" alt="Interior da loja" onError={imgFallback} style={{ width: "100%", height: 360, objectFit: "cover", borderRadius: 20 }} />
-      </div>
-    </section>
-  );
-}
-
-function Blog() {
-  const { open } = useDetail();
-  const posts = [
-    { id: "linho", t: "Por que linho é o tecido perfeito para o verão", img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1200&q=80", d: "Conforto, respirabilidade e estilo atemporal." },
-    { id: "guarda-roupa", t: "Como montar um guarda-roupa cápsula", img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80", d: "10 peças que combinam entre si o ano inteiro." },
-    { id: "couro", t: "Cuidados com peças de couro legítimo", img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1200&q=80", d: "Limpeza, hidratação e armazenamento corretos." },
-  ];
-  return (
-    <section style={{ marginTop: 24 }}>
-      <h1 className="loja-section-title" style={{ fontSize: 44, fontWeight: 700, letterSpacing: -0.03 }}>Diário</h1>
-      <div className="loja-3col" style={{ marginTop: 28, display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18 }}>
-        {posts.map((p, i) => (
-          <motion.div key={p.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.35, delay: i * 0.08 }} whileHover={{ y: -4 }}
-            onClick={() => open({ id: `post-${p.id}`, kind: "post", title: p.t, image: p.img, description: p.d + " Texto completo do artigo com mais informações sobre o tema.", highlights: ["Leitura de 4 min", "Por nossa equipe", "Atualizado este mês"] })}
-            style={{ borderRadius: 20, overflow: "hidden", border: `1px solid ${C.border}`, background: C.paper, cursor: "pointer" }}>
-            <img src={p.img} alt={p.t} onError={imgFallback} style={{ width: "100%", height: 200, objectFit: "cover" }} />
-            <div style={{ padding: 20 }}>
-              <div style={{ fontSize: 16, fontWeight: 700 }}>{p.t}</div>
-              <p style={{ marginTop: 8, fontSize: 13, color: C.inkSoft, lineHeight: 1.5 }}>{p.d}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Visite() {
-  return (
-    <section style={{ marginTop: 24 }}>
-      <h1 className="loja-section-title" style={{ fontSize: 44, fontWeight: 700, letterSpacing: -0.03 }}>Visite a loja</h1>
-      <div className="loja-2col" style={{ marginTop: 28, display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 28 }}>
-        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80" alt="Loja física" onError={imgFallback} style={{ width: "100%", height: 420, objectFit: "cover", borderRadius: 22 }} />
-        <div className="loja-4col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, alignContent: "start" }}>
-          {[
-            { t: "Endereço", v: "[seu endereço aqui]" },
-            { t: "Bairro", v: "[seu bairro aqui]" },
-            { t: "Horário", v: "[seu horário aqui]" },
-            { t: "WhatsApp", v: "[seu WhatsApp aqui]" },
-          ].map((it) => (
-            <motion.div key={it.t} whileHover={{ y: -3 }} style={{ padding: 22, borderRadius: 18, background: C.pill }}>
-              <div style={{ fontSize: 11, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2, fontWeight: 600 }}>{it.t}</div>
-              <div style={{ marginTop: 6, fontSize: 15, fontWeight: 600, color: C.ink }}>{it.v}</div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Contato() {
-  return (
-    <section style={{ marginTop: 24 }}>
-      <h1 className="loja-section-title" style={{ fontSize: 44, fontWeight: 700, letterSpacing: -0.03 }}>Fale com a loja</h1>
-      <p style={{ marginTop: 8, fontSize: 14, color: C.inkSoft, maxWidth: 600 }}>Atendimento próximo e humano. Use o canal que preferir.</p>
-      <div className="loja-2col" style={{ marginTop: 28, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
-        <div className="loja-4col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          {[
-            { t: "Telefone", v: "[seu telefone aqui]" },
-            { t: "WhatsApp", v: "[seu WhatsApp aqui]" },
-            { t: "Endereço", v: "[seu endereço aqui]" },
-            { t: "Horário", v: "[seu horário aqui]" },
-          ].map((it) => (
-            <motion.div key={it.t} whileHover={{ y: -3 }} style={{ padding: 22, borderRadius: 18, background: C.pill }}>
-              <div style={{ fontSize: 11, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2, fontWeight: 600 }}>{it.t}</div>
-              <div style={{ marginTop: 6, fontSize: 15, fontWeight: 600, color: C.ink }}>{it.v}</div>
-            </motion.div>
-          ))}
-        </div>
-        <form onSubmit={(e) => e.preventDefault()} style={{ padding: 24, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 12 }}>
-          <input placeholder="[seu nome aqui]" style={inputStyle} />
-          <input placeholder="[seu e-mail aqui]" style={inputStyle} />
-          <textarea placeholder="[sua mensagem aqui]" rows={5} style={{ ...inputStyle, resize: "vertical" }} />
-          <button type="submit" style={{ padding: "12px 16px", borderRadius: 12, background: C.brand, color: "#fff", fontSize: 14, fontWeight: 700 }}>Enviar mensagem</button>
-        </form>
-      </div>
-    </section>
-  );
-}
-
-// ---------------- Testimonials & Newsletter ----------------
-function Testimonials() {
-  const items = [
-    { q: "Curadoria incrível e atendimento super atencioso. Já é minha loja favorita.", a: "Bianca R." },
-    { q: "Comprei pelo WhatsApp e recebi em casa rapidíssimo. Recomendo demais.", a: "Helena T." },
-    { q: "As peças têm acabamento impecável. Vale cada centavo.", a: "Júlia A." },
-  ];
-  return (
-    <section className="loja-bleed" style={{ marginTop: 56, padding: "56px 56px", background: C.pill }}>
-      <div style={{ fontSize: 11, color: C.accent, textTransform: "uppercase", letterSpacing: 1.4, fontWeight: 700 }}>Depoimentos</div>
-      <h2 className="loja-section-title" style={{ marginTop: 6, fontSize: 36, fontWeight: 700, letterSpacing: -0.03 }}>Quem leva, volta</h2>
-      <div className="loja-3col" style={{ marginTop: 28, display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18 }}>
-        {items.map((t, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
-            style={{ padding: 24, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}>
-            <p style={{ fontSize: 15, color: C.ink, lineHeight: 1.55 }}>"{t.q}"</p>
-            <div style={{ marginTop: 14, fontSize: 12, color: C.inkSoft, fontWeight: 600 }}>— {t.a}</div>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function NewsletterStrip() {
-  return (
-    <section style={{ marginTop: 56, padding: "36px 32px", borderRadius: 24, background: C.brandDark, color: "#fff", display: "flex", gap: 18, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
-      <div>
-        <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1.4, fontWeight: 700 }}>Newsletter</div>
-        <h3 style={{ marginTop: 4, fontSize: 24, fontWeight: 700 }}>Receba as novidades em primeira mão</h3>
-      </div>
-      <form onSubmit={(e) => e.preventDefault()} style={{ display: "flex", gap: 8, flex: "1 1 320px", minWidth: 280 }}>
-        <input placeholder="[seu e-mail aqui]" style={{ ...inputStyle, background: "rgba(255,255,255,0.12)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)", flex: 1 }} />
-        <button type="submit" style={{ padding: "12px 20px", borderRadius: 12, background: C.accent, color: "#fff", fontWeight: 700, fontSize: 14 }}>Assinar</button>
-      </form>
-    </section>
-  );
-}
-
-// ---------------- Detail view ----------------
-function DetailView({ item, onBack, onAsk }: { item: DetailItem; onBack: () => void; onAsk: () => void }) {
-  return (
-    <div style={{ marginTop: 20 }}>
-      <button onClick={onBack} style={{ fontSize: 13, color: C.inkSoft, fontWeight: 600 }}>← Voltar</button>
-      <div className="loja-2col" style={{ marginTop: 16, display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 28 }}>
-        <div>
-          <motion.img src={item.image} alt={item.title} onError={imgFallback}
-            initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}
-            style={{ width: "100%", height: 480, objectFit: "cover", borderRadius: 22 }} />
-          <h1 style={{ marginTop: 22, fontSize: 36, fontWeight: 700, letterSpacing: -0.02 }}>{item.title}</h1>
-          {item.subtitle && <div style={{ marginTop: 6, fontSize: 13, color: C.inkSoft }}>{item.subtitle}</div>}
-          <p style={{ marginTop: 16, fontSize: 15, color: C.inkSoft, lineHeight: 1.7 }}>{item.description}</p>
-          {item.highlights && (
-            <div style={{ marginTop: 22 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: C.ink }}>Detalhes</div>
-              <ul style={{ marginTop: 10, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                {item.highlights.map((h) => (
-                  <li key={h} style={{ padding: "10px 14px", borderRadius: 12, background: C.pill, fontSize: 13, color: C.ink }}>• {h}</li>
+              <div className="mt-4 text-sm text-gray-500 mb-2">Suggestions</div>
+              <div className="flex flex-wrap gap-2">
+                {["Fresh Baguette", "Organic Bananas", "Orange Juice", "Local Eggs"].map((s) => (
+                  <button key={s} className="px-3 py-1.5 rounded-full text-sm font-medium" style={{ background: C.blue, color: C.ink }}>{s}</button>
                 ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Cart drawer */}
+      <AnimatePresence>
+        {cartOpen && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/40" onClick={() => setCartOpen(false)} />
+            <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "tween" }} className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-md bg-white flex flex-col">
+              <div className="flex items-center justify-between p-5 border-b">
+                <div className="font-bold text-lg heading">Your cart ({cartCount})</div>
+                <button onClick={() => setCartOpen(false)} aria-label="Close"><X className="w-5 h-5" /></button>
+              </div>
+              <div className="flex-1 overflow-auto p-5 space-y-4">
+                {cart.map((ci) => {
+                  const p = PRODUCTS.find((p) => p.id === ci.id)!;
+                  return (
+                    <div key={ci.id} className="flex gap-3 items-center">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden" style={{ background: p.bg }}>
+                        <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-sm">{p.name}</div>
+                        <div className="text-xs text-gray-500">${p.price.toFixed(2)}</div>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <button onClick={() => setCart((c) => c.map((i) => i.id === ci.id ? { ...i, qty: Math.max(1, i.qty - 1) } : i))} className="w-7 h-7 rounded-full border flex items-center justify-center"><Minus className="w-3 h-3" /></button>
+                        <span className="w-5 text-center font-semibold">{ci.qty}</span>
+                        <button onClick={() => setCart((c) => c.map((i) => i.id === ci.id ? { ...i, qty: i.qty + 1 } : i))} className="w-7 h-7 rounded-full border flex items-center justify-center"><Plus className="w-3 h-3" /></button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="border-t p-5 space-y-3">
+                <div className="flex justify-between font-semibold"><span>Subtotal</span><span>${cart.reduce((s, ci) => s + PRODUCTS.find((p) => p.id === ci.id)!.price * ci.qty, 0).toFixed(2)}</span></div>
+                <button className="w-full h-12 rounded-full text-white font-bold" style={{ background: C.orange }}>Checkout</button>
+                <button className="w-full h-12 rounded-full font-bold border-2" style={{ borderColor: C.ink, color: C.ink }}>View Cart</button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* HERO */}
+      <section className="relative overflow-hidden" style={{ background: C.blue }}>
+        {/* Doodles */}
+        <Doodle className="top-20 left-10 text-gray-400"><Apple className="w-6 h-6" /></Doodle>
+        <Doodle className="top-40 left-1/3 text-gray-400"><Croissant className="w-5 h-5" /></Doodle>
+        <Doodle className="bottom-40 left-20 text-gray-400"><Leaf className="w-7 h-7" /></Doodle>
+        <Doodle className="top-32 right-1/3 text-gray-400 rotate-12"><Tag className="w-5 h-5" /></Doodle>
+        <Doodle className="bottom-32 right-10 text-gray-400"><ShoppingCart className="w-8 h-8" /></Doodle>
+
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6 pt-12 pb-32 lg:py-24 grid lg:grid-cols-2 gap-10 items-center min-h-[620px] lg:min-h-[680px]">
+          {/* Left */}
+          <motion.div initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.12 } } }} className="relative z-10 max-w-[600px]">
+            <motion.div variants={fadeUp} className="flex items-center gap-2 mb-5">
+              <span className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: C.orange }}>· Fresh Daily ·</span>
+            </motion.div>
+            <motion.h1 variants={fadeUp} className="heading font-black text-[42px] sm:text-[56px] lg:text-[78px]" style={{ color: C.ink, fontWeight: 900 }}>
+              40% Savings on<br />Everyday Local<br />
+              <span className="relative inline-block">
+                Essentials
+                <svg className="absolute left-0 -bottom-2 w-full" viewBox="0 0 240 14" fill="none">
+                  <path d="M2 9 Q60 -2 120 6 T238 5" stroke={C.ink} strokeWidth="3" strokeLinecap="round" fill="none" />
+                </svg>
+              </span>
+            </motion.h1>
+            <motion.p variants={fadeUp} className="mt-6 text-[16px] leading-[1.7] max-w-[560px]" style={{ color: C.muted }}>
+              Shop fresh groceries, bakery favorites, snacks, drinks, and household basics from your trusted local store.
+            </motion.p>
+            <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-5">
+              <a href="#categories" className="group inline-flex items-center gap-3 h-[52px] pl-7 pr-2 rounded-full font-bold text-white transition-all hover:-translate-y-0.5" style={{ background: C.orange }}>
+                Shop Now
+                <span className="w-10 h-10 rounded-full bg-white flex items-center justify-center group-hover:translate-x-1 transition-transform" style={{ color: C.orange }}><ArrowRight className="w-4 h-4" /></span>
+              </a>
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2">
+                  {["A", "M", "H", "J"].map((l, i) => (
+                    <div key={i} className="w-9 h-9 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold" style={{ background: [C.orange, C.green, C.teal, C.yellow][i] }}>{l}</div>
+                  ))}
+                  <div className="w-9 h-9 rounded-full border-2 border-white flex items-center justify-center text-white text-[10px] font-bold" style={{ background: C.orange }}>1k</div>
+                </div>
+                <div className="text-sm">
+                  <div className="font-bold flex items-center gap-1">{[1, 2, 3, 4, 5].map((i) => <Star key={i} className="w-3 h-3 fill-current" style={{ color: C.yellow }} />)}</div>
+                  <div className="text-xs" style={{ color: C.muted }}>Local Reviews</div>
+                </div>
+              </div>
+            </motion.div>
+            <motion.div variants={fadeUp} className="mt-10 flex items-center gap-4 text-sm" style={{ color: C.muted }}>
+              <div className="w-12 h-px bg-gray-400" />
+              <span className="font-semibold">1/4</span>
+              <button className="w-10 h-10 rounded-full border flex items-center justify-center hover:bg-white" style={{ borderColor: C.muted }}><ArrowRight className="w-4 h-4" /></button>
+            </motion.div>
+          </motion.div>
+
+          {/* Right image */}
+          <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="relative">
+            <div className="relative">
+              <img src={heroImg} alt="Local shopper with grocery bag" className="relative z-10 w-full max-w-[560px] mx-auto" width={1280} height={1280} />
+              {/* Floating doodles */}
+              <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity }} className="absolute top-10 left-0 z-20 bg-white rounded-2xl shadow-lg p-3 hidden sm:flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: C.orangeLight }}><Truck className="w-4 h-4" style={{ color: C.orange }} /></div>
+                <div>
+                  <div className="text-[10px]" style={{ color: C.muted }}>Free delivery</div>
+                  <div className="text-xs font-bold">Over $30</div>
+                </div>
+              </motion.div>
+              <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 5, repeat: Infinity }} className="absolute bottom-16 right-0 z-20 bg-white rounded-2xl shadow-lg p-3 hidden sm:flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#E8F5E0" }}><Leaf className="w-4 h-4" style={{ color: C.green }} /></div>
+                <div>
+                  <div className="text-[10px]" style={{ color: C.muted }}>100% Fresh</div>
+                  <div className="text-xs font-bold">Daily picks</div>
+                </div>
+              </motion.div>
+              <motion.div animate={{ rotate: [0, 10, 0] }} transition={{ duration: 6, repeat: Infinity }} className="absolute top-20 right-4 z-20 w-12 h-12 rounded-full border-2 flex items-center justify-center" style={{ borderColor: C.orange, color: C.orange }}>
+                <ShoppingCart className="w-5 h-5" />
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Wave */}
+        <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 1440 80" preserveAspectRatio="none" fill={C.white}>
+          <path d="M0,40 C320,90 720,0 1080,40 C1260,60 1380,30 1440,40 L1440,80 L0,80 Z" />
+        </svg>
+      </section>
+
+      {/* ABOUT */}
+      <section id="about" className="py-20 lg:py-28 relative" style={{ background: C.white }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Image collage */}
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="relative h-[480px] sm:h-[560px]">
+            <div className="absolute top-0 left-0 w-[68%] h-[58%] rounded-[26px] overflow-hidden shadow-xl">
+              <img src={about1} alt="Fresh produce" className="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div className="absolute top-[30%] right-0 w-[48%] h-[48%] rounded-[22px] overflow-hidden shadow-xl">
+              <img src={about2} alt="Bakery" className="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div className="absolute bottom-0 left-[14%] w-[52%] h-[44%] rounded-[22px] overflow-hidden shadow-xl">
+              <img src={about3} alt="Grocery bag" className="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div className="absolute top-4 right-4 z-10 bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2 text-sm font-bold" style={{ color: C.orange }}>
+              <Spark className="w-4 h-4" /> Local since 2018
+            </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.1 }}>
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-4" style={{ color: C.orange }}>About Us</div>
+            <h2 className="heading text-[36px] sm:text-[48px] font-black" style={{ color: C.ink }}>
+              Fresh Essentials To Keep Your Home Stocked
+            </h2>
+            <p className="mt-5 text-[16px] leading-[1.7]" style={{ color: C.muted }}>
+              Morna Market is a neighborhood store built for daily convenience. We bring together fresh produce, bakery items, snacks, drinks, pantry basics, and household essentials in one simple local shopping experience.
+            </p>
+            <p className="mt-3 text-[15px] leading-[1.7]" style={{ color: C.muted }}>
+              Order online for pickup or local delivery, or visit the store for fresh daily finds.
+            </p>
+            <div className="mt-8 grid grid-cols-3 gap-4">
+              {[{ I: Apple, t: "Fresh Produce" }, { I: Croissant, t: "Daily Bakery" }, { I: Home, t: "Home Essentials" }].map((f, i) => (
+                <div key={i} className="text-center">
+                  <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-3" style={{ background: C.blue }}>
+                    <f.I className="w-6 h-6" style={{ color: C.orange }} />
+                  </div>
+                  <div className="text-sm font-bold">{f.t}</div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CATEGORIES */}
+      <section id="categories" className="py-20 lg:py-28" style={{ background: C.off }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3" style={{ color: C.orange }}>Shop by Category</div>
+            <h2 className="heading text-[36px] sm:text-[48px] font-black" style={{ color: C.ink }}>Everything You Need For The Week</h2>
+            <p className="mt-4" style={{ color: C.muted }}>Browse daily essentials, fresh items, snacks, and local favorites.</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+            {CATEGORIES.map((c, i) => (
+              <motion.a key={c.name} href="#products" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                className="group rounded-3xl p-6 hover:-translate-y-1 transition-all border" style={{ background: c.bg, borderColor: "transparent" }}>
+                <div className="w-14 h-14 rounded-2xl bg-white/70 flex items-center justify-center mb-4">
+                  <c.icon className="w-6 h-6" style={{ color: C.ink }} />
+                </div>
+                <div className="font-black text-lg heading">{c.name}</div>
+                <div className="text-sm mt-1 flex items-center justify-between" style={{ color: C.muted }}>
+                  <span>{c.count} items</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" style={{ color: C.orange }} />
+                </div>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED PRODUCTS */}
+      <section id="products" className="py-20 lg:py-28" style={{ background: C.white }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3" style={{ color: C.orange }}>Featured Products</div>
+            <h2 className="heading text-[36px] sm:text-[48px] font-black">Popular Picks From The Store</h2>
+            <p className="mt-4" style={{ color: C.muted }}>Fresh, practical, and ready for pickup or delivery.</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+            {PRODUCTS.map((p, i) => (
+              <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                className="group rounded-3xl border bg-white overflow-hidden hover:-translate-y-1.5 hover:shadow-xl transition-all" style={{ borderColor: C.border }}>
+                <div className="relative aspect-square overflow-hidden" style={{ background: p.bg }}>
+                  <img src={p.img} alt={p.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  {p.badge && <span className="absolute top-3 left-3 text-[11px] font-bold text-white px-2.5 py-1 rounded-full" style={{ background: C.orange }}>{p.badge}</span>}
+                  <button onClick={() => toggleWish(p.id)} aria-label="Wishlist" className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white shadow flex items-center justify-center">
+                    <Heart className="w-4 h-4" fill={wishlist.includes(p.id) ? C.orange : "none"} style={{ color: wishlist.includes(p.id) ? C.orange : C.ink }} />
+                  </button>
+                </div>
+                <div className="p-5">
+                  <div className="text-[11px] uppercase tracking-wider font-semibold mb-1" style={{ color: C.muted }}>{p.cat}</div>
+                  <div className="font-bold heading text-lg">{p.name}</div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <div className="font-black text-lg" style={{ color: C.ink }}>${p.price.toFixed(2)}</div>
+                    <button onClick={() => addToCart(p.id)} aria-label="Add to cart" className="h-9 px-4 rounded-full text-white text-sm font-bold flex items-center gap-1 hover:opacity-90" style={{ background: C.orange }}>
+                      <Plus className="w-4 h-4" /> Add
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WEEKLY DEALS */}
+      <section id="deals" className="py-20 lg:py-28" style={{ background: C.blue }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3" style={{ color: C.orange }}>Weekly Deals</div>
+            <h2 className="heading text-[36px] sm:text-[48px] font-black">Fresh Savings Every Week</h2>
+          </div>
+          <div className="grid lg:grid-cols-3 gap-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="lg:col-span-2 rounded-[32px] p-8 lg:p-12 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${C.orange}, ${C.orangeDeep})` }}>
+              <div className="relative z-10 text-white max-w-md">
+                <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3 opacity-80">Limited Time</div>
+                <h3 className="heading text-[34px] sm:text-[44px] font-black leading-[1.05]">Save 40% On Everyday Essentials</h3>
+                <p className="mt-4 opacity-90">Limited weekly selection on groceries, bakery, drinks, and pantry basics.</p>
+                <div className="mt-6 flex gap-3">
+                  {[{ v: "02", l: "Days" }, { v: "14", l: "Hours" }, { v: "38", l: "Min" }].map((t) => (
+                    <div key={t.l} className="bg-white/20 backdrop-blur rounded-2xl px-4 py-3 text-center min-w-[70px]">
+                      <div className="font-black text-2xl">{t.v}</div>
+                      <div className="text-[11px] uppercase tracking-wider">{t.l}</div>
+                    </div>
+                  ))}
+                </div>
+                <button className="mt-7 inline-flex items-center gap-2 h-12 px-7 rounded-full bg-white font-bold" style={{ color: C.orange }}>View Deals <ArrowRight className="w-4 h-4" /></button>
+              </div>
+              <div className="absolute -right-10 -bottom-10 opacity-30">
+                <ShoppingCart className="w-72 h-72 text-white" strokeWidth={1} />
+              </div>
+            </motion.div>
+            <div className="flex flex-col gap-6">
+              {[{ t: "Bakery Bundle", c: C.orangeLight, i: Croissant }, { t: "Fresh Fruit Pack", c: "#E8F5E0", i: Apple }, { t: "Breakfast Essentials", c: "#FBF3D4", i: Milk }].map((d) => (
+                <div key={d.t} className="rounded-3xl p-6 flex items-center gap-4" style={{ background: d.c }}>
+                  <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center"><d.i className="w-6 h-6" style={{ color: C.orange }} /></div>
+                  <div className="flex-1">
+                    <div className="heading font-black text-lg">{d.t}</div>
+                    <div className="text-sm" style={{ color: C.muted }}>Up to 30% off</div>
+                  </div>
+                  <ArrowRight className="w-5 h-5" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DELIVERY */}
+      <section id="delivery" className="py-20 lg:py-28" style={{ background: C.white }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6 grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3" style={{ color: C.orange }}>Pickup & Delivery</div>
+            <h2 className="heading text-[34px] sm:text-[44px] font-black">Order Online, Pick Up Nearby, Or Get It Delivered</h2>
+            <p className="mt-5" style={{ color: C.muted }}>Choose the shopping option that fits your day. We prepare your order locally and keep the process simple.</p>
+            <div className="mt-8 space-y-4">
+              {[
+                { I: Package, t: "Store Pickup", d: "Order online and collect from the counter." },
+                { I: Truck, t: "Local Delivery", d: "Fast delivery within selected nearby areas." },
+                { I: Clock, t: "Same-Day Essentials", d: "Get urgent household basics without a long wait." },
+              ].map((s) => (
+                <div key={s.t} className="flex gap-4 p-5 rounded-2xl border" style={{ borderColor: C.border }}>
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: C.orangeLight }}><s.I className="w-5 h-5" style={{ color: C.orange }} /></div>
+                  <div>
+                    <div className="font-bold heading text-lg">{s.t}</div>
+                    <div className="text-sm" style={{ color: C.muted }}>{s.d}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="relative rounded-[32px] overflow-hidden p-8 min-h-[400px] flex items-end" style={{ background: C.blue }}>
+            <div className="absolute inset-0 opacity-30">
+              <svg viewBox="0 0 400 400" className="w-full h-full"><defs><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" stroke={C.teal} strokeWidth="0.5" /></pattern></defs><rect width="400" height="400" fill="url(#grid)" /></svg>
+            </div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border-2 border-dashed" style={{ borderColor: C.orange }} />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: C.orange }}>
+              <MapPin className="w-6 h-6 text-white" />
+            </div>
+            <div className="relative z-10 bg-white rounded-2xl p-5 shadow-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: C.orangeLight }}><Truck className="w-5 h-5" style={{ color: C.orange }} /></div>
+                <div>
+                  <div className="text-xs" style={{ color: C.muted }}>Free delivery over</div>
+                  <div className="font-black text-xl heading">$30.00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* WHY */}
+      <section id="why" className="py-20 lg:py-28" style={{ background: C.off }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3" style={{ color: C.orange }}>Why Morna</div>
+            <h2 className="heading text-[36px] sm:text-[48px] font-black">Local Shopping Made Easier</h2>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-12">
+            {[
+              { I: Leaf, t: "Fresh Daily Stock" }, { I: User, t: "Friendly Local Service" },
+              { I: Clock, t: "Quick Pickup" }, { I: Package, t: "Simple Online Orders" },
+              { I: Tag, t: "Weekly Deals" }, { I: Heart, t: "Trusted by Neighbors" },
+            ].map((f, i) => (
+              <motion.div key={f.t} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                className="bg-white rounded-3xl p-6 border hover:shadow-lg transition-all" style={{ borderColor: C.border }}>
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: C.blue }}><f.I className="w-5 h-5" style={{ color: C.orange }} /></div>
+                <div className="font-bold heading text-lg">{f.t}</div>
+              </motion.div>
+            ))}
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+            {[{ v: "1.6K+", l: "Happy local customers" }, { v: "4.8/5", l: "Average rating" }, { v: "35%", l: "Weekly deal savings" }, { v: "30min", l: "Fast pickup prep" }].map((m) => (
+              <div key={m.l} className="rounded-3xl p-6 text-center" style={{ background: C.orange, color: "white" }}>
+                <div className="heading font-black text-4xl">{m.v}</div>
+                <div className="text-sm mt-1 opacity-90">{m.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="py-20 lg:py-28" style={{ background: C.white }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3" style={{ color: C.orange }}>Reviews</div>
+            <h2 className="heading text-[36px] sm:text-[48px] font-black">Loved By Local Shoppers</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((t, i) => (
+              <motion.div key={t.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="rounded-[24px] p-7 border bg-white shadow-sm" style={{ borderColor: C.border }}>
+                <div className="flex gap-1 mb-4">{[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-4 h-4 fill-current" style={{ color: C.yellow }} />)}</div>
+                <p className="text-[15px] leading-relaxed" style={{ color: C.inkSoft }}>"{t.text}"</p>
+                <div className="mt-6 flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-full flex items-center justify-center font-bold text-white" style={{ background: [C.orange, C.green, C.teal][i] }}>{t.name[0]}</div>
+                  <div className="font-bold">{t.name}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 lg:py-28" style={{ background: C.off }}>
+        <div className="max-w-3xl mx-auto px-4 lg:px-6">
+          <div className="text-center mb-12">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3" style={{ color: C.orange }}>FAQ</div>
+            <h2 className="heading text-[36px] sm:text-[48px] font-black">Common Questions</h2>
+          </div>
+          <div className="space-y-3">
+            {FAQS.map((f, i) => (
+              <div key={i} className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: C.border }}>
+                <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full p-5 flex items-center justify-between text-left">
+                  <span className="font-bold heading text-lg pr-4">{f.q}</span>
+                  <span className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors" style={{ background: openFaq === i ? C.orange : C.blue, color: openFaq === i ? "white" : C.ink }}>
+                    {openFaq === i ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                  </span>
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                      <div className="px-5 pb-5 text-[15px]" style={{ color: C.muted }}>{f.a}</div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" className="py-20 lg:py-28" style={{ background: C.white }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6 grid lg:grid-cols-2 gap-12">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.22em] mb-3" style={{ color: C.orange }}>Contact</div>
+            <h2 className="heading text-[36px] sm:text-[48px] font-black">Visit Morna Market</h2>
+            <p className="mt-4" style={{ color: C.muted }}>Stop by the store, place a pickup order, or contact us about local delivery.</p>
+            <div className="mt-8 space-y-4">
+              {[
+                { I: Phone, l: "Phone", v: "+1 214-481-9074" },
+                { I: Mail, l: "Email", v: "hello@mornamarket.com" },
+                { I: MapPin, l: "Address", v: "128 Market Street, Downtown District" },
+                { I: Clock, l: "Hours", v: "Mon — Sat: 8AM — 9PM · Sun: 9AM — 6PM" },
+              ].map((c) => (
+                <div key={c.l} className="flex gap-4 items-start">
+                  <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0" style={{ background: C.orangeLight }}><c.I className="w-5 h-5" style={{ color: C.orange }} /></div>
+                  <div>
+                    <div className="text-xs uppercase tracking-wider font-semibold" style={{ color: C.muted }}>{c.l}</div>
+                    <div className="font-bold">{c.v}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 rounded-2xl overflow-hidden h-48 relative" style={{ background: C.blue }}>
+              <div className="absolute inset-0 opacity-40">
+                <svg viewBox="0 0 400 200" className="w-full h-full"><path d="M0,100 Q100,40 200,100 T400,100" stroke={C.teal} fill="none" strokeWidth="2" /><path d="M0,140 Q150,80 300,140 T500,140" stroke={C.teal} fill="none" strokeWidth="1" /></svg>
+              </div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style={{ background: C.orange }}>
+                <MapPin className="w-6 h-6 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <form onSubmit={(e) => { e.preventDefault(); setFormSent(true); }} className="rounded-[28px] p-7 lg:p-9 shadow-xl border" style={{ borderColor: C.border, background: C.white }}>
+            {formSent ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-full bg-green-100 mx-auto flex items-center justify-center mb-4"><Spark className="w-7 h-7 text-green-600" /></div>
+                <h3 className="heading font-black text-2xl">Message received</h3>
+                <p className="mt-2" style={{ color: C.muted }}>Our team will contact you soon.</p>
+              </div>
+            ) : (
+              <>
+                <h3 className="heading font-black text-2xl mb-1">Send us a message</h3>
+                <p className="text-sm mb-6" style={{ color: C.muted }}>We reply within one business day.</p>
+                <div className="space-y-4">
+                  {[{ l: "Full Name", t: "text" }, { l: "Email", t: "email" }, { l: "Phone", t: "tel" }].map((f) => (
+                    <div key={f.l}>
+                      <label className="text-sm font-semibold mb-1.5 block">{f.l}</label>
+                      <input type={f.t} required className="w-full h-12 rounded-xl border px-4 outline-none focus:border-[color:var(--o)]" style={{ borderColor: C.border, ["--o" as any]: C.orange }} />
+                    </div>
+                  ))}
+                  <div>
+                    <label className="text-sm font-semibold mb-1.5 block">Request Type</label>
+                    <select className="w-full h-12 rounded-xl border px-4 outline-none bg-white" style={{ borderColor: C.border }}>
+                      <option>Pickup Order</option><option>Delivery Question</option><option>Product Request</option><option>General Contact</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold mb-1.5 block">Message</label>
+                    <textarea rows={4} required className="w-full rounded-xl border px-4 py-3 outline-none" style={{ borderColor: C.border }} />
+                  </div>
+                  <button type="submit" className="w-full h-13 py-3.5 rounded-full font-bold text-white text-base hover:-translate-y-0.5 transition-all" style={{ background: C.orange }}>Send Message</button>
+                </div>
+              </>
+            )}
+          </form>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="pt-16 pb-8" style={{ background: C.ink, color: "white" }}>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6 grid lg:grid-cols-4 gap-10">
+          <div>
+            <Logo dark />
+            <p className="mt-4 text-sm text-gray-400 max-w-xs">Your local neighborhood store for fresh groceries, bakery items, snacks, drinks, and daily essentials.</p>
+            <div className="mt-5 flex gap-2">
+              {[Facebook, Instagram, Youtube, Twitter, Linkedin].map((I, i) => (
+                <a key={i} href="#" aria-label="social" className="w-9 h-9 rounded-full bg-white/10 hover:bg-orange-500 flex items-center justify-center transition-colors"><I className="w-4 h-4" /></a>
+              ))}
+            </div>
+          </div>
+          {[
+            { t: "Shop", l: ["Fresh Produce", "Bakery", "Dairy & Eggs", "Snacks", "Household"] },
+            { t: "Company", l: ["About", "Deals", "Pickup", "Delivery", "Contact"] },
+            { t: "Support", l: ["FAQ", "Order Help", "Returns", "Privacy Policy", "Terms of Service"] },
+          ].map((col) => (
+            <div key={col.t}>
+              <div className="font-bold heading mb-4">{col.t}</div>
+              <ul className="space-y-2.5 text-sm text-gray-400">
+                {col.l.map((li) => <li key={li}><a href="#" className="hover:text-white transition-colors">{li}</a></li>)}
               </ul>
             </div>
-          )}
+          ))}
         </div>
-        <aside style={{ position: "sticky", top: 24, alignSelf: "start", padding: 22, borderRadius: 20, background: C.paper, border: `1px solid ${C.border}` }}>
-          {item.price && <div style={{ fontSize: 11, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2, fontWeight: 600 }}>Valor</div>}
-          {item.price && <div style={{ marginTop: 4, fontSize: 28, fontWeight: 800, color: C.brand }}>{item.price}</div>}
-          <button onClick={onAsk} style={{ marginTop: 18, width: "100%", padding: "14px", borderRadius: 14, background: C.brand, color: "#fff", fontWeight: 700, fontSize: 14 }}>Comprar no WhatsApp</button>
-          <button style={{ marginTop: 10, width: "100%", padding: "12px", borderRadius: 14, background: C.pill, color: C.ink, fontWeight: 600, fontSize: 13 }}>Reservar na loja</button>
-          <div style={{ marginTop: 18, fontSize: 12, color: C.inkSoft, lineHeight: 1.6 }}>
-            Atendimento por WhatsApp em [seu WhatsApp aqui].<br />
-            Entrega para todo o Brasil e retirada na loja.
-          </div>
-        </aside>
-      </div>
+        <div className="max-w-[1280px] mx-auto px-4 lg:px-6 mt-12 pt-6 border-t border-white/10 text-sm text-gray-500 text-center">
+          © 2026 Morna Market. All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 }
 
-// ---------------- Modal ----------------
-function AskModal({ item, onClose }: { item: { name: string; price?: string }; onClose: () => void }) {
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      onClick={onClose}
-      style={{ position: "fixed", inset: 0, background: "rgba(27,26,24,0.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50, padding: 16 }}>
-      <motion.div onClick={(e) => e.stopPropagation()}
-        initial={{ scale: 0.94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.94, opacity: 0 }}
-        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-        style={{ width: "100%", maxWidth: 460, background: C.paper, borderRadius: 22, padding: 28 }}>
-        <div style={{ fontSize: 11, color: C.accent, textTransform: "uppercase", letterSpacing: 1.4, fontWeight: 700 }}>Atendimento</div>
-        <h3 style={{ marginTop: 6, fontSize: 24, fontWeight: 700 }}>{item.name}</h3>
-        {item.price && <p style={{ marginTop: 6, fontSize: 14, color: C.inkSoft }}>{item.price} · finalizamos pelo WhatsApp.</p>}
-        <form onSubmit={(e) => { e.preventDefault(); onClose(); }} style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 10 }}>
-          <Field label="Nome"><input required placeholder="[seu nome aqui]" style={inputStyle} /></Field>
-          <Field label="WhatsApp"><input required placeholder="[seu WhatsApp aqui]" style={inputStyle} /></Field>
-          <Field label="Tamanho / observações"><input placeholder="[tamanho, cor, dúvidas]" style={inputStyle} /></Field>
-          <button type="submit" style={{ marginTop: 6, padding: "14px", borderRadius: 14, background: C.brand, color: "#fff", fontWeight: 700, fontSize: 14 }}>Falar com a loja</button>
-          <button type="button" onClick={onClose} style={{ padding: "10px", borderRadius: 12, background: C.pill, color: C.ink, fontWeight: 600, fontSize: 13 }}>Cancelar</button>
-        </form>
-      </motion.div>
-    </motion.div>
-  );
+function MornaMarketRoute() {
+  return <MornaMarket />;
 }
-
-// ---------------- Footer ----------------
-function Footer({ goTo }: { goTo: (p: PageKey) => void }) {
-  return (
-    <footer style={{ marginTop: 80, paddingTop: 32, borderTop: `1px solid ${C.divider}` }}>
-      <div className="loja-4col" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: 28 }}>
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 800 }}>Atelier Norte</div>
-          <p style={{ marginTop: 8, fontSize: 13, color: C.inkSoft, lineHeight: 1.6 }}>Curadoria autoral em moda, acessórios e objetos para casa.</p>
-        </div>
-        {[
-          { t: "Loja", l: ["vitrine", "colecoes", "promocoes"] as PageKey[] },
-          { t: "Marca", l: ["sobre", "lookbook", "blog"] as PageKey[] },
-        ].map((s) => (
-          <div key={s.t}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: C.ink, textTransform: "uppercase", letterSpacing: 1.2 }}>{s.t}</div>
-            <ul style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
-              {s.l.map((k) => {
-                const item = NAV_ITEMS.find((n) => n.key === k);
-                return <li key={k}><button onClick={() => goTo(k)} style={{ fontSize: 13, color: C.inkSoft }}>{item?.label}</button></li>;
-              })}
-            </ul>
-          </div>
-        ))}
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.ink, textTransform: "uppercase", letterSpacing: 1.2 }}>Contato</div>
-          <ul style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: C.inkSoft }}>
-            <li>[seu telefone aqui]</li>
-            <li>[seu endereço aqui]</li>
-            <li>[sua cidade aqui]</li>
-          </ul>
-        </div>
-      </div>
-      <div style={{ marginTop: 32, paddingTop: 18, borderTop: `1px solid ${C.divider}`, fontSize: 12, color: C.muted }}>
-        © {new Date().getFullYear()} Atelier Norte. Todos os direitos reservados.
-      </div>
-    </footer>
-  );
-}
-
-// ---------------- Field + input ----------------
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <span style={{ fontSize: 12, fontWeight: 600, color: C.inkSoft }}>{label}</span>
-      {children}
-    </label>
-  );
-}
-const inputStyle: React.CSSProperties = {
-  padding: "12px 14px", borderRadius: 12, border: `1px solid ${C.border}`,
-  background: "#fff", fontSize: 14, color: C.ink, outline: "none", width: "100%",
-};
-
-export default LojaPreview;
+export default MornaMarketRoute;
