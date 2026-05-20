@@ -31,8 +31,6 @@ function ConditionalFlaroChat() {
     "/unsubscribe",
     "/suporte",
     "/wishes",
-    "/s",
-    "/dev/preview",
   ];
   if (hiddenPrefixes.some((p) => pathname === p || pathname.startsWith(p + "/"))) return null;
   return <FlaroChat />;
