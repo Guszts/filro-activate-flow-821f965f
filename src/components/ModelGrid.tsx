@@ -161,7 +161,7 @@ export function ModelGrid({ featuredOnly = false }: ModelGridProps) {
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {visible.map((m, i) => {
         const Cover = m.Cover;
-        const isExternal = m.previewPath.startsWith("http");
+
         return (
           <motion.article
             key={m.name}
