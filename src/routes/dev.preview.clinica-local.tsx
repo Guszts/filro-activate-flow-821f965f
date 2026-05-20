@@ -2,6 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import clinicEyeHero from "@/assets/clinic-eye-hero.jpg";
+import surgeon1 from "@/assets/surgeon-1.jpg";
+import surgeon2 from "@/assets/surgeon-2.jpg";
+import surgeon3 from "@/assets/surgeon-3.jpg";
+import surgeon4 from "@/assets/surgeon-4.jpg";
 
 export const Route = createFileRoute("/dev/preview/clinica-local")({
   component: ClinicaPreview,
@@ -33,25 +37,32 @@ const HERO_EYE_FB = clinicEyeHero;
 
 const SURGEONS = [
   {
-    id: "mckelvie",
-    name: "Dr James McKelvie",
-    specialty: "Corneal & Cataract Surgeon",
-    bio: "Focused on advanced cataract, corneal, and anterior segment care.",
-    photo: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=900&q=80",
-  },
-  {
     id: "hart",
     name: "Dr Amelia Hart",
     specialty: "Refractive Surgery Specialist",
     bio: "Specialises in vision correction consultations and laser treatment pathways.",
-    photo: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=900&q=80",
+    photo: surgeon1,
+  },
+  {
+    id: "mckelvie",
+    name: "Dr James McKelvie",
+    specialty: "Corneal & Cataract Surgeon",
+    bio: "Focused on advanced cataract, corneal, and anterior segment care.",
+    photo: surgeon3,
+  },
+  {
+    id: "bennett",
+    name: "Dr Sofia Bennett",
+    specialty: "Glaucoma & Anterior Segment",
+    bio: "Dedicated to long-term glaucoma management and precision surgical care.",
+    photo: surgeon2,
   },
   {
     id: "clarke",
     name: "Dr Ethan Clarke",
     specialty: "Retinal & Diagnostic Specialist",
     bio: "Leads detailed diagnostic assessments and retinal care planning.",
-    photo: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=900&q=80",
+    photo: surgeon4,
   },
 ];
 
