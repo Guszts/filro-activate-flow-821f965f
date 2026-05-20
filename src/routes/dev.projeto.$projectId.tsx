@@ -266,7 +266,7 @@ function ChatPanel({
   estCost: number;
   balance: number | null;
   onSend: () => void;
-  scrollRef: React.RefObject<HTMLDivElement>;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
 }) {
   return (
     <div className="h-full flex flex-col rounded-3xl border border-border bg-paper overflow-hidden">
