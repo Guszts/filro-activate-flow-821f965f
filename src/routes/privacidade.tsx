@@ -82,7 +82,7 @@ function PrivacyPage() {
             <li><strong>Cloudflare</strong> (EUA) — hospedagem edge e proteção DDoS.</li>
             <li><strong>Supabase</strong> (EUA/UE) — banco de dados e autenticação.</li>
             <li><strong>Google</strong> (caso autenticação social seja usada) — apenas e-mail e nome do perfil.</li>
-            <li><strong>Provedores de IA</strong> (EUA/UE) — quando você usa o Flaro Dev, o prompt enviado no chat e o conteúdo atual do site são processados por provedores de modelos de linguagem (Google e/ou OpenAI) via gateway agregado. Os dados não são usados para treinar modelos públicos.</li>
+            
             <li><strong>Autoridades públicas</strong> — somente mediante ordem judicial ou requisição legal formal.</li>
           </ul>
           <p>Todas as transferências internacionais respeitam o art. 33 da LGPD (cláusulas contratuais padrão e garantias adequadas).</p>
