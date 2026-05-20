@@ -1053,16 +1053,10 @@ function PlanView({ card, onBuild }: { card: PlanCard; onBuild: () => void }) {
 function PreviewMsg({ card, onOpenPreview, onPublish }: { card: PreviewCard; onOpenPreview: (r?: string) => void; onPublish: () => void }) {
   return (
     <div className="rounded-2xl overflow-hidden" style={{ background: T.panel, border: `1px solid ${T.divider}` }}>
-      <div className="relative aspect-[16/9] overflow-hidden" style={{ background: T.input }}>
-        {card.previewRoute ? (
-          <div className="absolute top-0 left-0 origin-top-left pointer-events-none" style={{ width: 1280, height: 720, transform: "scale(calc(100% / 1280 * var(--cqw)))" }}>
-            <TemplateCover src={card.cover} name={card.name} previewRoute={card.previewRoute} />
-          </div>
-        ) : (
-          <img src={card.cover} alt={card.name} className="absolute inset-0 w-full h-full object-cover" />
-        )}
+      <div className="overflow-hidden" style={{ background: T.input }}>
         <TemplateCover src={card.cover} name={card.name} previewRoute={card.previewRoute} />
       </div>
+
       <div className="p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
