@@ -383,7 +383,7 @@ ${JSON.stringify(project.generated_content, null, 2)}`;
       _metadata: { instruction: data.instruction.slice(0, 200), cost, complexity: costBreakdown.complexity, band: costBreakdown.band } as never,
     } as never);
 
-    return { ok: true as const, error: null, cost, breakdown: costBreakdown };
+    return { ok: true as const, error: null, cost, breakdown: costBreakdown, action, notice };
   });
 
 // ---------- update manual ----------
