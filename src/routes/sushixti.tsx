@@ -79,7 +79,7 @@ const FAQS = [
   { q: "Do you serve drinks?", a: "Yes. The menu may include sake, tea, Japanese-inspired cocktails, and non-alcoholic options." },
 ];
 
-function SushiXTI() {
+export function SushiXTI() {
   const [tab, setTab] = useState<keyof typeof MENU>("Sushi");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [mobileOpen, setMobileOpen] = useState(false);
