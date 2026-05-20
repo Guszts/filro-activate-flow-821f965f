@@ -29,7 +29,7 @@ export function TemplateCover({ src, name, previewRoute, className }: Props) {
           }}
         >
           <iframe
-            src={previewRoute}
+            src={`${previewRoute}${previewRoute.includes("?") ? "&" : "?"}cover=1`}
             title={`Pré-visualização ${name}`}
             className="w-[1280px] h-[720px] block bg-paper border-0"
             loading="lazy"
