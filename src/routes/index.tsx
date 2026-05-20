@@ -9,8 +9,10 @@ import { PlanCard } from "@/components/PlanCard";
 import { FAQ } from "@/components/FAQ";
 
 import { useAuth } from "@/lib/auth";
+import { useCurrentPlan } from "@/hooks/useCurrentPlan";
 import { listPublicPlans } from "@/lib/plans.functions";
 import { formatBRL } from "@/lib/format";
+
 import heroImg from "@/assets/hero-flaro.jpg?w=1088&format=webp";
 import { ArrowRight } from "lucide-react";
 
@@ -70,6 +72,8 @@ function HomePage() {
   const scaleImg = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
 
   const plans = Route.useLoaderData();
+  const { plan: currentPlan } = useCurrentPlan();
+
 
   const handleSelect = (slug: string) => {
     sessionStorage.setItem("filro:selectedPlan", slug);
@@ -230,18 +234,26 @@ function HomePage() {
           </p>
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
-          {(plans ?? []).map((p: any, i: number) => (
-            <PlanCard
-              key={p.id}
-              index={i}
-              name={p.name}
-              activationPrice={formatBRL(p.activation_price)}
-              monthlyPrice={formatBRL(p.monthly_price)}
-              features={(p.features as string[]) ?? []}
-              highlight={p.slug === "plus"}
-              onSelect={() => handleSelect(p.slug)}
-            />
-          ))}
+          {(plans ?? []).map((p: any, i: number) => {
+            const isCurrent = currentPlan?.slug === p.slug;
+            const isLower = !!currentPlan && p.display_order < currentPlan.display_order;
+            const disabled = isCurrent || isLower;
+            return (
+              <PlanCard
+                key={p.id}
+                index={i}
+                name={p.name}
+                activationPrice={formatBRL(p.activation_price)}
+                monthlyPrice={formatBRL(p.monthly_price)}
+                features={(p.features as string[]) ?? []}
+                highlight={p.slug === "plus"}
+                onSelect={() => handleSelect(p.slug)}
+                disabled={disabled}
+                disabledLabel={isCurrent ? "Plano atual" : "Já incluído no seu plano"}
+              />
+            );
+          })}
+
         </div>
       </section>
 

@@ -4,6 +4,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { PlanCard } from "@/components/PlanCard";
 import { formatBRL } from "@/lib/format";
 import { listPublicPlans } from "@/lib/plans.functions";
+import { useCurrentPlan } from "@/hooks/useCurrentPlan";
+
 
 export const Route = createFileRoute("/planos/")({
   component: PlanosIndexPage,
@@ -23,11 +25,13 @@ export const Route = createFileRoute("/planos/")({
 function PlanosIndexPage() {
   const navigate = useNavigate();
   const plans = Route.useLoaderData();
+  const { plan: currentPlan } = useCurrentPlan();
 
   const handleSelect = (slug: string) => {
     sessionStorage.setItem("filro:selectedPlan", slug);
     navigate({ to: "/planos/$slug", params: { slug } });
   };
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -47,18 +51,26 @@ function PlanosIndexPage() {
 
         <section className="mx-auto max-w-[1400px] px-5 md:px-10 pb-20 md:pb-28">
           <div className="grid gap-6 lg:grid-cols-3">
-            {(plans ?? []).map((p: any, i: number) => (
-              <PlanCard
-                key={p.id}
-                index={i}
-                name={p.name}
-                activationPrice={formatBRL(p.activation_price)}
-                monthlyPrice={formatBRL(p.monthly_price)}
-                features={(p.features as string[]) ?? []}
-                highlight={p.slug === "plus"}
-                onSelect={() => handleSelect(p.slug)}
-              />
-            ))}
+            {(plans ?? []).map((p: any, i: number) => {
+              const isCurrent = currentPlan?.slug === p.slug;
+              const isLower = !!currentPlan && p.display_order < currentPlan.display_order;
+              const disabled = isCurrent || isLower;
+              return (
+                <PlanCard
+                  key={p.id}
+                  index={i}
+                  name={p.name}
+                  activationPrice={formatBRL(p.activation_price)}
+                  monthlyPrice={formatBRL(p.monthly_price)}
+                  features={(p.features as string[]) ?? []}
+                  highlight={p.slug === "plus"}
+                  onSelect={() => handleSelect(p.slug)}
+                  disabled={disabled}
+                  disabledLabel={isCurrent ? "Plano atual" : "Já incluído no seu plano"}
+                />
+              );
+            })}
+
           </div>
         </section>
       </main>
