@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { Variants } from "framer-motion";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ArrowUpRight, Menu, X, Check, Plus, Minus, Phone, Mail, MapPin, Clock, Heart, Wind, Activity, Users, Sparkles, Sun } from "lucide-react";
+import { ArrowUpRight, Menu, X, Check, Plus, Minus, Phone, Mail, MapPin, Clock, Heart, Wind, Activity, Users, Leaf, Sun } from "lucide-react";
 import heroImg from "@/assets/yoga-hero.png";
 import card1 from "@/assets/yoga-card-1.jpg";
 import card2 from "@/assets/yoga-card-2.jpg";
@@ -311,7 +311,7 @@ function Classes() {
     { icon: Wind, title: "Morning Flow", desc: "Energizing sequences to start your day with focus and clarity." },
     { icon: Heart, title: "Meditation & Breathwork", desc: "Calm the mind with guided meditation and pranayama." },
     { icon: Activity, title: "Flexibility Training", desc: "Open the hips, hamstrings, and spine with deep stretching." },
-    { icon: Sparkles, title: "Stress Relief Yoga", desc: "Slow, restorative practices to soothe the nervous system." },
+    { icon: Leaf, title: "Stress Relief Yoga", desc: "Slow, restorative practices to soothe the nervous system." },
     { icon: Users, title: "Private Sessions", desc: "One-on-one guidance tailored to your body and goals." },
   ];
   return (
@@ -357,7 +357,7 @@ function Services() {
     { icon: Heart, title: "Stress Reduction", desc: "Calm the nervous system through breath and movement." },
     { icon: Users, title: "Better Posture", desc: "Strengthen the core for everyday alignment." },
     { icon: Wind, title: "Mindful Breathing", desc: "Learn pranayama for clarity and focus." },
-    { icon: Sparkles, title: "Emotional Balance", desc: "Cultivate steadiness on and off the mat." },
+    { icon: Leaf, title: "Emotional Balance", desc: "Cultivate steadiness on and off the mat." },
     { icon: Sun, title: "Community Support", desc: "Practice alongside a welcoming community." },
   ];
   return (

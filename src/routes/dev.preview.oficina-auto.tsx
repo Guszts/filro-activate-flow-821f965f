@@ -317,7 +317,7 @@ export function OficinaPreview() {
               <div>
                 <div className="flex items-center gap-2 text-white font-extrabold text-[17px] tracking-tight">
                   <Star fill="#F7C948" stroke="#F7C948" size={16} />
-                  ZenZap
+                  ZenMech
                 </div>
                 <div className="mt-2"><Stars /></div>
                 <div className="mt-1.5 text-white/75 text-[13px]">4.7 out of 5</div>

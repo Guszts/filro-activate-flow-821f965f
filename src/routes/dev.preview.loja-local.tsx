@@ -6,7 +6,7 @@ import {
   ShoppingCart, Search, User, Heart, Menu, X, Phone, Mail,
   Facebook, Instagram, Youtube, Twitter, Linkedin, ChevronDown,
   MapPin, Truck, Clock, Leaf, Package, Star, Plus, Minus, ArrowRight,
-  Apple, Croissant, Milk, Coffee, Cookie, Sparkles as Spark, Home, Tag,
+  Apple, Croissant, Milk, Coffee, Cookie, Award as Spark, Home, Tag,
 } from "lucide-react";
 import heroImg from "@/assets/morna-hero.jpg";
 import about1 from "@/assets/morna-about-1.jpg";

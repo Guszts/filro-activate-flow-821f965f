@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Phone, Mail, MapPin, Clock, Menu, X, ChevronDown, ArrowRight, ArrowLeft,
-  Check, Plus, Minus, Star, Wrench, Hammer, Search, Home, Droplets, Zap,
+  Check, Plus, Minus, Star, Wrench, Hammer, Search, Home, Droplets, AlertTriangle,
   Shield, Award, Users, Clipboard, Facebook, Instagram, Linkedin, Youtube,
 } from "lucide-react";
 import heroImg from "@/assets/roofpro-hero.jpg";
@@ -42,7 +42,7 @@ const SERVICES = [
   { I: Search, t: "Roof Inspection", d: "Thorough inspections with detailed reports and honest recommendations." },
   { I: Home, t: "Roof Installation", d: "New roofing systems installed by a licensed and insured crew." },
   { I: Droplets, t: "Gutter Services", d: "Gutter cleaning, repair, and full replacement to protect your home." },
-  { I: Zap, t: "Emergency Roofing", d: "Urgent response for leaks, storm damage, and unsafe roof conditions." },
+  { I: AlertTriangle, t: "Emergency Roofing", d: "Urgent response for leaks, storm damage, and unsafe roof conditions." },
 ];
 
 const FEATURES = [
