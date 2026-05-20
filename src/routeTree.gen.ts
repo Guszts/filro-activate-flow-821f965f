@@ -53,6 +53,7 @@ import { Route as DevPreviewRestauranteCardapioRouteImport } from './routes/dev.
 import { Route as DevPreviewPrestadorServicoRouteImport } from './routes/dev.preview.prestador-servico'
 import { Route as DevPreviewOficinaAutoRouteImport } from './routes/dev.preview.oficina-auto'
 import { Route as DevPreviewLojaLocalRouteImport } from './routes/dev.preview.loja-local'
+import { Route as DevPreviewLandingVendasRouteImport } from './routes/dev.preview.landing-vendas'
 import { Route as DevPreviewClinicaLocalRouteImport } from './routes/dev.preview.clinica-local'
 import { Route as DevModelosSlugRouteImport } from './routes/dev.modelos.$slug'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
@@ -285,6 +286,11 @@ const DevPreviewLojaLocalRoute = DevPreviewLojaLocalRouteImport.update({
   path: '/dev/preview/loja-local',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevPreviewLandingVendasRoute = DevPreviewLandingVendasRouteImport.update({
+  id: '/dev/preview/landing-vendas',
+  path: '/dev/preview/landing-vendas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevPreviewClinicaLocalRoute = DevPreviewClinicaLocalRouteImport.update({
   id: '/dev/preview/clinica-local',
   path: '/dev/preview/clinica-local',
@@ -376,6 +382,7 @@ export interface FileRoutesByFullPath {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/landing-vendas': typeof DevPreviewLandingVendasRoute
   '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
   '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/prestador-servico': typeof DevPreviewPrestadorServicoRoute
@@ -431,6 +438,7 @@ export interface FileRoutesByTo {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/landing-vendas': typeof DevPreviewLandingVendasRoute
   '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
   '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/prestador-servico': typeof DevPreviewPrestadorServicoRoute
@@ -487,6 +495,7 @@ export interface FileRoutesById {
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/dev/modelos/$slug': typeof DevModelosSlugRoute
   '/dev/preview/clinica-local': typeof DevPreviewClinicaLocalRoute
+  '/dev/preview/landing-vendas': typeof DevPreviewLandingVendasRoute
   '/dev/preview/loja-local': typeof DevPreviewLojaLocalRoute
   '/dev/preview/oficina-auto': typeof DevPreviewOficinaAutoRoute
   '/dev/preview/prestador-servico': typeof DevPreviewPrestadorServicoRoute
@@ -544,6 +553,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/landing-vendas'
     | '/dev/preview/loja-local'
     | '/dev/preview/oficina-auto'
     | '/dev/preview/prestador-servico'
@@ -599,6 +609,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/landing-vendas'
     | '/dev/preview/loja-local'
     | '/dev/preview/oficina-auto'
     | '/dev/preview/prestador-servico'
@@ -654,6 +665,7 @@ export interface FileRouteTypes {
     | '/api/public/notify-admin-signup'
     | '/dev/modelos/$slug'
     | '/dev/preview/clinica-local'
+    | '/dev/preview/landing-vendas'
     | '/dev/preview/loja-local'
     | '/dev/preview/oficina-auto'
     | '/dev/preview/prestador-servico'
@@ -710,6 +722,7 @@ export interface RootRouteChildren {
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   DevModelosSlugRoute: typeof DevModelosSlugRoute
   DevPreviewClinicaLocalRoute: typeof DevPreviewClinicaLocalRoute
+  DevPreviewLandingVendasRoute: typeof DevPreviewLandingVendasRoute
   DevPreviewLojaLocalRoute: typeof DevPreviewLojaLocalRoute
   DevPreviewOficinaAutoRoute: typeof DevPreviewOficinaAutoRoute
   DevPreviewPrestadorServicoRoute: typeof DevPreviewPrestadorServicoRoute
@@ -1036,6 +1049,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevPreviewLojaLocalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/preview/landing-vendas': {
+      id: '/dev/preview/landing-vendas'
+      path: '/dev/preview/landing-vendas'
+      fullPath: '/dev/preview/landing-vendas'
+      preLoaderRoute: typeof DevPreviewLandingVendasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev/preview/clinica-local': {
       id: '/dev/preview/clinica-local'
       path: '/dev/preview/clinica-local'
@@ -1142,6 +1162,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   DevModelosSlugRoute: DevModelosSlugRoute,
   DevPreviewClinicaLocalRoute: DevPreviewClinicaLocalRoute,
+  DevPreviewLandingVendasRoute: DevPreviewLandingVendasRoute,
   DevPreviewLojaLocalRoute: DevPreviewLojaLocalRoute,
   DevPreviewOficinaAutoRoute: DevPreviewOficinaAutoRoute,
   DevPreviewPrestadorServicoRoute: DevPreviewPrestadorServicoRoute,
