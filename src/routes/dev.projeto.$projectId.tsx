@@ -340,6 +340,21 @@ function ChatPanel({
   );
 }
 
+function ActionLabel({ action }: { action: RiskAction }) {
+  const map = {
+    applied: { text: "Aplicado", cls: "bg-lime/30 text-ink border-lime" },
+    safe_alternative: { text: "Alternativa segura", cls: "bg-flame/15 text-flame border-flame/40" },
+    refused: { text: "Recusado · sem custo", cls: "bg-destructive/10 text-destructive border-destructive/30" },
+  } as const;
+  const v = map[action];
+  return (
+    <span className={`inline-flex items-center gap-1 text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full border ${v.cls}`}>
+      <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+      {v.text}
+    </span>
+  );
+}
+
 function ChatBubble({ msg }: { msg: ChatMsg }) {
   if (msg.role === "system") {
     return (
@@ -347,6 +362,7 @@ function ChatBubble({ msg }: { msg: ChatMsg }) {
     );
   }
   const isUser = msg.role === "user";
+  const action = !isUser && msg.role === "assistant" ? msg.action : undefined;
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
@@ -354,12 +370,15 @@ function ChatBubble({ msg }: { msg: ChatMsg }) {
       transition={{ duration: 0.2 }}
       className={`flex ${isUser ? "justify-end" : "justify-start"}`}
     >
-      <div
-        className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-snug whitespace-pre-wrap break-words ${
-          isUser ? "bg-ink text-paper rounded-br-sm" : "bg-muted text-ink rounded-bl-sm"
-        }`}
-      >
-        {msg.text}
+      <div className={`max-w-[85%] flex flex-col gap-1.5 ${isUser ? "items-end" : "items-start"}`}>
+        {action && <ActionLabel action={action} />}
+        <div
+          className={`px-3.5 py-2.5 rounded-2xl text-sm leading-snug whitespace-pre-wrap break-words ${
+            isUser ? "bg-ink text-paper rounded-br-sm" : "bg-muted text-ink rounded-bl-sm"
+          }`}
+        >
+          {msg.text}
+        </div>
       </div>
     </motion.div>
   );
