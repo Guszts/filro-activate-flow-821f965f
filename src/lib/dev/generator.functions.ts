@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { estimateEditCost } from "@/lib/dev/credit-cost";
+import { getTemplateSeed } from "@/lib/dev/template-seeds";
 
 const SLUG_RE = /^[a-z0-9-]{3,40}$/;
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
