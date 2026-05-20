@@ -215,15 +215,17 @@ export const generateDevSite = createServerFn({ method: "POST" })
     const base = slugify(data.preferredSlug || data.businessName);
     const slug = await uniqueSlug(base);
 
-    // 4. Gera conteúdo via IA — apenas se o usuário escreveu um briefing.
-    // Quando o site começa a partir de um template, renderizamos o template
-    // bespoke (registry) exatamente como na pré-visualização — sem remodelar
-    // pelo nome do negócio. O conteúdo gerado fica vazio até o usuário pedir
-    // edições no chat.
-    let content: GeneratedContent | Record<string, never> = {};
+    // 4. Conteúdo inicial.
+    // - Se o usuário escreveu um briefing real (>=10 chars): gera via IA.
+    // - Caso contrário: usa o snapshot rico do template (template-seeds) para
+    //   que o site já comece com o conteúdo do modelo escolhido. Sem isso, o
+    //   projeto começava como `{}` e a primeira edição da IA (ex: "traduza
+    //   pro português") gerava um site genérico e fraco, perdendo a essência
+    //   do template.
+    let content: Record<string, unknown> = (getTemplateSeed(tpl.slug, data.businessName, data.whatsapp) ?? {}) as unknown as Record<string, unknown>;
     if (data.description && data.description.length >= 10) {
       try {
-        content = await generateContent({
+        content = (await generateContent({
           businessName: data.businessName,
           segment: data.businessSegment,
           description: data.description,
@@ -232,7 +234,7 @@ export const generateDevSite = createServerFn({ method: "POST" })
           tone: data.tone,
           templateName: tpl.name,
           sections: (tpl.sections as unknown as string[]) || [],
-        });
+        })) as unknown as Record<string, unknown>;
       } catch (err) {
         return { ok: false as const, error: err instanceof Error ? err.message : "Falha na geração com IA", projectId: null, slug: null, publishedUrl: null };
       }
