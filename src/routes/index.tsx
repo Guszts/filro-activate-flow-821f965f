@@ -230,18 +230,26 @@ function HomePage() {
           </p>
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
-          {(plans ?? []).map((p: any, i: number) => (
-            <PlanCard
-              key={p.id}
-              index={i}
-              name={p.name}
-              activationPrice={formatBRL(p.activation_price)}
-              monthlyPrice={formatBRL(p.monthly_price)}
-              features={(p.features as string[]) ?? []}
-              highlight={p.slug === "plus"}
-              onSelect={() => handleSelect(p.slug)}
-            />
-          ))}
+          {(plans ?? []).map((p: any, i: number) => {
+            const isCurrent = currentPlan?.slug === p.slug;
+            const isLower = !!currentPlan && p.display_order < currentPlan.display_order;
+            const disabled = isCurrent || isLower;
+            return (
+              <PlanCard
+                key={p.id}
+                index={i}
+                name={p.name}
+                activationPrice={formatBRL(p.activation_price)}
+                monthlyPrice={formatBRL(p.monthly_price)}
+                features={(p.features as string[]) ?? []}
+                highlight={p.slug === "plus"}
+                onSelect={() => handleSelect(p.slug)}
+                disabled={disabled}
+                disabledLabel={isCurrent ? "Plano atual" : "Já incluído no seu plano"}
+              />
+            );
+          })}
+
         </div>
       </section>
 
