@@ -33,6 +33,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
 import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
+import { Route as OauthAuthorizeRouteImport } from './routes/oauth.authorize'
 import { Route as ModelosViagemWishesRouteImport } from './routes/modelos.viagem-wishes'
 import { Route as ModelosRestauranteCardapioRouteImport } from './routes/modelos.restaurante-cardapio'
 import { Route as ModelosPrestadorServicoRouteImport } from './routes/modelos.prestador-servico'
@@ -174,6 +175,11 @@ const PlanosSlugRoute = PlanosSlugRouteImport.update({
   path: '/planos/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OauthAuthorizeRoute = OauthAuthorizeRouteImport.update({
+  id: '/oauth/authorize',
+  path: '/oauth/authorize',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModelosViagemWishesRoute = ModelosViagemWishesRouteImport.update({
   id: '/viagem-wishes',
   path: '/viagem-wishes',
@@ -313,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/modelos/prestador-servico': typeof ModelosPrestadorServicoRoute
   '/modelos/restaurante-cardapio': typeof ModelosRestauranteCardapioRoute
   '/modelos/viagem-wishes': typeof ModelosViagemWishesRoute
+  '/oauth/authorize': typeof OauthAuthorizeRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
@@ -359,6 +366,7 @@ export interface FileRoutesByTo {
   '/modelos/prestador-servico': typeof ModelosPrestadorServicoRoute
   '/modelos/restaurante-cardapio': typeof ModelosRestauranteCardapioRoute
   '/modelos/viagem-wishes': typeof ModelosViagemWishesRoute
+  '/oauth/authorize': typeof OauthAuthorizeRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos': typeof PlanosIndexRoute
@@ -406,6 +414,7 @@ export interface FileRoutesById {
   '/modelos/prestador-servico': typeof ModelosPrestadorServicoRoute
   '/modelos/restaurante-cardapio': typeof ModelosRestauranteCardapioRoute
   '/modelos/viagem-wishes': typeof ModelosViagemWishesRoute
+  '/oauth/authorize': typeof OauthAuthorizeRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
@@ -454,6 +463,7 @@ export interface FileRouteTypes {
     | '/modelos/prestador-servico'
     | '/modelos/restaurante-cardapio'
     | '/modelos/viagem-wishes'
+    | '/oauth/authorize'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
@@ -500,6 +510,7 @@ export interface FileRouteTypes {
     | '/modelos/prestador-servico'
     | '/modelos/restaurante-cardapio'
     | '/modelos/viagem-wishes'
+    | '/oauth/authorize'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos'
@@ -546,6 +557,7 @@ export interface FileRouteTypes {
     | '/modelos/prestador-servico'
     | '/modelos/restaurante-cardapio'
     | '/modelos/viagem-wishes'
+    | '/oauth/authorize'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
@@ -586,6 +598,7 @@ export interface RootRouteChildren {
   ApiMcpRoute: typeof ApiMcpRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LeadIdRoute: typeof LeadIdRoute
+  OauthAuthorizeRoute: typeof OauthAuthorizeRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
   ProjetoIdRoute: typeof ProjetoIdRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
@@ -769,6 +782,13 @@ declare module '@tanstack/react-router' {
       path: '/planos/$slug'
       fullPath: '/planos/$slug'
       preLoaderRoute: typeof PlanosSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oauth/authorize': {
+      id: '/oauth/authorize'
+      path: '/oauth/authorize'
+      fullPath: '/oauth/authorize'
+      preLoaderRoute: typeof OauthAuthorizeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/modelos/viagem-wishes': {
@@ -962,6 +982,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMcpRoute: ApiMcpRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LeadIdRoute: LeadIdRoute,
+  OauthAuthorizeRoute: OauthAuthorizeRoute,
   PlanosSlugRoute: PlanosSlugRoute,
   ProjetoIdRoute: ProjetoIdRoute,
   PlanosIndexRoute: PlanosIndexRoute,
@@ -979,3 +1000,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
