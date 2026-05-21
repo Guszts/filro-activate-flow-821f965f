@@ -20,6 +20,7 @@ export function generateMcpToken(): { token: string; hash: string; prefix: strin
 export interface McpAuthContext extends Record<string, unknown> {
   userId: string;
   tokenId: string;
+  isAdmin: boolean;
 }
 
 export async function verifyMcpToken(token: string): Promise<McpAuthContext | null> {
@@ -31,10 +32,17 @@ export async function verifyMcpToken(token: string): Promise<McpAuthContext | nu
     .eq("token_hash", hash)
     .maybeSingle();
   if (error || !data || data.revoked_at) return null;
+  const { data: roleRow } = await supabaseAdmin
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", data.user_id)
+    .eq("role", "admin")
+    .maybeSingle();
   // Best-effort last_used_at update (fire-and-forget)
   void supabaseAdmin
     .from("mcp_tokens")
     .update({ last_used_at: new Date().toISOString() })
     .eq("id", data.id);
-  return { userId: data.user_id, tokenId: data.id };
+  return { userId: data.user_id, tokenId: data.id, isAdmin: Boolean(roleRow) };
 }
+
