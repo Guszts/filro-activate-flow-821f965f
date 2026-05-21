@@ -12,6 +12,7 @@ import { PhoneInput } from "@/components/PhoneInput";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { CreditCard, LogOut, Mail, Save, ArrowRight, User as UserIcon, XCircle, Camera, Trash2 } from "lucide-react";
+import { McpTokensSection } from "@/components/settings/McpTokensSection";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
