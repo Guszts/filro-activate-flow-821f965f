@@ -326,9 +326,9 @@ export const adminUpdateProjectStatus = defineTool({
   }),
   execute: async ({ projectId, status, note }, { auth }) => {
     requireAdmin(auth);
-    const patch: Record<string, unknown> = { project_status: status };
+    const patch: { project_status: string; notes?: string } = { project_status: status };
     if (note) patch.notes = note;
-    const { error } = await supabaseAdmin.from("projects").update(patch).eq("id", projectId);
+    const { error } = await supabaseAdmin.from("projects").update(patch as never).eq("id", projectId);
     if (error) throw new Error(error.message);
     return fmt({ ok: true });
   },
