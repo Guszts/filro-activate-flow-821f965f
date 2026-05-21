@@ -1,83 +1,101 @@
-# MCP Server do Filro
+# MCP OAuth 2.1 para Claude Mobile / Web
 
-Sim, dá pra criar. Vamos expor um endpoint MCP (Model Context Protocol) em `/api/mcp` usando `mcp-tanstack-start`, autenticado por token, para que ferramentas como **Claude Desktop**, **Cursor**, **ChatGPT (conectores)** e outros clientes MCP possam ler e agir sobre os dados do cliente Filro.
+Habilitar o servidor MCP do Filro a aparecer como **conector customizado** no Claude (mobile e web), implementando OAuth 2.1 com Dynamic Client Registration (DCR) e PKCE, conforme a spec MCP Authorization (2025-06-18).
 
-## O que o MCP vai permitir
+Continua restrito a **admins**. Tokens MCP estáticos (Bearer no header) seguem funcionando em paralelo para Claude Desktop / Cursor.
 
-O usuário (cliente Filro) gera um token pessoal no painel e cola no Claude. A partir daí, pode pedir coisas como:
+---
 
-- "Mostre o status do meu projeto Filro"
-- "Liste minhas cobranças extras em aberto"
-- "Abra um chamado de suporte dizendo que quero trocar o telefone do site"
-- "Quais planos existem e qual é o meu hoje?"
-- "Quantos leads chegaram este mês?" (se aplicável)
+## Fluxo do usuário
 
-## Escopo de ferramentas (v1)
+1. No app Claude (mobile/web), adicionar conector customizado com URL `https://filro.site/api/mcp`.
+2. Claude descobre os endpoints OAuth automaticamente, registra-se via DCR.
+3. Claude abre o navegador → cai em `/oauth/authorize` no Filro.
+4. Se não estiver logado, redireciona para `/login` e volta.
+5. Tela de consentimento mostra: "Claude está pedindo acesso admin ao Filro" → botão **Autorizar**.
+6. Redirect de volta para o Claude com code → Claude troca por access + refresh token.
+7. Claude faz POST `/api/mcp` com `Authorization: Bearer <access_token>` e ganha acesso às ferramentas admin.
 
-Foco no cliente final (não admin), respeitando RLS via token do próprio usuário.
+---
 
-Leitura:
-- `get_my_profile` — dados do perfil e plano atual
-- `list_my_projects` — projetos com status, prazo, URL publicada
-- `get_project` — detalhe + histórico de status + revisões
-- `list_my_payments` — pagamentos e cobranças extras
-- `list_my_support_tickets` — chamados abertos/fechados
-- `list_plans` — catálogo público de planos
+## Componentes
 
-Escrita (com `needsApproval`):
-- `create_support_ticket` — abre chamado
-- `reply_support_ticket` — responde em chamado existente
-- `request_project_revision` — cria revisão no projeto
+### 1. Banco (1 migração)
 
-## Autenticação
+Novas tabelas:
+- `oauth_clients` — clientes registrados via DCR (client_id, client_name, redirect_uris[], created_at). Sem secret (clientes públicos com PKCE).
+- `oauth_authorization_codes` — codes de uso único (code, client_id, user_id, redirect_uri, code_challenge, scope, expires_at). TTL 10 min.
+- `oauth_access_tokens` — tokens emitidos (token_hash, client_id, user_id, scope, expires_at, revoked_at). TTL 1h.
+- `oauth_refresh_tokens` — refresh tokens (token_hash, client_id, user_id, scope, expires_at, revoked_at). TTL 30 dias.
 
-Cada cliente gera um **MCP token** no painel (`/settings`):
-- Tabela nova `mcp_tokens` (id, user_id, token_hash, name, last_used_at, created_at, revoked_at).
-- Token mostrado uma vez na criação, armazenado como hash (sha256).
-- Cliente cola no Claude como `Authorization: Bearer flaro_mcp_xxx`.
-- No handler MCP, validamos o token, recuperamos o `user_id` e injetamos no contexto das tools.
-- Todas as queries usam `supabaseAdmin` filtradas explicitamente por `user_id` (RLS bypass controlado).
+RLS: apenas service role acessa (todas operações via `supabaseAdmin` no servidor).
 
-## Como o usuário conecta no Claude
+### 2. Rotas novas
 
-Instruções na página `/settings` → seção "Integração MCP":
-1. Clicar "Gerar token MCP", copiar.
-2. No Claude Desktop, editar `claude_desktop_config.json` adicionando o servidor remoto:
-   ```json
-   {
-     "mcpServers": {
-       "filro": {
-         "url": "https://filro.site/api/mcp",
-         "headers": { "Authorization": "Bearer flaro_mcp_xxx" }
-       }
-     }
-   }
-   ```
-3. Reiniciar o Claude.
+| Rota | Tipo | Função |
+|---|---|---|
+| `/.well-known/oauth-authorization-server` | server route GET | Metadata OAuth (RFC 8414) |
+| `/.well-known/oauth-protected-resource` | server route GET | Metadata do resource (RFC 9728) |
+| `/api/oauth/register` | server route POST | DCR (RFC 7591) — cria client |
+| `/oauth/authorize` | rota UI (GET/POST) | Login + consentimento + emissão de code |
+| `/api/oauth/token` | server route POST | Troca code→tokens, refresh |
 
-## Detalhes técnicos
+### 3. Endpoint MCP
 
-Stack:
-- `mcp-tanstack-start` + `@modelcontextprotocol/sdk` + `zod`.
-- Rota: `src/routes/api/mcp.ts` — só `POST` ativo, `GET`/`DELETE` retornam 405.
-- Tools em `src/lib/mcp/tools/*.ts`.
-- Helper `withMcpAuth` valida o Bearer token contra `mcp_tokens`.
+`/api/mcp` passa a aceitar duas formas de Bearer:
+- Token estático `flaro_mcp_*` (já existe) — admin check.
+- Access token OAuth — lookup em `oauth_access_tokens`, valida expiração, exige admin role do `user_id`.
 
-Arquivos a criar/editar:
-- `src/lib/mcp/tools/profile.ts`, `projects.ts`, `payments.ts`, `support.ts`, `plans.ts`
-- `src/lib/mcp/auth.ts` (extrai e valida token)
-- `src/routes/api/mcp.ts`
-- `src/components/settings/McpTokensSection.tsx` + integração em `/settings`
-- `src/lib/mcp-tokens.functions.ts` (createServerFn: criar/listar/revogar)
-- Migration: tabela `mcp_tokens` + RLS (`user_id = auth.uid()`)
+Em ambos os casos, todas as 16 ferramentas (client + admin) ficam disponíveis se `isAdmin = true`.
 
-Dependências:
-```
-bun add mcp-tanstack-start @modelcontextprotocol/sdk
-```
+### 4. Tela de consentimento
 
-## Fora do escopo da v1
+Nova rota `/oauth/authorize` (UI):
+- Verifica sessão Supabase. Se não logado → redirect pra `/login?next=...`.
+- Verifica role admin. Se não admin → mostra erro.
+- Mostra: nome do cliente (Claude), redirect URI, escopo (admin), botões **Autorizar** / **Cancelar**.
+- Ao autorizar: gera authorization code (com PKCE challenge), persiste, redireciona para `redirect_uri?code=...&state=...`.
 
-- Acesso de admin via MCP (pode entrar numa v2 com role check).
-- Webhooks/eventos push para o cliente MCP.
-- OAuth dinâmico — usaremos token estático, que é o caminho mais simples e suportado pelo Claude Desktop.
+### 5. Segurança
+
+- PKCE S256 obrigatório (sem `plain`).
+- Authorization code: uso único, 10 min, valida code_verifier.
+- Access token: 1h, hashed em DB (SHA-256).
+- Refresh token: 30 dias, rotação em cada refresh.
+- Apenas admins podem completar o consent.
+- Validar `redirect_uri` contra `oauth_clients.redirect_uris`.
+- `resource` parameter (RFC 8707) validado — tokens só valem para `/api/mcp`.
+
+---
+
+## Arquivos
+
+**Criar:**
+- `supabase/migrations/<ts>_mcp_oauth.sql`
+- `src/lib/mcp/oauth.server.ts` — helpers (gen code, hash, validate PKCE, issue tokens)
+- `src/routes/.well-known.oauth-authorization-server.ts`
+- `src/routes/.well-known.oauth-protected-resource.ts`
+- `src/routes/api/oauth/register.ts`
+- `src/routes/api/oauth/token.ts`
+- `src/routes/oauth.authorize.tsx` (UI + POST handler via server fn)
+- `src/lib/oauth.functions.ts` — server fns para listar pending auth e autorizar
+
+**Editar:**
+- `src/lib/mcp/auth.server.ts` — `verifyMcpToken` aceita também access tokens OAuth
+- `src/components/settings/McpTokensSection.tsx` — adicionar seção explicando "Conectar pelo Claude mobile/web" com URL `https://filro.site/api/mcp` para colar como conector customizado
+
+---
+
+## Escopo NÃO incluído
+
+- Multi-tenant (sempre admin scope, sem granularidade por ferramenta)
+- Client secrets / confidential clients (só public + PKCE)
+- Token introspection endpoint (RFC 7662)
+- Revocation endpoint público (admin pode revogar via DB / UI no futuro)
+- Suporte a múltiplos resource servers (só `/api/mcp`)
+
+---
+
+## Tempo estimado
+
+~6-8 chamadas de tool: 1 migração + 7-8 arquivos novos/editados. Após aprovação do plano, executo tudo de uma vez.
