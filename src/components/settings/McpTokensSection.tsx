@@ -127,6 +127,22 @@ export function McpTokensSection() {
         pagamentos, planos e abrir chamados de suporte em seu nome.
       </p>
 
+      {/* OAuth (Claude mobile / web) */}
+      <div className="mt-5 rounded-2xl border border-border bg-muted/30 p-5">
+        <div className="font-display font-black text-ink text-sm">
+          Conectar pelo Claude mobile ou web
+        </div>
+        <p className="mt-2 text-sm text-ink-soft">
+          Apps que não aceitam header customizado (Claude mobile/web, ChatGPT) usam OAuth.
+          Em <strong>Configurações → Conectores → Adicionar conector customizado</strong>, cole apenas
+          a URL abaixo. O Claude vai abrir uma tela de autorização aqui no Filro — basta clicar
+          em <strong>Autorizar</strong> (precisa estar logado como admin).
+        </p>
+        <code className="mt-3 block px-3 py-2 rounded-xl bg-ink text-paper text-xs font-mono break-all">
+          {mcpUrl}
+        </code>
+      </div>
+
       {/* New token reveal */}
       {justCreated && (
         <div className="mt-5 rounded-2xl border border-flame/40 bg-flame/5 p-5">
