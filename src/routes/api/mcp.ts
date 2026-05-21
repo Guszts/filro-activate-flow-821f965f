@@ -10,6 +10,9 @@ const mcp = createMcpServer({
   instructions:
     "Servidor MCP do Filro. Permite consultar e administrar dados de clientes, planos, projetos, pagamentos e suporte. Restrito a administradores.",
   tools: allTools,
+  // CRÍTICO: sem isso, a Response SSE é retornada antes do tool executar
+  // e o auth (em _currentOptions) é limpo pelo finally → ctx() lança "Não autenticado".
+  transport: { enableJsonResponse: true },
 });
 
 const RESOURCE_METADATA_URL = "https://filro.site/.well-known/oauth-protected-resource";
