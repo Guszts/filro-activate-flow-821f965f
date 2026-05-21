@@ -169,7 +169,7 @@ export const createTicket = defineTool({
   parameters: z.object({
     subject: z.string().min(3).max(200).describe("Assunto do chamado"),
     message: z.string().min(5).max(5000).describe("Mensagem inicial detalhando a solicitação"),
-    kind: z.enum(["question", "issue", "change_request", "feature_request"]).default("question"),
+    kind: z.enum(["question", "bug", "change_request", "cancellation", "other"]).default("question"),
     priority: z.enum(["low", "normal", "high", "urgent"]).default("normal"),
     projectId: z.string().uuid().optional().describe("ID do projeto relacionado, se aplicável"),
   }),
@@ -190,8 +190,9 @@ export const createTicket = defineTool({
     if (error) throw new Error(error.message);
     await supabaseAdmin.from("support_messages").insert({
       ticket_id: data.id,
-      sender_id: userId,
-      body: message,
+      author_id: userId,
+      author_role: "client",
+      content: message,
     });
     return fmt({ ok: true, ticket: data });
   },
