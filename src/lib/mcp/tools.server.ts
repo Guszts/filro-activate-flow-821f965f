@@ -236,9 +236,10 @@ export const listPlans = defineTool({
   execute: async () => {
     const { data, error } = await supabaseAdmin
       .from("plans")
-      .select("id,name,slug,price_cents,description,is_active")
-      .eq("is_active", true)
-      .order("price_cents", { ascending: true });
+      .select("id,name,slug,activation_price,monthly_price,description,features,hidden")
+      .eq("active", true)
+      .eq("hidden", false)
+      .order("display_order", { ascending: true });
     if (error) throw new Error(error.message);
     return fmt(data);
   },
