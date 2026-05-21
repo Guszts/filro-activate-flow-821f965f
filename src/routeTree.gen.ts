@@ -33,6 +33,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlanosIndexRouteImport } from './routes/planos.index'
 import { Route as ProjetoIdRouteImport } from './routes/projeto.$id'
 import { Route as PlanosSlugRouteImport } from './routes/planos.$slug'
+import { Route as OauthAuthorizeRouteImport } from './routes/oauth.authorize'
 import { Route as ModelosViagemWishesRouteImport } from './routes/modelos.viagem-wishes'
 import { Route as ModelosRestauranteCardapioRouteImport } from './routes/modelos.restaurante-cardapio'
 import { Route as ModelosPrestadorServicoRouteImport } from './routes/modelos.prestador-servico'
@@ -45,6 +46,8 @@ import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe
 import { Route as ApiMcpRouteImport } from './routes/api/mcp'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
+import { Route as ApiOauthTokenRouteImport } from './routes/api/oauth/token'
+import { Route as ApiOauthRegisterRouteImport } from './routes/api/oauth/register'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
@@ -172,6 +175,11 @@ const PlanosSlugRoute = PlanosSlugRouteImport.update({
   path: '/planos/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OauthAuthorizeRoute = OauthAuthorizeRouteImport.update({
+  id: '/oauth/authorize',
+  path: '/oauth/authorize',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModelosViagemWishesRoute = ModelosViagemWishesRouteImport.update({
   id: '/viagem-wishes',
   path: '/viagem-wishes',
@@ -234,6 +242,16 @@ const ApiPublicNotifyAdminSignupRoute =
     path: '/api/public/notify-admin-signup',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiOauthTokenRoute = ApiOauthTokenRouteImport.update({
+  id: '/api/oauth/token',
+  path: '/api/oauth/token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOauthRegisterRoute = ApiOauthRegisterRouteImport.update({
+  id: '/api/oauth/register',
+  path: '/api/oauth/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailTransactionalSendRoute =
   LovableEmailTransactionalSendRouteImport.update({
     id: '/lovable/email/transactional/send',
@@ -301,9 +319,12 @@ export interface FileRoutesByFullPath {
   '/modelos/prestador-servico': typeof ModelosPrestadorServicoRoute
   '/modelos/restaurante-cardapio': typeof ModelosRestauranteCardapioRoute
   '/modelos/viagem-wishes': typeof ModelosViagemWishesRoute
+  '/oauth/authorize': typeof OauthAuthorizeRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
+  '/api/oauth/register': typeof ApiOauthRegisterRoute
+  '/api/oauth/token': typeof ApiOauthTokenRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -345,9 +366,12 @@ export interface FileRoutesByTo {
   '/modelos/prestador-servico': typeof ModelosPrestadorServicoRoute
   '/modelos/restaurante-cardapio': typeof ModelosRestauranteCardapioRoute
   '/modelos/viagem-wishes': typeof ModelosViagemWishesRoute
+  '/oauth/authorize': typeof OauthAuthorizeRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos': typeof PlanosIndexRoute
+  '/api/oauth/register': typeof ApiOauthRegisterRoute
+  '/api/oauth/token': typeof ApiOauthTokenRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -390,9 +414,12 @@ export interface FileRoutesById {
   '/modelos/prestador-servico': typeof ModelosPrestadorServicoRoute
   '/modelos/restaurante-cardapio': typeof ModelosRestauranteCardapioRoute
   '/modelos/viagem-wishes': typeof ModelosViagemWishesRoute
+  '/oauth/authorize': typeof OauthAuthorizeRoute
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
+  '/api/oauth/register': typeof ApiOauthRegisterRoute
+  '/api/oauth/token': typeof ApiOauthTokenRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -436,9 +463,12 @@ export interface FileRouteTypes {
     | '/modelos/prestador-servico'
     | '/modelos/restaurante-cardapio'
     | '/modelos/viagem-wishes'
+    | '/oauth/authorize'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
+    | '/api/oauth/register'
+    | '/api/oauth/token'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -480,9 +510,12 @@ export interface FileRouteTypes {
     | '/modelos/prestador-servico'
     | '/modelos/restaurante-cardapio'
     | '/modelos/viagem-wishes'
+    | '/oauth/authorize'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos'
+    | '/api/oauth/register'
+    | '/api/oauth/token'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -524,9 +557,12 @@ export interface FileRouteTypes {
     | '/modelos/prestador-servico'
     | '/modelos/restaurante-cardapio'
     | '/modelos/viagem-wishes'
+    | '/oauth/authorize'
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
+    | '/api/oauth/register'
+    | '/api/oauth/token'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -562,9 +598,12 @@ export interface RootRouteChildren {
   ApiMcpRoute: typeof ApiMcpRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LeadIdRoute: typeof LeadIdRoute
+  OauthAuthorizeRoute: typeof OauthAuthorizeRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
   ProjetoIdRoute: typeof ProjetoIdRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
+  ApiOauthRegisterRoute: typeof ApiOauthRegisterRoute
+  ApiOauthTokenRoute: typeof ApiOauthTokenRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -745,6 +784,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/oauth/authorize': {
+      id: '/oauth/authorize'
+      path: '/oauth/authorize'
+      fullPath: '/oauth/authorize'
+      preLoaderRoute: typeof OauthAuthorizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/modelos/viagem-wishes': {
       id: '/modelos/viagem-wishes'
       path: '/viagem-wishes'
@@ -827,6 +873,20 @@ declare module '@tanstack/react-router' {
       path: '/api/public/notify-admin-signup'
       fullPath: '/api/public/notify-admin-signup'
       preLoaderRoute: typeof ApiPublicNotifyAdminSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/oauth/token': {
+      id: '/api/oauth/token'
+      path: '/api/oauth/token'
+      fullPath: '/api/oauth/token'
+      preLoaderRoute: typeof ApiOauthTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/oauth/register': {
+      id: '/api/oauth/register'
+      path: '/api/oauth/register'
+      fullPath: '/api/oauth/register'
+      preLoaderRoute: typeof ApiOauthRegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/transactional/send': {
@@ -922,9 +982,12 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMcpRoute: ApiMcpRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LeadIdRoute: LeadIdRoute,
+  OauthAuthorizeRoute: OauthAuthorizeRoute,
   PlanosSlugRoute: PlanosSlugRoute,
   ProjetoIdRoute: ProjetoIdRoute,
   PlanosIndexRoute: PlanosIndexRoute,
+  ApiOauthRegisterRoute: ApiOauthRegisterRoute,
+  ApiOauthTokenRoute: ApiOauthTokenRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,

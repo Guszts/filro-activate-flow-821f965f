@@ -346,6 +346,161 @@ export type Database = {
         }
         Relationships: []
       }
+      oauth_access_tokens: {
+        Row: {
+          client_id: string
+          created_at: string
+          expires_at: string
+          id: string
+          resource: string | null
+          revoked_at: string | null
+          scope: string
+          token_hash: string
+          user_id: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          resource?: string | null
+          revoked_at?: string | null
+          scope?: string
+          token_hash: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          resource?: string | null
+          revoked_at?: string | null
+          scope?: string
+          token_hash?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      oauth_authorization_codes: {
+        Row: {
+          client_id: string
+          code_challenge: string
+          code_challenge_method: string
+          code_hash: string
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          redirect_uri: string
+          resource: string | null
+          scope: string
+          user_id: string
+        }
+        Insert: {
+          client_id: string
+          code_challenge: string
+          code_challenge_method?: string
+          code_hash: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          redirect_uri: string
+          resource?: string | null
+          scope?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string
+          code_challenge?: string
+          code_challenge_method?: string
+          code_hash?: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          redirect_uri?: string
+          resource?: string | null
+          scope?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      oauth_clients: {
+        Row: {
+          client_id: string
+          client_name: string
+          created_at: string
+          id: string
+          redirect_uris: string[]
+          scope: string
+        }
+        Insert: {
+          client_id: string
+          client_name?: string
+          created_at?: string
+          id?: string
+          redirect_uris?: string[]
+          scope?: string
+        }
+        Update: {
+          client_id?: string
+          client_name?: string
+          created_at?: string
+          id?: string
+          redirect_uris?: string[]
+          scope?: string
+        }
+        Relationships: []
+      }
+      oauth_refresh_tokens: {
+        Row: {
+          client_id: string
+          created_at: string
+          expires_at: string
+          id: string
+          resource: string | null
+          revoked_at: string | null
+          rotated_from: string | null
+          scope: string
+          token_hash: string
+          user_id: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          resource?: string | null
+          revoked_at?: string | null
+          rotated_from?: string | null
+          scope?: string
+          token_hash: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          resource?: string | null
+          revoked_at?: string | null
+          rotated_from?: string | null
+          scope?: string
+          token_hash?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oauth_refresh_tokens_rotated_from_fkey"
+            columns: ["rotated_from"]
+            isOneToOne: false
+            referencedRelation: "oauth_refresh_tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_commissions: {
         Row: {
           activation_amount: number
