@@ -241,6 +241,8 @@ function SettingsPage() {
             <p className="text-sm text-ink-soft">Nenhuma assinatura ativa encontrada. Entre em contato com o suporte se isso parecer errado.</p>
           )}
         </motion.section>
+        <McpTokensSection />
+
 
         {/* DANGER */}
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-6 card-elevated p-7">
