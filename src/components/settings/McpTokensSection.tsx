@@ -35,7 +35,9 @@ export function McpTokensSection() {
   const [justCreated, setJustCreated] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const mcpUrl = typeof window !== "undefined" ? `${window.location.origin}/api/mcp` : "https://filro.site/api/mcp";
+  // URL canônica — domínios .lovable.app fazem 302 redirect para filro.site,
+  // e clientes MCP (Claude/Cursor) não seguem redirect em POST.
+  const mcpUrl = "https://filro.site/api/mcp";
 
   const refresh = async () => {
     try {
