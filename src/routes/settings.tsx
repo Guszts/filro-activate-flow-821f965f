@@ -241,7 +241,7 @@ function SettingsPage() {
             <p className="text-sm text-ink-soft">Nenhuma assinatura ativa encontrada. Entre em contato com o suporte se isso parecer errado.</p>
           )}
         </motion.section>
-        <McpTokensSection />
+        {isAdmin && <McpTokensSection />}
 
 
         {/* DANGER */}
