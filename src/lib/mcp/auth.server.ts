@@ -17,7 +17,7 @@ export function generateMcpToken(): { token: string; hash: string; prefix: strin
   };
 }
 
-export interface McpAuthContext {
+export interface McpAuthContext extends Record<string, unknown> {
   userId: string;
   tokenId: string;
 }
