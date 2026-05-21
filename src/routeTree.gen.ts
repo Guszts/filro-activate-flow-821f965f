@@ -45,6 +45,7 @@ import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe
 import { Route as ApiMcpRouteImport } from './routes/api/mcp'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
+import { Route as ApiOauthRegisterRouteImport } from './routes/api/oauth/register'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
@@ -234,6 +235,11 @@ const ApiPublicNotifyAdminSignupRoute =
     path: '/api/public/notify-admin-signup',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiOauthRegisterRoute = ApiOauthRegisterRouteImport.update({
+  id: '/api/oauth/register',
+  path: '/api/oauth/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailTransactionalSendRoute =
   LovableEmailTransactionalSendRouteImport.update({
     id: '/lovable/email/transactional/send',
@@ -304,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
+  '/api/oauth/register': typeof ApiOauthRegisterRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -348,6 +355,7 @@ export interface FileRoutesByTo {
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos': typeof PlanosIndexRoute
+  '/api/oauth/register': typeof ApiOauthRegisterRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -393,6 +401,7 @@ export interface FileRoutesById {
   '/planos/$slug': typeof PlanosSlugRoute
   '/projeto/$id': typeof ProjetoIdRoute
   '/planos/': typeof PlanosIndexRoute
+  '/api/oauth/register': typeof ApiOauthRegisterRoute
   '/api/public/notify-admin-signup': typeof ApiPublicNotifyAdminSignupRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -439,6 +448,7 @@ export interface FileRouteTypes {
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
+    | '/api/oauth/register'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -483,6 +493,7 @@ export interface FileRouteTypes {
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos'
+    | '/api/oauth/register'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -527,6 +538,7 @@ export interface FileRouteTypes {
     | '/planos/$slug'
     | '/projeto/$id'
     | '/planos/'
+    | '/api/oauth/register'
     | '/api/public/notify-admin-signup'
     | '/lovable/email/suppression'
     | '/api/public/payments/webhook'
@@ -565,6 +577,7 @@ export interface RootRouteChildren {
   PlanosSlugRoute: typeof PlanosSlugRoute
   ProjetoIdRoute: typeof ProjetoIdRoute
   PlanosIndexRoute: typeof PlanosIndexRoute
+  ApiOauthRegisterRoute: typeof ApiOauthRegisterRoute
   ApiPublicNotifyAdminSignupRoute: typeof ApiPublicNotifyAdminSignupRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -829,6 +842,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicNotifyAdminSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/oauth/register': {
+      id: '/api/oauth/register'
+      path: '/api/oauth/register'
+      fullPath: '/api/oauth/register'
+      preLoaderRoute: typeof ApiOauthRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/transactional/send': {
       id: '/lovable/email/transactional/send'
       path: '/lovable/email/transactional/send'
@@ -925,6 +945,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosSlugRoute: PlanosSlugRoute,
   ProjetoIdRoute: ProjetoIdRoute,
   PlanosIndexRoute: PlanosIndexRoute,
+  ApiOauthRegisterRoute: ApiOauthRegisterRoute,
   ApiPublicNotifyAdminSignupRoute: ApiPublicNotifyAdminSignupRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
