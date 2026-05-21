@@ -14,6 +14,24 @@ const mcp = createMcpServer({
 
 const RESOURCE_METADATA_URL = "https://filro.site/.well-known/oauth-protected-resource";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, GET, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept, Origin, X-Requested-With, MCP-Protocol-Version",
+  "Access-Control-Expose-Headers": "WWW-Authenticate, MCP-Session-Id",
+  "Access-Control-Max-Age": "86400",
+};
+
+function withCors(response: Response): Response {
+  const headers = new Headers(response.headers);
+  Object.entries(corsHeaders).forEach(([key, value]) => headers.set(key, value));
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 function unauthorized(description: string) {
   return new Response(
     JSON.stringify({
@@ -25,6 +43,7 @@ function unauthorized(description: string) {
       status: 401,
       headers: {
         "Content-Type": "application/json",
+        ...corsHeaders,
         // RFC 9728 — aponta para metadata do resource para OAuth discovery
         "WWW-Authenticate": `Bearer realm="filro", resource_metadata="${RESOURCE_METADATA_URL}"`,
       },
@@ -37,7 +56,7 @@ const handleMcpRequest = async (request: Request) => {
   if (!token) return unauthorized("Missing bearer token");
   const ctx = await verifyMcpToken(token);
   if (!ctx) return unauthorized("Invalid or expired token");
-  return mcp.handleRequest(request, { auth: { token, claims: ctx } });
+  return withCors(await mcp.handleRequest(request, { auth: { token, claims: ctx } }));
 };
 
 const methodNotAllowed = () =>
@@ -49,13 +68,14 @@ const methodNotAllowed = () =>
     }),
     {
       status: 405,
-      headers: { "Content-Type": "application/json", Allow: "POST" },
+      headers: { "Content-Type": "application/json", Allow: "POST, OPTIONS", ...corsHeaders },
     },
   );
 
 export const Route = createFileRoute("/api/mcp")({
   server: {
     handlers: {
+      OPTIONS: async () => new Response(null, { status: 204, headers: corsHeaders }),
       POST: async ({ request }) => handleMcpRequest(request),
       GET: async () => methodNotAllowed(),
       DELETE: async () => methodNotAllowed(),
