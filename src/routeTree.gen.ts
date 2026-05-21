@@ -42,6 +42,7 @@ import { Route as ModelosLandingVendasRouteImport } from './routes/modelos.landi
 import { Route as ModelosClinicaLocalRouteImport } from './routes/modelos.clinica-local'
 import { Route as LeadIdRouteImport } from './routes/lead.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as ApiMcpRouteImport } from './routes/api/mcp'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicNotifyAdminSignupRouteImport } from './routes/api/public/notify-admin-signup'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -217,6 +218,11 @@ const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   path: '/email/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMcpRoute = ApiMcpRouteImport.update({
+  id: '/api/mcp',
+  path: '/api/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   id: '/lovable/email/suppression',
   path: '/lovable/email/suppression',
@@ -285,6 +291,7 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/api/mcp': typeof ApiMcpRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/modelos/clinica-local': typeof ModelosClinicaLocalRoute
@@ -328,6 +335,7 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/api/mcp': typeof ApiMcpRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/modelos/clinica-local': typeof ModelosClinicaLocalRoute
@@ -372,6 +380,7 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/api/mcp': typeof ApiMcpRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/lead/$id': typeof LeadIdRoute
   '/modelos/clinica-local': typeof ModelosClinicaLocalRoute
@@ -417,6 +426,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/api/mcp'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/modelos/clinica-local'
@@ -460,6 +470,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/api/mcp'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/modelos/clinica-local'
@@ -503,6 +514,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/unsubscribe'
     | '/verify-email'
+    | '/api/mcp'
     | '/email/unsubscribe'
     | '/lead/$id'
     | '/modelos/clinica-local'
@@ -547,6 +559,7 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
+  ApiMcpRoute: typeof ApiMcpRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LeadIdRoute: typeof LeadIdRoute
   PlanosSlugRoute: typeof PlanosSlugRoute
@@ -795,6 +808,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/mcp': {
+      id: '/api/mcp'
+      path: '/api/mcp'
+      fullPath: '/api/mcp'
+      preLoaderRoute: typeof ApiMcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/suppression': {
       id: '/lovable/email/suppression'
       path: '/lovable/email/suppression'
@@ -899,6 +919,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VerifyEmailRoute: VerifyEmailRoute,
+  ApiMcpRoute: ApiMcpRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LeadIdRoute: LeadIdRoute,
   PlanosSlugRoute: PlanosSlugRoute,
@@ -916,13 +937,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
