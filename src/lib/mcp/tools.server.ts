@@ -369,9 +369,9 @@ export const adminReplyTicket = defineTool({
       ticket_id: ticketId, author_id: userId, author_role: "admin", content: message,
     });
     if (msgErr) throw new Error(msgErr.message);
-    const patch: Record<string, unknown> = { last_admin_reply_at: new Date().toISOString(), updated_at: new Date().toISOString() };
+    const patch: { last_admin_reply_at: string; updated_at: string; status?: string } = { last_admin_reply_at: new Date().toISOString(), updated_at: new Date().toISOString() };
     if (newStatus) patch.status = newStatus;
-    await supabaseAdmin.from("support_tickets").update(patch).eq("id", ticketId);
+    await supabaseAdmin.from("support_tickets").update(patch as never).eq("id", ticketId);
     return fmt({ ok: true });
   },
 });
