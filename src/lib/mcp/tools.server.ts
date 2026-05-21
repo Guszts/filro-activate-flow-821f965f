@@ -156,7 +156,7 @@ export const getTicket = defineTool({
     if (!ticket) throw new Error("Chamado não encontrado");
     const { data: messages } = await supabaseAdmin
       .from("support_messages")
-      .select("id,sender_id,body,created_at")
+      .select("id,author_id,author_role,content,created_at")
       .eq("ticket_id", ticketId)
       .order("created_at", { ascending: true });
     return fmt({ ticket, messages: messages ?? [] });
