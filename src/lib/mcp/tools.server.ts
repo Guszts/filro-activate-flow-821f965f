@@ -216,8 +216,9 @@ export const replyTicket = defineTool({
     if (ticket.status === "closed") throw new Error("Chamado fechado");
     const { error } = await supabaseAdmin.from("support_messages").insert({
       ticket_id: ticketId,
-      sender_id: userId,
-      body: message,
+      author_id: userId,
+      author_role: "client",
+      content: message,
     });
     if (error) throw new Error(error.message);
     await supabaseAdmin
