@@ -1,9 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
 import { PhoneInput } from "@/components/PhoneInput";
+import {
+  getOrCreateMyProject,
+  saveBusinessInfoDraft,
+  submitBusinessInfo,
+} from "@/lib/projects-client.functions";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Plus, Trash2, Upload, Check, Clock } from "lucide-react";
@@ -104,48 +110,55 @@ function BusinessInfoPage() {
 
   const lsKey = user ? `business-info-draft:${user.id}` : null;
 
+  const getOrCreate = useServerFn(getOrCreateMyProject);
+  const saveDraft = useServerFn(saveBusinessInfoDraft);
+  const submitFinal = useServerFn(submitBusinessInfo);
+
   useEffect(() => {
     if (loading) return;
     if (!user) { navigate({ to: "/login", search: { redirect: "/business-info" } }); return; }
     (async () => {
-      const { data: payRows } = await supabase.from("payments").select("id, plan_id, status, paid_at, plans(slug)").eq("user_id", user.id).eq("status", "paid").order("paid_at", { ascending: false }).limit(1);
-      const pay = payRows?.[0];
-      if (!pay) { toast.error("Você precisa concluir um pagamento primeiro."); navigate({ to: "/" }); return; }
-      const slug = (pay as { plans?: { slug?: string } | null })?.plans?.slug ?? "plus";
-      setPlanSlug(slug);
-
       try {
-        const raw = lsKey ? localStorage.getItem(lsKey) : null;
-        if (raw) {
-          const parsed = JSON.parse(raw) as Partial<BusinessInfo>;
-          setInfo({ ...empty, ...parsed, hours: normalizeHours((parsed as { hours?: unknown }).hours) });
-        }
-      } catch { /* ignore */ }
+        const proj = await getOrCreate();
+        const slugFromPlan = await supabase
+          .from("plans").select("slug").eq("id", proj.plan_id ?? "").maybeSingle();
+        const slug = slugFromPlan.data?.slug ?? "plus";
+        setPlanSlug(slug);
+        setProject({ id: proj.id, business_info_submitted: proj.business_info_submitted });
 
-      const { data: existing } = await supabase.from("projects").select("id, business_info, business_info_submitted").eq("user_id", user.id).maybeSingle();
-      if (existing) {
-        setProject({ id: existing.id, business_info_submitted: existing.business_info_submitted });
-        if (existing.business_info && typeof existing.business_info === "object" && Object.keys(existing.business_info).length > 0) {
-          const bi = existing.business_info as Partial<BusinessInfo>;
-          setInfo({ ...empty, ...bi, hours: normalizeHours((bi as { hours?: unknown }).hours) });
+        // Hydrate from server first; fall back to local draft if server is empty.
+        const serverBi = proj.business_info as Partial<BusinessInfo> | null;
+        if (serverBi && typeof serverBi === "object" && Object.keys(serverBi).length > 0) {
+          setInfo({ ...empty, ...serverBi, hours: normalizeHours((serverBi as { hours?: unknown }).hours) });
+        } else {
+          try {
+            const raw = lsKey ? localStorage.getItem(lsKey) : null;
+            if (raw) {
+              const parsed = JSON.parse(raw) as Partial<BusinessInfo>;
+              setInfo({ ...empty, ...parsed, hours: normalizeHours((parsed as { hours?: unknown }).hours) });
+            }
+          } catch { /* ignore */ }
         }
-      } else {
-        const { data: created } = await supabase.from("projects").insert({ user_id: user.id, plan_id: pay.plan_id }).select("id, business_info_submitted").single();
-        if (created) setProject({ id: created.id, business_info_submitted: created.business_info_submitted });
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "Erro ao carregar projeto";
+        toast.error(msg);
+        navigate({ to: "/" });
+        return;
       }
       setHydrated(true);
     })();
-  }, [loading, user, navigate, lsKey]);
+  }, [loading, user, navigate, lsKey, getOrCreate]);
 
   useEffect(() => {
     if (!hydrated || !lsKey) return;
     try { localStorage.setItem(lsKey, JSON.stringify(info)); } catch { /* ignore */ }
-    if (!project) return;
+    if (!project || project.business_info_submitted) return;
     const t = setTimeout(() => {
-      supabase.from("projects").update({ business_info: info as never }).eq("id", project.id);
+      saveDraft({ data: { projectId: project.id, businessInfo: info as unknown as Record<string, unknown> } })
+        .catch((e: unknown) => console.warn("[business-info] autosave failed", e));
     }, 800);
     return () => clearTimeout(t);
-  }, [info, hydrated, project, lsKey]);
+  }, [info, hydrated, project, lsKey, saveDraft]);
 
   const upd = <K extends keyof BusinessInfo>(k: K, v: BusinessInfo[K]) => setInfo((p) => ({ ...p, [k]: v }));
   const updDay = (key: string, patch: Partial<DayHours>) =>
@@ -199,18 +212,24 @@ function BusinessInfoPage() {
       return;
     }
     setSaving(true);
-    const { error } = await supabase.from("projects").update({
-      business_info: info as never,
-      business_info_submitted: true,
-      business_name: info.name,
-      business_segment: info.segment,
-      selected_model: info.model_choice,
-      project_status: "in_production",
-    }).eq("id", project.id);
-    setSaving(false);
-    if (error) return toast.error(error.message);
-    toast.success("Informações enviadas! Ativação iniciada. Entrega em 24h.");
-    setProject({ ...project, business_info_submitted: true });
+    try {
+      await submitFinal({
+        data: {
+          projectId: project.id,
+          businessInfo: info as unknown as Record<string, unknown>,
+          businessName: info.name,
+          businessSegment: info.segment,
+          selectedModel: info.model_choice,
+        },
+      });
+      toast.success("Informações enviadas! Ativação iniciada. Entrega em 24h.");
+      setProject({ ...project, business_info_submitted: true });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Erro ao enviar";
+      toast.error(msg);
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading || !project) return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
