@@ -4,7 +4,8 @@ import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const messageSchema = z.object({
-  role: z.enum(["user", "assistant", "system"]),
+  // "system" role is rejected on purpose — clients must not inject system prompts.
+  role: z.enum(["user", "assistant"]),
   content: z.string().min(1).max(4000),
 });
 

@@ -209,13 +209,6 @@ const PROMOCIONAL_PROMO_CODES: Array<{
     couponMetaId: "filro10_once",
     promoMetaId: "promo_filro10",
   },
-  {
-    code: "FILRO100",
-    percentOff: 100,
-    couponName: "Filro 100% off",
-    couponMetaId: "filro100_once",
-    promoMetaId: "promo_filro100",
-  },
 ];
 
 async function ensurePromocionalPromoCode(
