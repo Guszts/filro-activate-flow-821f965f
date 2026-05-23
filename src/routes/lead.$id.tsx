@@ -119,7 +119,7 @@ function LeadPage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {bi.products.map((p, i) => (
                 <div key={i} className="card-elevated p-4">
-                  {p.image_url && <img src={p.image_url} alt={p.name} className="aspect-video w-full object-cover rounded-xl mb-3" />}
+                  {p.image_url && <SignedImg path={p.image_url} alt={p.name} className="aspect-video w-full object-cover rounded-xl mb-3" />}
                   <div className="font-semibold text-ink">{p.name}</div>
                   <div className="text-sm text-ink-soft">{p.price}</div>
                   <p className="mt-1 text-sm text-ink-soft">{p.description}</p>
