@@ -13,6 +13,19 @@ import {
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Plus, Trash2, Upload, Check, Clock } from "lucide-react";
+import { useSignedBusinessAsset } from "@/hooks/useSignedBusinessAsset";
+
+function SignedImg({ path, alt, className }: { path: string; alt: string; className?: string }) {
+  const url = useSignedBusinessAsset(path);
+  if (!url) return <div className={(className ?? "") + " bg-muted animate-pulse"} aria-label={alt} />;
+  return <img src={url} alt={alt} className={className} />;
+}
+
+function SignedLink({ path, children, className }: { path: string; children: React.ReactNode; className?: string }) {
+  const url = useSignedBusinessAsset(path);
+  if (!url) return <span className={className}>Carregando…</span>;
+  return <a href={url} target="_blank" rel="noreferrer" className={className}>{children}</a>;
+}
 
 export const Route = createFileRoute("/business-info")({
   component: BusinessInfoPage,
