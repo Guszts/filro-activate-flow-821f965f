@@ -366,7 +366,7 @@ function BusinessInfoPage() {
                   <div key={idx} className="card-elevated p-5 md:p-6 grid md:grid-cols-[120px_1fr_auto] gap-4 items-start">
                     <label className="aspect-square rounded-xl border-2 border-dashed border-border grid place-items-center cursor-pointer hover:border-ink overflow-hidden bg-muted">
                       {pr.image_url
-                        ? <img src={pr.image_url} alt="" className="h-full w-full object-cover" />
+                        ? <SignedImg path={pr.image_url} alt="" className="h-full w-full object-cover" />
                         : <Upload className="h-5 w-5 text-ink-soft" />}
                       <input type="file" accept="image/*" onChange={(e) => handleProductImg(idx, e)} className="hidden" />
                     </label>
