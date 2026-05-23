@@ -39,8 +39,19 @@ interface PlanRow { id: string; name: string; activation_price: number; monthly_
 const STATUS_LABEL: Record<string, { label: string; color: string; icon: typeof Clock }> = {
   new: { label: "Novo", color: "bg-muted text-ink", icon: Clock },
   paid: { label: "Pago", color: "bg-lime text-ink", icon: CheckCircle2 },
+  payment_confirmed: { label: "Pagamento confirmado", color: "bg-lime text-ink", icon: CheckCircle2 },
+  waiting_info: { label: "Aguardando informações", color: "bg-amber-100 text-ink", icon: Clock },
+  briefing_received: { label: "Briefing recebido", color: "bg-azure/30 text-ink", icon: CheckCircle2 },
   in_progress: { label: "Em produção", color: "bg-azure text-paper", icon: Loader2 },
+  in_production: { label: "Em produção", color: "bg-azure text-paper", icon: Loader2 },
+  revision_sent: { label: "Revisão enviada", color: "bg-amber-100 text-ink", icon: Clock },
+  awaiting_client: { label: "Aguardando você", color: "bg-amber-200 text-ink", icon: Clock },
   delivered: { label: "Entregue", color: "bg-flame text-paper", icon: CheckCircle2 },
+  published: { label: "Publicado", color: "bg-lime text-ink", icon: CheckCircle2 },
+  maintenance: { label: "Em manutenção", color: "bg-muted text-ink", icon: Loader2 },
+  on_hold: { label: "Em espera", color: "bg-muted text-ink", icon: Clock },
+  paused: { label: "Pausado", color: "bg-muted text-ink", icon: Clock },
+  cancelled: { label: "Cancelado", color: "bg-flame/20 text-ink", icon: Clock },
 };
 
 function PainelPage() {
