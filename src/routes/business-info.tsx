@@ -164,14 +164,18 @@ function BusinessInfoPage() {
   const updDay = (key: string, patch: Partial<DayHours>) =>
     setInfo((p) => ({ ...p, hours: { ...p.hours, [key]: { ...p.hours[key], ...patch } } }));
 
+  // Returns the bucket-relative path (not a public URL) — the bucket is private
+  // and we render via signed URLs. Limits: 8MB, image/* or PDF only.
   const upload = async (file: File, prefix: string): Promise<string | null> => {
     if (!user) return null;
-    const ext = file.name.split(".").pop() ?? "bin";
+    if (file.size > 8 * 1024 * 1024) { toast.error("Arquivo muito grande (máx. 8MB)."); return null; }
+    const okType = file.type.startsWith("image/") || file.type === "application/pdf";
+    if (!okType) { toast.error("Tipo de arquivo não permitido. Envie imagem ou PDF."); return null; }
+    const ext = (file.name.split(".").pop() ?? "bin").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "bin";
     const path = `${user.id}/${prefix}-${crypto.randomUUID()}.${ext}`;
-    const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true });
+    const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true, contentType: file.type });
     if (error) { toast.error("Falha no upload do arquivo: " + error.message); return null; }
-    const { data } = supabase.storage.from("business-assets").getPublicUrl(path);
-    return data.publicUrl;
+    return path;
   };
 
   const handleLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
