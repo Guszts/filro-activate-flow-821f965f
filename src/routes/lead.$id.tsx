@@ -103,7 +103,7 @@ function LeadPage() {
           </Card>
           <Card title="Identidade">
             <div className="flex items-center gap-4 mb-3">
-              {bi.logo_url && <img src={bi.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
+              {bi.logo_url && <SignedImg path={bi.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
               <div className="flex gap-2">
                 {bi.brand_color_primary && <ColorSwatch hex={bi.brand_color_primary} />}
                 {bi.brand_color_secondary && <ColorSwatch hex={bi.brand_color_secondary} />}
