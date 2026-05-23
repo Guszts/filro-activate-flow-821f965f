@@ -393,7 +393,7 @@ function BusinessInfoPage() {
                   <Field label="Link de inspiração"><input value={info.model_link} onChange={(e) => upd("model_link", e.target.value)} className={inputCls} placeholder="https://..." /></Field>
                   <Field label="Arquivo (PDF, imagem, briefing)">
                     <div className="flex items-center gap-3">
-                      {info.model_file_url && <a href={info.model_file_url} target="_blank" rel="noreferrer" className="text-sm text-ink underline">Ver arquivo</a>}
+                      {info.model_file_url && <SignedLink path={info.model_file_url} className="text-sm text-ink underline">Ver arquivo</SignedLink>}
                       <label className="inline-flex items-center gap-2 h-12 px-4 rounded-xl border border-border bg-paper cursor-pointer hover:bg-muted text-sm">
                         <Upload className="h-4 w-4" /> {info.model_file_url ? "Trocar arquivo" : "Enviar arquivo"}
                         <input type="file" onChange={handleModelFile} className="hidden" />
