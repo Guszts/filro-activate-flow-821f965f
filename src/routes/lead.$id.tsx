@@ -7,6 +7,18 @@ import { motion } from "framer-motion";
 import { ArrowLeft, MessageCircle, Mail, ExternalLink, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { formatBRL, formatDateTime } from "@/lib/format";
+import { useSignedBusinessAsset } from "@/hooks/useSignedBusinessAsset";
+
+function SignedImg({ path, alt, className }: { path: string; alt: string; className?: string }) {
+  const url = useSignedBusinessAsset(path);
+  if (!url) return <div className={(className ?? "") + " bg-muted animate-pulse"} aria-label={alt} />;
+  return <img src={url} alt={alt} className={className} />;
+}
+function SignedFileLink({ path, children, className }: { path: string; children: React.ReactNode; className?: string }) {
+  const url = useSignedBusinessAsset(path);
+  if (!url) return <span className={className}>Carregando…</span>;
+  return <a href={url} target="_blank" rel="noreferrer" className={className}>{children}</a>;
+}
 
 export const Route = createFileRoute("/lead/$id")({
   component: LeadPage,
