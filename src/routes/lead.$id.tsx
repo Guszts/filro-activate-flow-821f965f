@@ -136,7 +136,7 @@ function LeadPage() {
           <Card title="Modelo de referência">
             <Row label="Notas" value={bi.model_notes} multiline />
             {bi.model_link && <p className="text-sm"><a href={bi.model_link} target="_blank" rel="noreferrer" className="text-ink underline inline-flex items-center gap-1">Link <ExternalLink className="h-3 w-3" /></a></p>}
-            {bi.model_file_url && <p className="text-sm mt-2"><a href={bi.model_file_url} target="_blank" rel="noreferrer" className="text-ink underline inline-flex items-center gap-1">Ver arquivo <ExternalLink className="h-3 w-3" /></a></p>}
+            {bi.model_file_url && <p className="text-sm mt-2"><SignedFileLink path={bi.model_file_url} className="text-ink underline inline-flex items-center gap-1">Ver arquivo <ExternalLink className="h-3 w-3" /></SignedFileLink></p>}
           </Card>
         </section>
       </div>
