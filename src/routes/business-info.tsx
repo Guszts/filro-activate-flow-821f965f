@@ -13,6 +13,19 @@ import {
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Plus, Trash2, Upload, Check, Clock } from "lucide-react";
+import { useSignedBusinessAsset } from "@/hooks/useSignedBusinessAsset";
+
+function SignedImg({ path, alt, className }: { path: string; alt: string; className?: string }) {
+  const url = useSignedBusinessAsset(path);
+  if (!url) return <div className={(className ?? "") + " bg-muted animate-pulse"} aria-label={alt} />;
+  return <img src={url} alt={alt} className={className} />;
+}
+
+function SignedLink({ path, children, className }: { path: string; children: React.ReactNode; className?: string }) {
+  const url = useSignedBusinessAsset(path);
+  if (!url) return <span className={className}>Carregando…</span>;
+  return <a href={url} target="_blank" rel="noreferrer" className={className}>{children}</a>;
+}
 
 export const Route = createFileRoute("/business-info")({
   component: BusinessInfoPage,
@@ -164,14 +177,18 @@ function BusinessInfoPage() {
   const updDay = (key: string, patch: Partial<DayHours>) =>
     setInfo((p) => ({ ...p, hours: { ...p.hours, [key]: { ...p.hours[key], ...patch } } }));
 
+  // Returns the bucket-relative path (not a public URL) — the bucket is private
+  // and we render via signed URLs. Limits: 8MB, image/* or PDF only.
   const upload = async (file: File, prefix: string): Promise<string | null> => {
     if (!user) return null;
-    const ext = file.name.split(".").pop() ?? "bin";
+    if (file.size > 8 * 1024 * 1024) { toast.error("Arquivo muito grande (máx. 8MB)."); return null; }
+    const okType = file.type.startsWith("image/") || file.type === "application/pdf";
+    if (!okType) { toast.error("Tipo de arquivo não permitido. Envie imagem ou PDF."); return null; }
+    const ext = (file.name.split(".").pop() ?? "bin").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "bin";
     const path = `${user.id}/${prefix}-${crypto.randomUUID()}.${ext}`;
-    const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true });
+    const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true, contentType: file.type });
     if (error) { toast.error("Falha no upload do arquivo: " + error.message); return null; }
-    const { data } = supabase.storage.from("business-assets").getPublicUrl(path);
-    return data.publicUrl;
+    return path;
   };
 
   const handleLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -294,7 +311,7 @@ function BusinessInfoPage() {
                 </div>
                 <Field label="Logo">
                   <div className="flex items-center gap-4">
-                    {info.logo_url && <img src={info.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
+                    {info.logo_url && <SignedImg path={info.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
                     <label className="inline-flex items-center gap-2 h-12 px-4 rounded-xl border border-border bg-paper cursor-pointer hover:bg-muted text-sm">
                       <Upload className="h-4 w-4" /> {info.logo_url ? "Trocar logo" : "Enviar logo"}
                       <input type="file" accept="image/*" onChange={handleLogo} className="hidden" />
@@ -349,7 +366,7 @@ function BusinessInfoPage() {
                   <div key={idx} className="card-elevated p-5 md:p-6 grid md:grid-cols-[120px_1fr_auto] gap-4 items-start">
                     <label className="aspect-square rounded-xl border-2 border-dashed border-border grid place-items-center cursor-pointer hover:border-ink overflow-hidden bg-muted">
                       {pr.image_url
-                        ? <img src={pr.image_url} alt="" className="h-full w-full object-cover" />
+                        ? <SignedImg path={pr.image_url} alt="" className="h-full w-full object-cover" />
                         : <Upload className="h-5 w-5 text-ink-soft" />}
                       <input type="file" accept="image/*" onChange={(e) => handleProductImg(idx, e)} className="hidden" />
                     </label>
@@ -376,7 +393,7 @@ function BusinessInfoPage() {
                   <Field label="Link de inspiração"><input value={info.model_link} onChange={(e) => upd("model_link", e.target.value)} className={inputCls} placeholder="https://..." /></Field>
                   <Field label="Arquivo (PDF, imagem, briefing)">
                     <div className="flex items-center gap-3">
-                      {info.model_file_url && <a href={info.model_file_url} target="_blank" rel="noreferrer" className="text-sm text-ink underline">Ver arquivo</a>}
+                      {info.model_file_url && <SignedLink path={info.model_file_url} className="text-sm text-ink underline">Ver arquivo</SignedLink>}
                       <label className="inline-flex items-center gap-2 h-12 px-4 rounded-xl border border-border bg-paper cursor-pointer hover:bg-muted text-sm">
                         <Upload className="h-4 w-4" /> {info.model_file_url ? "Trocar arquivo" : "Enviar arquivo"}
                         <input type="file" onChange={handleModelFile} className="hidden" />

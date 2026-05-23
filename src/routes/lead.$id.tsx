@@ -7,6 +7,18 @@ import { motion } from "framer-motion";
 import { ArrowLeft, MessageCircle, Mail, ExternalLink, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { formatBRL, formatDateTime } from "@/lib/format";
+import { useSignedBusinessAsset } from "@/hooks/useSignedBusinessAsset";
+
+function SignedImg({ path, alt, className }: { path: string; alt: string; className?: string }) {
+  const url = useSignedBusinessAsset(path);
+  if (!url) return <div className={(className ?? "") + " bg-muted animate-pulse"} aria-label={alt} />;
+  return <img src={url} alt={alt} className={className} />;
+}
+function SignedFileLink({ path, children, className }: { path: string; children: React.ReactNode; className?: string }) {
+  const url = useSignedBusinessAsset(path);
+  if (!url) return <span className={className}>Carregando…</span>;
+  return <a href={url} target="_blank" rel="noreferrer" className={className}>{children}</a>;
+}
 
 export const Route = createFileRoute("/lead/$id")({
   component: LeadPage,
@@ -91,7 +103,7 @@ function LeadPage() {
           </Card>
           <Card title="Identidade">
             <div className="flex items-center gap-4 mb-3">
-              {bi.logo_url && <img src={bi.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
+              {bi.logo_url && <SignedImg path={bi.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
               <div className="flex gap-2">
                 {bi.brand_color_primary && <ColorSwatch hex={bi.brand_color_primary} />}
                 {bi.brand_color_secondary && <ColorSwatch hex={bi.brand_color_secondary} />}
@@ -107,7 +119,7 @@ function LeadPage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {bi.products.map((p, i) => (
                 <div key={i} className="card-elevated p-4">
-                  {p.image_url && <img src={p.image_url} alt={p.name} className="aspect-video w-full object-cover rounded-xl mb-3" />}
+                  {p.image_url && <SignedImg path={p.image_url} alt={p.name} className="aspect-video w-full object-cover rounded-xl mb-3" />}
                   <div className="font-semibold text-ink">{p.name}</div>
                   <div className="text-sm text-ink-soft">{p.price}</div>
                   <p className="mt-1 text-sm text-ink-soft">{p.description}</p>
@@ -124,7 +136,7 @@ function LeadPage() {
           <Card title="Modelo de referência">
             <Row label="Notas" value={bi.model_notes} multiline />
             {bi.model_link && <p className="text-sm"><a href={bi.model_link} target="_blank" rel="noreferrer" className="text-ink underline inline-flex items-center gap-1">Link <ExternalLink className="h-3 w-3" /></a></p>}
-            {bi.model_file_url && <p className="text-sm mt-2"><a href={bi.model_file_url} target="_blank" rel="noreferrer" className="text-ink underline inline-flex items-center gap-1">Ver arquivo <ExternalLink className="h-3 w-3" /></a></p>}
+            {bi.model_file_url && <p className="text-sm mt-2"><SignedFileLink path={bi.model_file_url} className="text-ink underline inline-flex items-center gap-1">Ver arquivo <ExternalLink className="h-3 w-3" /></SignedFileLink></p>}
           </Card>
         </section>
       </div>
