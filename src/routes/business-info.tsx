@@ -311,7 +311,7 @@ function BusinessInfoPage() {
                 </div>
                 <Field label="Logo">
                   <div className="flex items-center gap-4">
-                    {info.logo_url && <img src={info.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
+                    {info.logo_url && <SignedImg path={info.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
                     <label className="inline-flex items-center gap-2 h-12 px-4 rounded-xl border border-border bg-paper cursor-pointer hover:bg-muted text-sm">
                       <Upload className="h-4 w-4" /> {info.logo_url ? "Trocar logo" : "Enviar logo"}
                       <input type="file" accept="image/*" onChange={handleLogo} className="hidden" />
