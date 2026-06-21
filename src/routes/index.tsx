@@ -94,8 +94,7 @@ function HomePage() {
             </span>
             <h1 className="editorial-headline mt-6 text-[14vw] sm:text-[10vw] lg:text-[8.5rem] text-ink">
               Transforme visitas<br />
-              em <span className="lime-mark">pedidos</span><br />
-              de orçamento.
+              em <span className="lime-mark">pedidos</span> de orçamento.
             </h1>
             <p className="mt-8 max-w-xl text-base md:text-lg text-ink-soft text-pretty">
               Montamos uma estrutura simples que transforma seu Instagram, Google e WhatsApp em conversas com clientes prontos para comprar. Não é só um site — é a ferramenta que fecha o ciclo de aquisição do seu negócio local.
