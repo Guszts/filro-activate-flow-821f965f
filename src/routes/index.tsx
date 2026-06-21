@@ -93,8 +93,8 @@ function HomePage() {
               <span className="h-1.5 w-6 bg-flame" /> Ativação baseada em modelos
             </span>
             <h1 className="editorial-headline mt-6 text-[14vw] sm:text-[10vw] lg:text-[8.5rem] text-ink">
-              Vire seguidor<br />
-              em <span className="lime-mark">pedido</span><br />
+              Transforme visitas<br />
+              em <span className="lime-mark">pedidos</span><br />
               de orçamento.
             </h1>
             <p className="mt-8 max-w-xl text-base md:text-lg text-ink-soft text-pretty">
