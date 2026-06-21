@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
           serviceType: "Criação e ativação de páginas profissionais",
           provider: { "@type": "Organization", name: "Filro", url: "https://setup.filro.site" },
           areaServed: { "@type": "Country", name: "Brasil" },
-          description: "Páginas profissionais, cardápios digitais, portfólios e sites para negócios locais com ativação digital rápida (estimativa de até 24h após envio completo).",
+          description: "Estrutura simples que transforma Instagram, Google e WhatsApp em pedidos de orçamento para negócios locais. Ativação guiada em até 24h.",
           url: "https://setup.filro.site/",
         }),
       },
