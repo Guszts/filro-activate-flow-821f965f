@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
           serviceType: "Criação e ativação de páginas profissionais",
           provider: { "@type": "Organization", name: "Filro", url: "https://setup.filro.site" },
           areaServed: { "@type": "Country", name: "Brasil" },
-          description: "Páginas profissionais, cardápios digitais, portfólios e sites para negócios locais com ativação digital rápida (estimativa de até 24h após envio completo).",
+          description: "Estrutura simples que transforma Instagram, Google e WhatsApp em pedidos de orçamento para negócios locais. Ativação guiada em até 24h.",
           url: "https://setup.filro.site/",
         }),
       },
@@ -93,12 +93,12 @@ function HomePage() {
               <span className="h-1.5 w-6 bg-flame" /> Ativação baseada em modelos
             </span>
             <h1 className="editorial-headline mt-6 text-[14vw] sm:text-[10vw] lg:text-[8.5rem] text-ink">
-              Ative sua<br />
-              <span className="lime-mark">presença</span><br />
-              digital.
+              Vire seguidor<br />
+              em <span className="lime-mark">pedido</span><br />
+              de orçamento.
             </h1>
             <p className="mt-8 max-w-xl text-base md:text-lg text-ink-soft text-pretty">
-              Páginas profissionais, cardápios digitais, portfólios e sites de negócios adaptados para empresas locais que precisam de uma apresentação online mais limpa, forte e organizada.
+              Montamos uma estrutura simples que transforma seu Instagram, Google e WhatsApp em conversas com clientes prontos para comprar. Não é só um site — é a ferramenta que fecha o ciclo de aquisição do seu negócio local.
             </p>
             <div className="mt-10 flex flex-wrap gap-3 items-center">
               <a href="#ativacao" className="inline-flex items-center justify-center h-14 px-8 rounded-2xl bg-ink text-paper font-semibold tracking-wide hover:scale-[1.02] transition-transform">

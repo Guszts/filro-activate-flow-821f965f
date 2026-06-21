@@ -1,0 +1,1 @@
+UPDATE public.plans SET active = false, hidden = true, updated_at = now() WHERE slug = 'promocional';
