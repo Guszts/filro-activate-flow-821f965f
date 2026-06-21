@@ -10,7 +10,7 @@ export function SiteFooter() {
             <span className="font-display font-black text-2xl text-ink tracking-tight">Filro</span>
           </Link>
           <p className="mt-4 text-sm text-ink-soft max-w-xs">
-            Presença digital pronta para negócios locais. Modelos, ativação guiada e manutenção sem complicação.
+            Estrutura simples para transformar Instagram, Google e WhatsApp em pedidos de orçamento para negócios locais.
           </p>
         </div>
         <div className="text-sm text-ink-soft">
