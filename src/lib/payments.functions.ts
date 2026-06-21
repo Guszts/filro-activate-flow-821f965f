@@ -287,7 +287,7 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
     if (parsed.protocol !== "https:" && parsed.hostname !== "localhost" && parsed.hostname !== "127.0.0.1") {
       throw new Error("Invalid returnOrigin protocol");
     }
-    if (!ALLOWED_RETURN_HOSTS.has(parsed.hostname)) throw new Error("Disallowed return origin");
+    if (!isAllowedReturnHost(parsed.hostname)) throw new Error("Disallowed return origin");
     let partnerCode: string | null = null;
     if (typeof data.partnerCode === "string" && data.partnerCode.trim()) {
       const c = data.partnerCode.trim().toLowerCase();
@@ -432,7 +432,7 @@ export const createPortalSession = createServerFn({ method: "POST" })
     if (parsed.protocol !== "https:" && parsed.hostname !== "localhost" && parsed.hostname !== "127.0.0.1") {
       throw new Error("Invalid returnUrl protocol");
     }
-    if (!ALLOWED_RETURN_HOSTS.has(parsed.hostname)) throw new Error("Disallowed returnUrl");
+    if (!isAllowedReturnHost(parsed.hostname)) throw new Error("Disallowed returnUrl");
     return { returnUrl: parsed.href, environment: data.environment };
   })
   .handler(async ({ data, context }) => {
