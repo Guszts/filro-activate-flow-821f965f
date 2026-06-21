@@ -1,101 +1,51 @@
-# MCP OAuth 2.1 para Claude Mobile / Web
+## Objetivo
+Voltar a aceitar pagamentos no Filro com o mínimo de mudança de código. O app já tem toda a infraestrutura de checkout, webhook e planos pronta — só precisa religar o provedor e recriar os produtos.
 
-Habilitar o servidor MCP do Filro a aparecer como **conector customizado** no Claude (mobile e web), implementando OAuth 2.1 com Dynamic Client Registration (DCR) e PKCE, conforme a spec MCP Authorization (2025-06-18).
+## Provedor recomendado
+**Stripe integrado da Lovable** (sem conta Stripe própria), com **cálculo e cobrança de impostos** (+0,5%/transação). Você cuida do registro/recolhimento (Brasil não tem full compliance handling).
 
-Continua restrito a **admins**. Tokens MCP estáticos (Bearer no header) seguem funcionando em paralelo para Claude Desktop / Cursor.
+## Etapas
 
----
+### 1. Habilitar Stripe
+- Acionar `enable_stripe_payments` (você preenche e-mail/nome no formulário que aparece).
+- Ambiente sandbox fica disponível imediatamente para testar com cartão `4242 4242 4242 4242`.
 
-## Fluxo do usuário
+### 2. Recriar os 7 produtos no Stripe
+Cada plano vira **2 prices** com lookup keys exatos que o código já usa:
 
-1. No app Claude (mobile/web), adicionar conector customizado com URL `https://filro.site/api/mcp`.
-2. Claude descobre os endpoints OAuth automaticamente, registra-se via DCR.
-3. Claude abre o navegador → cai em `/oauth/authorize` no Filro.
-4. Se não estiver logado, redireciona para `/login` e volta.
-5. Tela de consentimento mostra: "Claude está pedindo acesso admin ao Filro" → botão **Autorizar**.
-6. Redirect de volta para o Claude com code → Claude troca por access + refresh token.
-7. Claude faz POST `/api/mcp` com `Authorization: Bearer <access_token>` e ganha acesso às ferramentas admin.
+```text
+plan_promocional_activation    + plan_promocional_monthly
+plan_essencial_activation      + plan_essencial_monthly
+plan_profissional_activation   + plan_profissional_monthly
+plan_premium_activation        + plan_premium_monthly
+plan_ecommerce_activation      + plan_ecommerce_monthly
+plan_landing_activation        + plan_landing_monthly
+plan_personalizado_activation  + plan_personalizado_monthly
+```
 
----
+Tax code aplicado em todos: serviços digitais/IT (`txcd_10103001` ou equivalente para "website design/hosting services") — escolhido conforme a tabela do Stripe Tax.
 
-## Componentes
+Valores e nomes vêm de `src/lib/plans.functions.ts` (já configurados).
 
-### 1. Banco (1 migração)
+### 3. Sem mudanças de código necessárias
+Os arquivos já existem e seguem funcionando:
+- `src/lib/payments.functions.ts` — `createCheckoutSession`, `getPriceLookupKeys`
+- `src/lib/stripe.server.ts` — cliente Stripe server-side
+- `src/routes/checkout.tsx` — página de checkout
+- `src/routes/payment-success.tsx` / `payment-failed.tsx`
+- `src/routes/api/public/payments/webhook.ts` — webhook (já trata `checkout.session.completed`, `invoice.paid`, `customer.subscription.deleted` para atualizar status de projeto, criar charges, comissões de parceiro, etc.)
 
-Novas tabelas:
-- `oauth_clients` — clientes registrados via DCR (client_id, client_name, redirect_uris[], created_at). Sem secret (clientes públicos com PKCE).
-- `oauth_authorization_codes` — codes de uso único (code, client_id, user_id, redirect_uri, code_challenge, scope, expires_at). TTL 10 min.
-- `oauth_access_tokens` — tokens emitidos (token_hash, client_id, user_id, scope, expires_at, revoked_at). TTL 1h.
-- `oauth_refresh_tokens` — refresh tokens (token_hash, client_id, user_id, scope, expires_at, revoked_at). TTL 30 dias.
+Vou apenas verificar (sem editar) se a `automatic_tax: { enabled: true }` está no `createCheckoutSession`; caso não esteja, adiciono uma linha.
 
-RLS: apenas service role acessa (todas operações via `supabaseAdmin` no servidor).
+### 4. Teste
+1. Abrir `/planos` no preview, escolher um plano.
+2. Pagar com `4242 4242 4242 4242`, qualquer CVC, data futura.
+3. Conferir redirecionamento para `/payment-success` e o evento no webhook (status do projeto vai para `paid`).
 
-### 2. Rotas novas
+### 5. Ir para live
+Quando estiver tudo ok no sandbox, você troca para modo **live** no painel Pagamentos e publica o app — os produtos sincronizam automaticamente.
 
-| Rota | Tipo | Função |
-|---|---|---|
-| `/.well-known/oauth-authorization-server` | server route GET | Metadata OAuth (RFC 8414) |
-| `/.well-known/oauth-protected-resource` | server route GET | Metadata do resource (RFC 9728) |
-| `/api/oauth/register` | server route POST | DCR (RFC 7591) — cria client |
-| `/oauth/authorize` | rota UI (GET/POST) | Login + consentimento + emissão de code |
-| `/api/oauth/token` | server route POST | Troca code→tokens, refresh |
-
-### 3. Endpoint MCP
-
-`/api/mcp` passa a aceitar duas formas de Bearer:
-- Token estático `flaro_mcp_*` (já existe) — admin check.
-- Access token OAuth — lookup em `oauth_access_tokens`, valida expiração, exige admin role do `user_id`.
-
-Em ambos os casos, todas as 16 ferramentas (client + admin) ficam disponíveis se `isAdmin = true`.
-
-### 4. Tela de consentimento
-
-Nova rota `/oauth/authorize` (UI):
-- Verifica sessão Supabase. Se não logado → redirect pra `/login?next=...`.
-- Verifica role admin. Se não admin → mostra erro.
-- Mostra: nome do cliente (Claude), redirect URI, escopo (admin), botões **Autorizar** / **Cancelar**.
-- Ao autorizar: gera authorization code (com PKCE challenge), persiste, redireciona para `redirect_uri?code=...&state=...`.
-
-### 5. Segurança
-
-- PKCE S256 obrigatório (sem `plain`).
-- Authorization code: uso único, 10 min, valida code_verifier.
-- Access token: 1h, hashed em DB (SHA-256).
-- Refresh token: 30 dias, rotação em cada refresh.
-- Apenas admins podem completar o consent.
-- Validar `redirect_uri` contra `oauth_clients.redirect_uris`.
-- `resource` parameter (RFC 8707) validado — tokens só valem para `/api/mcp`.
-
----
-
-## Arquivos
-
-**Criar:**
-- `supabase/migrations/<ts>_mcp_oauth.sql`
-- `src/lib/mcp/oauth.server.ts` — helpers (gen code, hash, validate PKCE, issue tokens)
-- `src/routes/.well-known.oauth-authorization-server.ts`
-- `src/routes/.well-known.oauth-protected-resource.ts`
-- `src/routes/api/oauth/register.ts`
-- `src/routes/api/oauth/token.ts`
-- `src/routes/oauth.authorize.tsx` (UI + POST handler via server fn)
-- `src/lib/oauth.functions.ts` — server fns para listar pending auth e autorizar
-
-**Editar:**
-- `src/lib/mcp/auth.server.ts` — `verifyMcpToken` aceita também access tokens OAuth
-- `src/components/settings/McpTokensSection.tsx` — adicionar seção explicando "Conectar pelo Claude mobile/web" com URL `https://filro.site/api/mcp` para colar como conector customizado
-
----
-
-## Escopo NÃO incluído
-
-- Multi-tenant (sempre admin scope, sem granularidade por ferramenta)
-- Client secrets / confidential clients (só public + PKCE)
-- Token introspection endpoint (RFC 7662)
-- Revocation endpoint público (admin pode revogar via DB / UI no futuro)
-- Suporte a múltiplos resource servers (só `/api/mcp`)
-
----
-
-## Tempo estimado
-
-~6-8 chamadas de tool: 1 migração + 7-8 arquivos novos/editados. Após aprovação do plano, executo tudo de uma vez.
+## Notas técnicas
+- Nenhuma migração de banco; tabelas `events`, `projects`, `partner_commissions` já existem.
+- Webhook está em `/api/public/payments/webhook` — URL estável; o Stripe integrado da Lovable já registra o endpoint automaticamente.
+- Nenhuma secret nova precisa ser adicionada — a integração da Lovable injeta as chaves do Stripe.
