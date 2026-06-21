@@ -87,7 +87,7 @@ function HomePage() {
 
       {/* HERO */}
       <section ref={heroRef} className="relative overflow-hidden">
-        <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-10 md:pt-20 pb-24 md:pb-32 grid lg:grid-cols-12 gap-10 items-end">
+        <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-5 md:pt-16 pb-24 md:pb-32 grid lg:grid-cols-12 gap-10 items-end">
           <motion.div style={{ y: yText }} className="lg:col-span-7 relative z-10">
             <span className="inline-flex items-center gap-2 text-xs tracking-wide text-ink-soft">
               <span className="h-1.5 w-6 bg-flame" /> Ativação baseada em modelos
