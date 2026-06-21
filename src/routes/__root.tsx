@@ -107,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           alternateName: ["Filro Setup", "Setup Filro", "Filro Site", "Setup Filro Site"],
           url: "https://setup.filro.site",
           logo: "https://setup.filro.site/favicon.ico",
-          description: "Páginas profissionais e sites para negócios locais com ativação rápida.",
+          description: "Estrutura digital simples que transforma Instagram, Google e WhatsApp em pedidos de orçamento para negócios locais.",
           sameAs: ["https://filro.site", "https://setup.filro.site"],
         }),
       },
