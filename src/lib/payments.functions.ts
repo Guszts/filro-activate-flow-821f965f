@@ -193,6 +193,14 @@ const ALLOWED_RETURN_HOSTS = new Set([
   "127.0.0.1",
 ]);
 
+function isAllowedReturnHost(hostname: string): boolean {
+  if (ALLOWED_RETURN_HOSTS.has(hostname)) return true;
+  // Lovable preview/published subdomains rotate — allow any *.lovable.app and *.lovableproject.com.
+  if (hostname.endsWith(".lovable.app") || hostname.endsWith(".lovableproject.com")) return true;
+  if (hostname === "filro.site" || hostname.endsWith(".filro.site")) return true;
+  return false;
+}
+
 const PARTNER_CODE_RE = /^[a-z0-9_-]{3,40}$/;
 
 const PROMOCIONAL_PROMO_CODES: Array<{
