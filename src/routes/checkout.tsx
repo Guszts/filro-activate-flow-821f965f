@@ -59,6 +59,11 @@ function CheckoutPage() {
           },
         });
         if (paymentSession.error) throw new Error(paymentSession.error);
+        if (paymentSession.checkoutUrl) {
+          window.location.assign(paymentSession.checkoutUrl);
+          return;
+        }
+        if (!paymentSession.clientSecret) throw new Error("Falha ao iniciar pagamento");
         setClientSecret(paymentSession.clientSecret);
       } catch (e) {
         const msg = e instanceof Error ? e.message : "Falha ao iniciar pagamento";
