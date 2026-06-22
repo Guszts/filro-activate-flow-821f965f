@@ -354,7 +354,7 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
             line_items: [{ price: activationPrice.id, quantity: 1 }],
             mode: "payment",
             ...(isHostedCheckout
-              ? { ui_mode: "hosted", success_url: returnUrl, cancel_url: `${data.returnOrigin}/checkout` }
+              ? { success_url: returnUrl, cancel_url: `${data.returnOrigin}/checkout` }
               : { ui_mode: "embedded_page", return_url: returnUrl }),
             allow_promotion_codes: true,
             customer: customerId,
@@ -368,7 +368,7 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
             ],
             mode: "subscription",
             ...(isHostedCheckout
-              ? { ui_mode: "hosted", success_url: returnUrl, cancel_url: `${data.returnOrigin}/checkout` }
+              ? { success_url: returnUrl, cancel_url: `${data.returnOrigin}/checkout` }
               : { ui_mode: "embedded_page", return_url: returnUrl }),
             allow_promotion_codes: true,
             customer: customerId,
