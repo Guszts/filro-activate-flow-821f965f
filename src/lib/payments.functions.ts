@@ -301,6 +301,7 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
     const { data: authUser } = await supabase.auth.getUser();
     const customerEmail = authUser?.user?.email ?? undefined;
     const returnUrl = `${data.returnOrigin}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
+    const isHostedCheckout = data.environment === "live";
     try {
       const stripe = createStripeClient(data.environment);
       const plan = await getPlanForCheckout(data.planSlug);
@@ -352,8 +353,9 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
         ? {
             line_items: [{ price: activationPrice.id, quantity: 1 }],
             mode: "payment",
-            ui_mode: "embedded_page",
-            return_url: returnUrl,
+            ...(isHostedCheckout
+              ? { ui_mode: "hosted", success_url: returnUrl, cancel_url: `${data.returnOrigin}/checkout` }
+              : { ui_mode: "embedded_page", return_url: returnUrl }),
             allow_promotion_codes: true,
             customer: customerId,
             customer_update: { address: "auto", name: "auto" },
@@ -365,8 +367,9 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
               { price: activationPrice.id, quantity: 1 },
             ],
             mode: "subscription",
-            ui_mode: "embedded_page",
-            return_url: returnUrl,
+            ...(isHostedCheckout
+              ? { ui_mode: "hosted", success_url: returnUrl, cancel_url: `${data.returnOrigin}/checkout` }
+              : { ui_mode: "embedded_page", return_url: returnUrl }),
             allow_promotion_codes: true,
             customer: customerId,
             metadata: { userId, planSlug: data.planSlug, ...partnerMeta },
@@ -375,7 +378,11 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
 
       const session = await stripe.checkout.sessions.create(sessionParams);
 
-      if (!session.client_secret) throw new Error("Falha ao criar sessão");
+      if (isHostedCheckout) {
+        if (!session.url) throw new Error("Falha ao criar sessão");
+      } else if (!session.client_secret) {
+        throw new Error("Falha ao criar sessão");
+      }
 
       // Pre-cria/atualiza o referral em status checkout_created para rastrear cliques convertidos.
       if (partner) {
@@ -416,10 +423,10 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
         console.error("[checkout] event log failed", e);
       }
 
-      return { clientSecret: session.client_secret, error: null };
+      return { clientSecret: session.client_secret ?? null, checkoutUrl: session.url ?? null, error: null };
     } catch (err) {
       console.error("[checkout] checkout session startup failed", { planSlug: data.planSlug, err });
-      return { clientSecret: null, error: getCheckoutErrorMessage(err) };
+      return { clientSecret: null, checkoutUrl: null, error: getCheckoutErrorMessage(err) };
     }
   });
 
