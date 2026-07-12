@@ -1,1 +1,1 @@
-Full Terms page
+Improved Terms of Service page
