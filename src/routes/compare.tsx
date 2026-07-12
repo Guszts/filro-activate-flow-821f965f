@@ -1,0 +1,1 @@
+Full compare page code from above
