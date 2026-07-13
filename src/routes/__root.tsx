@@ -44,8 +44,8 @@ function NotFoundComponent() {
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="font-display text-7xl font-black text-ink">404</h1>
-        <p className="mt-4 text-ink-soft">Página não encontrada.</p>
-        <a href="/" className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold">Voltar ao início</a>
+        <p className="mt-4 text-ink-soft">Page not found.</p>
+        <a href="/" className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold">Back home</a>
       </div>
     </main>
   );
@@ -57,9 +57,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-3xl font-black text-ink">Algo deu errado</h1>
+        <h1 className="font-display text-3xl font-black text-ink">Something went wrong</h1>
         <p className="mt-2 text-ink-soft text-sm">{error.message}</p>
-        <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold">Tentar novamente</button>
+        <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold">Try again</button>
       </div>
     </div>
   );
