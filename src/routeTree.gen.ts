@@ -15,16 +15,22 @@ import { Route as TermosRouteImport } from './routes/termos'
 import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SecurityAndDeliveryRouteImport } from './routes/security-and-delivery'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ProcessRouteImport } from './routes/process'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PaymentSuccessRouteImport } from './routes/payment-success'
 import { Route as PaymentFailedRouteImport } from './routes/payment-failed'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as ModelosRouteImport } from './routes/modelos'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as GarantiaRouteImport } from './routes/garantia'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as ConsoleRouteImport } from './routes/console'
+import { Route as CompareRouteImport } from './routes/compare'
 import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -87,14 +93,34 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecurityAndDeliveryRoute = SecurityAndDeliveryRouteImport.update({
+  id: '/security-and-delivery',
+  path: '/security-and-delivery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProcessRoute = ProcessRouteImport.update({
+  id: '/process',
+  path: '/process',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
   id: '/privacidade',
   path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
@@ -122,6 +148,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GetStartedRoute = GetStartedRouteImport.update({
+  id: '/get-started',
+  path: '/get-started',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GarantiaRoute = GarantiaRouteImport.update({
   id: '/garantia',
   path: '/garantia',
@@ -135,6 +166,11 @@ const DocsRoute = DocsRouteImport.update({
 const ConsoleRoute = ConsoleRouteImport.update({
   id: '/console',
   path: '/console',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompararRoute = CompararRouteImport.update({
@@ -307,16 +343,22 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
+  '/compare': typeof CompareRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
+  '/get-started': typeof GetStartedRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRouteWithChildren
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
+  '/pricing': typeof PricingRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/process': typeof ProcessRoute
   '/register': typeof RegisterRoute
+  '/security-and-delivery': typeof SecurityAndDeliveryRoute
+  '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suporte': typeof SuporteRoute
@@ -356,16 +398,22 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
+  '/compare': typeof CompareRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
+  '/get-started': typeof GetStartedRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRouteWithChildren
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
+  '/pricing': typeof PricingRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/process': typeof ProcessRoute
   '/register': typeof RegisterRoute
+  '/security-and-delivery': typeof SecurityAndDeliveryRoute
+  '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suporte': typeof SuporteRoute
@@ -406,16 +454,22 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/comparar': typeof CompararRoute
+  '/compare': typeof CompareRoute
   '/console': typeof ConsoleRoute
   '/docs': typeof DocsRoute
   '/garantia': typeof GarantiaRoute
+  '/get-started': typeof GetStartedRoute
   '/login': typeof LoginRoute
   '/modelos': typeof ModelosRouteWithChildren
   '/painel': typeof PainelRoute
   '/payment-failed': typeof PaymentFailedRoute
   '/payment-success': typeof PaymentSuccessRoute
+  '/pricing': typeof PricingRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/process': typeof ProcessRoute
   '/register': typeof RegisterRoute
+  '/security-and-delivery': typeof SecurityAndDeliveryRoute
+  '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suporte': typeof SuporteRoute
@@ -457,16 +511,22 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/como-funciona'
     | '/comparar'
+    | '/compare'
     | '/console'
     | '/docs'
     | '/garantia'
+    | '/get-started'
     | '/login'
     | '/modelos'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
+    | '/pricing'
     | '/privacidade'
+    | '/process'
     | '/register'
+    | '/security-and-delivery'
+    | '/services'
     | '/settings'
     | '/sitemap.xml'
     | '/suporte'
@@ -506,16 +566,22 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/como-funciona'
     | '/comparar'
+    | '/compare'
     | '/console'
     | '/docs'
     | '/garantia'
+    | '/get-started'
     | '/login'
     | '/modelos'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
+    | '/pricing'
     | '/privacidade'
+    | '/process'
     | '/register'
+    | '/security-and-delivery'
+    | '/services'
     | '/settings'
     | '/sitemap.xml'
     | '/suporte'
@@ -555,16 +621,22 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/como-funciona'
     | '/comparar'
+    | '/compare'
     | '/console'
     | '/docs'
     | '/garantia'
+    | '/get-started'
     | '/login'
     | '/modelos'
     | '/painel'
     | '/payment-failed'
     | '/payment-success'
+    | '/pricing'
     | '/privacidade'
+    | '/process'
     | '/register'
+    | '/security-and-delivery'
+    | '/services'
     | '/settings'
     | '/sitemap.xml'
     | '/suporte'
@@ -605,16 +677,22 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ComoFuncionaRoute: typeof ComoFuncionaRoute
   CompararRoute: typeof CompararRoute
+  CompareRoute: typeof CompareRoute
   ConsoleRoute: typeof ConsoleRoute
   DocsRoute: typeof DocsRoute
   GarantiaRoute: typeof GarantiaRoute
+  GetStartedRoute: typeof GetStartedRoute
   LoginRoute: typeof LoginRoute
   ModelosRoute: typeof ModelosRouteWithChildren
   PainelRoute: typeof PainelRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
+  PricingRoute: typeof PricingRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
+  ProcessRoute: typeof ProcessRoute
   RegisterRoute: typeof RegisterRoute
+  SecurityAndDeliveryRoute: typeof SecurityAndDeliveryRoute
+  ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SuporteRoute: typeof SuporteRoute
@@ -686,6 +764,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/security-and-delivery': {
+      id: '/security-and-delivery'
+      path: '/security-and-delivery'
+      fullPath: '/security-and-delivery'
+      preLoaderRoute: typeof SecurityAndDeliveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -693,11 +785,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/process': {
+      id: '/process'
+      path: '/process'
+      fullPath: '/process'
+      preLoaderRoute: typeof ProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacidade': {
       id: '/privacidade'
       path: '/privacidade'
       fullPath: '/privacidade'
       preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/payment-success': {
@@ -735,6 +841,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/get-started': {
+      id: '/get-started'
+      path: '/get-started'
+      fullPath: '/get-started'
+      preLoaderRoute: typeof GetStartedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/garantia': {
       id: '/garantia'
       path: '/garantia'
@@ -754,6 +867,13 @@ declare module '@tanstack/react-router' {
       path: '/console'
       fullPath: '/console'
       preLoaderRoute: typeof ConsoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparar': {
@@ -1005,16 +1125,22 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ComoFuncionaRoute: ComoFuncionaRoute,
   CompararRoute: CompararRoute,
+  CompareRoute: CompareRoute,
   ConsoleRoute: ConsoleRoute,
   DocsRoute: DocsRoute,
   GarantiaRoute: GarantiaRoute,
+  GetStartedRoute: GetStartedRoute,
   LoginRoute: LoginRoute,
   ModelosRoute: ModelosRouteWithChildren,
   PainelRoute: PainelRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
+  PricingRoute: PricingRoute,
   PrivacidadeRoute: PrivacidadeRoute,
+  ProcessRoute: ProcessRoute,
   RegisterRoute: RegisterRoute,
+  SecurityAndDeliveryRoute: SecurityAndDeliveryRoute,
+  ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SuporteRoute: SuporteRoute,

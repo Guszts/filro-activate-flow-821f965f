@@ -313,6 +313,87 @@ export type Database = {
         }
         Relationships: []
       }
+      implementation_requests: {
+        Row: {
+          admin_notes: string | null
+          budget_range: string | null
+          company_name: string | null
+          company_website: string | null
+          country: string | null
+          created_at: string
+          current_stack: string | null
+          email: string
+          full_name: string
+          goals: string | null
+          id: string
+          industry: string | null
+          ip_address: string | null
+          message: string | null
+          phone: string | null
+          preferred_plan: string | null
+          status: string
+          team_size: string | null
+          timeline: string | null
+          updated_at: string
+          user_agent: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          budget_range?: string | null
+          company_name?: string | null
+          company_website?: string | null
+          country?: string | null
+          created_at?: string
+          current_stack?: string | null
+          email: string
+          full_name: string
+          goals?: string | null
+          id?: string
+          industry?: string | null
+          ip_address?: string | null
+          message?: string | null
+          phone?: string | null
+          preferred_plan?: string | null
+          status?: string
+          team_size?: string | null
+          timeline?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          budget_range?: string | null
+          company_name?: string | null
+          company_website?: string | null
+          country?: string | null
+          created_at?: string
+          current_stack?: string | null
+          email?: string
+          full_name?: string
+          goals?: string | null
+          id?: string
+          industry?: string | null
+          ip_address?: string | null
+          message?: string | null
+          phone?: string | null
+          preferred_plan?: string | null
+          status?: string
+          team_size?: string | null
+          timeline?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       mcp_tokens: {
         Row: {
           created_at: string
@@ -838,12 +919,19 @@ export type Database = {
         Row: {
           activation_price: number
           active: boolean
+          badge: string | null
+          checkout_mode: string
           created_at: string
+          cta_label: string | null
+          currency: string
+          delivery_window: string | null
           description: string
           display_order: number
+          exclusions: Json
           features: Json
           hidden: boolean
           id: string
+          maintenance_features: Json
           monthly_price: number
           name: string
           slug: string
@@ -852,12 +940,19 @@ export type Database = {
         Insert: {
           activation_price: number
           active?: boolean
+          badge?: string | null
+          checkout_mode?: string
           created_at?: string
+          cta_label?: string | null
+          currency?: string
+          delivery_window?: string | null
           description?: string
           display_order?: number
+          exclusions?: Json
           features?: Json
           hidden?: boolean
           id?: string
+          maintenance_features?: Json
           monthly_price: number
           name: string
           slug: string
@@ -866,12 +961,19 @@ export type Database = {
         Update: {
           activation_price?: number
           active?: boolean
+          badge?: string | null
+          checkout_mode?: string
           created_at?: string
+          cta_label?: string | null
+          currency?: string
+          delivery_window?: string | null
           description?: string
           display_order?: number
+          exclusions?: Json
           features?: Json
           hidden?: boolean
           id?: string
+          maintenance_features?: Json
           monthly_price?: number
           name?: string
           slug?: string
@@ -1338,6 +1440,48 @@ export type Database = {
           id?: string
           metadata?: Json | null
           reason?: string
+        }
+        Relationships: []
+      }
+      terms_acceptances: {
+        Row: {
+          accepted_at: string
+          checkout_session_id: string | null
+          created_at: string
+          email: string | null
+          id: string
+          ip_address: string | null
+          plan_slug: string | null
+          privacy_version: string | null
+          terms_version: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          accepted_at?: string
+          checkout_session_id?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          plan_slug?: string | null
+          privacy_version?: string | null
+          terms_version: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          accepted_at?: string
+          checkout_session_id?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          plan_slug?: string | null
+          privacy_version?: string | null
+          terms_version?: string
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }

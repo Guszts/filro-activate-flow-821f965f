@@ -44,8 +44,8 @@ function NotFoundComponent() {
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="font-display text-7xl font-black text-ink">404</h1>
-        <p className="mt-4 text-ink-soft">Página não encontrada.</p>
-        <a href="/" className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold">Voltar ao início</a>
+        <p className="mt-4 text-ink-soft">Page not found.</p>
+        <a href="/" className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold">Back home</a>
       </div>
     </main>
   );
@@ -57,9 +57,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-3xl font-black text-ink">Algo deu errado</h1>
+        <h1 className="font-display text-3xl font-black text-ink">Something went wrong</h1>
         <p className="mt-2 text-ink-soft text-sm">{error.message}</p>
-        <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold">Tentar novamente</button>
+        <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold">Try again</button>
       </div>
     </div>
   );
@@ -72,24 +72,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#0f0f10" },
       { name: "robots", content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" },
-      { title: "Filro — Transforme Instagram, Google e WhatsApp em pedidos de orçamento" },
-      { name: "description", content: "Montamos a estrutura simples que converte Instagram, Google e WhatsApp em conversas de venda para negócios locais. Ativação guiada em até 24h." },
-      { name: "keywords", content: "Filro, Filro Setup, captação de clientes negócio local, estrutura digital negócio local, converter Instagram em vendas, WhatsApp para orçamento, presença digital profissional, site para negócio local" },
+      { title: "Filro — US digital implementation partner" },
+      { name: "description", content: "Filro designs and implements connected digital systems — websites, CRMs, payments and automations — for US businesses." },
+      { name: "keywords", content: "digital implementation, web development agency USA, CRM setup, Stripe integration, automation partner, custom software, revenue system" },
       { name: "application-name", content: "Filro" },
       { name: "apple-mobile-web-app-title", content: "Filro" },
       { name: "author", content: "Filro" },
       { property: "og:site_name", content: "Filro" },
-      { property: "og:title", content: "Filro — Transforme Instagram, Google e WhatsApp em pedidos de orçamento" },
-      { property: "og:description", content: "Estrutura simples que converte Instagram, Google e WhatsApp em conversas de venda para negócios locais." },
+      { property: "og:title", content: "Filro — US digital implementation partner" },
+      { property: "og:description", content: "Websites, CRMs, payments and automations working together as one revenue system." },
       { property: "og:type", content: "website" },
-      { property: "og:locale", content: "pt_BR" },
-      { property: "og:image", content: "https://setup.filro.site/og-cover.png" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "640" },
+      { property: "og:locale", content: "en_US" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Filro — De seguidor a pedido de orçamento" },
-      { name: "twitter:description", content: "A estrutura que transforma Instagram, Google e WhatsApp em clientes para negócios locais." },
-      { name: "twitter:image", content: "https://setup.filro.site/og-cover.png" },
+      { name: "twitter:title", content: "Filro — US digital implementation partner" },
+      { name: "twitter:description", content: "Websites, CRMs, payments and automations built as one connected system." },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -104,11 +100,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Filro",
-          alternateName: ["Filro Setup", "Setup Filro", "Filro Site", "Setup Filro Site"],
-          url: "https://setup.filro.site",
-          logo: "https://setup.filro.site/favicon.ico",
-          description: "Estrutura digital simples que transforma Instagram, Google e WhatsApp em pedidos de orçamento para negócios locais.",
-          sameAs: ["https://filro.site", "https://setup.filro.site"],
+          alternateName: ["Filro", "Filro.site"],
+          url: "https://filro.site",
+          logo: "https://filro.site/favicon.ico",
+          description: "US digital implementation partner. We design and build connected systems: websites, CRMs, payments, automations and custom software.",
+          sameAs: ["https://filro.site"],
         }),
       },
       {
@@ -116,12 +112,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "Filro Setup",
-          alternateName: ["Filro", "Setup Filro", "Filro Site"],
-          url: "https://setup.filro.site",
+          name: "Filro",
+          alternateName: ["Filro.site"],
+          url: "https://filro.site",
           potentialAction: {
             "@type": "SearchAction",
-            target: "https://setup.filro.site/?q={search_term_string}",
+            target: "https://filro.site/?q={search_term_string}",
             "query-input": "required name=search_term_string",
           },
         }),
@@ -136,7 +132,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="en">
       <head><HeadContent /></head>
       <body>{children}<Scripts /></body>
     </html>
