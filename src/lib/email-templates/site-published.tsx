@@ -13,37 +13,31 @@ interface SitePublishedProps {
 }
 
 const SitePublishedEmail = ({ name, businessName, publishedUrl, panelUrl, projectPdfUrl }: SitePublishedProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="en" dir="ltr">
     <BrandHead />
-    <Preview>Seu site está no ar</Preview>
+    <Preview>Your site is live</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>
         <Text style={styles.brand}>{brand.siteName}</Text>
-        <Heading style={styles.h1}>Seu site está no ar{name ? `, ${name}` : ''}!</Heading>
+        <Heading style={styles.h1}>Your site is live{name ? `, ${name}` : ''}!</Heading>
         <Text style={styles.text}>
-          Concluímos a publicação{businessName ? ` de ${businessName}` : ''}. A partir de agora,
-          seus clientes já podem acessar online.
+          We've shipped {businessName ? businessName : 'your project'}. Your customers can access it right now.
         </Text>
         {publishedUrl && (
           <div style={styles.card}>
             <Text style={{ ...styles.textInk, margin: 0 }}>
-              <strong>Endereço:</strong> <a style={styles.link} href={publishedUrl}>{publishedUrl}</a>
+              <strong>URL:</strong> <a style={styles.link} href={publishedUrl}>{publishedUrl}</a>
             </Text>
           </div>
         )}
-        {publishedUrl && <Button style={styles.button} href={publishedUrl}>Ver meu site</Button>}
+        {panelUrl && <Button style={styles.button} href={panelUrl}>Open dashboard</Button>}
         {projectPdfUrl && (
-          <Button style={{ ...styles.button, marginTop: 12, backgroundColor: 'transparent', color: '#000', border: '1px solid #000' }} href={projectPdfUrl}>
-            Baixar PDF do projeto
-          </Button>
-        )}
-        <Hr style={styles.hr} />
-        {panelUrl && (
-          <Text style={styles.text}>
-            Solicite ajustes a qualquer momento pelo <a style={styles.link} href={panelUrl}>seu painel</a>.
+          <Text style={{ ...styles.text, marginTop: 16 }}>
+            <a style={styles.link} href={projectPdfUrl}>Download project brief (PDF)</a>
           </Text>
         )}
-        <Text style={styles.footer}>Comemore: é o primeiro passo da sua nova presença digital.</Text>
+        <Hr style={styles.hr} />
+        <Text style={styles.footer}>Reply anytime to request changes or ask a question.</Text>
       </Container>
     </Body>
   </Html>
@@ -51,7 +45,9 @@ const SitePublishedEmail = ({ name, businessName, publishedUrl, panelUrl, projec
 
 export const template = {
   component: SitePublishedEmail,
-  subject: 'Seu site Filro está no ar',
-  displayName: 'Site publicado',
-  previewData: { name: 'João', businessName: 'Padaria do João', publishedUrl: 'https://padariadojoao.filro.site', panelUrl: 'https://setup.filro.site/painel' },
+  subject: (d) => `Your site is live${d.businessName ? ` — ${d.businessName}` : ''}`,
+  displayName: 'Site published',
+  previewData: { name: 'Alex', businessName: 'Acme Co', publishedUrl: 'https://acme.com', panelUrl: 'https://filro.site/dashboard' },
 } satisfies TemplateEntry
+
+export default SitePublishedEmail

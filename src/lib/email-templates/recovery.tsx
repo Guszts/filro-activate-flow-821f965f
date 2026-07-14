@@ -9,18 +9,18 @@ interface RecoveryEmailProps {
 }
 
 export const RecoveryEmail = ({ confirmationUrl }: RecoveryEmailProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="en" dir="ltr">
     <BrandHead />
-    <Preview>Redefinir sua senha no {brand.siteName}</Preview>
+    <Preview>Reset your {brand.siteName} password</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>
         <Text style={styles.brand}>{brand.siteName}</Text>
-        <Heading style={styles.h1}>Redefinir sua senha</Heading>
+        <Heading style={styles.h1}>Reset your password</Heading>
         <Text style={styles.text}>
-          Recebemos um pedido para redefinir a senha da sua conta no {brand.siteName}. Clique no botão abaixo para escolher uma nova senha.
+          We received a request to reset the password for your {brand.siteName} account. Click below to choose a new password.
         </Text>
-        <Button style={styles.button} href={confirmationUrl}>Redefinir senha</Button>
-        <Text style={styles.footer}>Se você não solicitou, pode ignorar este e-mail. Sua senha continuará a mesma.</Text>
+        <Button style={styles.button} href={confirmationUrl}>Reset password</Button>
+        <Text style={styles.footer}>If you didn't request this, you can safely ignore this email. Your password won't change.</Text>
       </Container>
     </Body>
   </Html>

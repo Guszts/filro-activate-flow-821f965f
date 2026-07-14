@@ -1,14 +1,14 @@
-export function formatBRL(amountInCents: number): string {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    minimumFractionDigits: amountInCents % 100 === 0 ? 0 : 2,
-  }).format(amountInCents / 100);
+import { formatCurrency } from "./formatCurrency";
+
+// Legacy alias — historical callers pass amounts in cents. Defaults to USD/en-US
+// to match the new positioning. Pass a currency explicitly for historical BRL rows.
+export function formatBRL(amountInCents: number, currency: string = "usd"): string {
+  return formatCurrency(amountInCents, currency);
 }
 
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return "—";
-  return new Intl.DateTimeFormat("pt-BR", {
+  return new Intl.DateTimeFormat("en-US", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -17,7 +17,7 @@ export function formatDate(iso: string | null | undefined): string {
 
 export function formatDateTime(iso: string | null | undefined): string {
   if (!iso) return "—";
-  return new Intl.DateTimeFormat("pt-BR", {
+  return new Intl.DateTimeFormat("en-US", {
     day: "2-digit",
     month: "short",
     year: "numeric",

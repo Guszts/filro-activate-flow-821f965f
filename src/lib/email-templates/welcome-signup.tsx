@@ -4,28 +4,25 @@ import { brand, styles } from './_brand'
 import { BrandHead } from './_head'
 import type { TemplateEntry } from './registry'
 
-interface WelcomeSignupProps {
-  name?: string
-  checkoutUrl?: string
-}
+interface WelcomeSignupProps { name?: string; checkoutUrl?: string }
 
 const WelcomeSignupEmail = ({ name, checkoutUrl }: WelcomeSignupProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="en" dir="ltr">
     <BrandHead />
-    <Preview>Bem-vindo ao {brand.siteName}</Preview>
+    <Preview>Welcome to {brand.siteName}</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>
         <Text style={styles.brand}>{brand.siteName}</Text>
-        <Heading style={styles.h1}>Bem-vindo{name ? `, ${name}` : ''}!</Heading>
+        <Heading style={styles.h1}>Welcome{name ? `, ${name}` : ''}!</Heading>
         <Text style={styles.text}>
-          Seu cadastro foi confirmado. Agora é só escolher seu plano para começarmos a preparar
-          sua presença digital — entregamos em até 24h depois do pagamento confirmado.
+          Your account is confirmed. Next, pick the implementation plan that fits — we'll kick off with
+          a written scope and weekly milestones.
         </Text>
         {checkoutUrl && (
-          <Button style={styles.button} href={checkoutUrl}>Escolher meu plano</Button>
+          <Button style={styles.button} href={checkoutUrl}>View pricing</Button>
         )}
         <Hr style={styles.hr} />
-        <Text style={styles.footer}>Qualquer dúvida, é só responder este e-mail.</Text>
+        <Text style={styles.footer}>Reply anytime — a real person will answer.</Text>
       </Container>
     </Body>
   </Html>
@@ -33,7 +30,9 @@ const WelcomeSignupEmail = ({ name, checkoutUrl }: WelcomeSignupProps) => (
 
 export const template = {
   component: WelcomeSignupEmail,
-  subject: 'Bem-vindo ao Filro',
-  displayName: 'Boas-vindas (pós-cadastro)',
-  previewData: { name: 'João', checkoutUrl: 'https://filro.site/checkout' },
+  subject: 'Welcome to Filro',
+  displayName: 'Welcome (post-signup)',
+  previewData: { name: 'Alex', checkoutUrl: 'https://filro.site/pricing' },
 } satisfies TemplateEntry
+
+export default WelcomeSignupEmail
