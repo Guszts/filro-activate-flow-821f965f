@@ -12,24 +12,24 @@ interface SignupEmailProps {
 }
 
 export const SignupEmail = ({ confirmationUrl, token }: SignupEmailProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="en" dir="ltr">
     <BrandHead />
-    <Preview>Seu código de confirmação Filro</Preview>
+    <Preview>Your Filro confirmation code</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>
         <Text style={styles.brand}>{brand.siteName}</Text>
-        <Heading style={styles.h1}>Confirme seu e-mail</Heading>
+        <Heading style={styles.h1}>Confirm your email</Heading>
         <Text style={styles.text}>
-          Use o código de 6 dígitos abaixo para confirmar seu cadastro no {brand.siteName}.
+          Use the 6-digit code below to confirm your {brand.siteName} account.
         </Text>
         {token && <Text style={styles.code}>{token}</Text>}
-        <Text style={styles.text}>O código expira em 1 hora.</Text>
+        <Text style={styles.text}>This code expires in 1 hour.</Text>
         <Hr style={styles.hr} />
         <Text style={{ ...styles.text, fontSize: '13px' }}>
-          Prefere confirmar por link? Clique no botão abaixo.
+          Prefer to confirm via link? Click below.
         </Text>
-        <Button style={styles.button} href={confirmationUrl}>Confirmar por link</Button>
-        <Text style={styles.footer}>Se não foi você quem criou a conta, ignore este e-mail.</Text>
+        <Button style={styles.button} href={confirmationUrl}>Confirm via link</Button>
+        <Text style={styles.footer}>If you didn't create this account, ignore this email.</Text>
       </Container>
     </Body>
   </Html>
