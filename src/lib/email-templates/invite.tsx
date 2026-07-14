@@ -10,18 +10,18 @@ interface InviteEmailProps {
 }
 
 export const InviteEmail = ({ confirmationUrl }: InviteEmailProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="en" dir="ltr">
     <BrandHead />
-    <Preview>Você foi convidado para o {brand.siteName}</Preview>
+    <Preview>You've been invited to {brand.siteName}</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>
         <Text style={styles.brand}>{brand.siteName}</Text>
-        <Heading style={styles.h1}>Você foi convidado</Heading>
+        <Heading style={styles.h1}>You've been invited</Heading>
         <Text style={styles.text}>
-          Você foi convidado para entrar no {brand.siteName}. Clique no botão abaixo para aceitar e criar sua conta.
+          You've been invited to {brand.siteName}. Click below to accept and create your account.
         </Text>
-        <Button style={styles.button} href={confirmationUrl}>Aceitar convite</Button>
-        <Text style={styles.footer}>Se não esperava este convite, pode ignorar este e-mail.</Text>
+        <Button style={styles.button} href={confirmationUrl}>Accept invite</Button>
+        <Text style={styles.footer}>If you weren't expecting this invite, you can ignore this email.</Text>
       </Container>
     </Body>
   </Html>

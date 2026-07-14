@@ -13,24 +13,24 @@ interface ExtraChargeProps {
 }
 
 const ExtraChargeEmail = ({ name, title, description, amount, paymentLink }: ExtraChargeProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="en" dir="ltr">
     <BrandHead />
-    <Preview>Nova cobrança — {title ?? 'serviço extra'}</Preview>
+    <Preview>New charge — {title ?? 'additional work'}</Preview>
     <Body style={styles.main}>
       <Container style={styles.container}>
         <Text style={styles.brand}>{brand.siteName}</Text>
-        <Heading style={styles.h1}>Nova cobrança{name ? `, ${name}` : ''}</Heading>
+        <Heading style={styles.h1}>New charge{name ? `, ${name}` : ''}</Heading>
         <Text style={styles.text}>
-          Emitimos uma cobrança extra referente ao serviço solicitado.
+          We've issued an additional charge for the requested work.
         </Text>
         <div style={styles.card}>
           <Text style={{ ...styles.textInk, margin: '0 0 6px' }}><strong>{title ?? '—'}</strong></Text>
           {description && <Text style={{ ...styles.text, margin: '0 0 6px' }}>{description}</Text>}
-          {amount && <Text style={{ ...styles.textInk, margin: '6px 0 0' }}><strong>Valor:</strong> {amount}</Text>}
+          {amount && <Text style={{ ...styles.textInk, margin: '6px 0 0' }}><strong>Amount:</strong> {amount}</Text>}
         </div>
-        {paymentLink && <Button style={styles.button} href={paymentLink}>Pagar agora</Button>}
+        {paymentLink && <Button style={styles.button} href={paymentLink}>Pay now</Button>}
         <Hr style={styles.hr} />
-        <Text style={styles.footer}>Pagamento seguro processado pela Stripe.</Text>
+        <Text style={styles.footer}>Reply to this email if you have any questions.</Text>
       </Container>
     </Body>
   </Html>
@@ -38,7 +38,9 @@ const ExtraChargeEmail = ({ name, title, description, amount, paymentLink }: Ext
 
 export const template = {
   component: ExtraChargeEmail,
-  subject: (d: Record<string, any>) => `Nova cobrança Filro — ${d.title ?? 'serviço'}`,
-  displayName: 'Cobrança extra emitida',
-  previewData: { name: 'João', title: 'Ajustes adicionais', description: 'Conjunto de revisões fora do escopo do plano.', amount: 'R$ 150,00', paymentLink: 'https://buy.stripe.com/xxx' },
+  subject: (d) => `New charge — ${d.title ?? 'additional work'}`,
+  displayName: 'Extra charge issued',
+  previewData: { name: 'Alex', title: 'Landing page revision', description: 'Additional hero section and CTA copy variants.', amount: '$450.00', paymentLink: 'https://filro.site/pay/abc' },
 } satisfies TemplateEntry
+
+export default ExtraChargeEmail
