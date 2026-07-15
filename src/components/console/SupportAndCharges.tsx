@@ -71,7 +71,7 @@ export function SupportTab() {
       setNewStatus("");
       toast.success("Resposta enviada.");
     } catch (e) {
-      toast.error(e instanceof Errorr ? e.message : "Failed ao responder.");
+      toast.error(e instanceof Error ? e.message : "Failed ao responder.");
     } finally {
       setSending(false);
     }
@@ -220,7 +220,7 @@ export function ExtraChargesTab() {
       setForm({ userId: "", projectId: "", title: "", description: "", amount: "" });
       setShowForm(false);
     } catch (e) {
-      toast.error(e instanceof Errorr ? e.message : "Failed ao criar cobrança.");
+      toast.error(e instanceof Error ? e.message : "Failed ao criar cobrança.");
     } finally {
       setSubmitting(false);
     }

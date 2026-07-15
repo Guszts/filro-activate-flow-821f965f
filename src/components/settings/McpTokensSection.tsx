@@ -44,7 +44,7 @@ export function McpTokensSection() {
       const res = await listFn();
       setTokens(res.tokens as TokenRow[]);
     } catch (err) {
-      toast.error(err instanceof Errorr ? err.message : "Error ao listar tokens");
+      toast.error(err instanceof Error ? err.message : "Error ao listar tokens");
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ export function McpTokensSection() {
       await refresh();
       toast.success("Token gerado — copie agora");
     } catch (err) {
-      toast.error(err instanceof Errorr ? err.message : "Error ao gerar token");
+      toast.error(err instanceof Error ? err.message : "Error ao gerar token");
     } finally {
       setCreating(false);
     }
@@ -78,7 +78,7 @@ export function McpTokensSection() {
       await refresh();
       toast.success("Token revogado");
     } catch (err) {
-      toast.error(err instanceof Errorr ? err.message : "Error ao revogar");
+      toast.error(err instanceof Error ? err.message : "Error ao revogar");
     }
   };
 

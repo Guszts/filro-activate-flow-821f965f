@@ -25,7 +25,7 @@ function CheckoutPage() {
   const { user, loading } = useAuth();
   const [plan, setPlan] = useState<PlanInfo | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [error, setErrorr] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const startedRef = useRef(false);
   const planSlug = useMemo(
     () => (typeof window !== "undefined" ? sessionStorage.getItem("filro:selectedPlan") : null),
@@ -47,7 +47,7 @@ function CheckoutPage() {
           .eq("slug", planSlug)
           .maybeSingle();
         if (pErr) throw pErr;
-        if (!planRow) throw new Errorr("Plan não encontrado");
+        if (!planRow) throw new Error("Plan não encontrado");
         setPlan(planRow as PlanInfo);
 
         const paymentSession = await createPlanCheckoutSession({
@@ -58,16 +58,16 @@ function CheckoutPage() {
             partnerCode: getStoredPartnerCode(),
           },
         });
-        if (paymentSession.error) throw new Errorr(paymentSession.error);
+        if (paymentSession.error) throw new Error(paymentSession.error);
         if (paymentSession.checkoutUrl) {
           window.location.assign(paymentSession.checkoutUrl);
           return;
         }
-        if (!paymentSession.clientSecret) throw new Errorr("Failed ao iniciar pagamento");
+        if (!paymentSession.clientSecret) throw new Error("Failed ao iniciar pagamento");
         setClientSecret(paymentSession.clientSecret);
       } catch (e) {
-        const msg = e instanceof Errorr ? e.message : "Failed ao iniciar pagamento";
-        setErrorr(msg);
+        const msg = e instanceof Error ? e.message : "Failed ao iniciar pagamento";
+        setError(msg);
         toast.error(msg);
       }
     })();

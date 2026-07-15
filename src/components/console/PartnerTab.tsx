@@ -75,7 +75,7 @@ function Metric({ label, value, sub }: { label: string; value: string; sub?: str
 export function PartnerTab() {
   const qc = useQueryClient();
 
-  const { data, error: loadErrorr, isLoading } = useQuery({
+  const { data, error: loadError, isLoading } = useQuery({
     queryKey: ["console-partner"],
     queryFn: async () => {
       const [partnersR, commissionsR, referralsR, payoutsR, profilesR, plansR] = await Promise.all([
@@ -86,10 +86,10 @@ export function PartnerTab() {
         supabase.from("profiles").select("user_id, name, email"),
         supabase.from("plans").select("id, name"),
       ]);
-      const firstErrorr =
+      const firstError =
         partnersR.error || commissionsR.error || referralsR.error ||
         payoutsR.error || profilesR.error || plansR.error;
-      if (firstErrorr) throw new Errorr(firstErrorr.message);
+      if (firstError) throw new Error(firstError.message);
       return {
         partners: (partnersR.data ?? []) as Partner[],
         commissions: (commissionsR.data ?? []) as Commission[],
@@ -101,13 +101,13 @@ export function PartnerTab() {
     },
   });
 
-  if (loadErrorr) {
+  if (loadError) {
     return (
       <div>
         <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Partner</h1>
         <div className="mt-6 card-elevated p-6 border border-flame/40 bg-flame/5 text-ink">
           <div className="font-semibold">Failed ao carregar dados de parceiros.</div>
-          <div className="mt-1 text-sm text-ink-soft">{loadErrorr instanceof Errorr ? loadErrorr.message : String(loadErrorr)}</div>
+          <div className="mt-1 text-sm text-ink-soft">{loadError instanceof Error ? loadError.message : String(loadError)}</div>
         </div>
       </div>
     );
@@ -353,7 +353,7 @@ function EditPartnerModal({ partner, onClose, onSaved }: { partner: Partner; onC
       }});
       toast.success("Partner atualizado");
       onSaved();
-    } catch (e) { toast.error(e instanceof Errorr ? e.message : "Failed ao salvar"); }
+    } catch (e) { toast.error(e instanceof Error ? e.message : "Failed ao salvar"); }
     finally { setSaving(false); }
   };
 
@@ -394,7 +394,7 @@ function CommissionActions({
 
   const onApprove = async () => {
     try { await approveFn({ data: { id: commission.id } }); toast.success("Aprovada"); onChanged(); }
-    catch (e) { toast.error(e instanceof Errorr ? e.message : "Failed"); }
+    catch (e) { toast.error(e instanceof Error ? e.message : "Failed"); }
   };
 
   if (commission.status === "paid" || commission.status === "cancelled") {
@@ -427,7 +427,7 @@ function PayModal({ commission, partner, client, planName, onClose, onDone }: {
   const confirm = async () => {
     setSaving(true);
     try { await payFn({ data: { id: commission.id, method, notes: notes || undefined } }); toast.success("Commission marcada como paga"); onDone(); }
-    catch (e) { toast.error(e instanceof Errorr ? e.message : "Failed"); }
+    catch (e) { toast.error(e instanceof Error ? e.message : "Failed"); }
     finally { setSaving(false); }
   };
 
@@ -468,7 +468,7 @@ function CancelModal({ commission, onClose, onDone }: { commission: Commission; 
   const confirm = async () => {
     setSaving(true);
     try { await cancelFn({ data: { id: commission.id, reason, notes: notes || undefined } }); toast.success("Commission cancelada"); onDone(); }
-    catch (e) { toast.error(e instanceof Errorr ? e.message : "Failed"); }
+    catch (e) { toast.error(e instanceof Error ? e.message : "Failed"); }
     finally { setSaving(false); }
   };
 

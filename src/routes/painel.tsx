@@ -75,7 +75,7 @@ function DashboardPage() {
       if (res.url) window.open(res.url, "_blank");
       else toast.error(res.error || "No foi possível abrir o portal");
     } catch (err) {
-      toast.error(err instanceof Errorr ? err.message : "Error ao abrir portal");
+      toast.error(err instanceof Error ? err.message : "Error ao abrir portal");
     } finally {
       setOpeningPortal(false);
     }

@@ -377,12 +377,12 @@ function KanbanCard({
         headers: { "Content-Type": "application/pdf", "x-upsert": "true" },
         body: file,
       });
-      if (!putRes.ok) throw new Errorr(`Upload falhou (${putRes.status})`);
+      if (!putRes.ok) throw new Error(`Upload falhou (${putRes.status})`);
       await confirmUpload({ data: { projectId: project.id, path } });
       toast.success("PDF anexado em armazenamento privado");
       qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
     } catch (err) {
-      toast.error("Failed ao enviar PDF: " + (err as Errorr).message);
+      toast.error("Failed ao enviar PDF: " + (err as Error).message);
     } finally {
       setUploading(false);
     }
@@ -394,7 +394,7 @@ function KanbanCard({
       const { url } = await getDownloadUrl({ data: { projectId: project.id } });
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (err) {
-      toast.error("No foi possível gerar link: " + (err as Errorr).message);
+      toast.error("No foi possível gerar link: " + (err as Error).message);
     }
   }
 
@@ -405,7 +405,7 @@ function KanbanCard({
       await removePdf({ data: { projectId: project.id } });
       qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
     } catch (err) {
-      toast.error("Failed ao remover: " + (err as Errorr).message);
+      toast.error("Failed ao remover: " + (err as Error).message);
     }
   }
 

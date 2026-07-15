@@ -101,7 +101,7 @@ type DetailCtx = {
 const DetailContext = createContext<DetailCtx | null>(null);
 function useDetail() {
   const ctx = useContext(DetailContext);
-  if (!ctx) throw new Errorr("DetailContext missing");
+  if (!ctx) throw new Error("DetailContext missing");
   return ctx;
 }
 
@@ -230,7 +230,7 @@ function DetailView({ item, onBack, onReserve }: { item: DetailItem; onBack: () 
         className="wishes-hero"
       >
         <motion.img
-          src={item.image} alt={item.title} onErrorr={imgFallback}
+          src={item.image} alt={item.title} onError={imgFallback}
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 1.4, ease: "easeOut" }}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -475,7 +475,7 @@ function Home(props: {
         style={{ marginTop: 24, height: 460, borderRadius: 28, overflow: "hidden", position: "relative" }}
       >
         <motion.img
-          src={HERO_IMAGE} alt="Resort à beira-mar" onErrorr={imgFallback}
+          src={HERO_IMAGE} alt="Resort à beira-mar" onError={imgFallback}
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 1.5, ease: "easeOut" }}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -634,7 +634,7 @@ function HorizontalCard({ d, onReserve }: { d: Destination; onReserve: () => voi
       style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 14, padding: 14, borderRadius: 18, border: `1px solid ${C.border}`, background: C.paper, cursor: "pointer" }}
     >
       <div style={{ overflow: "hidden", borderRadius: 14, height: 120 }}>
-        <img onErrorr={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} className="group-hover:scale-105" />
+        <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} className="group-hover:scale-105" />
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "4px 4px 4px 0" }}>
         <div>
@@ -658,7 +658,7 @@ function VerticalCard({ d, onReserve }: { d: Destination; onReserve: () => void 
       className="wishes-card-vertical group"
       style={{ position: "relative", height: 320, borderRadius: 28, overflow: "hidden", border: `1px solid ${C.border}`, cursor: "pointer" }}
     >
-      <img onErrorr={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
+      <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
       <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(6px)", padding: "6px 10px", borderRadius: 999, fontSize: 12, fontWeight: 600, color: C.ink, display: "inline-flex", alignItems: "center", gap: 4 }}>
         <MapPin size={11} /> {d.country}
       </div>
@@ -1051,7 +1051,7 @@ function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
             style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden", cursor: "pointer" }}
           >
             <div style={{ height: 200, overflow: "hidden" }}>
-              <img onErrorr={imgFallback} src={h.image} alt={h.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
+              <img onError={imgFallback} src={h.image} alt={h.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
             </div>
             <div style={{ padding: 20 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 10 }}>
@@ -1107,7 +1107,7 @@ function Experiencias() {
             className="group"
           >
             <div style={{ height: 200, overflow: "hidden", position: "relative" }}>
-              <img onErrorr={imgFallback} src={e.image} alt={e.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s" }} className="group-hover:scale-110" />
+              <img onError={imgFallback} src={e.image} alt={e.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s" }} className="group-hover:scale-110" />
               <div style={{ position: "absolute", top: 12, left: 12, padding: "4px 10px", borderRadius: 999, background: "rgba(255,255,255,0.9)", fontSize: 11, fontWeight: 600, color: C.ink, display: "inline-flex", alignItems: "center", gap: 4 }}>
                 <Clock size={10} /> {e.duracao}
               </div>
@@ -1150,7 +1150,7 @@ function Blog() {
             className="wishes-card-horizontal group"
           >
             <div style={{ overflow: "hidden" }}>
-              <img onErrorr={imgFallback} src={p.image} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-105" />
+              <img onError={imgFallback} src={p.image} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-105" />
             </div>
             <div style={{ padding: 18 }}>
               <div style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 11, color: C.inkSoft }}>
@@ -1248,7 +1248,7 @@ function Reservar({ onConfirm }: { onConfirm: (d: Destination) => void }) {
           </motion.button>
         </motion.form>
         <motion.aside initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden" }}>
-          <img onErrorr={imgFallback} src={sel.image} alt={sel.title} style={{ width: "100%", height: 200, objectFit: "cover" }} />
+          <img onError={imgFallback} src={sel.image} alt={sel.title} style={{ width: "100%", height: 200, objectFit: "cover" }} />
           <div style={{ padding: 20 }}>
             <div style={{ fontSize: 12, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2 }}>Destino escolhido</div>
             <div style={{ marginTop: 6, fontSize: 22, fontWeight: 700, color: C.ink }}>{sel.title}</div>
@@ -1299,7 +1299,7 @@ function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; s
               style={{ borderRadius: 24, overflow: "hidden", background: C.paper, border: `1px solid ${C.border}`, cursor: "pointer" }}
             >
               <div style={{ height: 180, overflow: "hidden" }}>
-                <img onErrorr={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
+                <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
               </div>
               <div style={{ padding: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1333,7 +1333,7 @@ function Lugares({ onReserve }: { onReserve: (d: Destination) => void }) {
             style={{ position: "relative", height: 320, borderRadius: 24, overflow: "hidden", border: `1px solid ${C.border}`, cursor: "pointer" }}
             className="group"
           >
-            <img onErrorr={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
+            <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
             <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(255,255,255,0.9)", padding: "6px 10px", borderRadius: 999, fontSize: 12, fontWeight: 600 }}>{d.country}</div>
             <div style={{ position: "absolute", left: 10, right: 10, bottom: 10, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(10px)", borderRadius: 16, padding: 12 }}>
               <div style={{ fontSize: 16, fontWeight: 700, color: C.ink }}>{d.title}</div>

@@ -60,7 +60,7 @@ function SettingsPage() {
         toast.error(res.error || "No foi possível excluir");
       }
     } catch (err) {
-      toast.error(err instanceof Errorr ? err.message : "Error ao excluir");
+      toast.error(err instanceof Error ? err.message : "Error ao excluir");
     } finally {
       setDeleting(false);
     }
@@ -112,7 +112,7 @@ function SettingsPage() {
       setProfile((p) => ({ ...p, avatar_url: url }));
       toast.success("Foto atualizada");
     } catch (err) {
-      toast.error(err instanceof Errorr ? err.message : "Error ao enviar foto");
+      toast.error(err instanceof Error ? err.message : "Error ao enviar foto");
     } finally { setUploadingAvatar(false); }
   };
 
@@ -133,7 +133,7 @@ function SettingsPage() {
       if (res.url) window.open(res.url, "_blank");
       else toast.error(res.error || "No foi possível abrir o portal de cobrança");
     } catch (err) {
-      toast.error(err instanceof Errorr ? err.message : "Error ao abrir o portal");
+      toast.error(err instanceof Error ? err.message : "Error ao abrir o portal");
     } finally { setOpeningPortal(false); }
   };
 
@@ -150,7 +150,7 @@ function SettingsPage() {
         toast.error(res.error || "No foi possível cancelar");
       }
     } catch (err) {
-      toast.error(err instanceof Errorr ? err.message : "Error ao cancelar");
+      toast.error(err instanceof Error ? err.message : "Error ao cancelar");
     } finally { setCancelling(false); }
   };
 

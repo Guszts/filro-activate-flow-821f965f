@@ -135,7 +135,7 @@ function SupportPage() {
       setShowForm(false);
       qc.invalidateQueries({ queryKey: ["my-tickets"] });
     } catch (e) {
-      toast.error(e instanceof Errorr ? e.message : "Failed ao abrir chamado.");
+      toast.error(e instanceof Error ? e.message : "Failed ao abrir chamado.");
     } finally {
       setSubmitting(false);
     }

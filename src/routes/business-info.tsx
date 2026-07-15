@@ -153,7 +153,7 @@ function BusinessInfoPage() {
           } catch { /* ignore */ }
         }
       } catch (err: unknown) {
-        const msg = err instanceof Errorr ? err.message : "Error ao carregar projeto";
+        const msg = err instanceof Error ? err.message : "Error ao carregar projeto";
         toast.error(msg);
         navigate({ to: "/" });
         return;
@@ -242,7 +242,7 @@ function BusinessInfoPage() {
       toast.success("Information enviadas! Activation iniciada. Entrega within 1 business day.");
       setProject({ ...project, business_info_submitted: true });
     } catch (err: unknown) {
-      const msg = err instanceof Errorr ? err.message : "Error ao enviar";
+      const msg = err instanceof Error ? err.message : "Error ao enviar";
       toast.error(msg);
     } finally {
       setSaving(false);
