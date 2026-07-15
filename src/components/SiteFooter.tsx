@@ -16,19 +16,19 @@ export function SiteFooter() {
         <div className="text-sm text-ink-soft">
           <div className="font-semibold text-ink mb-4">Produto</div>
           <ul className="space-y-2.5">
-            <li><Link to="/modelos" className="hover:text-ink transition-colors">Modelos</Link></li>
-            <li><Link to="/como-funciona" className="hover:text-ink transition-colors">Como funciona</Link></li>
-            <li><Link to="/planos" className="hover:text-ink transition-colors">Planos</Link></li>
-            <li><Link to="/comparar" className="hover:text-ink transition-colors">Comparar planos</Link></li>
-            <li><Link to="/garantia" className="hover:text-ink transition-colors">Garantia e segurança</Link></li>
+            <li><Link to="/modelos" className="hover:text-ink transition-colors">Work</Link></li>
+            <li><Link to="/como-funciona" className="hover:text-ink transition-colors">How it works</Link></li>
+            <li><Link to="/planos" className="hover:text-ink transition-colors">Plans</Link></li>
+            <li><Link to="/comparar" className="hover:text-ink transition-colors">Compare planos</Link></li>
+            <li><Link to="/garantia" className="hover:text-ink transition-colors">Guarantee e segurança</Link></li>
           </ul>
         </div>
         <div className="text-sm text-ink-soft">
-          <div className="font-semibold text-ink mb-4">Recursos</div>
+          <div className="font-semibold text-ink mb-4">Resources</div>
           <ul className="space-y-2.5">
-            <li><Link to="/docs" className="hover:text-ink transition-colors">Documentação</Link></li>
-            <li><Link to="/termos" className="hover:text-ink transition-colors">Termos de Uso</Link></li>
-            <li><Link to="/privacidade" className="hover:text-ink transition-colors">Privacidade</Link></li>
+            <li><Link to="/docs" className="hover:text-ink transition-colors">Documentation</Link></li>
+            <li><Link to="/termos" className="hover:text-ink transition-colors">Terms of Use</Link></li>
+            <li><Link to="/privacidade" className="hover:text-ink transition-colors">Privacy</Link></li>
           </ul>
         </div>
         <div className="text-sm text-ink-soft">

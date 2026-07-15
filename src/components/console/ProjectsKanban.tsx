@@ -57,16 +57,16 @@ type ProjectRow = {
 };
 
 const COLUMNS: { id: ProjectStatus; label: string; tone: string }[] = [
-  { id: "new", label: "Novo", tone: "bg-stone/40" },
-  { id: "payment_confirmed", label: "Pagamento confirmado", tone: "bg-azure/15" },
+  { id: "new", label: "New", tone: "bg-stone/40" },
+  { id: "payment_confirmed", label: "Payment confirmado", tone: "bg-azure/15" },
   { id: "briefing_received", label: "Briefing recebido", tone: "bg-azure/25" },
-  { id: "in_production", label: "Em produção", tone: "bg-lime/40" },
+  { id: "in_production", label: "In production", tone: "bg-lime/40" },
   { id: "revision_sent", label: "Revisão enviada", tone: "bg-amber-100" },
   { id: "awaiting_client", label: "Aguardando cliente", tone: "bg-amber-200" },
-  { id: "published", label: "Publicado", tone: "bg-lime/70" },
-  { id: "maintenance", label: "Manutenção", tone: "bg-muted" },
+  { id: "published", label: "Published", tone: "bg-lime/70" },
+  { id: "maintenance", label: "Maintenance", tone: "bg-muted" },
   { id: "paused", label: "Pausado", tone: "bg-muted" },
-  { id: "cancelled", label: "Cancelado", tone: "bg-flame/20" },
+  { id: "cancelled", label: "Canceled", tone: "bg-flame/20" },
 ];
 
 export function ProjectsKanban() {
@@ -182,7 +182,7 @@ export function ProjectsKanban() {
     if (error) {
       // rollback
       qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
-      alert(`Erro ao atualizar status: ${error.message}`);
+      alert(`Error ao atualizar status: ${error.message}`);
       return;
     }
 
@@ -201,7 +201,7 @@ export function ProjectsKanban() {
     <div>
       <div className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Projetos</h1>
+          <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Projects</h1>
           <p className="mt-2 text-ink-soft text-sm">
             Quadro Kanban da operação. Arraste os cards para mover de etapa.
           </p>
@@ -210,14 +210,14 @@ export function ProjectsKanban() {
           <input
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            placeholder="Buscar cliente, negócio…"
+            placeholder="Search cliente, negócio…"
             className="h-11 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink w-full md:w-64"
           />
           <select
             value={planFilter}
             onChange={(e) => setPlanFilter(e.target.value)}
             className="h-11 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm"
-            aria-label="Filtrar por plano"
+            aria-label="Filter por plano"
           >
             <option value="all">Todos os planos</option>
             {(data?.plans ?? []).map((pl) => (
@@ -377,12 +377,12 @@ function KanbanCard({
         headers: { "Content-Type": "application/pdf", "x-upsert": "true" },
         body: file,
       });
-      if (!putRes.ok) throw new Error(`Upload falhou (${putRes.status})`);
+      if (!putRes.ok) throw new Errorr(`Upload falhou (${putRes.status})`);
       await confirmUpload({ data: { projectId: project.id, path } });
       toast.success("PDF anexado em armazenamento privado");
       qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
     } catch (err) {
-      toast.error("Falha ao enviar PDF: " + (err as Error).message);
+      toast.error("Failed ao enviar PDF: " + (err as Errorr).message);
     } finally {
       setUploading(false);
     }
@@ -394,18 +394,18 @@ function KanbanCard({
       const { url } = await getDownloadUrl({ data: { projectId: project.id } });
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (err) {
-      toast.error("Não foi possível gerar link: " + (err as Error).message);
+      toast.error("No foi possível gerar link: " + (err as Errorr).message);
     }
   }
 
   async function handlePdfRemove(e: React.MouseEvent) {
     e.stopPropagation();
-    if (!confirm("Remover o PDF deste projeto?")) return;
+    if (!confirm("Remove o PDF deste projeto?")) return;
     try {
       await removePdf({ data: { projectId: project.id } });
       qc.invalidateQueries({ queryKey: ["console-projects-kanban"] });
     } catch (err) {
-      toast.error("Falha ao remover: " + (err as Error).message);
+      toast.error("Failed ao remover: " + (err as Errorr).message);
     }
   }
 
@@ -467,7 +467,7 @@ function KanbanCard({
           <>
             <button type="button" onClick={handleView} className="text-[10px] text-ink-soft hover:text-ink underline">Ver</button>
             <button type="button" onClick={handlePdfRemove} className="ml-auto text-[10px] text-flame hover:opacity-80 inline-flex items-center gap-0.5">
-              <X className="h-3 w-3" /> Remover
+              <X className="h-3 w-3" /> Remove
             </button>
           </>
         )}

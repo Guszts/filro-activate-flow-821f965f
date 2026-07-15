@@ -17,7 +17,7 @@ import { McpTokensSection } from "@/components/settings/McpTokensSection";
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
   head: () => ({ meta: [
-    { title: "Configurações · Filro" },
+    { title: "Settings · Filro" },
     { name: "robots", content: "noindex,nofollow" },
   ]}),
 });
@@ -57,10 +57,10 @@ function SettingsPage() {
         await signOut();
         navigate({ to: "/" });
       } else {
-        toast.error(res.error || "Não foi possível excluir");
+        toast.error(res.error || "No foi possível excluir");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao excluir");
+      toast.error(err instanceof Errorr ? err.message : "Error ao excluir");
     } finally {
       setDeleting(false);
     }
@@ -92,7 +92,7 @@ function SettingsPage() {
     }).eq("user_id", user.id);
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Perfil atualizado");
+    toast.success("Profile atualizado");
   };
 
   const uploadAvatar = async (file: File) => {
@@ -112,7 +112,7 @@ function SettingsPage() {
       setProfile((p) => ({ ...p, avatar_url: url }));
       toast.success("Foto atualizada");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao enviar foto");
+      toast.error(err instanceof Errorr ? err.message : "Error ao enviar foto");
     } finally { setUploadingAvatar(false); }
   };
 
@@ -131,9 +131,9 @@ function SettingsPage() {
     try {
       const res = await openPortal({ data: { returnUrl: window.location.href, environment: getStripeEnvironment() } });
       if (res.url) window.open(res.url, "_blank");
-      else toast.error(res.error || "Não foi possível abrir o portal de cobrança");
+      else toast.error(res.error || "No foi possível abrir o portal de cobrança");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao abrir o portal");
+      toast.error(err instanceof Errorr ? err.message : "Error ao abrir o portal");
     } finally { setOpeningPortal(false); }
   };
 
@@ -142,26 +142,26 @@ function SettingsPage() {
     try {
       const res = await callCancel({ data: { reason: cancelReason.trim() || undefined, environment: getStripeEnvironment() } });
       if (res.ok) {
-        toast.success("Assinatura cancelada. Você mantém acesso até o fim do ciclo atual.");
+        toast.success("Subscription cancelada. Você mantém acesso até o fim do ciclo atual.");
         setCancelOpen(false);
         setCancelReason("");
         setHasSubscription(false);
       } else {
-        toast.error(res.error || "Não foi possível cancelar");
+        toast.error(res.error || "No foi possível cancelar");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao cancelar");
+      toast.error(err instanceof Errorr ? err.message : "Error ao cancelar");
     } finally { setCancelling(false); }
   };
 
-  if (loading || !user) return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
+  if (loading || !user) return <div className="min-h-screen grid place-items-center text-ink-soft">Loading...</div>;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SiteHeader />
       <main className="flex-1 mx-auto max-w-[900px] w-full px-5 md:px-10 py-12 md:py-16">
         <span className="text-xs tracking-wide text-ink-soft">Conta</span>
-        <h1 className="mt-2 editorial-headline text-5xl md:text-6xl text-ink">Configurações</h1>
+        <h1 className="mt-2 editorial-headline text-5xl md:text-6xl text-ink">Settings</h1>
         <p className="mt-3 text-ink-soft">Gerencie seu perfil, plano e conta.</p>
 
         {/* ACCOUNT */}
@@ -179,7 +179,7 @@ function SettingsPage() {
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mt-6 card-elevated p-7">
           <div className="flex items-center gap-3 mb-5">
             <div className="h-10 w-10 grid place-items-center rounded-2xl bg-muted text-ink"><UserIcon className="h-5 w-5" /></div>
-            <h2 className="font-display font-black text-2xl text-ink">Perfil</h2>
+            <h2 className="font-display font-black text-2xl text-ink">Profile</h2>
           </div>
           <div className="flex items-center gap-5 mb-6">
             <div className="relative h-20 w-20 rounded-full overflow-hidden bg-muted ring-1 ring-border grid place-items-center">
@@ -191,25 +191,25 @@ function SettingsPage() {
             </div>
             <div className="flex flex-col gap-2">
               <label className={`inline-flex items-center gap-2 h-10 px-4 rounded-xl border border-border bg-paper text-sm font-semibold text-ink cursor-pointer hover:bg-muted ${uploadingAvatar ? "opacity-60 pointer-events-none" : ""}`}>
-                <Camera className="h-4 w-4" /> {uploadingAvatar ? "Enviando..." : profile.avatar_url ? "Trocar foto" : "Adicionar foto"}
+                <Camera className="h-4 w-4" /> {uploadingAvatar ? "Sending..." : profile.avatar_url ? "Trocar foto" : "Add foto"}
                 <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadAvatar(f); e.target.value = ""; }} />
               </label>
               {profile.avatar_url && (
                 <button type="button" onClick={removeAvatar} disabled={uploadingAvatar} className="inline-flex items-center gap-2 text-xs text-ink-soft hover:text-flame transition-colors disabled:opacity-50">
-                  <Trash2 className="h-3.5 w-3.5" /> Remover
+                  <Trash2 className="h-3.5 w-3.5" /> Remove
                 </button>
               )}
               <span className="text-xs text-ink-soft">JPG ou PNG, até 5MB</span>
             </div>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
-            <Field label="Nome"><input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} className={inp} /></Field>
+            <Field label="Name"><input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} className={inp} /></Field>
             <Field label="WhatsApp"><PhoneInput value={profile.whatsapp} onChange={(v) => setProfile({ ...profile, whatsapp: v })} /></Field>
-            <Field label="Nome do negócio"><input value={profile.business_name} onChange={(e) => setProfile({ ...profile, business_name: e.target.value })} className={inp} /></Field>
-            <Field label="Segmento"><input value={profile.business_segment} onChange={(e) => setProfile({ ...profile, business_segment: e.target.value })} className={inp} /></Field>
+            <Field label="Name do negócio"><input value={profile.business_name} onChange={(e) => setProfile({ ...profile, business_name: e.target.value })} className={inp} /></Field>
+            <Field label="Segment"><input value={profile.business_segment} onChange={(e) => setProfile({ ...profile, business_segment: e.target.value })} className={inp} /></Field>
           </div>
           <button onClick={save} disabled={saving} className="mt-6 inline-flex items-center gap-2 h-12 px-6 rounded-2xl bg-ink text-paper font-semibold disabled:opacity-50">
-            <Save className="h-4 w-4" /> {saving ? "Salvando..." : "Salvar alterações"}
+            <Save className="h-4 w-4" /> {saving ? "Saving..." : "Save alterações"}
           </button>
         </motion.section>
 
@@ -217,7 +217,7 @@ function SettingsPage() {
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-6 card-elevated p-7">
           <div className="flex items-center gap-3 mb-5">
             <div className="h-10 w-10 grid place-items-center rounded-2xl bg-muted text-ink"><CreditCard className="h-5 w-5" /></div>
-            <h2 className="font-display font-black text-2xl text-ink">Plano e cobrança</h2>
+            <h2 className="font-display font-black text-2xl text-ink">Plan e cobrança</h2>
           </div>
           {hasSubscription ? (
             <>
@@ -228,17 +228,17 @@ function SettingsPage() {
                   <ArrowRight className="h-4 w-4" />
                 </button>
                 <button onClick={() => setCancelOpen(true)} className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted">
-                  <XCircle className="h-4 w-4" /> Cancelar assinatura
+                  <XCircle className="h-4 w-4" /> Cancel assinatura
                 </button>
               </div>
             </>
           ) : !hasPaid ? (
             <>
               <p className="text-sm text-ink-soft">Você ainda não tem um plano ativo. Escolha um para ativar sua presença digital.</p>
-              <Link to="/" hash="ativacao" className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-ink text-paper font-semibold">Ver planos <ArrowRight className="h-4 w-4" /></Link>
+              <Link to="/" hash="ativacao" className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-ink text-paper font-semibold">See pricing <ArrowRight className="h-4 w-4" /></Link>
             </>
           ) : (
-            <p className="text-sm text-ink-soft">Nenhuma assinatura ativa encontrada. Entre em contato com o suporte se isso parecer errado.</p>
+            <p className="text-sm text-ink-soft">Nenhuma assinatura ativa encontrada. Contact us com o suporte se isso parecer errado.</p>
           )}
         </motion.section>
         {isAdmin && <McpTokensSection />}
@@ -247,10 +247,10 @@ function SettingsPage() {
         {/* DANGER */}
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-6 card-elevated p-7">
           <h2 className="font-display font-black text-xl text-ink">Sessão</h2>
-          <p className="mt-1 text-sm text-ink-soft">Sair da sua conta neste dispositivo.</p>
+          <p className="mt-1 text-sm text-ink-soft">Sign out da sua conta neste dispositivo.</p>
           <button onClick={async () => { await signOut(); navigate({ to: "/" }); }}
             className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted">
-            <LogOut className="h-4 w-4" /> Sair
+            <LogOut className="h-4 w-4" /> Sign out
           </button>
         </motion.section>
 
@@ -258,12 +258,12 @@ function SettingsPage() {
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-6 card-elevated p-7 border-flame/30">
           <div className="flex items-center gap-3 mb-2">
             <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><Trash2 className="h-5 w-5" /></div>
-            <h2 className="font-display font-black text-xl text-ink">Excluir conta</h2>
+            <h2 className="font-display font-black text-xl text-ink">Delete conta</h2>
           </div>
-          <p className="mt-1 text-sm text-ink-soft">Esta ação é permanente. Seus dados, perfil e acesso serão removidos. Assinaturas ativas devem ser canceladas antes.</p>
+          <p className="mt-1 text-sm text-ink-soft">Esta ação é permanente. Seus dados, perfil e acesso serão removidos. Subscriptions ativas devem ser canceladas antes.</p>
           <button onClick={() => setDeleteOpen(true)}
             className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90">
-            <Trash2 className="h-4 w-4" /> Excluir minha conta
+            <Trash2 className="h-4 w-4" /> Delete minha conta
           </button>
         </motion.section>
       </main>
@@ -282,7 +282,7 @@ function SettingsPage() {
             >
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><XCircle className="h-5 w-5" /></div>
-                <h3 className="font-display font-black text-2xl text-ink">Cancelar assinatura?</h3>
+                <h3 className="font-display font-black text-2xl text-ink">Cancel assinatura?</h3>
               </div>
               <p className="mt-3 text-sm text-ink-soft">
                 Você manterá acesso até o fim do ciclo já pago. Conta pra gente o que faltou — usamos para melhorar.
@@ -302,14 +302,14 @@ function SettingsPage() {
                   disabled={cancelling}
                   className="h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted disabled:opacity-50"
                 >
-                  Voltar
+                  Back
                 </button>
                 <button
                   onClick={confirmCancel}
                   disabled={cancelling}
                   className="h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90 disabled:opacity-60 inline-flex items-center justify-center gap-2"
                 >
-                  <XCircle className="h-4 w-4" /> {cancelling ? "Cancelando..." : "Confirmar cancelamento"}
+                  <XCircle className="h-4 w-4" /> {cancelling ? "Cancelando..." : "Confirm cancelamento"}
                 </button>
               </div>
             </motion.div>
@@ -328,7 +328,7 @@ function SettingsPage() {
             >
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><Trash2 className="h-5 w-5" /></div>
-                <h3 className="font-display font-black text-2xl text-ink">Excluir conta?</h3>
+                <h3 className="font-display font-black text-2xl text-ink">Delete conta?</h3>
               </div>
               <p className="mt-3 text-sm text-ink-soft">
                 Esta ação é <strong>permanente</strong> e não pode ser desfeita. Todos os seus dados serão removidos.
@@ -347,14 +347,14 @@ function SettingsPage() {
                   disabled={deleting}
                   className="h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted disabled:opacity-50"
                 >
-                  Voltar
+                  Back
                 </button>
                 <button
                   onClick={confirmDeleteAccount}
                   disabled={deleting || deleteConfirm.trim().toUpperCase() !== "EXCLUIR"}
                   className="h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90 disabled:opacity-60 inline-flex items-center justify-center gap-2"
                 >
-                  <Trash2 className="h-4 w-4" /> {deleting ? "Excluindo..." : "Excluir definitivamente"}
+                  <Trash2 className="h-4 w-4" /> {deleting ? "Excluindo..." : "Delete definitivamente"}
                 </button>
               </div>
             </motion.div>

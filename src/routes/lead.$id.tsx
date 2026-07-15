@@ -59,7 +59,7 @@ function LeadPage() {
     },
   });
 
-  if (loading || !isAdmin) return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
+  if (loading || !isAdmin) return <div className="min-h-screen grid place-items-center text-ink-soft">Loading...</div>;
   if (!data?.profile) return <div className="min-h-screen grid place-items-center text-ink-soft">Lead não encontrado.</div>;
 
   const { profile, project, payments, plans } = data;
@@ -88,13 +88,13 @@ function LeadPage() {
 
         <div className="mt-10 grid lg:grid-cols-3 gap-6">
           <Card title="Status">
-            <Row label="Plano" value={planName ?? "—"} />
-            <Row label="Pagamento" value={paid ? `${formatBRL(paid.amount)} · pago em ${formatDateTime(paid.paid_at ?? paid.created_at)}` : "Pendente"} />
-            <Row label="Projeto" value={project?.project_status ?? "—"} />
-            <Row label="Info enviada" value={project?.business_info_submitted ? "Sim" : "Aguardando"} />
+            <Row label="Plan" value={planName ?? "—"} />
+            <Row label="Payment" value={paid ? `${formatBRL(paid.amount)} · pago em ${formatDateTime(paid.paid_at ?? paid.created_at)}` : "Pending"} />
+            <Row label="Project" value={project?.project_status ?? "—"} />
+            <Row label="Info enviada" value={project?.business_info_submitted ? "Yes" : "Aguardando"} />
           </Card>
           <Card title="Contato">
-            <Row label="Nome" value={profile.name} />
+            <Row label="Name" value={profile.name} />
             <Row label="Email" value={profile.email} />
             <Row label="WhatsApp" value={bi.whatsapp || profile.whatsapp} />
             <Row label="Instagram" value={bi.instagram} />
@@ -109,7 +109,7 @@ function LeadPage() {
                 {bi.brand_color_secondary && <ColorSwatch hex={bi.brand_color_secondary} />}
               </div>
             </div>
-            <Row label="Descrição" value={bi.description} multiline />
+            <Row label="Description" value={bi.description} multiline />
           </Card>
         </div>
 

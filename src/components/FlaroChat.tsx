@@ -27,12 +27,12 @@ function parseAssistantMessage(content: string): { text: string; actions: Action
   for (const e of emails) {
     if (seen.has(e.toLowerCase())) continue;
     seen.add(e.toLowerCase());
-    actions.push({ type: "email", href: `mailto:${e}`, label: "Enviar e-mail", icon: "mail" });
+    actions.push({ type: "email", href: `mailto:${e}`, label: "Send e-mail", icon: "mail" });
   }
   text = text.replace(emailRegex, "");
 
   if (/\b(planos?|preços?|iniciar ativação|ativar (sua |a )?página|ver planos|contratar)\b/i.test(text)) {
-    actions.push({ type: "plans", href: PLANS_HREF, label: "Ver planos", icon: "spark" });
+    actions.push({ type: "plans", href: PLANS_HREF, label: "See pricing", icon: "spark" });
   }
 
   text = text
@@ -73,7 +73,7 @@ function ActionChip({ a }: { a: Action }) {
 const INTRO: Msg = {
   role: "assistant",
   content:
-    "Oi! Eu sou o Flaro, atendente inteligente da Filro. Como posso te ajudar a colocar sua página no ar em 24h?",
+    "Oi! Eu sou o Flaro, atendente inteligente da Filro. Como posso te ajudar a colocar sua página no ar within 1 business day?",
 };
 
 export function FlaroChat() {
@@ -116,7 +116,7 @@ export function FlaroChat() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.6, type: "spring", stiffness: 260, damping: 20 }}
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Fechar chat com Flaro" : "Abrir chat com Flaro"}
+        aria-label={open ? "Close chat com Flaro" : "Abrir chat com Flaro"}
         className="fixed z-[60] bottom-5 right-5 md:bottom-6 md:right-6 h-14 w-14 rounded-full grid place-items-center text-ink shadow-2xl transition-transform hover:scale-105 active:scale-95 bg-lime ring-2 ring-ink"
         style={{
           boxShadow: "0 16px 40px -8px oklch(0.255 0.035 260 / 0.45)",
@@ -224,7 +224,7 @@ export function FlaroChat() {
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                aria-label="Enviar"
+                aria-label="Send"
                 className="h-10 w-10 grid place-items-center rounded-xl bg-ink text-paper disabled:opacity-40 transition-transform hover:scale-105 active:scale-95"
               >
                 <Send className="h-4 w-4" />

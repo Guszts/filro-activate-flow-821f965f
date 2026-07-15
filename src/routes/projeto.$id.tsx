@@ -41,16 +41,16 @@ type ProjectStatus =
   | "cancelled";
 
 const STATUS_META: Record<ProjectStatus, { label: string; tone: string; description: string }> = {
-  new: { label: "Novo", tone: "bg-muted text-ink", description: "Projeto recém-criado." },
-  payment_confirmed: { label: "Pagamento confirmado", tone: "bg-azure/20 text-ink", description: "Recebemos seu pagamento. Em breve iniciamos." },
+  new: { label: "New", tone: "bg-muted text-ink", description: "Project recém-criado." },
+  payment_confirmed: { label: "Payment confirmado", tone: "bg-azure/20 text-ink", description: "Recebemos seu pagamento. Em breve iniciamos." },
   briefing_received: { label: "Briefing recebido", tone: "bg-azure/30 text-ink", description: "Estamos analisando suas informações." },
-  in_production: { label: "Em produção", tone: "bg-lime text-ink", description: "Nosso time está construindo seu site." },
+  in_production: { label: "In production", tone: "bg-lime text-ink", description: "Nosso time está construindo seu site." },
   revision_sent: { label: "Revisão enviada", tone: "bg-amber-100 text-ink", description: "Enviamos uma versão para sua avaliação." },
   awaiting_client: { label: "Aguardando você", tone: "bg-amber-200 text-ink", description: "Precisamos do seu retorno para seguir." },
-  published: { label: "Publicado", tone: "bg-lime text-ink", description: "Seu site está no ar!" },
+  published: { label: "Published", tone: "bg-lime text-ink", description: "Seu site está no ar!" },
   maintenance: { label: "Em manutenção", tone: "bg-muted text-ink", description: "Ajustes contínuos de mensalidade." },
-  paused: { label: "Pausado", tone: "bg-muted text-ink", description: "Projeto pausado temporariamente." },
-  cancelled: { label: "Cancelado", tone: "bg-flame/20 text-ink", description: "Projeto cancelado." },
+  paused: { label: "Pausado", tone: "bg-muted text-ink", description: "Project pausado temporariamente." },
+  cancelled: { label: "Canceled", tone: "bg-flame/20 text-ink", description: "Project cancelado." },
 };
 
 const PIPELINE: ProjectStatus[] = [
@@ -174,10 +174,10 @@ function ProjectDeliveryPage() {
         <SiteHeader />
         <main className="flex-1 grid place-items-center px-6">
           <div className="max-w-md text-center space-y-3">
-            <h1 className="editorial-headline text-3xl text-ink">Projeto não encontrado</h1>
+            <h1 className="editorial-headline text-3xl text-ink">Project não encontrado</h1>
             <p className="text-ink-soft text-sm">Verifique o link ou volte ao seu painel.</p>
             <Link to="/painel" className="inline-block mt-2 text-sm font-semibold text-ink underline">
-              Ir para o painel
+              Go to dashboard
             </Link>
           </div>
         </main>
@@ -196,12 +196,12 @@ function ProjectDeliveryPage() {
       <main className="flex-1">
         <section className="px-6 md:px-12 py-12 max-w-6xl mx-auto w-full">
           <Link to="/painel" className="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
-            <ArrowLeft className="h-4 w-4" /> Voltar ao painel
+            <ArrowLeft className="h-4 w-4" /> Back ao painel
           </Link>
 
           <div className="mt-6 flex items-start justify-between flex-wrap gap-4">
             <div>
-              <div className="text-xs tracking-wide text-ink-soft uppercase">Projeto</div>
+              <div className="text-xs tracking-wide text-ink-soft uppercase">Project</div>
               <h1 className="editorial-headline text-4xl md:text-5xl text-ink mt-1">
                 {project.business_name || "Seu site"}
               </h1>
@@ -283,7 +283,7 @@ function ProjectDeliveryPage() {
                     {project.published_url} <ExternalLink className="h-4 w-4" />
                   </a>
                   {project.published_at && (
-                    <p className="text-xs text-ink-soft">Publicado em {formatDateTime(project.published_at)}</p>
+                    <p className="text-xs text-ink-soft">Published em {formatDateTime(project.published_at)}</p>
                   )}
                 </div>
               ) : (
@@ -312,7 +312,7 @@ function ProjectDeliveryPage() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   rows={4}
-                  placeholder="Ex: trocar a foto da seção 'Sobre' e ajustar o telefone do rodapé."
+                  placeholder="Ex: trocar a foto da seção 'About' e ajustar o telefone do rodapé."
                   className="w-full px-4 py-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm resize-y"
                 />
                 <div className="mt-3 flex flex-wrap gap-3">
@@ -322,7 +322,7 @@ function ProjectDeliveryPage() {
                     className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-ink text-paper text-sm font-semibold disabled:opacity-60"
                   >
                     {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                    Enviar pedido de ajuste
+                    Send pedido de ajuste
                   </button>
                   <button
                     disabled={submitting}

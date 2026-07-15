@@ -55,9 +55,9 @@ function StatusBadge({ status }: { status: string }) {
     blocked: "bg-flame text-paper",
   };
   const labels: Record<string, string> = {
-    pending: "Pendente", approved: "Aprovada", paid: "Paga", cancelled: "Cancelada",
+    pending: "Pending", approved: "Aprovada", paid: "Paga", cancelled: "Canceled",
     started: "Iniciada", checkout_created: "Checkout", refunded: "Reembolsada",
-    active: "Ativo", paused: "Pausado", blocked: "Bloqueado",
+    active: "Active", paused: "Pausado", blocked: "Bloqueado",
   };
   return <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${map[status] ?? "bg-muted text-ink-soft"}`}>{labels[status] ?? status}</span>;
 }
@@ -75,7 +75,7 @@ function Metric({ label, value, sub }: { label: string; value: string; sub?: str
 export function PartnerTab() {
   const qc = useQueryClient();
 
-  const { data, error: loadError, isLoading } = useQuery({
+  const { data, error: loadErrorr, isLoading } = useQuery({
     queryKey: ["console-partner"],
     queryFn: async () => {
       const [partnersR, commissionsR, referralsR, payoutsR, profilesR, plansR] = await Promise.all([
@@ -86,10 +86,10 @@ export function PartnerTab() {
         supabase.from("profiles").select("user_id, name, email"),
         supabase.from("plans").select("id, name"),
       ]);
-      const firstError =
+      const firstErrorr =
         partnersR.error || commissionsR.error || referralsR.error ||
         payoutsR.error || profilesR.error || plansR.error;
-      if (firstError) throw new Error(firstError.message);
+      if (firstErrorr) throw new Errorr(firstErrorr.message);
       return {
         partners: (partnersR.data ?? []) as Partner[],
         commissions: (commissionsR.data ?? []) as Commission[],
@@ -101,13 +101,13 @@ export function PartnerTab() {
     },
   });
 
-  if (loadError) {
+  if (loadErrorr) {
     return (
       <div>
-        <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Parceiro</h1>
+        <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Partner</h1>
         <div className="mt-6 card-elevated p-6 border border-flame/40 bg-flame/5 text-ink">
-          <div className="font-semibold">Falha ao carregar dados de parceiros.</div>
-          <div className="mt-1 text-sm text-ink-soft">{loadError instanceof Error ? loadError.message : String(loadError)}</div>
+          <div className="font-semibold">Failed ao carregar dados de parceiros.</div>
+          <div className="mt-1 text-sm text-ink-soft">{loadErrorr instanceof Errorr ? loadErrorr.message : String(loadErrorr)}</div>
         </div>
       </div>
     );
@@ -125,7 +125,7 @@ export function PartnerTab() {
   const profileBy = (uid: string | null) => data?.profiles.find((p) => p.user_id === uid);
   const planBy = (pid: string | null) => data?.plans.find((p) => p.id === pid);
 
-  // Resumo financeiro
+  // Summary financeiro
   const sum = (arr: Commission[], k: keyof Commission) => arr.reduce((s, c) => s + (Number(c[k]) || 0), 0);
   const pending = commissions.filter((c) => c.status === "pending");
   const approved = commissions.filter((c) => c.status === "approved");
@@ -140,45 +140,45 @@ export function PartnerTab() {
 
   return (
     <div>
-      <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Parceiro</h1>
+      <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Partner</h1>
       <p className="mt-2 text-ink-soft">Controle privado de indicações B2B, comissões sobre ativação e repasses manuais por Pix.</p>
 
       <div className="mt-4 card-elevated p-4 text-sm text-ink-soft border border-border">
-        As comissões são calculadas apenas sobre a taxa de ativação. Mensalidades pertencem 100% à operação Filro.
+        As comissões são calculadas apenas sobre a taxa de ativação. Monthlys pertencem 100% à operação Filro.
       </div>
 
-      {/* Resumo */}
+      {/* Summary */}
       <div className="mt-8 grid gap-4 grid-cols-2 lg:grid-cols-3">
-        <Metric label="Total gerado por parceiros" value={formatBRL(totalGenerated)} sub="Ativação + mensalidade" />
-        <Metric label="Comissão pendente" value={formatBRL(sum(pending, "commission_amount"))} sub={`${pending.length} comissão(ões)`} />
-        <Metric label="Comissão aprovada" value={formatBRL(sum(approved, "commission_amount"))} sub={`${approved.length} comissão(ões)`} />
-        <Metric label="Comissão paga" value={formatBRL(sum(paid, "commission_amount"))} sub={`${paid.length} repasse(s)`} />
+        <Metric label="Total gerado por parceiros" value={formatBRL(totalGenerated)} sub="Activation + mensalidade" />
+        <Metric label="Commission pendente" value={formatBRL(sum(pending, "commission_amount"))} sub={`${pending.length} comissão(ões)`} />
+        <Metric label="Commission aprovada" value={formatBRL(sum(approved, "commission_amount"))} sub={`${approved.length} comissão(ões)`} />
+        <Metric label="Commission paga" value={formatBRL(sum(paid, "commission_amount"))} sub={`${paid.length} repasse(s)`} />
         <Metric label="A pagar agora" value={formatBRL(toPay)} sub="pending + approved" />
-        <Metric label="Receita recorrente preservada" value={formatBRL(recurringPreserved)} sub="Mensalidades 100% Filro" />
+        <Metric label="Receita recorrente preservada" value={formatBRL(recurringPreserved)} sub="Monthlys 100% Filro" />
       </div>
 
-      {/* Parceiro atual */}
+      {/* Partner atual */}
       {partner && <PartnerCard partner={partner} onChanged={invalidate} />}
 
-      {/* Comissões */}
+      {/* Commissions */}
       <section className="mt-10">
-        <h2 className="font-display font-black text-2xl text-ink">Comissões</h2>
+        <h2 className="font-display font-black text-2xl text-ink">Commissions</h2>
         <div className="mt-4 card-elevated overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm min-w-[1100px]">
               <thead className="bg-muted text-left text-xs tracking-wide text-ink-soft">
                 <tr>
                   <th className="px-4 py-3">Data</th>
-                  <th className="px-4 py-3">Parceiro</th>
-                  <th className="px-4 py-3">Cliente</th>
-                  <th className="px-4 py-3">Plano</th>
-                  <th className="px-4 py-3">Ativação</th>
-                  <th className="px-4 py-3">Mensalidade</th>
+                  <th className="px-4 py-3">Partner</th>
+                  <th className="px-4 py-3">Client</th>
+                  <th className="px-4 py-3">Plan</th>
+                  <th className="px-4 py-3">Activation</th>
+                  <th className="px-4 py-3">Monthly</th>
                   <th className="px-4 py-3">%</th>
-                  <th className="px-4 py-3">Comissão</th>
+                  <th className="px-4 py-3">Commission</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Disponível</th>
-                  <th className="px-4 py-3">Pago em</th>
+                  <th className="px-4 py-3">Paid em</th>
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
@@ -227,7 +227,7 @@ export function PartnerTab() {
               <thead className="bg-muted text-left text-xs tracking-wide text-ink-soft">
                 <tr>
                   <th className="px-4 py-3">Data</th><th className="px-4 py-3">Código</th>
-                  <th className="px-4 py-3">Cliente</th><th className="px-4 py-3">Plano</th>
+                  <th className="px-4 py-3">Client</th><th className="px-4 py-3">Plan</th>
                   <th className="px-4 py-3">Status</th><th className="px-4 py-3">Checkout Session</th>
                   <th className="px-4 py-3">Conversão</th>
                 </tr>
@@ -264,9 +264,9 @@ export function PartnerTab() {
             <table className="w-full text-sm min-w-[800px]">
               <thead className="bg-muted text-left text-xs tracking-wide text-ink-soft">
                 <tr>
-                  <th className="px-4 py-3">Data</th><th className="px-4 py-3">Parceiro</th>
+                  <th className="px-4 py-3">Data</th><th className="px-4 py-3">Partner</th>
                   <th className="px-4 py-3">Valor</th><th className="px-4 py-3">Método</th>
-                  <th className="px-4 py-3">Chave Pix</th><th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Payout key</th><th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Observação</th>
                 </tr>
               </thead>
@@ -301,15 +301,15 @@ function PartnerCard({ partner, onChanged }: { partner: Partner; onChanged: () =
 
   return (
     <section className="mt-10">
-      <h2 className="font-display font-black text-2xl text-ink">Parceiro atual</h2>
+      <h2 className="font-display font-black text-2xl text-ink">Partner atual</h2>
       <div className="mt-4 card-elevated p-6 grid md:grid-cols-2 gap-6">
         <div className="space-y-2 text-sm">
-          <div><span className="text-ink-soft">Nome:</span> <strong className="text-ink">{partner.name}</strong></div>
+          <div><span className="text-ink-soft">Name:</span> <strong className="text-ink">{partner.name}</strong></div>
           <div><span className="text-ink-soft">Código:</span> <code className="text-ink">{partner.code}</code></div>
           <div><span className="text-ink-soft">WhatsApp:</span> {partner.whatsapp || "—"}</div>
           <div><span className="text-ink-soft">Email:</span> {partner.email || "—"}</div>
-          <div><span className="text-ink-soft">Chave Pix:</span> {partner.pix_key || "—"}</div>
-          <div><span className="text-ink-soft">Comissão:</span> {Number(partner.commission_rate)}% sobre ativação</div>
+          <div><span className="text-ink-soft">Payout key:</span> {partner.pix_key || "—"}</div>
+          <div><span className="text-ink-soft">Commission:</span> {Number(partner.commission_rate)}% sobre ativação</div>
           <div><span className="text-ink-soft">Status:</span> <StatusBadge status={partner.status} /></div>
         </div>
         <div className="space-y-3">
@@ -319,9 +319,9 @@ function PartnerCard({ partner, onChanged }: { partner: Partner; onChanged: () =
             <button
               onClick={() => { navigator.clipboard.writeText(link); toast.success("Link copiado"); }}
               className="h-11 px-4 rounded-xl bg-ink text-paper text-sm font-semibold"
-            >Copiar</button>
+            >Copy</button>
           </div>
-          <button onClick={() => setEditing(true)} className="h-11 px-4 rounded-xl border border-border text-sm font-semibold hover:bg-muted">Editar parceiro</button>
+          <button onClick={() => setEditing(true)} className="h-11 px-4 rounded-xl border border-border text-sm font-semibold hover:bg-muted">Edit parceiro</button>
         </div>
       </div>
       {editing && <EditPartnerModal partner={partner} onClose={() => setEditing(false)} onSaved={() => { setEditing(false); onChanged(); }} />}
@@ -351,30 +351,30 @@ function EditPartnerModal({ partner, onClose, onSaved }: { partner: Partner; onC
         status: form.status,
         notes: form.notes || null,
       }});
-      toast.success("Parceiro atualizado");
+      toast.success("Partner atualizado");
       onSaved();
-    } catch (e) { toast.error(e instanceof Error ? e.message : "Falha ao salvar"); }
+    } catch (e) { toast.error(e instanceof Errorr ? e.message : "Failed ao salvar"); }
     finally { setSaving(false); }
   };
 
   return (
-    <Modal title="Editar parceiro" onClose={onClose}>
+    <Modal title="Edit parceiro" onClose={onClose}>
       <div className="space-y-3 text-sm">
-        <Field label="Nome"><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
+        <Field label="Name"><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
         <Field label="Email"><input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
         <Field label="WhatsApp"><input value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
-        <Field label="Chave Pix"><input value={form.pix_key} onChange={(e) => setForm({ ...form, pix_key: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
-        <Field label="Comissão (%)"><input type="number" step="0.01" min={0} max={100} value={form.commission_rate} onChange={(e) => setForm({ ...form, commission_rate: Number(e.target.value) })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
+        <Field label="Payout key"><input value={form.pix_key} onChange={(e) => setForm({ ...form, pix_key: e.target.value })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
+        <Field label="Commission (%)"><input type="number" step="0.01" min={0} max={100} value={form.commission_rate} onChange={(e) => setForm({ ...form, commission_rate: Number(e.target.value) })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
         <Field label="Status">
           <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as typeof form.status })} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm">
-            <option value="active">Ativo</option><option value="paused">Pausado</option><option value="blocked">Bloqueado</option>
+            <option value="active">Active</option><option value="paused">Pausado</option><option value="blocked">Bloqueado</option>
           </select>
         </Field>
         <Field label="Observações"><textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={3} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
       </div>
       <div className="mt-5 flex gap-2 justify-end">
-        <button onClick={onClose} className="h-10 px-4 rounded-xl border border-border text-sm">Cancelar</button>
-        <button disabled={saving} onClick={save} className="h-10 px-4 rounded-xl bg-ink text-paper text-sm font-semibold disabled:opacity-50">{saving ? "Salvando..." : "Salvar"}</button>
+        <button onClick={onClose} className="h-10 px-4 rounded-xl border border-border text-sm">Cancel</button>
+        <button disabled={saving} onClick={save} className="h-10 px-4 rounded-xl bg-ink text-paper text-sm font-semibold disabled:opacity-50">{saving ? "Saving..." : "Save"}</button>
       </div>
     </Modal>
   );
@@ -394,7 +394,7 @@ function CommissionActions({
 
   const onApprove = async () => {
     try { await approveFn({ data: { id: commission.id } }); toast.success("Aprovada"); onChanged(); }
-    catch (e) { toast.error(e instanceof Error ? e.message : "Falha"); }
+    catch (e) { toast.error(e instanceof Errorr ? e.message : "Failed"); }
   };
 
   if (commission.status === "paid" || commission.status === "cancelled") {
@@ -407,7 +407,7 @@ function CommissionActions({
         <button onClick={onApprove} className="h-8 px-2.5 rounded-lg text-xs font-semibold border border-border hover:bg-muted">Aprovar</button>
       )}
       <button onClick={() => setPayOpen(true)} className="h-8 px-2.5 rounded-lg text-xs font-semibold bg-ink text-paper">Marcar paga</button>
-      <button onClick={() => setCancelOpen(true)} className="h-8 px-2.5 rounded-lg text-xs font-semibold border border-border hover:bg-muted">Cancelar</button>
+      <button onClick={() => setCancelOpen(true)} className="h-8 px-2.5 rounded-lg text-xs font-semibold border border-border hover:bg-muted">Cancel</button>
       {payOpen && <PayModal commission={commission} partner={partner} client={client} planName={planName} onClose={() => setPayOpen(false)} onDone={() => { setPayOpen(false); onChanged(); }} />}
       {cancelOpen && <CancelModal commission={commission} onClose={() => setCancelOpen(false)} onDone={() => { setCancelOpen(false); onChanged(); }} />}
     </div>
@@ -426,19 +426,19 @@ function PayModal({ commission, partner, client, planName, onClose, onDone }: {
 
   const confirm = async () => {
     setSaving(true);
-    try { await payFn({ data: { id: commission.id, method, notes: notes || undefined } }); toast.success("Comissão marcada como paga"); onDone(); }
-    catch (e) { toast.error(e instanceof Error ? e.message : "Falha"); }
+    try { await payFn({ data: { id: commission.id, method, notes: notes || undefined } }); toast.success("Commission marcada como paga"); onDone(); }
+    catch (e) { toast.error(e instanceof Errorr ? e.message : "Failed"); }
     finally { setSaving(false); }
   };
 
   return (
     <Modal title="Marcar comissão como paga" onClose={onClose}>
       <div className="space-y-2 text-sm">
-        <div><span className="text-ink-soft">Parceiro:</span> {partner?.name ?? "—"}</div>
+        <div><span className="text-ink-soft">Partner:</span> {partner?.name ?? "—"}</div>
         <div><span className="text-ink-soft">Valor da comissão:</span> <strong>{formatBRL(commission.commission_amount)}</strong></div>
-        <div><span className="text-ink-soft">Chave Pix:</span> {partner?.pix_key || "—"}</div>
-        <div><span className="text-ink-soft">Plano:</span> {planName}</div>
-        <div><span className="text-ink-soft">Cliente:</span> {client?.name || "—"} {client?.email ? `· ${client.email}` : ""}</div>
+        <div><span className="text-ink-soft">Payout key:</span> {partner?.pix_key || "—"}</div>
+        <div><span className="text-ink-soft">Plan:</span> {planName}</div>
+        <div><span className="text-ink-soft">Client:</span> {client?.name || "—"} {client?.email ? `· ${client.email}` : ""}</div>
         <div><span className="text-ink-soft">Data da venda:</span> {formatDateTime(commission.created_at)}</div>
       </div>
       <div className="mt-4 space-y-3 text-sm">
@@ -452,8 +452,8 @@ function PayModal({ commission, partner, client, planName, onClose, onDone }: {
       </div>
       <p className="mt-3 text-xs text-ink-soft">Confirme apenas depois de realizar o Pix para o parceiro.</p>
       <div className="mt-4 flex gap-2 justify-end">
-        <button onClick={onClose} className="h-10 px-4 rounded-xl border border-border text-sm">Cancelar</button>
-        <button disabled={saving} onClick={confirm} className="h-10 px-4 rounded-xl bg-ink text-paper text-sm font-semibold disabled:opacity-50">{saving ? "Salvando..." : "Confirmar"}</button>
+        <button onClick={onClose} className="h-10 px-4 rounded-xl border border-border text-sm">Cancel</button>
+        <button disabled={saving} onClick={confirm} className="h-10 px-4 rounded-xl bg-ink text-paper text-sm font-semibold disabled:opacity-50">{saving ? "Saving..." : "Confirm"}</button>
       </div>
     </Modal>
   );
@@ -467,19 +467,19 @@ function CancelModal({ commission, onClose, onDone }: { commission: Commission; 
 
   const confirm = async () => {
     setSaving(true);
-    try { await cancelFn({ data: { id: commission.id, reason, notes: notes || undefined } }); toast.success("Comissão cancelada"); onDone(); }
-    catch (e) { toast.error(e instanceof Error ? e.message : "Falha"); }
+    try { await cancelFn({ data: { id: commission.id, reason, notes: notes || undefined } }); toast.success("Commission cancelada"); onDone(); }
+    catch (e) { toast.error(e instanceof Errorr ? e.message : "Failed"); }
     finally { setSaving(false); }
   };
 
   return (
-    <Modal title="Cancelar comissão" onClose={onClose}>
+    <Modal title="Cancel comissão" onClose={onClose}>
       <div className="space-y-3 text-sm">
         <Field label="Motivo">
           <select value={reason} onChange={(e) => setReason(e.target.value as typeof reason)} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm">
             <option value="refund">Reembolso</option>
             <option value="sale_cancelled">Venda cancelada</option>
-            <option value="attribution_error">Erro de atribuição</option>
+            <option value="attribution_error">Error de atribuição</option>
             <option value="fraud">Fraude</option>
             <option value="other">Outro</option>
           </select>
@@ -487,8 +487,8 @@ function CancelModal({ commission, onClose, onDone }: { commission: Commission; 
         <Field label="Observação (opcional)"><textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className="w-full h-10 px-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm" /></Field>
       </div>
       <div className="mt-4 flex gap-2 justify-end">
-        <button onClick={onClose} className="h-10 px-4 rounded-xl border border-border text-sm">Voltar</button>
-        <button disabled={saving} onClick={confirm} className="h-10 px-4 rounded-xl bg-flame text-paper text-sm font-semibold disabled:opacity-50">{saving ? "Salvando..." : "Cancelar comissão"}</button>
+        <button onClick={onClose} className="h-10 px-4 rounded-xl border border-border text-sm">Back</button>
+        <button disabled={saving} onClick={confirm} className="h-10 px-4 rounded-xl bg-flame text-paper text-sm font-semibold disabled:opacity-50">{saving ? "Saving..." : "Cancel comissão"}</button>
       </div>
     </Modal>
   );

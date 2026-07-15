@@ -7,40 +7,40 @@ const faqs = [
     a: "Estimativa de até 24 horas após o envio completo das informações do seu negócio. Materiais incompletos podem alongar o prazo.",
   },
   {
-    q: "Quanto custa? Como funcionam os planos?",
-    a: "Cobramos uma taxa única de ativação + mensalidade. Os planos vão do Start (R$ 197 + R$ 97/mês) ao Premium (R$ 897 + R$ 129/mês). O Plus (R$ 497 + R$ 97/mês) é o mais escolhido. Veja todos os planos na página /planos.",
+    q: "Quanto custa? How it worksm os planos?",
+    a: "Cobramos uma taxa única de ativação + mensalidade. Os planos vão do Start (R$ 197 + R$ 97/mo) ao Premium (R$ 897 + R$ 129/mo). O Plus (R$ 497 + R$ 97/mo) é o mais escolhido. Veja todos os planos na página /planos.",
   },
   {
     q: "Posso enviar um modelo de referência?",
-    a: "Sim. No formulário de informações do negócio, você pode anexar um link, arquivo ou descrever em texto livre como gostaria que ficasse.",
+    a: "Yes. No formulário de informações do negócio, você pode anexar um link, arquivo ou descrever em texto livre como gostaria que ficasse.",
   },
   {
-    q: "Como funciona o pagamento?",
-    a: "Pagamento seguro pela Stripe: cartão de crédito, cartão de débito ou Pix. A ativação é cobrada uma vez; a mensalidade é cobrada na mesma data todo mês.",
+    q: "How it works o pagamento?",
+    a: "Payment seguro pela Stripe: cartão de crédito, cartão de débito ou Pix. A ativação é cobrada uma vez; a mensalidade é cobrada na mesma data todo mo.",
   },
   {
     q: "Posso cancelar quando quiser?",
-    a: "Sim. Não há fidelidade. Cancele a mensalidade a qualquer momento direto do seu painel. A página fica no ar até o fim do ciclo já pago.",
+    a: "Yes. No há fidelidade. Cancele a mensalidade a qualquer momento direto do seu painel. A página fica no ar até o fim do ciclo já pago.",
   },
   {
     q: "Vocês fazem alterações depois de entregue?",
-    a: "Sim. Pequenas alterações (texto, fotos, horários, contatos, preços de catálogo) estão incluídas na mensalidade. Mudanças estruturais maiores são orçadas à parte.",
+    a: "Yes. Pequenas alterações (texto, fotos, horários, contatos, preços de catálogo) estão incluídas na mensalidade. Mudanças estruturais maiores são orçadas à parte.",
   },
   {
     q: "Preciso ter domínio próprio?",
-    a: "Não é obrigatório. Entregamos em um subdomínio nosso (ex.: seu-negocio.filro.site), mas se você tiver um domínio (ex.: meunegocio.com.br) configuramos sem custo adicional.",
+    a: "No é obrigatório. Entregamos em um subdomínio nosso (ex.: seu-negocio.filro.site), mas se você tiver um domínio (ex.: meunegocio.com.br) configuramos sem custo adicional.",
   },
   {
     q: "Funciona bem no celular?",
-    a: "Sim. Todas as páginas são 100% responsivas, otimizadas para mobile-first, e instaláveis como PWA (atalho na tela inicial do celular).",
+    a: "Yes. Todas as páginas são 100% responsivas, otimizadas para mobile-first, e instaláveis como PWA (atalho na tela inicial do celular).",
   },
   {
     q: "Tem integração com WhatsApp?",
-    a: "Sim. O botão de WhatsApp é nativo em todos os planos. Cliques são rastreados no painel para você medir conversão.",
+    a: "Yes. O botão de WhatsApp é nativo em todos os planos. Cliques são rastreados no painel para você medir conversão.",
   },
   {
     q: "Vocês cuidam de SEO?",
-    a: "Sim — SEO técnico básico está incluso em todos os planos: meta tags, schema.org, sitemap.xml, robots.txt e otimização de imagens. SEO de conteúdo (artigos, blog) é serviço à parte.",
+    a: "Yes — SEO técnico básico está incluso em todos os planos: meta tags, schema.org, sitemap.xml, robots.txt e otimização de imagens. SEO de conteúdo (artigos, blog) é serviço à parte.",
   },
   {
     q: "Quais formas de pagamento aceitam?",

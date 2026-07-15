@@ -71,7 +71,7 @@ export function SupportTab() {
       setNewStatus("");
       toast.success("Resposta enviada.");
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falha ao responder.");
+      toast.error(e instanceof Errorr ? e.message : "Failed ao responder.");
     } finally {
       setSending(false);
     }
@@ -82,7 +82,7 @@ export function SupportTab() {
 
   return (
     <div>
-      <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Suporte</h1>
+      <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Support</h1>
       <p className="text-ink-soft mt-2 text-sm">Tickets abertos pelos clientes.</p>
 
       <div className="mt-6 grid lg:grid-cols-[1fr_1.5fr] gap-4">
@@ -127,7 +127,7 @@ export function SupportTab() {
                 {(messages.data ?? []).map((m) => (
                   <div key={m.id} className={`p-3 rounded-xl ${m.author_role === "admin" ? "bg-lime/30 mr-8" : "bg-muted ml-8"}`}>
                     <div className="text-[10px] font-bold uppercase tracking-wide text-ink-soft mb-1">
-                      {m.author_role === "admin" ? "Você (admin)" : "Cliente"} · {formatDateTime(m.created_at)}
+                      {m.author_role === "admin" ? "Você (admin)" : "Client"} · {formatDateTime(m.created_at)}
                     </div>
                     <p className="text-sm text-ink whitespace-pre-wrap">{m.content}</p>
                   </div>
@@ -158,7 +158,7 @@ export function SupportTab() {
                     className="inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-ink text-paper text-sm font-semibold disabled:opacity-60"
                   >
                     {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                    Enviar
+                    Send
                   </button>
                 </div>
               </div>
@@ -216,11 +216,11 @@ export function ExtraChargesTab() {
           environment: getStripeEnvironment(),
         },
       });
-      toast.success("Cobrança criada e link de pagamento gerado.");
+      toast.success("Charge criada e link de pagamento gerado.");
       setForm({ userId: "", projectId: "", title: "", description: "", amount: "" });
       setShowForm(false);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falha ao criar cobrança.");
+      toast.error(e instanceof Errorr ? e.message : "Failed ao criar cobrança.");
     } finally {
       setSubmitting(false);
     }
@@ -230,7 +230,7 @@ export function ExtraChargesTab() {
     <div>
       <div className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Cobranças extras</h1>
+          <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Charges extras</h1>
           <p className="text-ink-soft mt-2 text-sm">Upsell e cobranças avulsas (página extra, redesign, etc).</p>
         </div>
         <button
@@ -238,7 +238,7 @@ export function ExtraChargesTab() {
           className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-ink text-paper text-sm font-semibold"
         >
           {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-          {showForm ? "Cancelar" : "Nova cobrança"}
+          {showForm ? "Cancel" : "New cobrança"}
         </button>
       </div>
 
@@ -246,7 +246,7 @@ export function ExtraChargesTab() {
         <div className="mt-6 card-elevated p-6 space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Cliente</label>
+              <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Client</label>
               <select
                 value={form.userId}
                 onChange={(e) => setForm({ ...form, userId: e.target.value })}
@@ -271,7 +271,7 @@ export function ExtraChargesTab() {
             </div>
           </div>
           <div>
-            <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Título</label>
+            <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Title</label>
             <input
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -280,7 +280,7 @@ export function ExtraChargesTab() {
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Descrição (opcional)</label>
+            <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Description (opcional)</label>
             <textarea
               rows={3}
               value={form.description}
@@ -304,8 +304,8 @@ export function ExtraChargesTab() {
           <table className="w-full text-sm">
             <thead className="bg-muted text-left text-xs tracking-wide text-ink-soft">
               <tr>
-                <th className="px-4 py-3">Cliente</th>
-                <th className="px-4 py-3">Título</th>
+                <th className="px-4 py-3">Client</th>
+                <th className="px-4 py-3">Title</th>
                 <th className="px-4 py-3">Valor</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Link</th>

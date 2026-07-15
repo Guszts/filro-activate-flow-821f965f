@@ -33,7 +33,7 @@ type Destination = {
 };
 
 const DESTINATIONS: Destination[] = [
-  { id: "nova-york", title: "Nova York", country: "EUA", locationLabel: "Cidade dos EUA", category: "america", image: "https://images.unsplash.com/photo-1492217140050-8c43e0a3923f?auto=format&fit=crop&w=1200&q=80", rating: 4.8, type: "horizontal", priceLabel: "A partir de R$ 7.490", description: "Roteiro urbano com hospedagem em Manhattan e passeios guiados." },
+  { id: "nova-york", title: "New York", country: "EUA", locationLabel: "Cidade dos EUA", category: "america", image: "https://images.unsplash.com/photo-1492217140050-8c43e0a3923f?auto=format&fit=crop&w=1200&q=80", rating: 4.8, type: "horizontal", priceLabel: "A partir de R$ 7.490", description: "Roteiro urbano com hospedagem em Manhattan e passeios guiados." },
   { id: "bangladesh", title: "Bangladesh", country: "Bangladesh", locationLabel: "Cox Bazar", category: "asia", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80", rating: 4.6, type: "horizontal", priceLabel: "A partir de R$ 5.290", description: "Praias de águas turquesa e cultura local imersiva." },
   { id: "nepal", title: "Nepal", country: "Nepal", locationLabel: "Himalaia", category: "asia", image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=900&q=80", rating: 5, type: "vertical", priceLabel: "A partir de R$ 8.990", description: "Trekking nas montanhas com guias locais e lodges premium." },
   { id: "dubai", title: "Dubai", country: "EAU", locationLabel: "Emirados Árabes Unidos", category: "oriente-medio", image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=900&q=80", rating: 5, type: "vertical", priceLabel: "A partir de R$ 9.790", description: "Hotéis 5 estrelas, deserto e arquitetura moderna." },
@@ -53,7 +53,7 @@ const FILTERS = [
 type FilterKey = (typeof FILTERS)[number]["key"];
 
 const NAV_ITEMS = [
-  { key: "inicio", label: "Início" },
+  { key: "inicio", label: "Home" },
   { key: "passagens", label: "Passagens" },
   { key: "hoteis", label: "Hotéis" },
   { key: "pacotes", label: "Pacotes" },
@@ -101,7 +101,7 @@ type DetailCtx = {
 const DetailContext = createContext<DetailCtx | null>(null);
 function useDetail() {
   const ctx = useContext(DetailContext);
-  if (!ctx) throw new Error("DetailContext missing");
+  if (!ctx) throw new Errorr("DetailContext missing");
   return ctx;
 }
 
@@ -122,7 +122,7 @@ export function WishesPreview() {
   const [openDropdown, setOpenDropdown] = useState<null | "loc" | "date" | "guests">(null);
   const [loc, setLoc] = useState("Para onde você vai?");
   const [date, setDate] = useState("Escolha a data");
-  const [guests, setGuests] = useState("Adicionar");
+  const [guests, setGuests] = useState("Add");
   const [bookingFor, setBookingFor] = useState<Destination | null>(null);
   const [detail, setDetail] = useState<DetailItem | null>(null);
 
@@ -221,7 +221,7 @@ function DetailView({ item, onBack, onReserve }: { item: DetailItem; onBack: () 
         whileHover={{ x: -4 }} onClick={onBack}
         style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: C.ink, marginBottom: 18, padding: "8px 14px", borderRadius: 999, background: C.pill }}
       >
-        ← Voltar
+        ← Back
       </motion.button>
 
       <motion.div
@@ -230,7 +230,7 @@ function DetailView({ item, onBack, onReserve }: { item: DetailItem; onBack: () 
         className="wishes-hero"
       >
         <motion.img
-          src={item.image} alt={item.title} onError={imgFallback}
+          src={item.image} alt={item.title} onErrorr={imgFallback}
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 1.4, ease: "easeOut" }}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -244,7 +244,7 @@ function DetailView({ item, onBack, onReserve }: { item: DetailItem; onBack: () 
 
       <div className="wishes-content" style={{ marginTop: 32, display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 28 }}>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: C.ink }}>Sobre essa experiência</h2>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: C.ink }}>About essa experiência</h2>
           <p style={{ marginTop: 10, fontSize: 15, lineHeight: 1.7, color: C.inkSoft }}>{item.description} Roteiro pensado para quem busca conforto e autenticidade, com hospedagem cuidadosamente avaliada e atividades guiadas em português.</p>
 
           {item.highlights && (
@@ -299,10 +299,10 @@ function DetailView({ item, onBack, onReserve }: { item: DetailItem; onBack: () 
           )}
           <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 10 }}>
             <motion.button whileHover={{ scale: 1.02 }} onClick={onReserve} style={{ height: 50, borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 14 }}>Reservar agora</motion.button>
-            <button style={{ height: 46, borderRadius: 14, background: C.pill, color: C.ink, fontWeight: 600, fontSize: 13 }}>Adicionar à lista de desejos</button>
+            <button style={{ height: 46, borderRadius: 14, background: C.pill, color: C.ink, fontWeight: 600, fontSize: 13 }}>Add à lista de desejos</button>
           </div>
           <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.divider}`, display: "flex", flexDirection: "column", gap: 10 }}>
-            {[{ i: Shield, l: "Reserva 100% protegida" }, { i: Heart, l: "Cancelamento flexível" }, { i: Phone, l: "Suporte 24/7" }].map((b) => (
+            {[{ i: Shield, l: "Reserva 100% protegida" }, { i: Heart, l: "Cancelamento flexível" }, { i: Phone, l: "Support 24/7" }].map((b) => (
               <div key={b.l} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: C.inkSoft }}>
                 <b.i size={14} /> {b.l}
               </div>
@@ -426,7 +426,7 @@ function Header({ page, setPage, menuOpen, setMenuOpen }: { page: PageKey; setPa
           className="wishes-header-cta"
           style={{ background: C.pill, color: C.ink, height: 38, padding: "0 16px", borderRadius: 999, fontSize: 13, fontWeight: 600 }}
         >
-          Entrar
+          Sign in
         </motion.button>
       </div>
 
@@ -475,7 +475,7 @@ function Home(props: {
         style={{ marginTop: 24, height: 460, borderRadius: 28, overflow: "hidden", position: "relative" }}
       >
         <motion.img
-          src={HERO_IMAGE} alt="Resort à beira-mar" onError={imgFallback}
+          src={HERO_IMAGE} alt="Resort à beira-mar" onErrorr={imgFallback}
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 1.5, ease: "easeOut" }}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -508,10 +508,10 @@ function Home(props: {
         style={{ position: "relative", width: "82%", margin: "-48px auto 0", height: 96, background: C.paper, borderRadius: 24, boxShadow: "0 20px 60px rgba(22,27,28,0.12)", display: "grid", gridTemplateColumns: "1fr auto 1fr auto 1fr auto", alignItems: "center", padding: "0 14px", gap: 8, zIndex: 5 }}
       >
         <SearchField label="Localização" value={loc} open={openDropdown === "loc"} onToggle={() => setOpenDropdown(openDropdown === "loc" ? null : "loc")}
-          options={["Lisboa", "Dubai", "Nepal", "Nova York", "Bangladesh"]} onPick={(v) => { setLoc(v); setOpenDropdown(null); }} />
+          options={["Lisboa", "Dubai", "Nepal", "New York", "Bangladesh"]} onPick={(v) => { setLoc(v); setOpenDropdown(null); }} />
         <Divider />
         <SearchField label="Data" value={date} open={openDropdown === "date"} onToggle={() => setOpenDropdown(openDropdown === "date" ? null : "date")}
-          options={["Hoje", "Amanhã", "Próxima Semana", "Próximo Mês"]} onPick={(v) => { setDate(v); setOpenDropdown(null); }} />
+          options={["Hoje", "Amanhã", "Próxima Semana", "Next Mês"]} onPick={(v) => { setDate(v); setOpenDropdown(null); }} />
         <Divider />
         <SearchField label="Hóspedes" value={guests} open={openDropdown === "guests"} onToggle={() => setOpenDropdown(openDropdown === "guests" ? null : "guests")}
           options={["1", "2", "3", "4+"]} onPick={(v) => { setGuests(v); setOpenDropdown(null); }} />
@@ -521,7 +521,7 @@ function Home(props: {
           onClick={() => setOpenDropdown(null)}
           style={{ background: C.btn, color: "#fff", width: 180, height: 70, borderRadius: 14, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, fontWeight: 600 }}
         >
-          <Search size={16} /> Buscar
+          <Search size={16} /> Search
         </motion.button>
       </motion.div>
 
@@ -634,7 +634,7 @@ function HorizontalCard({ d, onReserve }: { d: Destination; onReserve: () => voi
       style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 14, padding: 14, borderRadius: 18, border: `1px solid ${C.border}`, background: C.paper, cursor: "pointer" }}
     >
       <div style={{ overflow: "hidden", borderRadius: 14, height: 120 }}>
-        <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} className="group-hover:scale-105" />
+        <img onErrorr={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} className="group-hover:scale-105" />
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "4px 4px 4px 0" }}>
         <div>
@@ -658,7 +658,7 @@ function VerticalCard({ d, onReserve }: { d: Destination; onReserve: () => void 
       className="wishes-card-vertical group"
       style={{ position: "relative", height: 320, borderRadius: 28, overflow: "hidden", border: `1px solid ${C.border}`, cursor: "pointer" }}
     >
-      <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
+      <img onErrorr={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
       <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(6px)", padding: "6px 10px", borderRadius: 999, fontSize: 12, fontWeight: 600, color: C.ink, display: "inline-flex", alignItems: "center", gap: 4 }}>
         <MapPin size={11} /> {d.country}
       </div>
@@ -689,7 +689,7 @@ function SectionTitle({ kicker, title, sub }: { kicker?: string; title: string; 
 
 function Features() {
   const items = [
-    { title: "Reserva segura", text: "Pagamento protegido e confirmação imediata após aprovação do cartão." },
+    { title: "Reserva segura", text: "Payment protegido e confirmação imediata após aprovação do cartão." },
     { title: "Destinos globais", text: "Mais de 120 destinos cuidadosamente selecionados em 5 continentes." },
     { title: "Atendimento humano", text: "Equipe dedicada antes, durante e depois da sua viagem." },
     { title: "Pacotes flexíveis", text: "Roteiros adaptados ao seu ritmo, orçamento e estilo de viagem." },
@@ -800,7 +800,7 @@ function NewsletterCTA({ goTo }: { goTo: (p: PageKey) => void }) {
             </motion.button>
           </form>
           <button onClick={() => goTo("pacotes")} style={{ marginTop: 18, fontSize: 13, fontWeight: 600, color: C.ink, display: "inline-flex", alignItems: "center", gap: 4 }}>
-            Ver todos os pacotes <ChevronRight size={14} />
+            See all os pacotes <ChevronRight size={14} />
           </button>
         </div>
       </motion.div>
@@ -810,10 +810,10 @@ function NewsletterCTA({ goTo }: { goTo: (p: PageKey) => void }) {
 
 function FAQ() {
   const items = [
-    { q: "Como funciona o pagamento?", a: "Aceitamos cartão, Pix e parcelamento em até 12x. Confirmação imediata após aprovação." },
-    { q: "Posso cancelar minha reserva?", a: "Sim, até 7 dias antes da viagem você recebe 100% de reembolso." },
+    { q: "How it works o pagamento?", a: "Aceitamos cartão, Pix e parcelamento em até 12x. Confirmação imediata após aprovação." },
+    { q: "Posso cancelar minha reserva?", a: "Yes, até 7 dias antes da viagem você recebe 100% de reembolso." },
     { q: "Os pacotes incluem passagem aérea?", a: "Depende do pacote. Pacotes 'Completo' e 'Premium' incluem voos." },
-    { q: "Vocês oferecem seguro viagem?", a: "Sim, todos os pacotes incluem seguro básico. Upgrades disponíveis." },
+    { q: "Vocês oferecem seguro viagem?", a: "Yes, todos os pacotes incluem seguro básico. Upgrades disponíveis." },
   ];
   const [open, setOpen] = useState<number | null>(0);
   return (
@@ -874,7 +874,7 @@ function Passagens() {
 
       {/* Stepper */}
       <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 28, flexWrap: "wrap" }}>
-        {["Busca", "Voos", "Assentos", "Pagamento"].map((s, i) => {
+        {["Busca", "Voos", "Assentos", "Payment"].map((s, i) => {
           const order = ["busca", "voos", "assentos", "pagamento"];
           const idx = order.indexOf(step);
           const active = i <= idx;
@@ -910,7 +910,7 @@ function Passagens() {
               <Field label="Classe"><select value={classe} onChange={(e) => setClasse(e.target.value)} style={inputStyle}>{["Econômica","Premium","Executiva","Primeira"].map(x => <option key={x}>{x}</option>)}</select></Field>
             </div>
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" style={{ marginTop: 8, width: "100%", height: 52, borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 15, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-              <Search size={16} /> Buscar Passagens
+              <Search size={16} /> Search Passagens
             </motion.button>
           </motion.form>
         )}
@@ -938,7 +938,7 @@ function Passagens() {
                 </div>
               </motion.div>
             ))}
-            <button onClick={() => setStep("busca")} style={{ marginTop: 8, alignSelf: "flex-start", fontSize: 13, color: C.inkSoft }}>← Nova busca</button>
+            <button onClick={() => setStep("busca")} style={{ marginTop: 8, alignSelf: "flex-start", fontSize: 13, color: C.inkSoft }}>← New busca</button>
           </motion.div>
         )}
 
@@ -965,9 +965,9 @@ function Passagens() {
               })}
             </div>
             <div style={{ marginTop: 22, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-              <button onClick={() => setStep("voos")} style={{ fontSize: 13, color: C.inkSoft }}>← Voltar</button>
+              <button onClick={() => setStep("voos")} style={{ fontSize: 13, color: C.inkSoft }}>← Back</button>
               <motion.button whileHover={{ scale: 1.04 }} disabled={!assento} onClick={() => setStep("pagamento")} style={{ padding: "12px 24px", borderRadius: 14, background: assento ? C.btn : C.divider, color: assento ? "#fff" : C.muted, fontWeight: 600, fontSize: 14 }}>
-                Continuar {assento && `· ${assento}`}
+                Continue {assento && `· ${assento}`}
               </motion.button>
             </div>
           </motion.div>
@@ -982,8 +982,8 @@ function Passagens() {
             className="wishes-content"
           >
             <div style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, padding: 24 }}>
-              <div style={{ fontSize: 17, fontWeight: 700, color: C.ink, marginBottom: 16 }}><CreditCard size={16} style={{ display: "inline", marginRight: 6 }} /> Pagamento</div>
-              <Field label="Nome no cartão"><input required style={inputStyle} placeholder="Como aparece no cartão" /></Field>
+              <div style={{ fontSize: 17, fontWeight: 700, color: C.ink, marginBottom: 16 }}><CreditCard size={16} style={{ display: "inline", marginRight: 6 }} /> Payment</div>
+              <Field label="Name no cartão"><input required style={inputStyle} placeholder="Como aparece no cartão" /></Field>
               <Field label="Número do cartão"><input required style={inputStyle} placeholder="0000 0000 0000 0000" /></Field>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <Field label="Validade"><input required style={inputStyle} placeholder="MM/AA" /></Field>
@@ -997,7 +997,7 @@ function Passagens() {
               </motion.button>
             </div>
             <aside style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, padding: 24, height: "fit-content" }}>
-              <div style={{ fontSize: 13, color: C.inkSoft }}>Resumo do voo</div>
+              <div style={{ fontSize: 13, color: C.inkSoft }}>Summary do voo</div>
               <div style={{ marginTop: 8, fontSize: 16, fontWeight: 700, color: C.ink }}>{voos[voo ?? 0].cia}</div>
               <div style={{ marginTop: 4, fontSize: 14, color: C.ink }}>{voos[voo ?? 0].de} → {voos[voo ?? 0].para}</div>
               <div style={{ marginTop: 2, fontSize: 12, color: C.inkSoft }}>{voos[voo ?? 0].duracao} · {voos[voo ?? 0].paradas}</div>
@@ -1018,7 +1018,7 @@ function Passagens() {
             </motion.div>
             <h3 style={{ marginTop: 18, fontSize: 24, fontWeight: 700, color: C.ink }}>Compra confirmada!</h3>
             <p style={{ marginTop: 8, color: C.inkSoft, maxWidth: 400, margin: "8px auto 0" }}>Seu bilhete eletrônico foi enviado por e-mail. Boa viagem!</p>
-            <button onClick={() => { setStep("busca"); setVoo(null); setAssento(null); }} style={{ marginTop: 24, padding: "12px 24px", borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 14 }}>Nova busca</button>
+            <button onClick={() => { setStep("busca"); setVoo(null); setAssento(null); }} style={{ marginTop: 24, padding: "12px 24px", borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 14 }}>New busca</button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1033,7 +1033,7 @@ function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
     { name: "Resort Costa Verde", local: "Algarve, Portugal", preco: "R$ 890/noite", rating: 4.9, image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80" },
     { name: "Hotel Burj Vista", local: "Dubai, EAU", preco: "R$ 1.450/noite", rating: 5, image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80" },
     { name: "Mountain Lodge", local: "Pokhara, Nepal", preco: "R$ 420/noite", rating: 4.7, image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80" },
-    { name: "Soho Boutique", local: "Nova York, EUA", preco: "R$ 1.290/noite", rating: 4.8, image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80" },
+    { name: "Soho Boutique", local: "New York, EUA", preco: "R$ 1.290/noite", rating: 4.8, image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80" },
   ];
   const amen = [
     { i: Wifi, l: "Wi-Fi grátis" }, { i: Coffee, l: "Café incluso" }, { i: Tv, l: "Smart TV" }, { i: Bath, l: "Spa" },
@@ -1051,7 +1051,7 @@ function Hoteis({ onReserve }: { onReserve: (d: Destination) => void }) {
             style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden", cursor: "pointer" }}
           >
             <div style={{ height: 200, overflow: "hidden" }}>
-              <img onError={imgFallback} src={h.image} alt={h.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
+              <img onErrorr={imgFallback} src={h.image} alt={h.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
             </div>
             <div style={{ padding: 20 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 10 }}>
@@ -1090,7 +1090,7 @@ function Experiencias() {
     { title: "Trekking no Himalaia", local: "Nepal", duracao: "3 dias", preco: "R$ 2.290", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" },
     { title: "Tour de Bondinho", local: "Lisboa", duracao: "2h", preco: "R$ 180", image: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=900&q=80" },
     { title: "Cruzeiro em Santorini", local: "Grécia", duracao: "5h", preco: "R$ 890", image: "https://images.unsplash.com/photo-1601581875309-fafbf2d3ed3a?auto=format&fit=crop&w=900&q=80" },
-    { title: "Broadway Night", local: "Nova York", duracao: "3h", preco: "R$ 690", image: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=900&q=80" },
+    { title: "Broadway Night", local: "New York", duracao: "3h", preco: "R$ 690", image: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=900&q=80" },
     { title: "Pôr do Sol no Cox Bazar", local: "Bangladesh", duracao: "4h", preco: "R$ 290", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80" },
   ];
   return (
@@ -1107,7 +1107,7 @@ function Experiencias() {
             className="group"
           >
             <div style={{ height: 200, overflow: "hidden", position: "relative" }}>
-              <img onError={imgFallback} src={e.image} alt={e.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s" }} className="group-hover:scale-110" />
+              <img onErrorr={imgFallback} src={e.image} alt={e.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s" }} className="group-hover:scale-110" />
               <div style={{ position: "absolute", top: 12, left: 12, padding: "4px 10px", borderRadius: 999, background: "rgba(255,255,255,0.9)", fontSize: 11, fontWeight: 600, color: C.ink, display: "inline-flex", alignItems: "center", gap: 4 }}>
                 <Clock size={10} /> {e.duracao}
               </div>
@@ -1150,7 +1150,7 @@ function Blog() {
             className="wishes-card-horizontal group"
           >
             <div style={{ overflow: "hidden" }}>
-              <img onError={imgFallback} src={p.image} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-105" />
+              <img onErrorr={imgFallback} src={p.image} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-105" />
             </div>
             <div style={{ padding: 18 }}>
               <div style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 11, color: C.inkSoft }}>
@@ -1179,14 +1179,14 @@ function Contato() {
           onSubmit={(e) => { e.preventDefault(); setSent(true); }}
           style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, padding: 28 }}
         >
-          <Field label="Nome completo"><input required style={inputStyle} placeholder="Seu nome" /></Field>
+          <Field label="Name completo"><input required style={inputStyle} placeholder="Seu nome" /></Field>
           <Field label="E-mail"><input required type="email" style={inputStyle} placeholder="voce@email.com" /></Field>
-          <Field label="Assunto"><input style={inputStyle} placeholder="Sobre o que deseja falar?" /></Field>
-          <Field label="Mensagem">
+          <Field label="Subject"><input style={inputStyle} placeholder="About o que deseja falar?" /></Field>
+          <Field label="Message">
             <textarea required style={{ ...inputStyle, height: 120, padding: 14, resize: "none" }} placeholder="Conte um pouco mais..." />
           </Field>
           <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" style={{ width: "100%", height: 50, borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 14, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-            {sent ? <><Check size={14} /> Enviado</> : <><Send size={14} /> Enviar mensagem</>}
+            {sent ? <><Check size={14} /> Enviado</> : <><Send size={14} /> Send mensagem</>}
           </motion.button>
         </motion.form>
 
@@ -1195,7 +1195,7 @@ function Contato() {
           style={{ display: "flex", flexDirection: "column", gap: 14 }}
         >
           {[
-            { l: "Telefone", v: "[seu telefone aqui]" },
+            { l: "Phone", v: "[seu telefone aqui]" },
             { l: "E-mail", v: "[seu e-mail aqui]" },
             { l: "Endereço", v: "[seu endereço aqui]" },
             { l: "Horário", v: "[seu horário aqui]" },
@@ -1244,11 +1244,11 @@ function Reservar({ onConfirm }: { onConfirm: (d: Destination) => void }) {
             <Field label="Tipo de pacote"><select value={tipo} onChange={(e) => setTipo(e.target.value)} style={inputStyle}>{["Completo","Econômico","Premium","Lua de mel"].map(x => <option key={x}>{x}</option>)}</select></Field>
           </div>
           <motion.button whileHover={{ scale: 1.02 }} type="submit" style={{ marginTop: 8, width: "100%", height: 52, borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600, fontSize: 15, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-            <Search size={16} /> Buscar Viagens
+            <Search size={16} /> Search Viagens
           </motion.button>
         </motion.form>
         <motion.aside initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ background: C.paper, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden" }}>
-          <img onError={imgFallback} src={sel.image} alt={sel.title} style={{ width: "100%", height: 200, objectFit: "cover" }} />
+          <img onErrorr={imgFallback} src={sel.image} alt={sel.title} style={{ width: "100%", height: 200, objectFit: "cover" }} />
           <div style={{ padding: 20 }}>
             <div style={{ fontSize: 12, color: C.inkSoft, textTransform: "uppercase", letterSpacing: 1.2 }}>Destino escolhido</div>
             <div style={{ marginTop: 6, fontSize: 22, fontWeight: 700, color: C.ink }}>{sel.title}</div>
@@ -1299,7 +1299,7 @@ function Pacotes({ filter, setFilter, items, onReserve }: { filter: FilterKey; s
               style={{ borderRadius: 24, overflow: "hidden", background: C.paper, border: `1px solid ${C.border}`, cursor: "pointer" }}
             >
               <div style={{ height: 180, overflow: "hidden" }}>
-                <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
+                <img onErrorr={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="hover:scale-105" />
               </div>
               <div style={{ padding: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1333,7 +1333,7 @@ function Lugares({ onReserve }: { onReserve: (d: Destination) => void }) {
             style={{ position: "relative", height: 320, borderRadius: 24, overflow: "hidden", border: `1px solid ${C.border}`, cursor: "pointer" }}
             className="group"
           >
-            <img onError={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
+            <img onErrorr={imgFallback} src={d.image} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s" }} className="group-hover:scale-110" />
             <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(255,255,255,0.9)", padding: "6px 10px", borderRadius: 999, fontSize: 12, fontWeight: 600 }}>{d.country}</div>
             <div style={{ position: "absolute", left: 10, right: 10, bottom: 10, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(10px)", borderRadius: 16, padding: 12 }}>
               <div style={{ fontSize: 16, fontWeight: 700, color: C.ink }}>{d.title}</div>
@@ -1372,11 +1372,11 @@ function Footer({ goTo }: { goTo: (p: PageKey) => void }) {
         </div>
         <div>
           <div style={{ fontSize: 12, fontWeight: 700, color: C.ink, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Empresa</div>
-          {["Sobre","Carreiras","Imprensa","Parceiros"].map(l => <div key={l} style={{ marginBottom: 8, fontSize: 13, color: C.inkSoft }} className="hover:text-black">{l}</div>)}
+          {["About","Carreiras","Imprensa","Partners"].map(l => <div key={l} style={{ marginBottom: 8, fontSize: 13, color: C.inkSoft }} className="hover:text-black">{l}</div>)}
         </div>
         <div>
           <div style={{ fontSize: 12, fontWeight: 700, color: C.ink, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Legal</div>
-          {["Termos","Privacidade","Cookies"].map(l => <div key={l} style={{ marginBottom: 8, fontSize: 13, color: C.inkSoft }} className="hover:text-black">{l}</div>)}
+          {["Terms","Privacy","Cookies"].map(l => <div key={l} style={{ marginBottom: 8, fontSize: 13, color: C.inkSoft }} className="hover:text-black">{l}</div>)}
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, paddingTop: 20, borderTop: `1px solid ${C.divider}` }}>
@@ -1412,14 +1412,14 @@ function BookingModal({ destination, onClose }: { destination: Destination; onCl
             </motion.div>
             <h3 style={{ marginTop: 16, fontSize: 22, fontWeight: 700, color: C.ink }}>Reserva solicitada</h3>
             <p style={{ marginTop: 8, fontSize: 14, color: C.inkSoft }}>Nossa equipe entrará em contato para confirmar os detalhes.</p>
-            <button onClick={onClose} style={{ marginTop: 20, height: 46, padding: "0 24px", borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600 }}>Fechar</button>
+            <button onClick={onClose} style={{ marginTop: 20, height: 46, padding: "0 24px", borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600 }}>Close</button>
           </div>
         ) : (
           <form onSubmit={(e) => { e.preventDefault(); setDone(true); }}>
             <h3 style={{ fontSize: 22, fontWeight: 700, color: C.ink }}>Finalizar reserva</h3>
             <p style={{ marginTop: 6, fontSize: 14, color: C.inkSoft }}>Preencha seus dados para continuar.</p>
             <div style={{ marginTop: 20 }}>
-              <Field label="Nome completo"><input required value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} placeholder="Seu nome" /></Field>
+              <Field label="Name completo"><input required value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} placeholder="Seu nome" /></Field>
               <Field label="WhatsApp"><input required value={whats} onChange={(e) => setWhats(e.target.value)} style={inputStyle} placeholder="(11) 90000-0000" /></Field>
               <Field label="Destino"><input readOnly value={destination.title} style={{ ...inputStyle, background: C.pill }} /></Field>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -1430,8 +1430,8 @@ function BookingModal({ destination, onClose }: { destination: Destination; onCl
               </div>
             </div>
             <div style={{ marginTop: 12, display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              <button type="button" onClick={onClose} style={{ height: 46, padding: "0 18px", borderRadius: 14, background: C.pill, color: C.ink, fontWeight: 600 }}>Cancelar</button>
-              <motion.button whileHover={{ scale: 1.04 }} type="submit" style={{ height: 46, padding: "0 22px", borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600 }}>Confirmar Reserva</motion.button>
+              <button type="button" onClick={onClose} style={{ height: 46, padding: "0 18px", borderRadius: 14, background: C.pill, color: C.ink, fontWeight: 600 }}>Cancel</button>
+              <motion.button whileHover={{ scale: 1.04 }} type="submit" style={{ height: 46, padding: "0 22px", borderRadius: 14, background: C.btn, color: "#fff", fontWeight: 600 }}>Confirm Reserva</motion.button>
             </div>
           </form>
         )}

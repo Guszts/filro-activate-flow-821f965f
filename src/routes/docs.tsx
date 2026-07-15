@@ -9,14 +9,14 @@ export const Route = createFileRoute("/docs")({
   component: DocsPage,
   head: () => ({
     meta: [
-      { title: "Documentação · Filro" },
-      { name: "description", content: "Como funciona a Filro: ativação em 24h, o que enviar, dúvidas frequentes e detalhes técnicos." },
-      { property: "og:title", content: "Documentação · Filro" },
-      { property: "og:description", content: "Como funciona a Filro: ativação em 24h, o que enviar e detalhes técnicos." },
+      { title: "Documentation · Filro" },
+      { name: "description", content: "How it works a Filro: ativação within 1 business day, o que enviar, dúvidas frequentes e detalhes técnicos." },
+      { property: "og:title", content: "Documentation · Filro" },
+      { property: "og:description", content: "How it works a Filro: ativação within 1 business day, o que enviar e detalhes técnicos." },
       { property: "og:type", content: "article" },
       { property: "og:url", content: "https://setup.filro.site/docs" },
-      { name: "twitter:title", content: "Documentação · Filro" },
-      { name: "twitter:description", content: "Como funciona a ativação em 24h, o que enviar e dúvidas frequentes." },
+      { name: "twitter:title", content: "Documentation · Filro" },
+      { name: "twitter:description", content: "How it works a ativação within 1 business day, o que enviar e dúvidas frequentes." },
     ],
     links: [{ rel: "canonical", href: "https://setup.filro.site/docs" }],
     scripts: [{
@@ -25,8 +25,8 @@ export const Route = createFileRoute("/docs")({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Início", item: "https://setup.filro.site/" },
-          { "@type": "ListItem", position: 2, name: "Documentação", item: "https://setup.filro.site/docs" },
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://setup.filro.site/" },
+          { "@type": "ListItem", position: 2, name: "Documentation", item: "https://setup.filro.site/docs" },
         ],
       }),
     }],
@@ -37,14 +37,14 @@ const sections = [
   { id: "comecando", label: "Começando", icon: Rocket },
   { id: "fluxo", label: "Fluxo de ativação", icon: Workflow },
   { id: "envio", label: "O que enviar", icon: Palette },
-  { id: "pagamento", label: "Pagamento e planos", icon: CreditCard },
-  { id: "tecnico", label: "Detalhes técnicos", icon: Wrench },
+  { id: "pagamento", label: "Payment e planos", icon: CreditCard },
+  { id: "tecnico", label: "Details técnicos", icon: Wrench },
   { id: "dominio", label: "Domínio e hospedagem", icon: Globe },
-  { id: "manutencao", label: "Manutenção e edições", icon: RefreshCw },
+  { id: "manutencao", label: "Maintenance e edições", icon: RefreshCw },
   { id: "metricas", label: "Métricas e SEO", icon: BarChart3 },
   
   { id: "faq", label: "FAQ", icon: FileQuestion },
-  { id: "suporte", label: "Suporte", icon: MessageCircle },
+  { id: "suporte", label: "Support", icon: MessageCircle },
 ] as const;
 
 function DocsPage() {
@@ -55,9 +55,9 @@ function DocsPage() {
       <SiteHeader />
       <main className="mx-auto max-w-[1300px] w-full px-5 md:px-10 py-12 md:py-16 flex-1">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          <span className="inline-flex items-center gap-2 text-xs tracking-wide text-ink-soft"><span className="h-1.5 w-6 bg-flame" /> Documentação</span>
+          <span className="inline-flex items-center gap-2 text-xs tracking-wide text-ink-soft"><span className="h-1.5 w-6 bg-flame" /> Documentation</span>
           <h1 className="mt-4 editorial-headline text-5xl md:text-7xl text-ink">Tudo que você precisa saber.</h1>
-          <p className="mt-4 max-w-2xl text-ink-soft">Guia completo: do cadastro à entrega em 24h, passando pelo que enviar, como funciona por baixo dos panos e como pedir suporte.</p>
+          <p className="mt-4 max-w-2xl text-ink-soft">Guia completo: do cadastro à entrega within 1 business day, passando pelo que enviar, como funciona por baixo dos panos e como pedir suporte.</p>
         </motion.div>
 
         <div className="mt-12 grid lg:grid-cols-[260px_1fr] gap-10">
@@ -75,7 +75,7 @@ function DocsPage() {
 
           <article className="prose-docs space-y-16">
             <Section id="comecando" title="Começando" icon={Rocket}>
-              <p>Filro entrega presença digital pronta para empresas locais. Ativação acontece em <strong>até 24 horas</strong> após o pagamento e o envio das informações do negócio. Você não precisa entender de tecnologia — nosso time monta tudo a partir das informações que você fornece.</p>
+              <p>Filro entrega presença digital pronta para empresas locais. Activation acontece em <strong>até 24 horas</strong> após o pagamento e o envio das informações do negócio. Você não precisa entender de tecnologia — nosso time monta tudo a partir das informações que você fornece.</p>
               <h3>Pré-requisitos</h3>
               <ul>
                 <li>Um e-mail válido (usado para login e notificações).</li>
@@ -109,8 +109,8 @@ function DocsPage() {
               <p>Quanto mais detalhes, mais rápido entregamos. Abaixo o checklist completo organizado pelas seções do formulário:</p>
               <h3>Identidade visual</h3>
               <ul>
-                <li>Nome do negócio e segmento (alimentação, beleza, moda, serviços, etc.).</li>
-                <li>Descrição curta (1 linha) e descrição longa (2-3 parágrafos).</li>
+                <li>Name do negócio e segmento (alimentação, beleza, moda, serviços, etc.).</li>
+                <li>Description curta (1 linha) e descrição longa (2-3 parágrafos).</li>
                 <li>Slogan ou frase de impacto (opcional, mas recomendado).</li>
                 <li>Cores da marca (HEX preferencialmente; ou indicar referência).</li>
                 <li>Logo: PNG transparente ou SVG (ideal); JPG funciona se for em fundo neutro.</li>
@@ -130,17 +130,17 @@ function DocsPage() {
               </ul>
               <h3>Promoções e referência</h3>
               <ul>
-                <li>Cupons, combos, descontos por tempo limitado.</li>
+                <li>Coupons, combos, descontos por tempo limitado.</li>
                 <li><strong>Selecionar modelo:</strong> link de referência (site que você gosta), arquivo (brief, PDF, imagem) ou descrição livre do clima desejado.</li>
               </ul>
-              <Card><Lightbulb className="h-5 w-5 text-flame" /><div>Não tem logo ou fotos profissionais? Sem problema. Trabalhamos com tipografia, ilustrações e fotos do seu celular ou stock licenciado.</div></Card>
+              <Card><Lightbulb className="h-5 w-5 text-flame" /><div>No tem logo ou fotos profissionais? Sem problema. Trabalhamos com tipografia, ilustrações e fotos do seu celular ou stock licenciado.</div></Card>
             </Section>
 
-            <Section id="pagamento" title="Pagamento e planos" icon={CreditCard}>
+            <Section id="pagamento" title="Payment e planos" icon={CreditCard}>
               <h3>Estrutura de cobrança</h3>
               <ul>
-                <li><strong>Ativação (única):</strong> taxa cobrada uma vez, libera a produção.</li>
-                <li><strong>Mensalidade:</strong> cobrada mensalmente na mesma data, cobre hospedagem, manutenção e suporte.</li>
+                <li><strong>Activation (única):</strong> taxa cobrada uma vez, libera a produção.</li>
+                <li><strong>Monthly:</strong> cobrada mensalmente na mesma data, cobre hospedagem, manutenção e suporte.</li>
               </ul>
               <h3>Formas de pagamento</h3>
               <ul>
@@ -153,17 +153,17 @@ function DocsPage() {
               <ul>
                 <li>Direito de arrependimento de 7 dias se a produção não tiver iniciado.</li>
                 <li>Após início da produção, ativação não é reembolsável.</li>
-                <li>Mensalidade pode ser cancelada com 7 dias de antecedência.</li>
+                <li>Monthly pode ser cancelada com 7 dias de antecedência.</li>
               </ul>
-              <p>Detalhes completos em <Link to="/termos" className="text-ink underline">Termos de Uso</Link>.</p>
+              <p>Details completos em <Link to="/termos" className="text-ink underline">Terms of Use</Link>.</p>
             </Section>
 
-            <Section id="tecnico" title="Detalhes técnicos" icon={Wrench}>
+            <Section id="tecnico" title="Details técnicos" icon={Wrench}>
               <h3>Stack</h3>
               <ul>
                 <li>Frontend: React 19 + TanStack Start v1 (SSR + Edge runtime).</li>
                 <li>Backend gerenciado: Postgres + Auth + Storage + Realtime.</li>
-                <li>Pagamentos: Stripe com Embedded Checkout.</li>
+                <li>Payments: Stripe com Embedded Checkout.</li>
                 <li>Hospedagem em edge global, com cache em centenas de POPs.</li>
                 <li>CDN de imagens com otimização automática (WebP/AVIF).</li>
               </ul>
@@ -203,13 +203,13 @@ function DocsPage() {
               <p>Suportamos integração com Google Workspace e Microsoft 365 (você contrata; configuramos os registros MX e SPF gratuitamente).</p>
             </Section>
 
-            <Section id="manutencao" title="Manutenção e edições" icon={RefreshCw}>
+            <Section id="manutencao" title="Maintenance e edições" icon={RefreshCw}>
               <h3>O que está incluso na mensalidade</h3>
               <ul>
                 <li>Pequenas alterações de catálogo (preços, fotos, descrições) inclusas via painel.</li>
-                <li>Pequenos ajustes visuais (até 2h/mês de equipe).</li>
+                <li>Pequenos ajustes visuais (até 2h/mo de equipe).</li>
                 <li>Hospedagem ativa enquanto a mensalidade estiver em dia.</li>
-                <li>Suporte básico para manutenção do projeto pelo WhatsApp.</li>
+                <li>Support básico para manutenção do projeto pelo WhatsApp.</li>
               </ul>
               <h3>Edições maiores</h3>
               <p>Redesigns, novas seções customizadas ou integrações específicas são orçados à parte. Pedidos pelo WhatsApp; orçamento em até 1 dia útil.</p>
@@ -226,8 +226,8 @@ function DocsPage() {
               </ul>
               <h3>Analytics</h3>
               <ul>
-                <li>Painel próprio com visitas, cliques no WhatsApp e conversões.</li>
-                <li>Suporte a Google Analytics 4 e Meta Pixel (você fornece o ID).</li>
+                <li>Dashboard próprio com visitas, cliques no WhatsApp e conversões.</li>
+                <li>Support a Google Analytics 4 e Meta Pixel (você fornece o ID).</li>
               </ul>
             </Section>
 
@@ -235,24 +235,24 @@ function DocsPage() {
             <Section id="faq" title="Perguntas frequentes" icon={FileQuestion}>
               
               <Q q="Quanto tempo até estar no ar?">Até 24 horas após o envio das informações. Geralmente entregamos em menos de 18h.</Q>
-              <Q q="Preciso entender de tecnologia?">Não. Você só envia as informações; nosso time monta tudo. O painel também é desenhado para uso por leigos.</Q>
+              <Q q="Preciso entender de tecnologia?">No. Você só envia as informações; nosso time monta tudo. O painel também é desenhado para uso por leigos.</Q>
               <Q q="E se eu não gostar do resultado?">Incluímos 1 rodada de revisão visual nos primeiros 7 dias. Ajustes simples dentro do escopo são feitos sem custo nesse período.</Q>
-              <Q q="Posso cancelar?">Sim, a qualquer momento. A ativação não é reembolsável após início da produção; mensalidade pode ser cancelada com 7 dias de antecedência.</Q>
+              <Q q="Posso cancelar?">Yes, a qualquer momento. A ativação não é reembolsável após início da produção; mensalidade pode ser cancelada com 7 dias de antecedência.</Q>
               <Q q="O que acontece se eu cancelar?">O site fica no ar até o fim do ciclo já pago. Depois disso, exportamos seus dados em JSON/CSV e o domínio próprio continua seu para apontar onde quiser.</Q>
-              <Q q="Vocês fazem cardápio digital?">Sim, é uma das categorias mais pedidas. Plano Avançado em diante, com QR code para mesas.</Q>
-              <Q q="Aceita cartão internacional?">Sim, Stripe processa em 135+ moedas.</Q>
-              <Q q="Vocês criam logo?">Não fazemos design de marca do zero, mas trabalhamos com tipografia e refinamentos no que você já tem. Se precisar de logo profissional, indicamos parceiros.</Q>
-              <Q q="Hospedam meu e-mail também?">Não diretamente. Configuramos gratuitamente os DNS para Google Workspace ou Microsoft 365.</Q>
+              <Q q="Vocês fazem cardápio digital?">Yes, é uma das categorias mais pedidas. Plan Avançado em diante, com QR code para mesas.</Q>
+              <Q q="Aceita cartão internacional?">Yes, Stripe processa em 135+ moedas.</Q>
+              <Q q="Vocês criam logo?">No fazemos design de marca do zero, mas trabalhamos com tipografia e refinamentos no que você já tem. Se precisar de logo profissional, indicamos parceiros.</Q>
+              <Q q="Hospedam meu e-mail também?">No diretamente. Configuramos gratuitamente os DNS para Google Workspace ou Microsoft 365.</Q>
               <Q q="Tem app mobile?">A página é 100% responsiva e instalável como PWA (atalho na tela inicial). App nativo (iOS/Android) é projeto à parte.</Q>
             </Section>
 
-            <Section id="suporte" title="Suporte" icon={MessageCircle}>
+            <Section id="suporte" title="Support" icon={MessageCircle}>
               <p>Atendimento humano via WhatsApp em horário comercial (segunda a sexta, 9h às 18h, horário de Brasília):</p>
               <ul>
                 <li>WhatsApp: <a href="https://wa.me/5592993561754" className="text-ink underline" target="_blank" rel="noreferrer">+55 92 99356-1754</a></li>
                 <li>E-mail: <a href="mailto:filro.site@gmail.com" className="text-ink underline">filro.site@gmail.com</a></li>
               </ul>
-              <p>Para dúvidas legais, veja <Link to="/termos" className="text-ink underline">Termos de Uso</Link> e <Link to="/privacidade" className="text-ink underline">Política de Privacidade</Link>.</p>
+              <p>Para dúvidas legais, veja <Link to="/termos" className="text-ink underline">Terms of Use</Link> e <Link to="/privacidade" className="text-ink underline">Privacy Policy</Link>.</p>
               <Card><ShieldCheck className="h-5 w-5 text-azure" /><div><strong>SLA:</strong> resposta em até 4h úteis para dúvidas; até 1h para incidentes críticos (site fora do ar, falha de pagamento).</div></Card>
             </Section>
           </article>

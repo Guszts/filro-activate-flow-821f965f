@@ -25,8 +25,8 @@ export const Route = createFileRoute("/register")({
   component: RegisterPage,
   validateSearch: (s: Record<string, unknown>) => ({ redirect: safeRedirect(s.redirect) }),
   head: () => ({ meta: [
-    { title: "Criar conta · Filro" },
-    { name: "description", content: "Crie sua conta Filro e comece a ativação da sua página profissional em 24h." },
+    { title: "Create account · Filro" },
+    { name: "description", content: "Crie sua conta Filro e comece a ativação da sua página profissional within 1 business day." },
     { name: "robots", content: "noindex,nofollow" },
   ]}),
 });
@@ -59,32 +59,32 @@ function RegisterPage() {
     });
     setLoading(false);
     if (error) return toast.error(error.message);
-    toast.success("Enviamos um código de 6 dígitos para seu e-mail");
+    toast.success("We sent a 6-digit code to your email");
     navigate({ to: "/verify-email", search: { email: form.email, redirect: safeRedirect(redirect) } });
   };
 
   return (
     <main className="min-h-screen grid place-items-center px-5 py-10">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-xl">
-        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
-        <h1 className="mt-10 editorial-headline text-5xl text-ink">Criar conta</h1>
-        <p className="mt-3 text-ink-soft">Vamos preparar sua ativação.</p>
+        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Home</Link>
+        <h1 className="mt-10 editorial-headline text-5xl text-ink">Create account</h1>
+        <p className="mt-3 text-ink-soft">Let's set up your account.</p>
         <form onSubmit={submit} className="mt-8 card-elevated p-7 grid sm:grid-cols-2 gap-4">
-          <Field label="Nome" full><input required value={form.name} onChange={upd("name")} className={inp} /></Field>
+          <Field label="Name" full><input required value={form.name} onChange={upd("name")} className={inp} /></Field>
           <Field label="Email"><input type="email" required value={form.email} onChange={upd("email")} className={inp} /></Field>
           <Field label="WhatsApp"><PhoneInput value={form.whatsapp} onChange={(v) => setForm({ ...form, whatsapp: v })} required /></Field>
-          <Field label="Nome do negócio"><input required value={form.business_name} onChange={upd("business_name")} className={inp} /></Field>
-          <Field label="Segmento do negócio"><input required value={form.business_segment} onChange={upd("business_segment")} className={inp} placeholder="Ex: Padaria, Salão" /></Field>
-          <Field label="Senha (mín. 8)" full><input type="password" required value={form.password} onChange={upd("password")} className={inp} /></Field>
+          <Field label="Name do negócio"><input required value={form.business_name} onChange={upd("business_name")} className={inp} /></Field>
+          <Field label="Business segment"><input required value={form.business_segment} onChange={upd("business_segment")} className={inp} placeholder="e.g. Cafe, Studio" /></Field>
+          <Field label="Password (min. 8)" full><input type="password" required value={form.password} onChange={upd("password")} className={inp} /></Field>
           <button disabled={loading} className="sm:col-span-2 w-full h-13 py-4 rounded-full bg-ink text-paper font-semibold tracking-wide disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-elegant">
-            {loading ? "Criando..." : "Criar conta"}
+            {loading ? "Creating..." : "Create account"}
           </button>
           <p className="sm:col-span-2 text-xs text-ink-soft text-center leading-relaxed">
-            Ao criar conta, você concorda com nossos <Link to="/termos" className="text-ink underline">Termos de Uso</Link> e a <Link to="/privacidade" className="text-ink underline">Política de Privacidade</Link>.
+            By creating an account, you agree to our <Link to="/termos" className="text-ink underline">Terms of Use</Link> and <Link to="/privacidade" className="text-ink underline">Privacy Policy</Link>.
           </p>
         </form>
         <p className="mt-6 text-center text-sm text-ink-soft">
-          Já tem conta? <Link to="/login" search={{ redirect: safeRedirect(redirect) }} className="text-ink font-semibold">Entrar</Link>
+          Already have an account? <Link to="/login" search={{ redirect: safeRedirect(redirect) }} className="text-ink font-semibold">Sign in</Link>
         </p>
       </motion.div>
     </main>

@@ -13,10 +13,10 @@ import { ArrowLeft, ExternalLink, Loader2, MessageSquare, Plus, Send } from "luc
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/suporte")({
-  component: SuportePage,
+  component: SupportPage,
   head: () => ({
     meta: [
-      { title: "Suporte · Filro" },
+      { title: "Support · Filro" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/suporte")({
 const KIND_LABELS = {
   question: "Dúvida",
   change_request: "Pedido de ajuste",
-  bug: "Erro / problema",
+  bug: "Error / problema",
   cancellation: "Cancelamento",
   other: "Outro",
 } as const;
@@ -46,7 +46,7 @@ const STATUS_TONE: Record<string, string> = {
   closed: "bg-muted text-ink-soft",
 };
 
-function SuportePage() {
+function SupportPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -130,12 +130,12 @@ function SuportePage() {
     setSubmitting(true);
     try {
       await createTicket({ data: { ...form } });
-      toast.success("Chamado aberto! Nossa equipe responde em até 24h.");
+      toast.success("Chamado aberto! Nossa equipe responde within 1 business day.");
       setForm({ subject: "", message: "", kind: "question" });
       setShowForm(false);
       qc.invalidateQueries({ queryKey: ["my-tickets"] });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falha ao abrir chamado.");
+      toast.error(e instanceof Errorr ? e.message : "Failed ao abrir chamado.");
     } finally {
       setSubmitting(false);
     }
@@ -174,13 +174,13 @@ function SuportePage() {
       <main className="flex-1">
         <section className="px-6 md:px-12 py-12 max-w-6xl mx-auto w-full">
           <Link to="/painel" className="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
-            <ArrowLeft className="h-4 w-4" /> Voltar ao painel
+            <ArrowLeft className="h-4 w-4" /> Back ao painel
           </Link>
 
           <div className="mt-6 flex items-end justify-between gap-4 flex-wrap">
             <div>
               <div className="text-xs tracking-wide text-ink-soft uppercase">Atendimento</div>
-              <h1 className="editorial-headline text-4xl md:text-5xl text-ink mt-1">Suporte</h1>
+              <h1 className="editorial-headline text-4xl md:text-5xl text-ink mt-1">Support</h1>
               <p className="text-ink-soft mt-2 text-sm">
                 Abra um chamado, acompanhe respostas e veja suas cobranças extras.
               </p>
@@ -189,7 +189,7 @@ function SuportePage() {
               onClick={() => setShowForm((s) => !s)}
               className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-ink text-paper text-sm font-semibold"
             >
-              <Plus className="h-4 w-4" /> Novo chamado
+              <Plus className="h-4 w-4" /> New chamado
             </button>
           </div>
 
@@ -209,7 +209,7 @@ function SuportePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Assunto</label>
+                  <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Subject</label>
                   <input
                     value={form.subject}
                     onChange={(e) => setForm({ ...form, subject: e.target.value })}
@@ -219,7 +219,7 @@ function SuportePage() {
                 </div>
               </div>
               <div>
-                <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Descrição</label>
+                <label className="text-xs font-bold text-ink-soft uppercase tracking-wide">Description</label>
                 <textarea
                   rows={5}
                   value={form.message}
@@ -234,15 +234,15 @@ function SuportePage() {
                 className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-lime text-ink text-sm font-semibold disabled:opacity-60"
               >
                 {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                Enviar chamado
+                Send chamado
               </button>
             </motion.div>
           )}
 
-          {/* Cobranças extras */}
+          {/* Charges extras */}
           {charges.length > 0 && (
             <div className="mt-10">
-              <h2 className="font-display font-black text-2xl text-ink">Cobranças extras</h2>
+              <h2 className="font-display font-black text-2xl text-ink">Charges extras</h2>
               <div className="mt-4 grid md:grid-cols-2 gap-4">
                 {charges.map((c) => (
                   <div key={c.id} className="card-elevated p-5">
@@ -257,9 +257,9 @@ function SuportePage() {
                         c.status === "cancelled" || c.status === "refunded" ? "bg-flame/20 text-ink" :
                         "bg-muted text-ink-soft"
                       }`}>
-                        {c.status === "paid" ? "Pago" :
-                         c.status === "sent" ? "Aguardando pagamento" :
-                         c.status === "cancelled" ? "Cancelado" :
+                        {c.status === "paid" ? "Paid" :
+                         c.status === "sent" ? "Awaiting payment" :
+                         c.status === "cancelled" ? "Canceled" :
                          c.status === "refunded" ? "Reembolsado" : "Rascunho"}
                       </span>
                     </div>

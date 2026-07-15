@@ -44,7 +44,7 @@ export function McpTokensSection() {
       const res = await listFn();
       setTokens(res.tokens as TokenRow[]);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao listar tokens");
+      toast.error(err instanceof Errorr ? err.message : "Error ao listar tokens");
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ export function McpTokensSection() {
       await refresh();
       toast.success("Token gerado — copie agora");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao gerar token");
+      toast.error(err instanceof Errorr ? err.message : "Error ao gerar token");
     } finally {
       setCreating(false);
     }
@@ -78,7 +78,7 @@ export function McpTokensSection() {
       await refresh();
       toast.success("Token revogado");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao revogar");
+      toast.error(err instanceof Errorr ? err.message : "Error ao revogar");
     }
   };
 
@@ -134,7 +134,7 @@ export function McpTokensSection() {
         </div>
         <p className="mt-2 text-sm text-ink-soft">
           Apps que não aceitam header customizado (Claude mobile/web, ChatGPT) usam OAuth.
-          Em <strong>Configurações → Conectores → Adicionar conector customizado</strong>, cole apenas
+          Em <strong>Settings → Conectores → Add conector customizado</strong>, cole apenas
           a URL abaixo. O Claude vai abrir uma tela de autorização aqui no Filro — basta clicar
           em <strong>Autorizar</strong> (precisa estar logado como admin).
         </p>
@@ -159,7 +159,7 @@ export function McpTokensSection() {
                   className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-ink text-paper text-xs font-semibold"
                 >
                   {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                  {copied ? "Copiado" : "Copiar"}
+                  {copied ? "Copied" : "Copy"}
                 </button>
               </div>
 
@@ -170,7 +170,7 @@ export function McpTokensSection() {
                 <div className="mt-3 space-y-2 text-sm text-ink-soft">
                   <p>
                     1. Abra <code className="px-1 rounded bg-muted">claude_desktop_config.json</code>{" "}
-                    (Configurações → Developer → Edit Config).
+                    (Settings → Developer → Edit Config).
                   </p>
                   <p>2. Adicione o servidor abaixo e salve:</p>
                   <pre className="text-xs bg-ink text-paper rounded-xl p-3 overflow-x-auto">{configJson}</pre>
@@ -182,7 +182,7 @@ export function McpTokensSection() {
                 onClick={() => setJustCreated(null)}
                 className="mt-4 text-xs text-ink-soft underline"
               >
-                Fechar — já copiei
+                Close — já copiei
               </button>
             </div>
           </div>
@@ -195,7 +195,7 @@ export function McpTokensSection() {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Nome (ex: Claude Desktop)"
+            placeholder="Name (ex: Claude Desktop)"
             className="flex-1 h-12 px-4 rounded-2xl border border-border bg-paper text-ink"
           />
           <button
@@ -217,7 +217,7 @@ export function McpTokensSection() {
       {/* Tokens list */}
       <div className="mt-5">
         {loading ? (
-          <div className="text-sm text-ink-soft">Carregando...</div>
+          <div className="text-sm text-ink-soft">Loading...</div>
         ) : tokens.length === 0 ? (
           <div className="text-sm text-ink-soft">Nenhum token criado ainda.</div>
         ) : (
