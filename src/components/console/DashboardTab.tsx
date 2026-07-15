@@ -27,7 +27,7 @@ function rangeFor(key: RangeKey, customFrom?: string, customTo?: string): { from
     }
     case "month": {
       const f = new Date(now.getFullYear(), now.getMonth(), 1);
-      return { from: f, to: endOfDay(now), label: "Este mês" };
+      return { from: f, to: endOfDay(now), label: "Este mo" };
     }
     case "lastmonth": {
       const f = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -174,7 +174,7 @@ export function DashboardTab() {
       </div>
 
       {isLoading || !stats ? (
-        <div className="text-ink-soft">Carregando...</div>
+        <div className="text-ink-soft">Loading...</div>
       ) : (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -182,7 +182,7 @@ export function DashboardTab() {
             <Kpi label="Pedidos" value={String(stats.orderCount)} sub={`${stats.buyers} clientes únicos`} />
             <Kpi label="Ticket médio" value={stats.ticket ? formatBRL(stats.ticket) : "—"} />
             <Kpi label="MRR" value={formatBRL(stats.mrr)} sub={`ARR ${formatBRL(stats.arr)}`} />
-            <Kpi label="Assinaturas ativas" value={String(stats.activeSubs)} />
+            <Kpi label="Subscriptions ativas" value={String(stats.activeSubs)} />
             <Kpi label="Cancelamentos no período" value={String(stats.cancelled)} sub={`${stats.churn}% churn`} />
             <Kpi label="Receita bruta (sem cupom)" value={formatBRL(stats.originalRevenue)} />
             <Kpi label="Total descontos" value={formatBRL(stats.discounts)} />
@@ -227,11 +227,11 @@ export function DashboardTab() {
           </div>
 
           <div className="card-elevated p-5">
-            <div className="text-xs tracking-wide text-ink-soft mb-3">Clientes mais fiéis (todo o histórico)</div>
+            <div className="text-xs tracking-wide text-ink-soft mb-3">Clients mais fiéis (todo o histórico)</div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="text-left text-xs text-ink-soft">
-                  <tr><th className="py-2">Cliente</th><th>Pedidos</th><th>Total gasto</th></tr>
+                  <tr><th className="py-2">Client</th><th>Pedidos</th><th>Total gasto</th></tr>
                 </thead>
                 <tbody>
                   {stats.loyal.map((l: any) => (
@@ -269,7 +269,7 @@ function OrdersTable({ title, rows, nameOf, planNameOf }: { title: string; rows:
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="text-left text-xs text-ink-soft">
-            <tr><th className="py-2">Cliente</th><th>Plano</th><th>Valor</th><th>Quando</th></tr>
+            <tr><th className="py-2">Client</th><th>Plan</th><th>Valor</th><th>Quando</th></tr>
           </thead>
           <tbody>
             {rows.map((r: any) => (

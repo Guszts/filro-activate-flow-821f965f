@@ -1,5 +1,5 @@
 // Captura e persistência do código de parceiro (B2B privado).
-// Não exibe nada para o visitante. Validado também no backend.
+// Doesn't show anything to visitors. Also validated on the backend.
 
 const STORAGE_KEY = "filro:partnerCode";
 const COOKIE_KEY = "filro_partner_code";

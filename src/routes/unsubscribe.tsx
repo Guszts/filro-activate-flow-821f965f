@@ -8,7 +8,7 @@ export const Route = createFileRoute("/unsubscribe")({
   }),
   component: UnsubscribePage,
   head: () => ({ meta: [
-    { title: "Cancelar inscrição · Filro" },
+    { title: "Unsubscribe · Filro" },
     { name: "robots", content: "noindex,nofollow" },
   ]}),
 });
@@ -58,20 +58,20 @@ function UnsubscribePage() {
           {state === "loading" && <p className="text-ink-soft">Verificando…</p>}
           {state === "invalid" && <p className="text-destructive">Link inválido ou expirado.</p>}
           {state === "error" && <p className="text-destructive">Algo deu errado. Tente novamente em alguns minutos.</p>}
-          {state === "already" && <p className="text-ink-soft">Você já está descadastrado destes e-mails.</p>}
+          {state === "already" && <p className="text-ink-soft">You're already unsubscribed from these emails.</p>}
           {state === "valid" && (
             <>
-              <p className="text-ink-soft">Confirme abaixo para parar de receber e-mails do Filro neste endereço.</p>
+              <p className="text-ink-soft">Confirm below to stop receiving Filro emails at this address.</p>
               <button
                 onClick={confirm}
                 disabled={submitting}
                 className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold disabled:opacity-50"
               >
-                {submitting ? "Processando…" : "Confirmar cancelamento"}
+                {submitting ? "Processing…" : "Confirm cancellation"}
               </button>
             </>
           )}
-          {state === "done" && <p className="text-ink">Pronto. Você não receberá mais e-mails do Filro neste endereço.</p>}
+          {state === "done" && <p className="text-ink">Done. You won't receive Filro emails at this address anymore.</p>}
         </div>
       </main>
     </div>

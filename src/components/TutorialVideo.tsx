@@ -12,7 +12,7 @@ export function TutorialVideo({ url, planName }: { url: string | null; planName:
           <div>
             <PlayCircle className="mx-auto h-14 w-14 text-ink-soft" />
             <p className="mt-4 text-sm text-ink-soft max-w-md">
-              Tutorial em produção. Em breve um vídeo curto mostrando como adaptamos o modelo {planName} ao seu negócio.
+              Tutorial in production. A short video showing how we adapt the {planName} to your business is coming soon.
             </p>
           </div>
         </div>

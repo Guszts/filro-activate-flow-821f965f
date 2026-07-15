@@ -23,14 +23,14 @@ function SignedImg({ path, alt, className }: { path: string; alt: string; classN
 
 function SignedLink({ path, children, className }: { path: string; children: React.ReactNode; className?: string }) {
   const url = useSignedBusinessAsset(path);
-  if (!url) return <span className={className}>Carregando…</span>;
+  if (!url) return <span className={className}>Loading…</span>;
   return <a href={url} target="_blank" rel="noreferrer" className={className}>{children}</a>;
 }
 
 export const Route = createFileRoute("/business-info")({
   component: BusinessInfoPage,
   head: () => ({ meta: [
-    { title: "Informações do negócio · Filro" },
+    { title: "Business information · Filro" },
     { name: "robots", content: "noindex,nofollow" },
   ]}),
 });
@@ -153,7 +153,7 @@ function BusinessInfoPage() {
           } catch { /* ignore */ }
         }
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : "Erro ao carregar projeto";
+        const msg = err instanceof Error ? err.message : "Error ao carregar projeto";
         toast.error(msg);
         navigate({ to: "/" });
         return;
@@ -183,11 +183,11 @@ function BusinessInfoPage() {
     if (!user) return null;
     if (file.size > 8 * 1024 * 1024) { toast.error("Arquivo muito grande (máx. 8MB)."); return null; }
     const okType = file.type.startsWith("image/") || file.type === "application/pdf";
-    if (!okType) { toast.error("Tipo de arquivo não permitido. Envie imagem ou PDF."); return null; }
+    if (!okType) { toast.error("File type not allowed. Upload an image or PDF."); return null; }
     const ext = (file.name.split(".").pop() ?? "bin").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "bin";
     const path = `${user.id}/${prefix}-${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true, contentType: file.type });
-    if (error) { toast.error("Falha no upload do arquivo: " + error.message); return null; }
+    if (error) { toast.error("Failed no upload do arquivo: " + error.message); return null; }
     return path;
   };
 
@@ -239,17 +239,17 @@ function BusinessInfoPage() {
           selectedModel: info.model_choice,
         },
       });
-      toast.success("Informações enviadas! Ativação iniciada. Entrega em 24h.");
+      toast.success("Information enviadas! Activation iniciada. Entrega within 1 business day.");
       setProject({ ...project, business_info_submitted: true });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Erro ao enviar";
+      const msg = err instanceof Error ? err.message : "Error ao enviar";
       toast.error(msg);
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading || !project) return <div className="min-h-screen grid place-items-center text-ink-soft">Carregando...</div>;
+  if (loading || !project) return <div className="min-h-screen grid place-items-center text-ink-soft">Loading...</div>;
 
   const activeSectionKeys = PLAN_SECTIONS[planSlug] ?? PLAN_SECTIONS.plus;
   const sections = activeSectionKeys.map((k) => [k, SECTION_LABELS[k]] as const);
@@ -260,22 +260,22 @@ function BusinessInfoPage() {
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
       <main className="mx-auto max-w-[1200px] w-full px-5 md:px-10 py-10 md:py-16">
-        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
+        <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Home</Link>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mt-6 flex items-center gap-4">
-          <h1 className="editorial-headline text-4xl md:text-6xl text-ink">Informações do negócio</h1>
+          <h1 className="editorial-headline text-4xl md:text-6xl text-ink">Business information</h1>
           {project.business_info_submitted && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-lime text-ink text-xs font-semibold">
               <Check className="h-3.5 w-3.5" /> Enviado
             </span>
           )}
         </motion.div>
-        <p className="mt-3 text-ink-soft max-w-2xl">Quanto mais detalhes você fornecer, melhor o resultado. Tudo é editável depois.</p>
+        <p className="mt-3 text-ink-soft max-w-2xl">The more detail you share, the better the result. Everything is editable later.</p>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink text-paper text-xs font-semibold uppercase tracking-wide">
-            Plano {planSlug}
+            Plan {planSlug}
           </span>
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-flame/10 text-flame text-xs font-semibold">
-            <Clock className="h-3.5 w-3.5" /> Entrega em até 24h após confirmação
+            <Clock className="h-3.5 w-3.5" /> Kickoff within 1 business day after confirmation
           </span>
         </div>
 
@@ -301,10 +301,10 @@ function BusinessInfoPage() {
           <div className="space-y-6">
             {currentSection === "identidade" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
-                <Field label="Nome do negócio *"><input value={info.name} onChange={(e) => upd("name", e.target.value)} className={inputCls} /></Field>
+                <Field label="Name do negócio *"><input value={info.name} onChange={(e) => upd("name", e.target.value)} className={inputCls} /></Field>
                 <Field label="Slogan"><input value={info.slogan} onChange={(e) => upd("slogan", e.target.value)} className={inputCls} placeholder="ex.: O melhor café da cidade" /></Field>
-                <Field label="Segmento"><input value={info.segment} onChange={(e) => upd("segment", e.target.value)} className={inputCls} placeholder="ex.: Padaria, Salão, Restaurante" /></Field>
-                <Field label="Descrição"><textarea value={info.description} onChange={(e) => upd("description", e.target.value)} rows={4} className={inputCls + " py-3 h-auto"} placeholder="Conte sobre o negócio, história, o que o diferencia" /></Field>
+                <Field label="Segment"><input value={info.segment} onChange={(e) => upd("segment", e.target.value)} className={inputCls} placeholder="ex.: Padaria, Salão, Restaurante" /></Field>
+                <Field label="Description"><textarea value={info.description} onChange={(e) => upd("description", e.target.value)} rows={4} className={inputCls + " py-3 h-auto"} placeholder="Conte sobre o negócio, história, o que o diferencia" /></Field>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <Field label="Cor primária"><div className="flex gap-2 items-center"><input type="color" value={info.brand_color_primary} onChange={(e) => upd("brand_color_primary", e.target.value)} className="h-12 w-16 rounded-xl cursor-pointer border border-border" /><input value={info.brand_color_primary} onChange={(e) => upd("brand_color_primary", e.target.value)} className={inputCls} /></div></Field>
                   <Field label="Cor secundária"><div className="flex gap-2 items-center"><input type="color" value={info.brand_color_secondary} onChange={(e) => upd("brand_color_secondary", e.target.value)} className="h-12 w-16 rounded-xl cursor-pointer border border-border" /><input value={info.brand_color_secondary} onChange={(e) => upd("brand_color_secondary", e.target.value)} className={inputCls} /></div></Field>
@@ -313,7 +313,7 @@ function BusinessInfoPage() {
                   <div className="flex items-center gap-4">
                     {info.logo_url && <SignedImg path={info.logo_url} alt="logo" className="h-16 w-16 rounded-xl object-cover border border-border" />}
                     <label className="inline-flex items-center gap-2 h-12 px-4 rounded-xl border border-border bg-paper cursor-pointer hover:bg-muted text-sm">
-                      <Upload className="h-4 w-4" /> {info.logo_url ? "Trocar logo" : "Enviar logo"}
+                      <Upload className="h-4 w-4" /> {info.logo_url ? "Trocar logo" : "Send logo"}
                       <input type="file" accept="image/*" onChange={handleLogo} className="hidden" />
                     </label>
                   </div>
@@ -371,31 +371,31 @@ function BusinessInfoPage() {
                       <input type="file" accept="image/*" onChange={(e) => handleProductImg(idx, e)} className="hidden" />
                     </label>
                     <div className="space-y-2">
-                      <input value={pr.name} onChange={(e) => updProduct(idx, "name", e.target.value)} className={inputCls} placeholder="Nome do produto" />
+                      <input value={pr.name} onChange={(e) => updProduct(idx, "name", e.target.value)} className={inputCls} placeholder="Name do produto" />
                       <input value={pr.price} onChange={(e) => updProduct(idx, "price", e.target.value)} className={inputCls} placeholder="Preço" />
-                      <textarea value={pr.description} onChange={(e) => updProduct(idx, "description", e.target.value)} rows={2} className={inputCls + " py-3 h-auto"} placeholder="Descrição curta" />
+                      <textarea value={pr.description} onChange={(e) => updProduct(idx, "description", e.target.value)} rows={2} className={inputCls + " py-3 h-auto"} placeholder="Description curta" />
                     </div>
                     <button onClick={() => removeProduct(idx)} className="h-10 w-10 grid place-items-center rounded-xl text-flame hover:bg-flame/10"><Trash2 className="h-4 w-4" /></button>
                   </div>
                 ))}
                 <button onClick={addProduct} className="w-full h-14 rounded-2xl border-2 border-dashed border-border text-ink-soft hover:border-ink hover:text-ink inline-flex items-center justify-center gap-2 transition-colors">
-                  <Plus className="h-5 w-5" /> Adicionar produto / serviço
+                  <Plus className="h-5 w-5" /> Add produto / serviço
                 </button>
               </div>
             )}
 
             {currentSection === "modelo" && (
               <div className="card-elevated p-6 md:p-8 space-y-5">
-                <Field label="Promoções e ofertas"><textarea value={info.promotions} onChange={(e) => upd("promotions", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Cupons, descontos, combos..." /></Field>
+                <Field label="Promoções e ofertas"><textarea value={info.promotions} onChange={(e) => upd("promotions", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Coupons, descontos, combos..." /></Field>
                 <div className="border-t border-border pt-5">
                   <div className="font-semibold text-ink mb-3">Modelo de referência</div>
-                  <Field label="Descreva como você quer"><textarea value={info.model_notes} onChange={(e) => upd("model_notes", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Estilo, sites de referência, vibe..." /></Field>
-                  <Field label="Link de inspiração"><input value={info.model_link} onChange={(e) => upd("model_link", e.target.value)} className={inputCls} placeholder="https://..." /></Field>
+                  <Field label="Describe what you want"><textarea value={info.model_notes} onChange={(e) => upd("model_notes", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Style, reference sites, vibe..." /></Field>
+                  <Field label="Inspiration link"><input value={info.model_link} onChange={(e) => upd("model_link", e.target.value)} className={inputCls} placeholder="https://..." /></Field>
                   <Field label="Arquivo (PDF, imagem, briefing)">
                     <div className="flex items-center gap-3">
                       {info.model_file_url && <SignedLink path={info.model_file_url} className="text-sm text-ink underline">Ver arquivo</SignedLink>}
                       <label className="inline-flex items-center gap-2 h-12 px-4 rounded-xl border border-border bg-paper cursor-pointer hover:bg-muted text-sm">
-                        <Upload className="h-4 w-4" /> {info.model_file_url ? "Trocar arquivo" : "Enviar arquivo"}
+                        <Upload className="h-4 w-4" /> {info.model_file_url ? "Trocar arquivo" : "Send arquivo"}
                         <input type="file" onChange={handleModelFile} className="hidden" />
                       </label>
                     </div>
@@ -410,7 +410,7 @@ function BusinessInfoPage() {
                   <textarea value={info.premium_brand_voice} onChange={(e) => upd("premium_brand_voice", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Tom de voz: amigável, profissional, sofisticado, descontraído..." />
                 </Field>
                 <Field label="Público-alvo">
-                  <textarea value={info.premium_target_audience} onChange={(e) => upd("premium_target_audience", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Quem são seus clientes ideais? Idade, perfil, interesses, necessidades..." />
+                  <textarea value={info.premium_target_audience} onChange={(e) => upd("premium_target_audience", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Who are your ideal customers? Age, profile, interests, needs..." />
                 </Field>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <Field label="Facebook">
@@ -431,14 +431,14 @@ function BusinessInfoPage() {
               </div>
               <div className="flex items-center gap-3">
                 {!allValid && !project.business_info_submitted && (
-                  <span className="text-xs text-ink-soft">Complete todas as seções para enviar</span>
+                  <span className="text-xs text-ink-soft">Complete all sections to submit</span>
                 )}
                 <button
                   onClick={submit}
                   disabled={saving || (!allValid && !project.business_info_submitted)}
                   className="h-13 px-8 py-3 rounded-full bg-ink text-paper font-semibold hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
-                  {saving ? "Salvando..." : project.business_info_submitted ? "Atualizar informações" : "Enviar para ativação"}
+                  {saving ? "Saving..." : project.business_info_submitted ? "Update information" : "Submit for kickoff"}
                 </button>
               </div>
             </div>

@@ -24,7 +24,7 @@ async function assertAdmin(userId: string) {
 
 /**
  * Admin cria uma cobrança extra (upsell) e gera um Stripe Payment Link.
- * Não usamos checkout session embed pois é admin enviando link ao cliente.
+ * No embedded checkout — an admin sends a payment link to the client.
  */
 export const createExtraCharge = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -37,7 +37,7 @@ export const createExtraCharge = createServerFn({ method: "POST" })
     environment: StripeEnv;
   }) => {
     if (!data.title || data.title.length > 200) throw new Error("Título inválido");
-    if (data.description && data.description.length > 2000) throw new Error("Descrição muito longa");
+    if (data.description && data.description.length > 2000) throw new Error("Description too long");
     if (!Number.isInteger(data.amount) || data.amount < 100 || data.amount > 10_000_000) {
       throw new Error("Valor inválido");
     }

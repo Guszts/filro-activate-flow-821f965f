@@ -44,11 +44,11 @@ export function CouponsTab() {
           syncStripe: form.syncStripe,
         },
       });
-      toast.success("Cupom criado");
+      toast.success("Coupon criado");
       setForm({ code: "", description: "", discount_percent: 10, plan_slug: "", max_uses: "", expires_at: "", syncStripe: true });
       qc.invalidateQueries({ queryKey: ["console-promo-codes"] });
     } catch (err: any) {
-      toast.error(err.message ?? "Erro ao criar cupom");
+      toast.error(err.message ?? "Error ao criar cupom");
     } finally {
       setBusy(false);
     }
@@ -64,7 +64,7 @@ export function CouponsTab() {
   };
 
   const onDelete = async (id: string, code: string) => {
-    if (!confirm(`Excluir cupom ${code}?`)) return;
+    if (!confirm(`Delete cupom ${code}?`)) return;
     try {
       await remove({ data: { id } });
       qc.invalidateQueries({ queryKey: ["console-promo-codes"] });
@@ -75,7 +75,7 @@ export function CouponsTab() {
 
   return (
     <div>
-      <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Cupons</h1>
+      <h1 className="editorial-headline text-4xl md:text-5xl text-ink">Coupons</h1>
       <p className="mt-2 text-ink-soft">Crie, ative e expire códigos promocionais. São sincronizados com o Stripe automaticamente.</p>
 
       <form onSubmit={submit} className="mt-8 card-elevated p-6 grid grid-cols-1 md:grid-cols-6 gap-3">
@@ -91,13 +91,13 @@ export function CouponsTab() {
         <input type="datetime-local" value={form.expires_at} onChange={(e) => setForm({ ...form, expires_at: e.target.value })}
           className="h-11 px-3 rounded-lg border border-border bg-paper" />
         <input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
-          placeholder="Descrição interna" className="md:col-span-4 h-11 px-3 rounded-lg border border-border bg-paper" />
+          placeholder="Description interna" className="md:col-span-4 h-11 px-3 rounded-lg border border-border bg-paper" />
         <label className="md:col-span-2 flex items-center gap-2 text-sm text-ink-soft">
           <input type="checkbox" checked={form.syncStripe} onChange={(e) => setForm({ ...form, syncStripe: e.target.checked })} />
           Sincronizar no Stripe
         </label>
         <button disabled={busy} type="submit" className="md:col-span-6 h-11 rounded-lg bg-ink text-paper font-semibold hover:bg-ink/90 disabled:opacity-50">
-          {busy ? "Criando..." : "Criar cupom"}
+          {busy ? "Creating..." : "Criar cupom"}
         </button>
       </form>
 
@@ -108,7 +108,7 @@ export function CouponsTab() {
               <tr>
                 <th className="px-4 py-3">Código</th>
                 <th className="px-4 py-3">% off</th>
-                <th className="px-4 py-3">Plano</th>
+                <th className="px-4 py-3">Plan</th>
                 <th className="px-4 py-3">Usos</th>
                 <th className="px-4 py-3">Expira</th>
                 <th className="px-4 py-3">Status</th>
@@ -116,7 +116,7 @@ export function CouponsTab() {
               </tr>
             </thead>
             <tbody>
-              {isLoading && <tr><td colSpan={7} className="px-4 py-8 text-center text-ink-soft">Carregando...</td></tr>}
+              {isLoading && <tr><td colSpan={7} className="px-4 py-8 text-center text-ink-soft">Loading...</td></tr>}
               {!isLoading && (codes ?? []).length === 0 && (
                 <tr><td colSpan={7} className="px-4 py-12 text-center text-ink-soft">Nenhum cupom.</td></tr>
               )}
@@ -129,14 +129,14 @@ export function CouponsTab() {
                   <td className="px-4 py-3 text-ink-soft">{c.expires_at ? formatDateTime(c.expires_at) : "—"}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${c.active ? "bg-lime text-ink" : "bg-muted text-ink-soft"}`}>
-                      {c.active ? "Ativo" : "Inativo"}
+                      {c.active ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td className="px-4 py-3 space-x-2 text-xs">
                     <button onClick={() => onToggle(c.id, !c.active)} className="underline text-ink-soft hover:text-ink">
-                      {c.active ? "Desativar" : "Ativar"}
+                      {c.active ? "Desativar" : "Activer"}
                     </button>
-                    <button onClick={() => onDelete(c.id, c.code)} className="underline text-flame hover:text-flame/80">Excluir</button>
+                    <button onClick={() => onDelete(c.id, c.code)} className="underline text-flame hover:text-flame/80">Delete</button>
                   </td>
                 </tr>
               ))}

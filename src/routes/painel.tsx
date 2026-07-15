@@ -15,9 +15,9 @@ import { toast } from "sonner";
 import { SubscriptionCancellationModals } from "@/components/SubscriptionCancellationModals";
 
 export const Route = createFileRoute("/painel")({
-  component: PainelPage,
+  component: DashboardPage,
   head: () => ({ meta: [
-    { title: "Painel · Filro" },
+    { title: "Dashboard · Filro" },
     { name: "robots", content: "noindex,nofollow" },
   ]}),
 });
@@ -37,24 +37,24 @@ interface PaymentRow { id: string; amount: number; currency: string; status: str
 interface PlanRow { id: string; name: string; activation_price: number; monthly_price: number }
 
 const STATUS_LABEL: Record<string, { label: string; color: string; icon: typeof Clock }> = {
-  new: { label: "Novo", color: "bg-muted text-ink", icon: Clock },
-  paid: { label: "Pago", color: "bg-lime text-ink", icon: CheckCircle2 },
-  payment_confirmed: { label: "Pagamento confirmado", color: "bg-lime text-ink", icon: CheckCircle2 },
+  new: { label: "New", color: "bg-muted text-ink", icon: Clock },
+  paid: { label: "Paid", color: "bg-lime text-ink", icon: CheckCircle2 },
+  payment_confirmed: { label: "Payment confirmado", color: "bg-lime text-ink", icon: CheckCircle2 },
   waiting_info: { label: "Aguardando informações", color: "bg-amber-100 text-ink", icon: Clock },
   briefing_received: { label: "Briefing recebido", color: "bg-azure/30 text-ink", icon: CheckCircle2 },
-  in_progress: { label: "Em produção", color: "bg-azure text-paper", icon: Loader2 },
-  in_production: { label: "Em produção", color: "bg-azure text-paper", icon: Loader2 },
+  in_progress: { label: "In production", color: "bg-azure text-paper", icon: Loader2 },
+  in_production: { label: "In production", color: "bg-azure text-paper", icon: Loader2 },
   revision_sent: { label: "Revisão enviada", color: "bg-amber-100 text-ink", icon: Clock },
-  awaiting_client: { label: "Aguardando você", color: "bg-amber-200 text-ink", icon: Clock },
-  delivered: { label: "Entregue", color: "bg-flame text-paper", icon: CheckCircle2 },
-  published: { label: "Publicado", color: "bg-lime text-ink", icon: CheckCircle2 },
-  maintenance: { label: "Em manutenção", color: "bg-muted text-ink", icon: Loader2 },
+  awaiting_client: { label: "Waiting on you", color: "bg-amber-200 text-ink", icon: Clock },
+  delivered: { label: "Delivered", color: "bg-flame text-paper", icon: CheckCircle2 },
+  published: { label: "Published", color: "bg-lime text-ink", icon: CheckCircle2 },
+  maintenance: { label: "In maintenance", color: "bg-muted text-ink", icon: Loader2 },
   on_hold: { label: "Em espera", color: "bg-muted text-ink", icon: Clock },
   paused: { label: "Pausado", color: "bg-muted text-ink", icon: Clock },
-  cancelled: { label: "Cancelado", color: "bg-flame/20 text-ink", icon: Clock },
+  cancelled: { label: "Canceled", color: "bg-flame/20 text-ink", icon: Clock },
 };
 
-function PainelPage() {
+function DashboardPage() {
   const navigate = useNavigate();
   const { user, loading, hasPaid, isAdmin } = useAuth();
   const [project, setProject] = useState<ProjectRow | null>(null);
@@ -73,9 +73,9 @@ function PainelPage() {
         data: { returnUrl: window.location.href, environment: getStripeEnvironment() },
       });
       if (res.url) window.open(res.url, "_blank");
-      else toast.error(res.error || "Não foi possível abrir o portal");
+      else toast.error(res.error || "No foi possível abrir o portal");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao abrir portal");
+      toast.error(err instanceof Error ? err.message : "Error ao abrir portal");
     } finally {
       setOpeningPortal(false);
     }
@@ -116,19 +116,19 @@ function PainelPage() {
       <main className="flex-1 mx-auto max-w-[1200px] w-full px-5 md:px-10 py-12 md:py-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
           <div>
-            <span className="text-xs tracking-wide text-ink-soft">Painel</span>
+            <span className="text-xs tracking-wide text-ink-soft">Dashboard</span>
             <h1 className="mt-2 editorial-headline text-4xl sm:text-5xl md:text-6xl text-ink leading-tight">Olá, <span className="lime-mark">{user?.email?.split("@")[0]}</span></h1>
             <p className="mt-3 text-ink-soft">Acompanhe seu projeto, pagamentos e edite as informações do negócio.</p>
           </div>
           <a href="https://wa.me/5592993561754" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-lime text-ink font-semibold text-sm self-start">
-            <MessageCircle className="h-4 w-4" /> Suporte WhatsApp
+            <MessageCircle className="h-4 w-4" /> Support WhatsApp
           </a>
         </div>
 
         {subInfo?.cancel_at_period_end && subInfo.current_period_end && (
           <div className="mb-6 p-4 sm:p-5 rounded-2xl border border-flame/30 bg-flame/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="text-sm">
-              <p className="font-semibold text-ink">Assinatura cancelada</p>
+              <p className="font-semibold text-ink">Subscription cancelada</p>
               <p className="text-ink-soft mt-1">
                 Seu site e o acesso ao painel ficam ativos até{" "}
                 <strong className="text-ink">
@@ -141,7 +141,7 @@ function PainelPage() {
               disabled={openingPortal}
               className="h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold whitespace-nowrap disabled:opacity-60"
             >
-              {openingPortal ? "Abrindo..." : "Voltar com a assinatura"}
+              {openingPortal ? "Abrindo..." : "Reactivate subscription"}
             </button>
           </div>
         )}
@@ -162,9 +162,9 @@ function PainelPage() {
                 <div>
                   <div className="text-xs tracking-wide text-ink-soft">Seu projeto</div>
                   <div className="mt-2 font-display font-black text-3xl text-ink">
-                    {project?.business_name || currentPlan?.name || "Aguardando ativação"}
+                    {project?.business_name || currentPlan?.name || "Awaiting kickoff"}
                   </div>
-                  {currentPlan && <div className="mt-1 text-sm text-ink-soft">Plano {currentPlan.name}</div>}
+                  {currentPlan && <div className="mt-1 text-sm text-ink-soft">Plan {currentPlan.name}</div>}
                 </div>
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${status.color}`}>
                   <StatusIcon className="h-3.5 w-3.5" /> {status.label}
@@ -173,23 +173,23 @@ function PainelPage() {
 
               {!project?.plan_id ? (
                 <div className="mt-6 p-5 rounded-2xl bg-muted">
-                  <p className="text-sm text-ink">Você ainda não ativou um plano. Escolha uma opção para começarmos.</p>
+                  <p className="text-sm text-ink">You haven't activated a plan yet. Pick one to get started.</p>
                   <Link to="/" hash="ativacao" className="mt-4 inline-flex items-center gap-2 h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold">
-                    Ver planos <ArrowRight className="h-4 w-4" />
+                    See pricing <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
               ) : !project?.business_info_submitted ? (
                 <div className="mt-6 p-5 rounded-2xl bg-lime/30">
-                  <p className="text-sm text-ink font-medium">Próximo passo: enviar as informações do negócio.</p>
+                  <p className="text-sm text-ink font-medium">Next passo: enviar as informações do negócio.</p>
                   <p className="text-xs text-ink-soft mt-1">Após o envio, sua página fica pronta em até 24 horas.</p>
                   <Link to="/business-info" className="mt-4 inline-flex items-center gap-2 h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold">
-                    Enviar informações <ArrowRight className="h-4 w-4" />
+                    Send informações <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
               ) : (
                 <div className="mt-6 p-5 rounded-2xl bg-azure/10 border border-azure/20">
                   <p className="text-sm text-ink font-medium">Tudo certo! Estamos preparando sua página.</p>
-                  <p className="text-xs text-ink-soft mt-1">Você receberá um aviso pelo WhatsApp assim que estiver pronto.</p>
+                  <p className="text-xs text-ink-soft mt-1">You receberá um aviso pelo WhatsApp assim que estiver pronto.</p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {project?.id && (
                       <Link to="/projeto/$id" params={{ id: project.id }} className="inline-flex items-center gap-2 h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold">
@@ -197,7 +197,7 @@ function PainelPage() {
                       </Link>
                     )}
                     <Link to="/business-info" className="inline-flex items-center gap-2 h-11 px-5 rounded-2xl border border-ink text-ink text-sm font-semibold">
-                      <Pencil className="h-4 w-4" /> Editar informações
+                      <Pencil className="h-4 w-4" /> Edit informações
                     </Link>
                   </div>
                 </div>
@@ -217,7 +217,7 @@ function PainelPage() {
                     disabled={openingPortal}
                     className="w-full flex items-center justify-between p-4 rounded-2xl bg-ink text-paper hover:bg-ink/90 transition-colors disabled:opacity-60"
                   >
-                    <span className="inline-flex items-center gap-3 text-sm font-medium"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Gerenciar assinatura"}</span>
+                    <span className="inline-flex items-center gap-3 text-sm font-medium"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Manage subscription"}</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 )}
@@ -226,11 +226,11 @@ function PainelPage() {
                   <ArrowRight className="h-4 w-4 text-ink-soft" />
                 </Link>
                 <Link to="/docs" className="flex items-center justify-between p-4 rounded-2xl bg-muted hover:bg-stone transition-colors">
-                  <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><FileText className="h-4 w-4" /> Documentação</span>
+                  <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><FileText className="h-4 w-4" /> Documentation</span>
                   <ArrowRight className="h-4 w-4 text-ink-soft" />
                 </Link>
                 <Link to="/suporte" className="flex items-center justify-between p-4 rounded-2xl bg-muted hover:bg-stone transition-colors">
-                  <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><MessageCircle className="h-4 w-4" /> Suporte e chamados</span>
+                  <span className="inline-flex items-center gap-3 text-sm font-medium text-ink"><MessageCircle className="h-4 w-4" /> Support e chamados</span>
                   <ArrowRight className="h-4 w-4 text-ink-soft" />
                 </Link>
                 <Link to="/" hash="faq" className="flex items-center justify-between p-4 rounded-2xl bg-muted hover:bg-stone transition-colors">
@@ -249,7 +249,7 @@ function PainelPage() {
               <div className="flex items-center justify-between mb-5">
                 <div>
                   <div className="text-xs tracking-wide text-ink-soft">Histórico</div>
-                  <h2 className="mt-1 font-display font-black text-2xl text-ink">Pagamentos</h2>
+                  <h2 className="mt-1 font-display font-black text-2xl text-ink">Payments</h2>
                 </div>
               </div>
               {payments.length === 0 ? (
@@ -260,7 +260,7 @@ function PainelPage() {
                     <thead className="text-xs tracking-wide text-ink-soft border-b border-border">
                       <tr>
                         <th className="text-left py-3 font-medium">Data</th>
-                        <th className="text-left py-3 font-medium">Plano</th>
+                        <th className="text-left py-3 font-medium">Plan</th>
                         <th className="text-left py-3 font-medium">Status</th>
                         <th className="text-right py-3 font-medium">Valor</th>
                       </tr>
@@ -275,7 +275,7 @@ function PainelPage() {
                             <td className="py-3 text-ink font-medium">{plan?.name ?? "—"}</td>
                             <td className="py-3">
                               <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${paid ? "bg-lime text-ink" : "bg-muted text-ink-soft"}`}>
-                                {paid ? "Pago" : p.status}
+                                {paid ? "Paid" : p.status}
                               </span>
                             </td>
                             <td className="py-3 text-right text-ink font-semibold">{formatBRL(p.amount)}</td>

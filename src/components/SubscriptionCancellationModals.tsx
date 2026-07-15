@@ -65,12 +65,12 @@ export function SubscriptionCancellationModals({
               <Calendar className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="font-display font-black text-2xl text-ink leading-tight">Cancelamento confirmado</h2>
+              <h2 className="font-display font-black text-2xl text-ink leading-tight">Cancellation confirmado</h2>
               <p className="mt-2 text-sm text-ink-soft">
-                Seu site continuará no ar e você manterá o acesso ao painel até <strong className="text-ink">{formatDate(currentPeriodEnd)}</strong>.
+                Your site stays live and you keep dashboard access until <strong className="text-ink">{formatDate(currentPeriodEnd)}</strong>.
               </p>
               <p className="mt-2 text-sm text-ink-soft">
-                Depois dessa data, o acesso ao painel será encerrado e tiraremos o seu site do ar. Nada mais será cobrado.
+                After that date, dashboard access ends and we take the site offline. Nothing else will be charged.
               </p>
             </div>
           </div>
@@ -83,7 +83,7 @@ export function SubscriptionCancellationModals({
               disabled={reactivating}
               className="h-11 px-5 rounded-2xl bg-ink text-paper font-semibold text-sm disabled:opacity-60"
             >
-              {reactivating ? "Abrindo..." : "Voltar com a assinatura"}
+              {reactivating ? "Abrindo..." : "Reactivate subscription"}
             </button>
           </div>
         </Modal>
@@ -97,10 +97,10 @@ export function SubscriptionCancellationModals({
             </div>
             <div>
               <h2 className="font-display font-black text-2xl text-ink leading-tight">
-                {daysLeft === 1 ? "Falta 1 dia" : `Faltam ${daysLeft} dias`} para seu site sair do ar
+                {daysLeft === 1 ? "1 day left" : `${daysLeft} days`} until your site goes offline
               </h2>
               <p className="mt-2 text-sm text-ink-soft">
-                Seu acesso ao painel e o seu site serão encerrados em <strong className="text-ink">{formatDate(currentPeriodEnd)}</strong>.
+                Your dashboard access and site will end on <strong className="text-ink">{formatDate(currentPeriodEnd)}</strong>.
               </p>
               <p className="mt-2 text-sm text-ink-soft">
                 Quer continuar? Reative agora e mantenha tudo no ar sem perder nada.
@@ -109,14 +109,14 @@ export function SubscriptionCancellationModals({
           </div>
           <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end mt-6">
             <button onClick={dismissSevenDay} className="h-11 px-5 rounded-2xl border border-border text-ink font-semibold text-sm">
-              Agora não
+              Not now
             </button>
             <button
               onClick={onReactivate}
               disabled={reactivating}
               className="h-11 px-5 rounded-2xl bg-lime text-ink font-semibold text-sm disabled:opacity-60"
             >
-              {reactivating ? "Abrindo..." : "Voltar com a assinatura"}
+              {reactivating ? "Abrindo..." : "Reactivate subscription"}
             </button>
           </div>
         </Modal>
@@ -147,7 +147,7 @@ function Modal({ children, onClose }: { children: React.ReactNode; onClose: () =
       >
         <button
           onClick={onClose}
-          aria-label="Fechar"
+          aria-label="Close"
           className="absolute top-3 right-3 h-9 w-9 grid place-items-center rounded-full hover:bg-muted text-ink-soft hover:text-ink transition-colors"
         >
           <X className="h-4 w-4" />

@@ -17,7 +17,7 @@ export const Route = createFileRoute("/payment-success")({
     redirect_status: (s.redirect_status as string) || "",
   }),
   head: () => ({ meta: [
-    { title: "Pagamento confirmado · Filro" },
+    { title: "Payment confirmado · Filro" },
     { name: "robots", content: "noindex,nofollow" },
   ]}),
 });
@@ -95,61 +95,61 @@ function SuccessPage() {
           >
             <Check className="h-10 w-10 text-ink" strokeWidth={3} />
           </motion.div>
-          <h1 className="mt-6 editorial-headline text-5xl md:text-6xl text-ink">Pagamento confirmado</h1>
+          <h1 className="mt-6 editorial-headline text-5xl md:text-6xl text-ink">Payment confirmado</h1>
           <p className="mt-3 text-ink-soft">
-            {status === "checking" && "Confirmando seu pagamento via webhook…"}
-            {status === "ok" && "Tudo certo. Seu recibo está abaixo."}
-            {status === "pending" && "Recebemos sua tentativa. Aguardando confirmação do provedor."}
+            {status === "checking" && "Confirming your payment via webhook…"}
+            {status === "ok" && "All set. Your receipt is below."}
+            {status === "pending" && "Recebemos sua tentativa. Awaiting confirmation do provedor."}
           </p>
           <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-flame/10 text-flame text-sm font-semibold">
-            <Clock className="h-4 w-4" /> Sua presença digital fica pronta em 24h
+            <Clock className="h-4 w-4" /> Your implementation kicks off within one business day
           </div>
         </motion.div>
 
         {/* RECEIPT */}
         <div className="mt-10 card-elevated p-7 md:p-10">
           <div className="flex items-center gap-2 text-xs tracking-wide text-ink-soft">
-            <Receipt className="h-3.5 w-3.5" /> Recibo
+            <Receipt className="h-3.5 w-3.5" /> Receipt
           </div>
           <div className="mt-2 flex flex-wrap items-baseline justify-between gap-4">
-            <div className="font-display font-black text-3xl md:text-4xl text-ink">{plan?.name || "Plano"}</div>
+            <div className="font-display font-black text-3xl md:text-4xl text-ink">{plan?.name || "Plan"}</div>
             <StatusPill status={payment?.status ?? "pending"} />
           </div>
 
           <div className="mt-6 grid sm:grid-cols-2 gap-6 text-sm">
-            <Field label="Pago em" value={payment?.paid_at ? formatDateTime(payment.paid_at) : "—"} />
-            <Field label="Valor cobrado" value={payment ? formatBRL(payment.amount) : "—"} />
-            <Field label="ID do pagamento" value={payment?.stripe_payment_intent_id || "—"} mono />
-            <Field label="Moeda" value={(payment?.currency || "brl").toUpperCase()} />
+            <Field label="Paid em" value={payment?.paid_at ? formatDateTime(payment.paid_at) : "—"} />
+            <Field label="Amount charged" value={payment ? formatBRL(payment.amount) : "—"} />
+            <Field label="Payment ID" value={payment?.stripe_payment_intent_id || "—"} mono />
+            <Field label="Currency" value={(payment?.currency || "brl").toUpperCase()} />
           </div>
 
           {plan && (
             <div className="mt-8 border-t border-border pt-6 grid sm:grid-cols-2 gap-3 text-sm">
-              <Field label="Ativação (única)" value={formatBRL(plan.activation_price)} />
-              <Field label="Mensalidade" value={`${formatBRL(plan.monthly_price)}/mês`} />
+              <Field label="Activation (única)" value={formatBRL(plan.activation_price)} />
+              <Field label="Monthly" value={`${formatBRL(plan.monthly_price)}/mo`} />
             </div>
           )}
 
           <div className="mt-8 border-t border-border pt-6">
-            <div className="text-xs tracking-wide text-ink-soft mb-3">Assinatura</div>
+            <div className="text-xs tracking-wide text-ink-soft mb-3">Subscription</div>
             {sub ? (
               <div className="grid sm:grid-cols-2 gap-3 text-sm">
                 <Field label="Status" value={sub.status} />
-                <Field label="Renovação automática" value={sub.cancel_at_period_end ? "Cancelada no fim do ciclo" : "Ativa"} />
-                <Field label="Ciclo atual" value={sub.current_period_start ? formatDateTime(sub.current_period_start) : "—"} />
-                <Field label="Próximo ciclo em" value={sub.current_period_end ? formatDateTime(sub.current_period_end) : "—"} />
+                <Field label="Auto-renew" value={sub.cancel_at_period_end ? "Canceled no fim do ciclo" : "Active"} />
+                <Field label="Current period" value={sub.current_period_start ? formatDateTime(sub.current_period_start) : "—"} />
+                <Field label="Next ciclo em" value={sub.current_period_end ? formatDateTime(sub.current_period_end) : "—"} />
               </div>
             ) : (
-              <p className="text-sm text-ink-soft">Aguardando ativação da assinatura via webhook.</p>
+              <p className="text-sm text-ink-soft">Waiting for subscription activation via webhook.</p>
             )}
           </div>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-3">
             <Link to="/business-info" className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-2xl bg-ink text-paper font-semibold hover:scale-[1.02] transition-transform shadow-elegant">
-              Enviar informações do negócio <ArrowRight className="h-4 w-4" />
+              Send informações do negócio <ArrowRight className="h-4 w-4" />
             </Link>
             <Link to="/painel" className="inline-flex items-center justify-center h-12 px-6 rounded-2xl border border-border text-ink font-semibold hover:bg-muted transition">
-              Ir para o painel
+              Go to dashboard
             </Link>
           </div>
         </div>
@@ -173,14 +173,14 @@ function SuccessPage() {
             >
               <button
                 onClick={() => setEbookOpen(false)}
-                aria-label="Fechar"
+                aria-label="Close"
                 className="absolute top-4 right-4 h-9 w-9 grid place-items-center rounded-full hover:bg-muted transition"
               >
                 <X className="h-4 w-4 text-ink-soft" />
               </button>
 
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lime text-ink text-xs font-bold uppercase tracking-wide">
-                Bônus exclusivo
+                Exclusive bonus
               </div>
               <div className="mt-5 flex items-start gap-4">
                 <div className="h-14 w-14 shrink-0 rounded-2xl bg-ink grid place-items-center">
@@ -188,19 +188,19 @@ function SuccessPage() {
                 </div>
                 <div>
                   <h2 className="editorial-headline text-3xl md:text-4xl text-ink leading-tight">
-                    Manual do Filro
+                    The Filro Manual
                   </h2>
                   <p className="mt-1 text-sm text-ink-soft">
-                    150 páginas de estratégias, dicas e bastidores pra você extrair o máximo do seu plano.
+                    150 pages of strategies, tips, and behind-the-scenes to get the most from your plan.
                   </p>
                 </div>
               </div>
 
               <ul className="mt-6 space-y-2 text-sm text-ink">
                 {[
-                  "Onboarding completo passo a passo",
-                  "Como vender mais pelo WhatsApp",
-                  "SEO local e casos reais de clientes",
+                  "Complete step-by-step onboarding",
+                  "How to sell more through WhatsApp",
+                  "Local SEO and real client case studies",
                 ].map((t) => (
                   <li key={t} className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-flame" strokeWidth={3} /> {t}
@@ -214,13 +214,13 @@ function SuccessPage() {
                 onClick={() => { setEbookClaimed(true); setTimeout(() => setEbookOpen(false), 400); }}
                 className="mt-7 w-full inline-flex items-center justify-center gap-2 h-12 px-6 rounded-2xl bg-lime text-ink font-bold hover:scale-[1.02] transition-transform shadow-elegant"
               >
-                <Download className="h-4 w-4" /> Receber meu ebook
+                <Download className="h-4 w-4" /> Get my ebook
               </a>
               <button
                 onClick={() => setEbookOpen(false)}
                 className="mt-2 w-full text-xs text-ink-soft hover:text-ink transition py-2"
               >
-                Agora não
+                Not now
               </button>
             </motion.div>
           </motion.div>
@@ -246,6 +246,6 @@ function StatusPill({ status }: { status: string }) {
     processing: "bg-azure/20 text-ink",
     failed: "bg-flame text-paper",
   };
-  const label: Record<string, string> = { paid: "Pago", pending: "Pendente", processing: "Processando", failed: "Falha" };
+  const label: Record<string, string> = { paid: "Paid", pending: "Pending", processing: "Processing", failed: "Failed" };
   return <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${map[status] ?? "bg-muted text-ink-soft"}`}>{label[status] ?? status}</span>;
 }

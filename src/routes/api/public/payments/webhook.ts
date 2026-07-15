@@ -468,7 +468,7 @@ async function handleEvent(event: Stripe.Event, env: StripeEnv) {
           project_id: proj?.id ?? null,
           plan_id: proj?.plan_id ?? null,
           title: `Encerrar site cancelado — ${proj?.business_name ?? profile?.name ?? profile?.email ?? userId}`,
-          description: `Assinatura encerrada em ${formatDate(endsAtIso) ?? "—"}. Tirar o site do ar, revogar acessos e arquivar o projeto. E-mail do cliente: ${profile?.email ?? "—"}.`,
+          description: `Subscription ended on ${formatDate(endsAtIso) ?? "—"}. Take site offline, revoke access and archive project. Client email: ${profile?.email ?? "—"}.`,
           status: "pending",
         });
 
