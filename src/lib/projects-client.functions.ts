@@ -70,7 +70,7 @@ export const saveBusinessInfoDraft = createServerFn({ method: "POST" })
       .select("user_id, business_info_submitted")
       .eq("id", data.projectId)
       .maybeSingle();
-    if (!project) throw new Error("Projeto não encontrado.");
+    if (!project) throw new Error("Project not found.");
     if (project.user_id !== userId) throw new Error("Acesso negado.");
     // Once submitted, drafts are frozen — admin team owns the content.
     if (project.business_info_submitted) {
@@ -107,7 +107,7 @@ export const submitBusinessInfo = createServerFn({ method: "POST" })
       .select("user_id, business_info_submitted, project_status")
       .eq("id", data.projectId)
       .maybeSingle();
-    if (!project) throw new Error("Projeto não encontrado.");
+    if (!project) throw new Error("Project not found.");
     if (project.user_id !== userId) throw new Error("Acesso negado.");
     if (project.business_info_submitted) {
       return { ok: true, alreadySubmitted: true };

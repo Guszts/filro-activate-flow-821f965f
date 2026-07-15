@@ -86,7 +86,7 @@ const models: Model[] = [
   },
   {
     name: "Prestador de Serviço",
-    desc: "Captação de orçamento para profissionais autônomos.",
+    desc: "Lead capture for independent professionals.",
     Cover: photoCover(prestadorCover, undefined, "Capa Prestador de Serviço"),
     previewPath: "/modelos/prestador-servico",
     featured: true,
@@ -115,7 +115,7 @@ const models: Model[] = [
   },
   {
     name: "Padaria",
-    desc: "Cardápio visual e localização em destaque.",
+    desc: "Visual menu with location front and center.",
     Cover: photoCover(padariaSrc, padariaSet, "Capa Padaria"),
     previewPath: "https://padaria.filro.site/",
     featured: false,

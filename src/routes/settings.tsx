@@ -224,21 +224,21 @@ function SettingsPage() {
               <p className="text-sm text-ink-soft">Update payment method, view invoices, switch or cancel your plan.</p>
               <div className="mt-5 flex flex-col sm:flex-row gap-3">
                 <button onClick={manageBilling} disabled={openingPortal} className="inline-flex items-center justify-between gap-3 h-12 px-5 rounded-2xl bg-ink text-paper font-semibold hover:bg-ink/90 disabled:opacity-60">
-                  <span className="inline-flex items-center gap-2"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Gerenciar assinatura"}</span>
+                  <span className="inline-flex items-center gap-2"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Manage subscription"}</span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
                 <button onClick={() => setCancelOpen(true)} className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted">
-                  <XCircle className="h-4 w-4" /> Cancel assinatura
+                  <XCircle className="h-4 w-4" /> Cancel subscription
                 </button>
               </div>
             </>
           ) : !hasPaid ? (
             <>
-              <p className="text-sm text-ink-soft">You ainda não tem um plano ativo. Escolha um para ativar sua presença digital.</p>
+              <p className="text-sm text-ink-soft">You don't have an active plan yet. Choose one to get started.</p>
               <Link to="/" hash="ativacao" className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-ink text-paper font-semibold">See pricing <ArrowRight className="h-4 w-4" /></Link>
             </>
           ) : (
-            <p className="text-sm text-ink-soft">Nenhuma assinatura ativa encontrada. Contact us com o suporte se isso parecer errado.</p>
+            <p className="text-sm text-ink-soft">No active subscription found. Contact us com o suporte se isso parecer errado.</p>
           )}
         </motion.section>
         {isAdmin && <McpTokensSection />}
@@ -282,7 +282,7 @@ function SettingsPage() {
             >
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><XCircle className="h-5 w-5" /></div>
-                <h3 className="font-display font-black text-2xl text-ink">Cancel assinatura?</h3>
+                <h3 className="font-display font-black text-2xl text-ink">Cancel subscription?</h3>
               </div>
               <p className="mt-3 text-sm text-ink-soft">
                 You manterá acesso até o fim do ciclo já pago. Conta pra gente o que faltou — usamos para melhorar.
@@ -332,7 +332,7 @@ function SettingsPage() {
               </div>
               <p className="mt-3 text-sm text-ink-soft">
                 This action is <strong>permanent</strong> and cannot be undone. All your data will be removed.
-                {hasSubscription && <span className="block mt-2 text-flame">You ainda tem assinatura ativa — cancele primeiro para evitar cobranças.</span>}
+                {hasSubscription && <span className="block mt-2 text-flame">You still have an active subscription — cancel it first to avoid charges.</span>}
               </p>
               <label className="block mt-5 text-xs tracking-wide text-ink-soft uppercase">Type <strong>DELETE</strong> to confirm</label>
               <input

@@ -59,7 +59,7 @@ export const approveOAuthConsent = createServerFn({ method: "POST" })
     const client = await getClient(data.client_id);
     if (!client) throw new Error("Cliente OAuth desconhecido.");
     if (!client.redirect_uris.includes(data.redirect_uri)) {
-      throw new Error("redirect_uri não corresponde ao cliente registrado.");
+      throw new Error("redirect_uri does not match registered client.");
     }
 
     const code = await issueAuthorizationCode({

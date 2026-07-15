@@ -164,7 +164,7 @@ function DocsPage() {
                 <li>Frontend: React 19 + TanStack Start v1 (SSR + Edge runtime).</li>
                 <li>Backend gerenciado: Postgres + Auth + Storage + Realtime.</li>
                 <li>Payments: Stripe com Embedded Checkout.</li>
-                <li>Hospedagem em edge global, com cache em centenas de POPs.</li>
+                <li>Stays em edge global, com cache em centenas de POPs.</li>
                 <li>CDN de imagens com otimização automática (WebP/AVIF).</li>
               </ul>
               <h3>Performance</h3>
@@ -185,7 +185,7 @@ function DocsPage() {
               <h3>Acessibilidade</h3>
               <ul>
                 <li>Contraste mínimo WCAG AA em todos os componentes.</li>
-                <li>Navegação completa por teclado.</li>
+                <li>Navigation completa por teclado.</li>
                 <li>Alt-text obrigatório em todas as imagens publicadas.</li>
               </ul>
             </Section>
@@ -208,7 +208,7 @@ function DocsPage() {
               <ul>
                 <li>Pequenas alterações de catálogo (preços, fotos, descrições) inclusas via painel.</li>
                 <li>Pequenos ajustes visuais (até 2h/mo de equipe).</li>
-                <li>Hospedagem ativa enquanto a mensalidade estiver em dia.</li>
+                <li>Stays ativa enquanto a mensalidade estiver em dia.</li>
                 <li>Support básico para manutenção do projeto pelo WhatsApp.</li>
               </ul>
               <h3>Edições maiores</h3>
@@ -236,7 +236,7 @@ function DocsPage() {
               
               <Q q="Quanto tempo até estar no ar?">Até 24 horas após o envio das informações. Geralmente entregamos em menos de 18h.</Q>
               <Q q="Preciso entender de tecnologia?">No. You só envia as informações; nosso time monta tudo. O painel também é desenhado para uso por leigos.</Q>
-              <Q q="E se eu não gostar do resultado?">Incluímos 1 rodada de revisão visual nos primeiros 7 days. Ajustes simples dentro do escopo são feitos sem custo nesse período.</Q>
+              <Q q="What if I don't like the result?">Incluímos 1 rodada de revisão visual nos primeiros 7 days. Ajustes simples dentro do escopo são feitos sem custo nesse período.</Q>
               <Q q="Posso cancelar?">Yes, a qualquer momento. A ativação não é reembolsável após início da produção; mensalidade pode ser cancelada com 7 days de antecedência.</Q>
               <Q q="O que acontece se eu cancelar?">O site fica no ar até o fim do ciclo já pago. Depois disso, exportamos seus dados em JSON/CSV e o domínio próprio continua seu para apontar onde quiser.</Q>
               <Q q="Yous fazem cardápio digital?">Yes, é uma das categorias mais pedidas. Plan Avançado em diante, com QR code para mesas.</Q>

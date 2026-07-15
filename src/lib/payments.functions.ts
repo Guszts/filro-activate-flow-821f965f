@@ -20,7 +20,7 @@ function assertStripeList<T>(response: unknown, lookupKey: string): { data: T[] 
   if (!maybe || !Array.isArray(maybe.data)) {
     console.error("[checkout] unexpected Stripe list response", { lookupKey, response: maybe });
     const details = typeof maybe?.message === "string" ? maybe.message : "resposta inválida do provedor";
-    throw new Error(`Falha na integração de pagamentos (${lookupKey}): ${details}`);
+    throw new Error(`Payments integration failure (${lookupKey}): ${details}`);
   }
   return maybe as { data: T[] };
 }
@@ -45,7 +45,7 @@ async function getPlanForCheckout(planSlug: string): Promise<PlanPriceInfo> {
     console.error("[checkout] plan lookup failed", { planSlug, error });
     throw new Error("Falha ao consultar plano");
   }
-  if (!data) throw new Error("Plano não encontrado");
+  if (!data) throw new Error("Plan not found");
   return data as PlanPriceInfo;
 }
 
@@ -178,7 +178,7 @@ async function resolveOrCreatePlanPrices(
     if (!monthlyPrice) monthlyPrice = await createPlanPrice(stripe, productId, monthlyKey, plan.monthly_price, { interval: "month" });
   }
 
-  if (!activationPrice || !monthlyPrice) throw new Error("Preços do plano não encontrados");
+  if (!activationPrice || !monthlyPrice) throw new Error("Plan prices not found");
 
   return { activationPrice, monthlyPrice };
 }
@@ -331,8 +331,8 @@ export const createPlanCheckoutSession = createServerFn({ method: "POST" })
         console.error("[checkout] price resolution failed", { planSlug: data.planSlug, err });
         throw new Error(`Falha ao preparar preços do plano: ${err instanceof Error ? err.message : String(err)}`);
       }
-      if (!activationPrice) throw new Error("Preços do plano não encontrados");
-      if (!isOneTime && !monthlyPrice) throw new Error("Preços do plano não encontrados");
+      if (!activationPrice) throw new Error("Plan prices not found");
+      if (!isOneTime && !monthlyPrice) throw new Error("Plan prices not found");
 
       const customerId = await resolveOrCreateCustomer(stripe, {
         email: customerEmail,
@@ -455,7 +455,7 @@ export const createPortalSession = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (!sub?.stripe_customer_id) {
-      return { url: null, error: "Nenhuma assinatura encontrada para gerenciar." };
+      return { url: null, error: "No subscription available to manage." };
     }
 
     try {
@@ -491,7 +491,7 @@ export const cancelSubscription = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (!sub?.stripe_subscription_id) {
-      return { ok: false, error: "Nenhuma assinatura ativa encontrada." };
+      return { ok: false, error: "No active subscription found." };
     }
 
     try {
@@ -521,7 +521,7 @@ export const cancelSubscription = createServerFn({ method: "POST" })
       return { ok: true, error: null };
     } catch (err) {
       console.error("[cancel] failed", err);
-      return { ok: false, error: err instanceof Error ? err.message : "Falha ao cancelar assinatura" };
+      return { ok: false, error: err instanceof Error ? err.message : "Failed to cancel subscription" };
     }
   });
 

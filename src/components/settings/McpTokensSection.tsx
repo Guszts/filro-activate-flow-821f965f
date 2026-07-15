@@ -115,7 +115,7 @@ export function McpTokensSection() {
           <Plug className="h-5 w-5" />
         </div>
         <div>
-          <h2 className="font-display font-black text-2xl text-ink">Integração MCP</h2>
+          <h2 className="font-display font-black text-2xl text-ink">MCP Integration</h2>
           <p className="text-xs text-ink-soft mt-0.5">
             Conecte o Filro ao Claude, Cursor e outras ferramentas via Model Context Protocol
           </p>
@@ -123,7 +123,7 @@ export function McpTokensSection() {
       </div>
 
       <p className="mt-3 text-sm text-ink-soft">
-        Gere um token pessoal e cole na configuração do seu cliente MCP. Ele poderá consultar seus projetos,
+        Generate a personal token and paste it into your MCP client's config. It can then query your projects,
         pagamentos, planos e abrir chamados de suporte em seu nome.
       </p>
 
@@ -133,9 +133,9 @@ export function McpTokensSection() {
           Conectar pelo Claude mobile ou web
         </div>
         <p className="mt-2 text-sm text-ink-soft">
-          Apps que não aceitam header customizado (Claude mobile/web, ChatGPT) usam OAuth.
+          Apps that don't accept a custom header (Claude mobile/web, ChatGPT) use OAuth.
           Em <strong>Settings → Conectores → Add conector customizado</strong>, cole apenas
-          a URL abaixo. O Claude vai abrir uma tela de autorização aqui no Filro — basta clicar
+          the URL below. Claude will open an authorization screen on Filro — just click
           em <strong>Autorizar</strong> (precisa estar logado como admin).
         </p>
         <code className="mt-3 block px-3 py-2 rounded-xl bg-ink text-paper text-xs font-mono break-all">
@@ -149,7 +149,7 @@ export function McpTokensSection() {
           <div className="flex items-start gap-2">
             <AlertCircle className="h-5 w-5 text-flame shrink-0 mt-0.5" />
             <div className="flex-1">
-              <div className="font-display font-black text-ink">Copie agora — não será exibido novamente</div>
+              <div className="font-display font-black text-ink">Copy now — it won't be shown again</div>
               <div className="mt-3 flex gap-2">
                 <code className="flex-1 px-3 py-2 rounded-xl bg-ink text-paper text-xs font-mono break-all">
                   {justCreated}

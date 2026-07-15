@@ -8,15 +8,15 @@ const faqs = [
   },
   {
     q: "Quanto custa? How it worksm os planos?",
-    a: "Cobramos uma taxa única de ativação + mensalidade. Os planos vão do Start (R$ 197 + R$ 97/mo) ao Premium (R$ 897 + R$ 129/mo). O Plus (R$ 497 + R$ 97/mo) é o mais escolhido. Veja todos os planos na página /planos.",
+    a: "We charge a one-time activation fee plus a monthly maintenance. Plans range from Launch ($2,500 + $297/mo) to Revenue System ($10,000 + $997/mo) — Scale is custom. See all pricing on /pricing.",
   },
   {
     q: "Posso enviar um modelo de referência?",
-    a: "Yes. No formulário de informações do negócio, você pode anexar um link, arquivo ou descrever em texto livre como gostaria que ficasse.",
+    a: "Yes. In the business info form you can attach a link, a file, or describe in free text how you'd like it to look.",
   },
   {
-    q: "How it works o pagamento?",
-    a: "Payment seguro pela Stripe: cartão de crédito, cartão de débito ou Pix. A ativação é cobrada uma vez; a mensalidade é cobrada na mesma data todo mo.",
+    q: "How does payment work?",
+    a: "Secure payments via Stripe: credit or debit card. Activation is charged once; the monthly fee is charged on the same date each month.",
   },
   {
     q: "Posso cancelar quando quiser?",
@@ -28,26 +28,26 @@ const faqs = [
   },
   {
     q: "Preciso ter domínio próprio?",
-    a: "No é obrigatório. Entregamos em um subdomínio nosso (ex.: seu-negocio.filro.site), mas se você tiver um domínio (ex.: meunegocio.com.br) configuramos sem custo adicional.",
+    a: "It's not required. We deliver on a subdomain we host (e.g. your-business.filro.site). If you have your own domain (e.g. yourbusiness.com), we set it up at no extra cost.",
   },
   {
     q: "Funciona bem no celular?",
     a: "Yes. Todas as páginas são 100% responsivas, otimizadas para mobile-first, e instaláveis como PWA (atalho na tela inicial do celular).",
   },
   {
-    q: "Tem integração com WhatsApp?",
-    a: "Yes. O botão de WhatsApp é nativo em todos os planos. Cliques são rastreados no painel para você medir conversão.",
+    q: "Do you integrate with WhatsApp?",
+    a: "Yes. A WhatsApp button is native to all plans. Clicks are tracked in your dashboard so you can measure conversion.",
   },
   {
     q: "Yous cuidam de SEO?",
-    a: "Yes — SEO técnico básico está incluso em todos os planos: meta tags, schema.org, sitemap.xml, robots.txt e otimização de imagens. SEO de conteúdo (artigos, blog) é serviço à parte.",
+    a: "Yes — technical SEO basics are included in every plan: meta tags, schema.org, sitemap.xml, robots.txt, image optimization. Content SEO (articles, blog) is a separate service.",
   },
   {
     q: "Quais formas de pagamento aceitam?",
     a: "Cartão de crédito (Visa, Mastercard, Elo, Amex, Hipercard), cartão de débito e Pix. Cartões internacionais funcionam via Stripe.",
   },
   {
-    q: "E se eu não gostar do resultado?",
+    q: "What if I don't like the result?",
     a: "Incluímos uma rodada de revisão visual nos primeiros 7 days. Ajustes dentro do escopo são feitos sem custo nesse período.",
   },
 ];
@@ -62,7 +62,7 @@ export function FAQ() {
             Perguntas <br /><span className="lime-mark">frequentes</span>
           </h2>
           <p className="mt-6 text-ink-soft max-w-sm">
-            Se algo não estiver claro, fale com a gente pelo WhatsApp e respondemos rapidinho.
+            If anything is unclear, reach out and we'll get back quickly.
           </p>
         </div>
         <motion.div

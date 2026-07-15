@@ -37,7 +37,7 @@ export const createExtraCharge = createServerFn({ method: "POST" })
     environment: StripeEnv;
   }) => {
     if (!data.title || data.title.length > 200) throw new Error("Título inválido");
-    if (data.description && data.description.length > 2000) throw new Error("Descrição muito longa");
+    if (data.description && data.description.length > 2000) throw new Error("Description too long");
     if (!Number.isInteger(data.amount) || data.amount < 100 || data.amount > 10_000_000) {
       throw new Error("Valor inválido");
     }

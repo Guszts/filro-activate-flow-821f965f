@@ -217,7 +217,7 @@ function DashboardPage() {
                     disabled={openingPortal}
                     className="w-full flex items-center justify-between p-4 rounded-2xl bg-ink text-paper hover:bg-ink/90 transition-colors disabled:opacity-60"
                   >
-                    <span className="inline-flex items-center gap-3 text-sm font-medium"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Gerenciar assinatura"}</span>
+                    <span className="inline-flex items-center gap-3 text-sm font-medium"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Manage subscription"}</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 )}
