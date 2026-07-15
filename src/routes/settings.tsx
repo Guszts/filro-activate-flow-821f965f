@@ -45,8 +45,8 @@ function SettingsPage() {
   const [deleting, setDeleting] = useState(false);
 
   const confirmDeleteAccount = async () => {
-    if (deleteConfirm.trim().toUpperCase() !== "EXCLUIR") {
-      toast.error("Digite EXCLUIR para confirmar");
+    if (deleteConfirm.trim().toUpperCase() !== "DELETE") {
+      toast.error("Type DELETE to confirm");
       return;
     }
     setDeleting(true);
@@ -142,7 +142,7 @@ function SettingsPage() {
     try {
       const res = await callCancel({ data: { reason: cancelReason.trim() || undefined, environment: getStripeEnvironment() } });
       if (res.ok) {
-        toast.success("Subscription cancelada. Você mantém acesso até o fim do ciclo atual.");
+        toast.success("Subscription cancelada. You mantém acesso até o fim do ciclo atual.");
         setCancelOpen(false);
         setCancelReason("");
         setHasSubscription(false);
@@ -162,14 +162,14 @@ function SettingsPage() {
       <main className="flex-1 mx-auto max-w-[900px] w-full px-5 md:px-10 py-12 md:py-16">
         <span className="text-xs tracking-wide text-ink-soft">Conta</span>
         <h1 className="mt-2 editorial-headline text-5xl md:text-6xl text-ink">Settings</h1>
-        <p className="mt-3 text-ink-soft">Gerencie seu perfil, plano e conta.</p>
+        <p className="mt-3 text-ink-soft">Manage your profile, plan, and account.</p>
 
         {/* ACCOUNT */}
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mt-10 card-elevated p-7">
           <div className="flex items-center gap-3 mb-5">
             <div className="h-10 w-10 grid place-items-center rounded-2xl bg-ink text-paper"><Mail className="h-5 w-5" /></div>
             <div>
-              <div className="text-xs tracking-wide text-ink-soft uppercase">Logado como</div>
+              <div className="text-xs tracking-wide text-ink-soft uppercase">Signed in as</div>
               <div className="font-display font-black text-xl text-ink">{user.email}</div>
             </div>
           </div>
@@ -221,7 +221,7 @@ function SettingsPage() {
           </div>
           {hasSubscription ? (
             <>
-              <p className="text-sm text-ink-soft">Atualize forma de pagamento, veja faturas, troque ou cancele seu plano.</p>
+              <p className="text-sm text-ink-soft">Update payment method, view invoices, switch or cancel your plan.</p>
               <div className="mt-5 flex flex-col sm:flex-row gap-3">
                 <button onClick={manageBilling} disabled={openingPortal} className="inline-flex items-center justify-between gap-3 h-12 px-5 rounded-2xl bg-ink text-paper font-semibold hover:bg-ink/90 disabled:opacity-60">
                   <span className="inline-flex items-center gap-2"><CreditCard className="h-4 w-4" /> {openingPortal ? "Abrindo..." : "Gerenciar assinatura"}</span>
@@ -234,7 +234,7 @@ function SettingsPage() {
             </>
           ) : !hasPaid ? (
             <>
-              <p className="text-sm text-ink-soft">Você ainda não tem um plano ativo. Escolha um para ativar sua presença digital.</p>
+              <p className="text-sm text-ink-soft">You ainda não tem um plano ativo. Escolha um para ativar sua presença digital.</p>
               <Link to="/" hash="ativacao" className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-ink text-paper font-semibold">See pricing <ArrowRight className="h-4 w-4" /></Link>
             </>
           ) : (
@@ -247,7 +247,7 @@ function SettingsPage() {
         {/* DANGER */}
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-6 card-elevated p-7">
           <h2 className="font-display font-black text-xl text-ink">Sessão</h2>
-          <p className="mt-1 text-sm text-ink-soft">Sign out da sua conta neste dispositivo.</p>
+          <p className="mt-1 text-sm text-ink-soft">Sign out of your account on this device.</p>
           <button onClick={async () => { await signOut(); navigate({ to: "/" }); }}
             className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl border border-border text-ink font-semibold hover:bg-muted">
             <LogOut className="h-4 w-4" /> Sign out
@@ -260,7 +260,7 @@ function SettingsPage() {
             <div className="h-10 w-10 grid place-items-center rounded-2xl bg-flame text-paper"><Trash2 className="h-5 w-5" /></div>
             <h2 className="font-display font-black text-xl text-ink">Delete conta</h2>
           </div>
-          <p className="mt-1 text-sm text-ink-soft">Esta ação é permanente. Seus dados, perfil e acesso serão removidos. Subscriptions ativas devem ser canceladas antes.</p>
+          <p className="mt-1 text-sm text-ink-soft">This action is permanent. Your data, profile, and access will be removed. Active subscriptions must be canceled first.</p>
           <button onClick={() => setDeleteOpen(true)}
             className="mt-5 inline-flex items-center gap-2 h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90">
             <Trash2 className="h-4 w-4" /> Delete minha conta
@@ -285,7 +285,7 @@ function SettingsPage() {
                 <h3 className="font-display font-black text-2xl text-ink">Cancel assinatura?</h3>
               </div>
               <p className="mt-3 text-sm text-ink-soft">
-                Você manterá acesso até o fim do ciclo já pago. Conta pra gente o que faltou — usamos para melhorar.
+                You manterá acesso até o fim do ciclo já pago. Conta pra gente o que faltou — usamos para melhorar.
               </p>
               <label className="block mt-5 text-xs tracking-wide text-ink-soft uppercase">Motivo (opcional)</label>
               <textarea
@@ -293,7 +293,7 @@ function SettingsPage() {
                 onChange={(e) => setCancelReason(e.target.value)}
                 rows={4}
                 maxLength={1000}
-                placeholder="Ex.: vou pausar o negócio, preço, encontrei outra solução..."
+                placeholder="e.g. pausing the business, pricing, found another solution..."
                 className="mt-2 w-full px-4 py-3 rounded-xl border border-border bg-paper outline-none focus:border-ink transition-colors text-sm"
               />
               <div className="mt-6 flex flex-col-reverse sm:flex-row gap-3 sm:justify-end">
@@ -331,14 +331,14 @@ function SettingsPage() {
                 <h3 className="font-display font-black text-2xl text-ink">Delete conta?</h3>
               </div>
               <p className="mt-3 text-sm text-ink-soft">
-                Esta ação é <strong>permanente</strong> e não pode ser desfeita. Todos os seus dados serão removidos.
-                {hasSubscription && <span className="block mt-2 text-flame">Você ainda tem assinatura ativa — cancele primeiro para evitar cobranças.</span>}
+                This action is <strong>permanent</strong> and cannot be undone. All your data will be removed.
+                {hasSubscription && <span className="block mt-2 text-flame">You ainda tem assinatura ativa — cancele primeiro para evitar cobranças.</span>}
               </p>
-              <label className="block mt-5 text-xs tracking-wide text-ink-soft uppercase">Digite <strong>EXCLUIR</strong> para confirmar</label>
+              <label className="block mt-5 text-xs tracking-wide text-ink-soft uppercase">Type <strong>DELETE</strong> to confirm</label>
               <input
                 value={deleteConfirm}
                 onChange={(e) => setDeleteConfirm(e.target.value)}
-                placeholder="EXCLUIR"
+                placeholder="DELETE"
                 className="mt-2 w-full px-4 py-3 rounded-xl border border-border bg-paper outline-none focus:border-flame transition-colors text-sm"
               />
               <div className="mt-6 flex flex-col-reverse sm:flex-row gap-3 sm:justify-end">
@@ -351,7 +351,7 @@ function SettingsPage() {
                 </button>
                 <button
                   onClick={confirmDeleteAccount}
-                  disabled={deleting || deleteConfirm.trim().toUpperCase() !== "EXCLUIR"}
+                  disabled={deleting || deleteConfirm.trim().toUpperCase() !== "DELETE"}
                   className="h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90 disabled:opacity-60 inline-flex items-center justify-center gap-2"
                 >
                   <Trash2 className="h-4 w-4" /> {deleting ? "Excluindo..." : "Delete definitivamente"}

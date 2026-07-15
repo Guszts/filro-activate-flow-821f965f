@@ -18,7 +18,7 @@ let stripePromise: Promise<Stripe | null> | null = null;
 
 export function getStripe(): Promise<Stripe | null> {
   if (!stripePromise) {
-    if (!clientToken) throw new Error("VITE_PAYMENTS_CLIENT_TOKEN não configurado");
+    if (!clientToken) throw new Error("VITE_PAYMENTS_CLIENT_TOKEN not configured");
     stripePromise = loadStripe(clientToken);
   }
   return stripePromise;

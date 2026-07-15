@@ -16,7 +16,7 @@ function SignedImg({ path, alt, className }: { path: string; alt: string; classN
 }
 function SignedFileLink({ path, children, className }: { path: string; children: React.ReactNode; className?: string }) {
   const url = useSignedBusinessAsset(path);
-  if (!url) return <span className={className}>Carregando…</span>;
+  if (!url) return <span className={className}>Loading…</span>;
   return <a href={url} target="_blank" rel="noreferrer" className={className}>{children}</a>;
 }
 

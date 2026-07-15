@@ -23,7 +23,7 @@ const faqs = [
     a: "Yes. No há fidelidade. Cancele a mensalidade a qualquer momento direto do seu painel. A página fica no ar até o fim do ciclo já pago.",
   },
   {
-    q: "Vocês fazem alterações depois de entregue?",
+    q: "Yous fazem alterações depois de entregue?",
     a: "Yes. Pequenas alterações (texto, fotos, horários, contatos, preços de catálogo) estão incluídas na mensalidade. Mudanças estruturais maiores são orçadas à parte.",
   },
   {
@@ -39,7 +39,7 @@ const faqs = [
     a: "Yes. O botão de WhatsApp é nativo em todos os planos. Cliques são rastreados no painel para você medir conversão.",
   },
   {
-    q: "Vocês cuidam de SEO?",
+    q: "Yous cuidam de SEO?",
     a: "Yes — SEO técnico básico está incluso em todos os planos: meta tags, schema.org, sitemap.xml, robots.txt e otimização de imagens. SEO de conteúdo (artigos, blog) é serviço à parte.",
   },
   {
@@ -48,7 +48,7 @@ const faqs = [
   },
   {
     q: "E se eu não gostar do resultado?",
-    a: "Incluímos uma rodada de revisão visual nos primeiros 7 dias. Ajustes dentro do escopo são feitos sem custo nesse período.",
+    a: "Incluímos uma rodada de revisão visual nos primeiros 7 days. Ajustes dentro do escopo são feitos sem custo nesse período.",
   },
 ];
 

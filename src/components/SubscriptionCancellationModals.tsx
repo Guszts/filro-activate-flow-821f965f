@@ -67,10 +67,10 @@ export function SubscriptionCancellationModals({
             <div>
               <h2 className="font-display font-black text-2xl text-ink leading-tight">Cancelamento confirmado</h2>
               <p className="mt-2 text-sm text-ink-soft">
-                Seu site continuará no ar e você manterá o acesso ao painel até <strong className="text-ink">{formatDate(currentPeriodEnd)}</strong>.
+                Your site stays live and you keep dashboard access until <strong className="text-ink">{formatDate(currentPeriodEnd)}</strong>.
               </p>
               <p className="mt-2 text-sm text-ink-soft">
-                Depois dessa data, o acesso ao painel será encerrado e tiraremos o seu site do ar. Nada mais será cobrado.
+                After that date, dashboard access ends and we take the site offline. Nothing else will be charged.
               </p>
             </div>
           </div>
@@ -97,10 +97,10 @@ export function SubscriptionCancellationModals({
             </div>
             <div>
               <h2 className="font-display font-black text-2xl text-ink leading-tight">
-                {daysLeft === 1 ? "Falta 1 dia" : `Faltam ${daysLeft} dias`} para seu site sair do ar
+                {daysLeft === 1 ? "1 day left" : `${daysLeft} days`} until your site goes offline
               </h2>
               <p className="mt-2 text-sm text-ink-soft">
-                Seu acesso ao painel e o seu site serão encerrados em <strong className="text-ink">{formatDate(currentPeriodEnd)}</strong>.
+                Your dashboard access and site will end on <strong className="text-ink">{formatDate(currentPeriodEnd)}</strong>.
               </p>
               <p className="mt-2 text-sm text-ink-soft">
                 Quer continuar? Reative agora e mantenha tudo no ar sem perder nada.

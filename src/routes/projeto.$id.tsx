@@ -46,7 +46,7 @@ const STATUS_META: Record<ProjectStatus, { label: string; tone: string; descript
   briefing_received: { label: "Briefing recebido", tone: "bg-azure/30 text-ink", description: "Estamos analisando suas informações." },
   in_production: { label: "In production", tone: "bg-lime text-ink", description: "Nosso time está construindo seu site." },
   revision_sent: { label: "Revisão enviada", tone: "bg-amber-100 text-ink", description: "Enviamos uma versão para sua avaliação." },
-  awaiting_client: { label: "Aguardando você", tone: "bg-amber-200 text-ink", description: "Precisamos do seu retorno para seguir." },
+  awaiting_client: { label: "Waiting on you", tone: "bg-amber-200 text-ink", description: "Precisamos do seu retorno para seguir." },
   published: { label: "Published", tone: "bg-lime text-ink", description: "Seu site está no ar!" },
   maintenance: { label: "Em manutenção", tone: "bg-muted text-ink", description: "Ajustes contínuos de mensalidade." },
   paused: { label: "Pausado", tone: "bg-muted text-ink", description: "Project pausado temporariamente." },

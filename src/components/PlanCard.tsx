@@ -74,7 +74,7 @@ export function PlanCard({
             {activationPrice}
           </div>
           <div className="mt-1 text-sm text-ink-soft">
-            ativação · depois {monthlyPrice}/mo de manutenção
+            activation · then {monthlyPrice}/mo maintenance
           </div>
         </div>
         <ul className="relative z-10 mt-8 space-y-3 text-sm leading-relaxed text-ink-soft">
@@ -126,7 +126,7 @@ export function PlanCard({
           {activationPrice}
         </div>
         <div className="mt-2 text-sm text-ink-soft">
-          ativação · depois <span className="text-ink font-semibold">{monthlyPrice}/mo</span> de manutenção
+          activation · then <span className="text-ink font-semibold">{monthlyPrice}/mo</span> maintenance
         </div>
       </div>
 

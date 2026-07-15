@@ -75,7 +75,7 @@ function DocsPage() {
 
           <article className="prose-docs space-y-16">
             <Section id="comecando" title="Começando" icon={Rocket}>
-              <p>Filro entrega presença digital pronta para empresas locais. Activation acontece em <strong>até 24 horas</strong> após o pagamento e o envio das informações do negócio. Você não precisa entender de tecnologia — nosso time monta tudo a partir das informações que você fornece.</p>
+              <p>Filro entrega presença digital pronta para empresas locais. Activation acontece em <strong>até 24 horas</strong> após o pagamento e o envio das informações do negócio. You não precisa entender de tecnologia — nosso time monta tudo a partir das informações que você fornece.</p>
               <h3>Pré-requisitos</h3>
               <ul>
                 <li>Um e-mail válido (usado para login e notificações).</li>
@@ -151,9 +151,9 @@ function DocsPage() {
               </ul>
               <h3>Cancelamento e reembolso</h3>
               <ul>
-                <li>Direito de arrependimento de 7 dias se a produção não tiver iniciado.</li>
+                <li>Direito de arrependimento de 7 days se a produção não tiver iniciado.</li>
                 <li>Após início da produção, ativação não é reembolsável.</li>
-                <li>Monthly pode ser cancelada com 7 dias de antecedência.</li>
+                <li>Monthly pode ser cancelada com 7 days de antecedência.</li>
               </ul>
               <p>Details completos em <Link to="/termos" className="text-ink underline">Terms of Use</Link>.</p>
             </Section>
@@ -235,13 +235,13 @@ function DocsPage() {
             <Section id="faq" title="Perguntas frequentes" icon={FileQuestion}>
               
               <Q q="Quanto tempo até estar no ar?">Até 24 horas após o envio das informações. Geralmente entregamos em menos de 18h.</Q>
-              <Q q="Preciso entender de tecnologia?">No. Você só envia as informações; nosso time monta tudo. O painel também é desenhado para uso por leigos.</Q>
-              <Q q="E se eu não gostar do resultado?">Incluímos 1 rodada de revisão visual nos primeiros 7 dias. Ajustes simples dentro do escopo são feitos sem custo nesse período.</Q>
-              <Q q="Posso cancelar?">Yes, a qualquer momento. A ativação não é reembolsável após início da produção; mensalidade pode ser cancelada com 7 dias de antecedência.</Q>
+              <Q q="Preciso entender de tecnologia?">No. You só envia as informações; nosso time monta tudo. O painel também é desenhado para uso por leigos.</Q>
+              <Q q="E se eu não gostar do resultado?">Incluímos 1 rodada de revisão visual nos primeiros 7 days. Ajustes simples dentro do escopo são feitos sem custo nesse período.</Q>
+              <Q q="Posso cancelar?">Yes, a qualquer momento. A ativação não é reembolsável após início da produção; mensalidade pode ser cancelada com 7 days de antecedência.</Q>
               <Q q="O que acontece se eu cancelar?">O site fica no ar até o fim do ciclo já pago. Depois disso, exportamos seus dados em JSON/CSV e o domínio próprio continua seu para apontar onde quiser.</Q>
-              <Q q="Vocês fazem cardápio digital?">Yes, é uma das categorias mais pedidas. Plan Avançado em diante, com QR code para mesas.</Q>
+              <Q q="Yous fazem cardápio digital?">Yes, é uma das categorias mais pedidas. Plan Avançado em diante, com QR code para mesas.</Q>
               <Q q="Aceita cartão internacional?">Yes, Stripe processa em 135+ moedas.</Q>
-              <Q q="Vocês criam logo?">No fazemos design de marca do zero, mas trabalhamos com tipografia e refinamentos no que você já tem. Se precisar de logo profissional, indicamos parceiros.</Q>
+              <Q q="Yous criam logo?">No fazemos design de marca do zero, mas trabalhamos com tipografia e refinamentos no que você já tem. Se precisar de logo profissional, indicamos parceiros.</Q>
               <Q q="Hospedam meu e-mail também?">No diretamente. Configuramos gratuitamente os DNS para Google Workspace ou Microsoft 365.</Q>
               <Q q="Tem app mobile?">A página é 100% responsiva e instalável como PWA (atalho na tela inicial). App nativo (iOS/Android) é projeto à parte.</Q>
             </Section>

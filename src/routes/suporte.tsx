@@ -33,7 +33,7 @@ const KIND_LABELS = {
 const STATUS_LABELS: Record<string, string> = {
   open: "Aberto",
   in_progress: "Em andamento",
-  waiting_client: "Aguardando você",
+  waiting_client: "Waiting on you",
   resolved: "Resolvido",
   closed: "Fechado",
 };
@@ -124,7 +124,7 @@ function SupportPage() {
 
   async function submitTicket() {
     if (!form.subject.trim() || !form.message.trim()) {
-      toast.error("Preencha assunto e descrição.");
+      toast.error("Please provide a subject and description.");
       return;
     }
     setSubmitting(true);
@@ -224,7 +224,7 @@ function SupportPage() {
                   rows={5}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  placeholder="Descreva com detalhes o que você precisa."
+                  placeholder="Describe what you need in detail."
                   className="mt-1 w-full px-3 py-3 rounded-xl border border-border bg-paper outline-none focus:border-ink text-sm resize-y"
                 />
               </div>
@@ -288,7 +288,7 @@ function SupportPage() {
               <h2 className="font-display font-black text-2xl text-ink mb-4">Meus chamados</h2>
               <div className="space-y-2">
                 {tickets.length === 0 && (
-                  <p className="text-sm text-ink-soft italic">Você ainda não abriu nenhum chamado.</p>
+                  <p className="text-sm text-ink-soft italic">You haven't opened any tickets yet.</p>
                 )}
                 {tickets.map((t) => (
                   <button
@@ -318,7 +318,7 @@ function SupportPage() {
                 <h2 className="font-display font-black text-2xl text-ink">Conversa</h2>
               </div>
               {!activeTicket ? (
-                <p className="text-sm text-ink-soft italic">Selecione um chamado para ver as mensagens.</p>
+                <p className="text-sm text-ink-soft italic">Select a ticket to see messages.</p>
               ) : (
                 <div>
                   <div className="pb-3 border-b border-border">
@@ -331,7 +331,7 @@ function SupportPage() {
                     {(messagesQuery.data ?? []).map((m) => (
                       <div key={m.id} className={`p-3 rounded-xl ${m.author_role === "admin" ? "bg-lime/30 ml-0 mr-8" : "bg-muted ml-8 mr-0"}`}>
                         <div className="text-[10px] font-bold uppercase tracking-wide text-ink-soft mb-1">
-                          {m.author_role === "admin" ? "Equipe Filro" : "Você"} · {formatDateTime(m.created_at)}
+                          {m.author_role === "admin" ? "Filro Team" : "You"} · {formatDateTime(m.created_at)}
                         </div>
                         <p className="text-sm text-ink whitespace-pre-wrap">{m.content}</p>
                       </div>

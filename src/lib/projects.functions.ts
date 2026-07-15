@@ -26,7 +26,7 @@ async function assertOwnerOrAdmin(userId: string, projectId: string) {
     .select("user_id")
     .eq("id", projectId)
     .maybeSingle();
-  if (!project) throw new Error("Projeto não encontrado.");
+  if (!project) throw new Error("Project not found.");
   if (project.user_id === userId) return;
   if (await isAdmin(userId)) return;
   throw new Error("Acesso negado a este projeto.");
@@ -49,7 +49,7 @@ export const getProjectPdfDownloadUrl = createServerFn({ method: "POST" })
       .select("project_pdf_path,project_pdf_url")
       .eq("id", data.projectId)
       .maybeSingle();
-    if (!project) throw new Error("Projeto não encontrado.");
+    if (!project) throw new Error("Project not found.");
     if (project.project_pdf_path) {
       const { data: signed, error } = await supabaseAdmin.storage
         .from(PDF_BUCKET)
@@ -99,7 +99,7 @@ export const confirmProjectPdfUpload = createServerFn({ method: "POST" })
     const { data: head, error: headErr } = await supabaseAdmin.storage
       .from(PDF_BUCKET)
       .createSignedUrl(data.path, 60);
-    if (headErr || !head) throw new Error("Upload não confirmado no bucket.");
+    if (headErr || !head) throw new Error("Upload not confirmed in bucket.");
     const { error } = await supabaseAdmin
       .from("projects")
       .update({ project_pdf_path: data.path, project_pdf_url: null })
@@ -137,7 +137,7 @@ export const removeProjectPdf = createServerFn({ method: "POST" })
 
 /**
  * Notifica o cliente quando o projeto é publicado. Idempotente por project_id.
- * Gera URL assinada de longa duração (7 dias) para o PDF, se existir.
+ * Gera URL assinada de longa duração (7 days) para o PDF, se existir.
  */
 export const notifySitePublished = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

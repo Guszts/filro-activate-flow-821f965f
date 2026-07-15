@@ -23,7 +23,7 @@ function SignedImg({ path, alt, className }: { path: string; alt: string; classN
 
 function SignedLink({ path, children, className }: { path: string; children: React.ReactNode; className?: string }) {
   const url = useSignedBusinessAsset(path);
-  if (!url) return <span className={className}>Carregando…</span>;
+  if (!url) return <span className={className}>Loading…</span>;
   return <a href={url} target="_blank" rel="noreferrer" className={className}>{children}</a>;
 }
 
@@ -183,7 +183,7 @@ function BusinessInfoPage() {
     if (!user) return null;
     if (file.size > 8 * 1024 * 1024) { toast.error("Arquivo muito grande (máx. 8MB)."); return null; }
     const okType = file.type.startsWith("image/") || file.type === "application/pdf";
-    if (!okType) { toast.error("Tipo de arquivo não permitido. Envie imagem ou PDF."); return null; }
+    if (!okType) { toast.error("File type not allowed. Upload an image or PDF."); return null; }
     const ext = (file.name.split(".").pop() ?? "bin").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "bin";
     const path = `${user.id}/${prefix}-${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage.from("business-assets").upload(path, file, { upsert: true, contentType: file.type });
@@ -269,13 +269,13 @@ function BusinessInfoPage() {
             </span>
           )}
         </motion.div>
-        <p className="mt-3 text-ink-soft max-w-2xl">Quanto mais detalhes você fornecer, melhor o resultado. Tudo é editável depois.</p>
+        <p className="mt-3 text-ink-soft max-w-2xl">The more detail you share, the better the result. Everything is editable later.</p>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink text-paper text-xs font-semibold uppercase tracking-wide">
             Plan {planSlug}
           </span>
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-flame/10 text-flame text-xs font-semibold">
-            <Clock className="h-3.5 w-3.5" /> Entrega within 1 business day após confirmação
+            <Clock className="h-3.5 w-3.5" /> Kickoff within 1 business day after confirmation
           </span>
         </div>
 
@@ -389,8 +389,8 @@ function BusinessInfoPage() {
                 <Field label="Promoções e ofertas"><textarea value={info.promotions} onChange={(e) => upd("promotions", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Coupons, descontos, combos..." /></Field>
                 <div className="border-t border-border pt-5">
                   <div className="font-semibold text-ink mb-3">Modelo de referência</div>
-                  <Field label="Descreva como você quer"><textarea value={info.model_notes} onChange={(e) => upd("model_notes", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Estilo, sites de referência, vibe..." /></Field>
-                  <Field label="Link de inspiração"><input value={info.model_link} onChange={(e) => upd("model_link", e.target.value)} className={inputCls} placeholder="https://..." /></Field>
+                  <Field label="Describe what you want"><textarea value={info.model_notes} onChange={(e) => upd("model_notes", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Style, reference sites, vibe..." /></Field>
+                  <Field label="Inspiration link"><input value={info.model_link} onChange={(e) => upd("model_link", e.target.value)} className={inputCls} placeholder="https://..." /></Field>
                   <Field label="Arquivo (PDF, imagem, briefing)">
                     <div className="flex items-center gap-3">
                       {info.model_file_url && <SignedLink path={info.model_file_url} className="text-sm text-ink underline">Ver arquivo</SignedLink>}
@@ -410,7 +410,7 @@ function BusinessInfoPage() {
                   <textarea value={info.premium_brand_voice} onChange={(e) => upd("premium_brand_voice", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Tom de voz: amigável, profissional, sofisticado, descontraído..." />
                 </Field>
                 <Field label="Público-alvo">
-                  <textarea value={info.premium_target_audience} onChange={(e) => upd("premium_target_audience", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Quem são seus clientes ideais? Idade, perfil, interesses, necessidades..." />
+                  <textarea value={info.premium_target_audience} onChange={(e) => upd("premium_target_audience", e.target.value)} rows={3} className={inputCls + " py-3 h-auto"} placeholder="Who are your ideal customers? Age, profile, interests, needs..." />
                 </Field>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <Field label="Facebook">
@@ -431,14 +431,14 @@ function BusinessInfoPage() {
               </div>
               <div className="flex items-center gap-3">
                 {!allValid && !project.business_info_submitted && (
-                  <span className="text-xs text-ink-soft">Complete todas as seções para enviar</span>
+                  <span className="text-xs text-ink-soft">Complete all sections to submit</span>
                 )}
                 <button
                   onClick={submit}
                   disabled={saving || (!allValid && !project.business_info_submitted)}
                   className="h-13 px-8 py-3 rounded-full bg-ink text-paper font-semibold hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
-                  {saving ? "Saving..." : project.business_info_submitted ? "Atualizar informações" : "Send para ativação"}
+                  {saving ? "Saving..." : project.business_info_submitted ? "Update information" : "Submit for kickoff"}
                 </button>
               </div>
             </div>

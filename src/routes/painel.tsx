@@ -45,7 +45,7 @@ const STATUS_LABEL: Record<string, { label: string; color: string; icon: typeof 
   in_progress: { label: "In production", color: "bg-azure text-paper", icon: Loader2 },
   in_production: { label: "In production", color: "bg-azure text-paper", icon: Loader2 },
   revision_sent: { label: "Revisão enviada", color: "bg-amber-100 text-ink", icon: Clock },
-  awaiting_client: { label: "Aguardando você", color: "bg-amber-200 text-ink", icon: Clock },
+  awaiting_client: { label: "Waiting on you", color: "bg-amber-200 text-ink", icon: Clock },
   delivered: { label: "Delivered", color: "bg-flame text-paper", icon: CheckCircle2 },
   published: { label: "Published", color: "bg-lime text-ink", icon: CheckCircle2 },
   maintenance: { label: "Em manutenção", color: "bg-muted text-ink", icon: Loader2 },
@@ -173,7 +173,7 @@ function DashboardPage() {
 
               {!project?.plan_id ? (
                 <div className="mt-6 p-5 rounded-2xl bg-muted">
-                  <p className="text-sm text-ink">Você ainda não ativou um plano. Pick a opção para começarmos.</p>
+                  <p className="text-sm text-ink">You ainda não ativou um plano. Pick a opção para começarmos.</p>
                   <Link to="/" hash="ativacao" className="mt-4 inline-flex items-center gap-2 h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold">
                     See pricing <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -189,7 +189,7 @@ function DashboardPage() {
               ) : (
                 <div className="mt-6 p-5 rounded-2xl bg-azure/10 border border-azure/20">
                   <p className="text-sm text-ink font-medium">Tudo certo! Estamos preparando sua página.</p>
-                  <p className="text-xs text-ink-soft mt-1">Você receberá um aviso pelo WhatsApp assim que estiver pronto.</p>
+                  <p className="text-xs text-ink-soft mt-1">You receberá um aviso pelo WhatsApp assim que estiver pronto.</p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {project?.id && (
                       <Link to="/projeto/$id" params={{ id: project.id }} className="inline-flex items-center gap-2 h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold">

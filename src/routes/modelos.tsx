@@ -11,7 +11,7 @@ export const Route = createFileRoute("/modelos")({
       { title: "Work · Filro" },
       { name: "description", content: "Explore Filro's page templates: local shop, clinic, restaurant, retail, automotive and more. Each template is adapted with your brand, colors, and content." },
       { property: "og:title", content: "Work · Filro" },
-      { property: "og:description", content: "Work de página prontos para padarias, clínicas, restaurantes, moda e mais. Adaptados ao seu negócio." },
+      { property: "og:description", content: "Work de página prontos para padarias, clínicas, restaurantes, moda e mais. Adaptados to your business is coming soon." },
       { property: "og:url", content: "https://setup.filro.site/modelos" },
     ],
     links: [{ rel: "canonical", href: "https://setup.filro.site/modelos" }],
