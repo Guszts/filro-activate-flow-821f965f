@@ -48,7 +48,7 @@ const STATUS_LABEL: Record<string, { label: string; color: string; icon: typeof 
   awaiting_client: { label: "Waiting on you", color: "bg-amber-200 text-ink", icon: Clock },
   delivered: { label: "Delivered", color: "bg-flame text-paper", icon: CheckCircle2 },
   published: { label: "Published", color: "bg-lime text-ink", icon: CheckCircle2 },
-  maintenance: { label: "Em manutenção", color: "bg-muted text-ink", icon: Loader2 },
+  maintenance: { label: "In maintenance", color: "bg-muted text-ink", icon: Loader2 },
   on_hold: { label: "Em espera", color: "bg-muted text-ink", icon: Clock },
   paused: { label: "Pausado", color: "bg-muted text-ink", icon: Clock },
   cancelled: { label: "Canceled", color: "bg-flame/20 text-ink", icon: Clock },
@@ -141,7 +141,7 @@ function DashboardPage() {
               disabled={openingPortal}
               className="h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold whitespace-nowrap disabled:opacity-60"
             >
-              {openingPortal ? "Abrindo..." : "Back com a assinatura"}
+              {openingPortal ? "Abrindo..." : "Reactivate subscription"}
             </button>
           </div>
         )}
@@ -162,7 +162,7 @@ function DashboardPage() {
                 <div>
                   <div className="text-xs tracking-wide text-ink-soft">Seu projeto</div>
                   <div className="mt-2 font-display font-black text-3xl text-ink">
-                    {project?.business_name || currentPlan?.name || "Aguardando ativação"}
+                    {project?.business_name || currentPlan?.name || "Awaiting kickoff"}
                   </div>
                   {currentPlan && <div className="mt-1 text-sm text-ink-soft">Plan {currentPlan.name}</div>}
                 </div>
@@ -173,7 +173,7 @@ function DashboardPage() {
 
               {!project?.plan_id ? (
                 <div className="mt-6 p-5 rounded-2xl bg-muted">
-                  <p className="text-sm text-ink">You ainda não ativou um plano. Pick a opção para começarmos.</p>
+                  <p className="text-sm text-ink">You haven't activated a plan yet. Pick one to get started.</p>
                   <Link to="/" hash="ativacao" className="mt-4 inline-flex items-center gap-2 h-11 px-5 rounded-2xl bg-ink text-paper text-sm font-semibold">
                     See pricing <ArrowRight className="h-4 w-4" />
                   </Link>

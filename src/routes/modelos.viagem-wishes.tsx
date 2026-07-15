@@ -302,7 +302,7 @@ function DetailView({ item, onBack, onReserve }: { item: DetailItem; onBack: () 
             <button style={{ height: 46, borderRadius: 14, background: C.pill, color: C.ink, fontWeight: 600, fontSize: 13 }}>Add à lista de desejos</button>
           </div>
           <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.divider}`, display: "flex", flexDirection: "column", gap: 10 }}>
-            {[{ i: Shield, l: "Reserva 100% protegida" }, { i: Heart, l: "Cancelamento flexível" }, { i: Phone, l: "Support 24/7" }].map((b) => (
+            {[{ i: Shield, l: "100% protected booking" }, { i: Heart, l: "Flexible cancellation" }, { i: Phone, l: "Support 24/7" }].map((b) => (
               <div key={b.l} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: C.inkSoft }}>
                 <b.i size={14} /> {b.l}
               </div>

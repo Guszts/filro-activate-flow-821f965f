@@ -10,13 +10,13 @@ export const Route = createFileRoute("/docs")({
   head: () => ({
     meta: [
       { title: "Documentation · Filro" },
-      { name: "description", content: "How it works a Filro: ativação within 1 business day, o que enviar, dúvidas frequentes e detalhes técnicos." },
+      { name: "description", content: "How Filro works: kickoff within 1 business day, what to send, FAQs, and technical details." },
       { property: "og:title", content: "Documentation · Filro" },
-      { property: "og:description", content: "How it works a Filro: ativação within 1 business day, o que enviar e detalhes técnicos." },
+      { property: "og:description", content: "How Filro works: kickoff, what to send, and technical details." },
       { property: "og:type", content: "article" },
       { property: "og:url", content: "https://setup.filro.site/docs" },
       { name: "twitter:title", content: "Documentation · Filro" },
-      { name: "twitter:description", content: "How it works a ativação within 1 business day, o que enviar e dúvidas frequentes." },
+      { name: "twitter:description", content: "How the kickoff works, what to send, and FAQs." },
     ],
     links: [{ rel: "canonical", href: "https://setup.filro.site/docs" }],
     scripts: [{
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/docs")({
 
 const sections = [
   { id: "comecando", label: "Começando", icon: Rocket },
-  { id: "fluxo", label: "Fluxo de ativação", icon: Workflow },
+  { id: "fluxo", label: "Activation flow", icon: Workflow },
   { id: "envio", label: "O que enviar", icon: Palette },
   { id: "pagamento", label: "Payment e planos", icon: CreditCard },
   { id: "tecnico", label: "Details técnicos", icon: Wrench },
@@ -56,7 +56,7 @@ function DocsPage() {
       <main className="mx-auto max-w-[1300px] w-full px-5 md:px-10 py-12 md:py-16 flex-1">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <span className="inline-flex items-center gap-2 text-xs tracking-wide text-ink-soft"><span className="h-1.5 w-6 bg-flame" /> Documentation</span>
-          <h1 className="mt-4 editorial-headline text-5xl md:text-7xl text-ink">Tudo que você precisa saber.</h1>
+          <h1 className="mt-4 editorial-headline text-5xl md:text-7xl text-ink">Everything you need to know.</h1>
           <p className="mt-4 max-w-2xl text-ink-soft">Guia completo: do cadastro à entrega within 1 business day, passando pelo que enviar, como funciona por baixo dos panos e como pedir suporte.</p>
         </motion.div>
 
@@ -75,7 +75,7 @@ function DocsPage() {
 
           <article className="prose-docs space-y-16">
             <Section id="comecando" title="Começando" icon={Rocket}>
-              <p>Filro entrega presença digital pronta para empresas locais. Activation acontece em <strong>até 24 horas</strong> após o pagamento e o envio das informações do negócio. You não precisa entender de tecnologia — nosso time monta tudo a partir das informações que você fornece.</p>
+              <p>Filro delivers implementation for growing businesses. Kickoff happens within <strong>one business day</strong> after payment and business info submission. You don't need to be technical — our team builds everything from the info you provide.</p>
               <h3>Pré-requisitos</h3>
               <ul>
                 <li>Um e-mail válido (usado para login e notificações).</li>
@@ -85,7 +85,7 @@ function DocsPage() {
               <h3>Passo a passo</h3>
               <ol>
                 <li><strong>Escolha um plano</strong> na home (Essencial, Avançado ou Premium).</li>
-                <li><strong>Crie sua conta</strong> com e-mail/senha ou login Google.</li>
+                <li><strong>Create your account</strong> with email/password or Google sign-in.</li>
                 <li><strong>Finalize o pagamento</strong> via Stripe (cartão, débito ou Pix).</li>
                 <li><strong>Envie as informações do negócio</strong> — identidade, contato, catálogo e referência de modelo.</li>
                 <li>Em estimativa de até 24h após envio completo das informações, sua presença digital fica no ar e o link chega no WhatsApp.</li>
@@ -93,15 +93,15 @@ function DocsPage() {
               <Card><Clock className="h-5 w-5 text-flame" /><div><strong>Estimativa 24h.</strong> Prazo contado a partir do envio completo do formulário; materiais incompletos pausam o cronômetro.</div></Card>
             </Section>
 
-            <Section id="fluxo" title="Fluxo de ativação" icon={Workflow}>
+            <Section id="fluxo" title="Activation flow" icon={Workflow}>
               <p>Veja em detalhes o que acontece nos bastidores entre o seu pagamento e o site no ar:</p>
               <ul>
-                <li><strong>0–5 min · Confirmação de pagamento:</strong> webhook Stripe valida a transação e libera o formulário de informações.</li>
-                <li><strong>5–60 min · Coleta de informações:</strong> você preenche em ~10 minutos. Tudo é editável depois.</li>
+                <li><strong>0–5 min · Payment confirmation:</strong> Stripe webhook validates the transaction and unlocks the info form.</li>
+                <li><strong>5–60 min · Info collection:</strong> you complete it in ~10 minutes. Everything editable later.</li>
                 <li><strong>1–2h · Briefing interno:</strong> validamos materiais, identificamos lacunas e (se necessário) chamamos no WhatsApp.</li>
-                <li><strong>2–18h · Produção:</strong> time monta a página com base no modelo escolhido + sua identidade visual.</li>
-                <li><strong>18–22h · QA visual:</strong> revisamos cada tela em desktop, tablet e mobile. Otimização de imagens e SEO.</li>
-                <li><strong>22–24h · Publicação:</strong> domínio temporário <code>seu-negocio.filro.site</code> imediato; configuração de domínio próprio em paralelo (24–72h conforme registrador).</li>
+                <li><strong>2–18h · Production:</strong> our team builds the page from the chosen template + your brand identity.</li>
+                <li><strong>18–22h · Visual QA:</strong> we review each screen on desktop, tablet, mobile. Image optimization and SEO.</li>
+                <li><strong>22–24h · Publishing:</strong> temporary domain <code>seu-negocio.filro.site</code> immediately; custom domain setup runs in parallel (24–72h depending on registrar).</li>
               </ul>
             </Section>
 
@@ -109,8 +109,8 @@ function DocsPage() {
               <p>Quanto mais detalhes, mais rápido entregamos. Abaixo o checklist completo organizado pelas seções do formulário:</p>
               <h3>Identidade visual</h3>
               <ul>
-                <li>Name do negócio e segmento (alimentação, beleza, moda, serviços, etc.).</li>
-                <li>Description curta (1 linha) e descrição longa (2-3 parágrafos).</li>
+                <li>Business name and segment (food, beauty, retail, services, etc.).</li>
+                <li>Short description (1 line) and long description (2–3 paragraphs).</li>
                 <li>Slogan ou frase de impacto (opcional, mas recomendado).</li>
                 <li>Cores da marca (HEX preferencialmente; ou indicar referência).</li>
                 <li>Logo: PNG transparente ou SVG (ideal); JPG funciona se for em fundo neutro.</li>
@@ -124,14 +124,14 @@ function DocsPage() {
               </ul>
               <h3>Catálogo</h3>
               <ul>
-                <li>Lista de produtos ou serviços com nome, preço, descrição.</li>
+                <li>List of products or services with name, price, description.</li>
                 <li>Imagens: jpg/png/webp, ~1MB cada, idealmente quadradas (1080×1080).</li>
                 <li>Categorias (cardápio, portfólio por área, coleções).</li>
               </ul>
               <h3>Promoções e referência</h3>
               <ul>
                 <li>Coupons, combos, descontos por tempo limitado.</li>
-                <li><strong>Selecionar modelo:</strong> link de referência (site que você gosta), arquivo (brief, PDF, imagem) ou descrição livre do clima desejado.</li>
+                <li><strong>Select template:</strong> reference link (a site you like), file (brief, PDF, image) or free-form description of the desired feel.</li>
               </ul>
               <Card><Lightbulb className="h-5 w-5 text-flame" /><div>No tem logo ou fotos profissionais? Sem problema. Trabalhamos com tipografia, ilustrações e fotos do seu celular ou stock licenciado.</div></Card>
             </Section>
@@ -139,8 +139,8 @@ function DocsPage() {
             <Section id="pagamento" title="Payment e planos" icon={CreditCard}>
               <h3>Estrutura de cobrança</h3>
               <ul>
-                <li><strong>Activation (única):</strong> taxa cobrada uma vez, libera a produção.</li>
-                <li><strong>Monthly:</strong> cobrada mensalmente na mesma data, cobre hospedagem, manutenção e suporte.</li>
+                <li><strong>Activation (one-time):</strong> charged once, unlocks production.</li>
+                <li><strong>Monthly:</strong> billed monthly on the same date; covers hosting, maintenance, and support.</li>
               </ul>
               <h3>Formas de pagamento</h3>
               <ul>
@@ -149,10 +149,10 @@ function DocsPage() {
                 <li>Pix (à vista).</li>
                 <li>Cartão internacional (135+ moedas via Stripe).</li>
               </ul>
-              <h3>Cancelamento e reembolso</h3>
+              <h3>Cancellation e reembolso</h3>
               <ul>
-                <li>Direito de arrependimento de 7 days se a produção não tiver iniciado.</li>
-                <li>Após início da produção, ativação não é reembolsável.</li>
+                <li>7-day right of withdrawal if production hasn't started.</li>
+                <li>Once production has started, activation is non-refundable.</li>
                 <li>Monthly pode ser cancelada com 7 days de antecedência.</li>
               </ul>
               <p>Details completos em <Link to="/termos" className="text-ink underline">Terms of Use</Link>.</p>
@@ -165,7 +165,7 @@ function DocsPage() {
                 <li>Backend gerenciado: Postgres + Auth + Storage + Realtime.</li>
                 <li>Payments: Stripe com Embedded Checkout.</li>
                 <li>Stays em edge global, com cache em centenas de POPs.</li>
-                <li>CDN de imagens com otimização automática (WebP/AVIF).</li>
+                <li>Image CDN with automatic optimization (WebP/AVIF).</li>
               </ul>
               <h3>Performance</h3>
               <ul>
@@ -178,8 +178,8 @@ function DocsPage() {
               <ul>
                 <li>RLS (Row-Level Security) ativo em todas as tabelas.</li>
                 <li>Roles separados em tabela própria (sem escalonamento de privilégio).</li>
-                <li>Webhooks com verificação HMAC.</li>
-                <li>Rate limiting e proteção DDoS via Cloudflare.</li>
+                <li>Webhooks with HMAC verification.</li>
+                <li>Rate limiting and DDoS protection via Cloudflare.</li>
                 <li>HTTPS obrigatório com TLS 1.3 e HSTS.</li>
               </ul>
               <h3>Acessibilidade</h3>
@@ -191,16 +191,16 @@ function DocsPage() {
             </Section>
 
             <Section id="dominio" title="Domínio e hospedagem" icon={Globe}>
-              <p>Sua página fica em <code>seu-negocio.filro.site</code> imediatamente após a publicação. Para usar domínio próprio:</p>
+              <p>Your page lives at <code>seu-negocio.filro.site</code> immediately after publishing. To use a custom domain:</p>
               <ol>
-                <li>Compre o domínio em um registrador (Registro.br para .com.br, GoDaddy ou Cloudflare para .com).</li>
+                <li>Compre o domínio em um registrador (Registro.br para .com, GoDaddy ou Cloudflare para .com).</li>
                 <li>Aponte o registro CNAME para <code>cdn.filro.site</code> (apex/raiz: usar ALIAS ou ANAME).</li>
-                <li>Avise o time pelo WhatsApp; SSL/HTTPS é provisionado automaticamente em ~1h após a propagação DNS.</li>
+                <li>Let the team know; SSL/HTTPS is provisioned automatically within ~1h of DNS propagation.</li>
               </ol>
               <h3>Custos</h3>
-              <p>O domínio é pago diretamente ao registrador (R$ 40-120/ano para <code>.com.br</code>). A Filro não cobra taxa adicional para conectar domínio próprio.</p>
+              <p>Domains are paid directly to the registrar (typically $10–20/yr for <code>.com</code>).Filro doesn't charge to connect a custom domain.</p>
               <h3>E-mail profissional</h3>
-              <p>Suportamos integração com Google Workspace e Microsoft 365 (você contrata; configuramos os registros MX e SPF gratuitamente).</p>
+              <p>We support Google Workspace and Microsoft 365 (you subscribe; we set up MX and SPF records at no charge).</p>
             </Section>
 
             <Section id="manutencao" title="Maintenance e edições" icon={RefreshCw}>
@@ -209,7 +209,7 @@ function DocsPage() {
                 <li>Pequenas alterações de catálogo (preços, fotos, descrições) inclusas via painel.</li>
                 <li>Pequenos ajustes visuais (até 2h/mo de equipe).</li>
                 <li>Stays ativa enquanto a mensalidade estiver em dia.</li>
-                <li>Support básico para manutenção do projeto pelo WhatsApp.</li>
+                <li>Basic maintenance support via email/chat.</li>
               </ul>
               <h3>Edições maiores</h3>
               <p>Redesigns, novas seções customizadas ou integrações específicas são orçados à parte. Pedidos pelo WhatsApp; orçamento em até 1 dia útil.</p>

@@ -67,7 +67,7 @@ function UnsubscribePage() {
                 disabled={submitting}
                 className="mt-6 inline-flex h-12 px-6 items-center rounded-full bg-ink text-paper font-semibold disabled:opacity-50"
               >
-                {submitting ? "Processando…" : "Confirmar cancelamento"}
+                {submitting ? "Processing…" : "Confirm cancellation"}
               </button>
             </>
           )}

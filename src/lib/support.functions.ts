@@ -24,7 +24,7 @@ async function assertAdmin(userId: string) {
 
 /**
  * Admin cria uma cobrança extra (upsell) e gera um Stripe Payment Link.
- * Não usamos checkout session embed pois é admin enviando link ao cliente.
+ * No embedded checkout — an admin sends a payment link to the client.
  */
 export const createExtraCharge = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

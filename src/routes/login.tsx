@@ -14,7 +14,7 @@ export const Route = createFileRoute("/login")({
   validateSearch: (s: Record<string, unknown>) => ({ redirect: safeRedirect(s.redirect) }),
   head: () => ({ meta: [
     { title: "Entrar · Filro" },
-    { name: "description", content: "Acesse sua conta Filro para gerenciar sua página, conteúdos e ativação." },
+    { name: "description", content: "Sign in to your Filro account to manage your site, content, and implementation." },
     { name: "robots", content: "noindex,nofollow" },
   ]}),
 });
@@ -48,7 +48,7 @@ function LoginPage() {
       <div className="w-full max-w-md">
         <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Início</Link>
         <h1 className="mt-10 editorial-headline text-5xl text-ink">Entrar</h1>
-        <p className="mt-3 text-ink-soft">Acesse sua conta para continuar a ativação.</p>
+        <p className="mt-3 text-ink-soft">Sign in to continue your implementation.</p>
         <form onSubmit={submit} className="mt-8 card-elevated p-7 space-y-4">
           <div>
             <label className="text-xs tracking-wide text-ink-soft">Email</label>
@@ -56,7 +56,7 @@ function LoginPage() {
               className="mt-2 w-full h-12 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink" />
           </div>
           <div>
-            <label className="text-xs tracking-wide text-ink-soft">Senha</label>
+            <label className="text-xs tracking-wide text-ink-soft">Password</label>
             <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
               className="mt-2 w-full h-12 px-4 rounded-xl border border-border bg-paper outline-none focus:border-ink" />
           </div>
@@ -65,7 +65,7 @@ function LoginPage() {
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-ink-soft">
-          Não tem conta? <Link to="/register" search={{ redirect: safeRedirect(redirect) }} className="text-ink font-semibold underline-offset-4 hover:underline">Criar conta</Link>
+          Don't have an account? <Link to="/register" search={{ redirect: safeRedirect(redirect) }} className="text-ink font-semibold underline-offset-4 hover:underline">Create account</Link>
         </p>
       </div>
     </main>

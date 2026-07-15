@@ -65,7 +65,7 @@ export function SubscriptionCancellationModals({
               <Calendar className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="font-display font-black text-2xl text-ink leading-tight">Cancelamento confirmado</h2>
+              <h2 className="font-display font-black text-2xl text-ink leading-tight">Cancellation confirmado</h2>
               <p className="mt-2 text-sm text-ink-soft">
                 Your site stays live and you keep dashboard access until <strong className="text-ink">{formatDate(currentPeriodEnd)}</strong>.
               </p>
@@ -83,7 +83,7 @@ export function SubscriptionCancellationModals({
               disabled={reactivating}
               className="h-11 px-5 rounded-2xl bg-ink text-paper font-semibold text-sm disabled:opacity-60"
             >
-              {reactivating ? "Abrindo..." : "Back com a assinatura"}
+              {reactivating ? "Abrindo..." : "Reactivate subscription"}
             </button>
           </div>
         </Modal>
@@ -116,7 +116,7 @@ export function SubscriptionCancellationModals({
               disabled={reactivating}
               className="h-11 px-5 rounded-2xl bg-lime text-ink font-semibold text-sm disabled:opacity-60"
             >
-              {reactivating ? "Abrindo..." : "Back com a assinatura"}
+              {reactivating ? "Abrindo..." : "Reactivate subscription"}
             </button>
           </div>
         </Modal>

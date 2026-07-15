@@ -137,7 +137,7 @@ export const removeProjectPdf = createServerFn({ method: "POST" })
 
 /**
  * Notifica o cliente quando o projeto é publicado. Idempotente por project_id.
- * Gera URL assinada de longa duração (7 days) para o PDF, se existir.
+ * Generates a long-lived signed URL (7 days) for the PDF if it exists.
  */
 export const notifySitePublished = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

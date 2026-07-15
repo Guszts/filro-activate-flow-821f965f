@@ -60,7 +60,7 @@ function LeadPage() {
   });
 
   if (loading || !isAdmin) return <div className="min-h-screen grid place-items-center text-ink-soft">Loading...</div>;
-  if (!data?.profile) return <div className="min-h-screen grid place-items-center text-ink-soft">Lead não encontrado.</div>;
+  if (!data?.profile) return <div className="min-h-screen grid place-items-center text-ink-soft">Lead not found.</div>;
 
   const { profile, project, payments, plans } = data;
   const bi: BusinessInfo = (project?.business_info as BusinessInfo) ?? {};

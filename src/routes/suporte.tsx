@@ -26,7 +26,7 @@ const KIND_LABELS = {
   question: "Dúvida",
   change_request: "Pedido de ajuste",
   bug: "Error / problema",
-  cancellation: "Cancelamento",
+  cancellation: "Cancellation",
   other: "Outro",
 } as const;
 

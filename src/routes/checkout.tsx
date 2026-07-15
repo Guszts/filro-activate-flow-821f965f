@@ -47,7 +47,7 @@ function CheckoutPage() {
           .eq("slug", planSlug)
           .maybeSingle();
         if (pErr) throw pErr;
-        if (!planRow) throw new Error("Plan não encontrado");
+        if (!planRow) throw new Error("Plan not found");
         setPlan(planRow as PlanInfo);
 
         const paymentSession = await createPlanCheckoutSession({

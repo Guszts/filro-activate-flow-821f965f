@@ -309,7 +309,7 @@ function SettingsPage() {
                   disabled={cancelling}
                   className="h-12 px-5 rounded-2xl bg-flame text-paper font-semibold hover:bg-flame/90 disabled:opacity-60 inline-flex items-center justify-center gap-2"
                 >
-                  <XCircle className="h-4 w-4" /> {cancelling ? "Cancelando..." : "Confirm cancelamento"}
+                  <XCircle className="h-4 w-4" /> {cancelling ? "Canceling..." : "Confirm cancellation"}
                 </button>
               </div>
             </motion.div>
